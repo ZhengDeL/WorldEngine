@@ -15,6 +15,8 @@
 
 </div>
 
+**Ascend 910C / A3 AlgEngine migration:** see [ascend/README.md](ascend/README.md) for pinned runtime, tested paths, equipment sizing and reproducible commands.
+
 <div id="top" align="center">
 <p align="center">
 <img src="https://raw.githubusercontent.com/OpenDriveLab/opendrivelab.github.io/refs/heads/master/WorldEngine/imgs/README_overall.jpg" width="800px" >

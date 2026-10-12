@@ -7,6 +7,7 @@
 from mmcv.ops.multi_scale_deform_attn import multi_scale_deformable_attn_pytorch
 import warnings
 import torch
+import mx_driving
 import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import xavier_init, constant_init
@@ -494,7 +495,12 @@ class MSDeformableAttention3D(BaseModule):
         #  attention_weights.shape: bs, num_query, num_heads, num_levels, num_all_points
         #
 
-        if torch.cuda.is_available() and value.is_cuda:
+        if value.device.type == "npu":
+            output = mx_driving.multi_scale_deformable_attn(
+                value, spatial_shapes, level_start_index,
+                sampling_locations, attention_weights,
+            )
+        elif torch.cuda.is_available() and value.is_cuda:
             if value.dtype == torch.float16:
                 MultiScaleDeformableAttnFunction = MultiScaleDeformableAttnFunction_fp32
             else:

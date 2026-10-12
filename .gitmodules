@@ -1,0 +1,4 @@
+[submodule "ascend/third_party/navsim"]
+	path = ascend/third_party/navsim
+	url = https://github.com/autonomousvision/navsim.git
+	branch = v1.1

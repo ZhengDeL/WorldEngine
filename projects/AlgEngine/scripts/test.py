@@ -6,11 +6,13 @@ import os.path as osp
 import pickle
 from pprint import pprint
 import torch
+import torch_npu
+from torch_npu.contrib import transfer_to_npu
 
 import mmcv
 from mmcv import Config, DictAction
 from mmcv.cnn import fuse_conv_bn
-from mmcv.parallel import MMDistributedDataParallel
+from mmcv.device.npu import NPUDistributedDataParallel as MMDistributedDataParallel
 from mmcv.runner import (get_dist_info, init_dist, load_checkpoint,
                          wrap_fp16_model)
 from mmdet.apis import multi_gpu_test, set_random_seed
@@ -204,14 +206,17 @@ def main():
 
     rank, _ = get_dist_info()
     if rank == 0:
+        if args.out:
+            mmcv.mkdir_or_exist(osp.dirname(osp.abspath(args.out)))
+            mmcv.dump(outputs, args.out)
         kwargs = {} if args.eval_options is None else args.eval_options
         # kwargs['jsonfile_prefix'] = osp.join('work_dirs', args.config.split(
         #     '/')[-1].split('.')[-2], 'test', time.ctime().replace(' ', '_').replace(':', '_'))
 
         # change path to be within the trained checkpoint dir
         timestr: str = time.ctime().replace(' ', '_').replace(':', '_')
-        kwargs['jsonfile_prefix'] = osp.join('/'.join(args.checkpoint.split(
-            '/')[:-1]), 'test', timestr)
+        kwargs.setdefault('jsonfile_prefix', osp.join('/'.join(args.checkpoint.split(
+            '/')[:-1]), 'test', timestr))
 
 
         if args.format_only:

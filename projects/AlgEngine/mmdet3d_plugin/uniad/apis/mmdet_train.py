@@ -5,7 +5,8 @@ import numpy as np
 import torch
 # torch.multiprocessing.set_start_method("fork")
 import torch.distributed as dist
-from mmcv.parallel import MMDataParallel, MMDistributedDataParallel
+from mmcv.device.npu import NPUDataParallel as MMDataParallel
+from mmcv.device.npu import NPUDistributedDataParallel as MMDistributedDataParallel
 from mmcv.runner import (
     HOOKS,
     DistSamplerSeedHook,

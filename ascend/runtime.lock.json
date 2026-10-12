@@ -1,0 +1,23 @@
+{
+  "upstream_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+  "navsim": {
+    "repository": "https://github.com/autonomousvision/navsim",
+    "branch": "v1.1",
+    "commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+  },
+  "image": "local/migration-worldengine:26.1.0-a3-20261011",
+  "image_id": "sha256:ff85edc4a3e51385d814d9b3bfa442efdf040fc6c78e74e667ba9850f7b1b4a3",
+  "source_image": "swr.cn-south-1.myhuaweicloud.com/ascendhub/drivingsdk@sha256:52326fada68feb9d26e8c170bb7fdeea0e81aeba24fa1a84a316a19feba3c801",
+  "tested_versions": {
+    "python": "3.10.21",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post6",
+    "mx_driving": "26.1.0.post2",
+    "cann": "9.1.0",
+    "mmcv": "1.7.2",
+    "mmdet": "2.24.0",
+    "mmdet3d": "1.0.0rc4",
+    "numpy": "1.23.5"
+  },
+  "acceptance": "Pinned image plus source-level NAVSIM dependency; reconstructed cold builds need their own image ID and revalidation."
+}

@@ -7,6 +7,7 @@
 import copy
 import warnings
 import torch
+import mx_driving
 import math
 import torch.nn as nn
 
@@ -592,7 +593,12 @@ class MotionDeformableAttention(BaseModule):
                 f"Last dim of reference_trajs must be"
                 f" 2 or 4, but get {reference_trajs.shape[-1]} instead."
             )
-        if torch.cuda.is_available() and value.is_cuda:
+        if value.device.type == "npu":
+            output = mx_driving.multi_scale_deformable_attn(
+                value, spatial_shapes, level_start_index,
+                sampling_locations, attention_weights,
+            )
+        elif torch.cuda.is_available() and value.is_cuda:
 
             # using fp16 deformable attention is unstable because it performs many sum operations
             if value.dtype == torch.float16:

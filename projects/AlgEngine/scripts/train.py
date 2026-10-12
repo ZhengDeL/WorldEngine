@@ -2,6 +2,8 @@ from __future__ import division
 import sys 
 import argparse
 import torch
+import torch_npu
+from torch_npu.contrib import transfer_to_npu
 import mmcv
 import copy
 import os

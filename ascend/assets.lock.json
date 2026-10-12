@@ -1,0 +1,48 @@
+{
+  "dataset": "OpenDriveLab/WorldEngine",
+  "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+  "automatic_download": false,
+  "excludes": "SimEngine assets and raw OpenScene camera files",
+  "assets": [
+    {
+      "path": "data/alg_engine/ckpts/hydramdp/e2e_hydramdp_50pct_ep8.pth",
+      "bytes": 450763271,
+      "sha256": "7e39dcd2d64e3bca32cbeca3a3e127de736a505c220ef47a24d854b4cf093065"
+    },
+    {
+      "path": "data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "bytes": 319956525,
+      "sha256": "2a81595fcee9df0ef93e9f76d7e735752786802f8a907c0c06949afb03ecea7a"
+    },
+    {
+      "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_50pct_ep8.pth",
+      "bytes": 434885591,
+      "sha256": "3f8efa98c9874c54ad1e8e547136cf6f4c92fd2c24454d4dbe39b538e8c64b98"
+    },
+    {
+      "path": "data/alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl",
+      "bytes": 848516627,
+      "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+    },
+    {
+      "path": "data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b"
+    },
+    {
+      "path": "data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl",
+      "bytes": 2791314758,
+      "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+    },
+    {
+      "path": "data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca"
+    },
+    {
+      "path": "data/alg_engine/test_8192_kmeans.npy",
+      "bytes": 3932288,
+      "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+    }
+  ]
+}
