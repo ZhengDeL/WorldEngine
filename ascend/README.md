@@ -1,157 +1,217 @@
 # AlgEngine on Ascend 910C / A3
 
-This branch adapts **AlgEngine** training, reward/LoRA fine-tuning, policy-gradient fine-tuning and planning inference. **SimEngine** remains a GPU-side subsystem. Its rendering, simulation and closed-loop services have not been deployed or validated by this branch.
+This branch implements and exercises AlgEngine training, VADv2 reward/LoRA fine-tuning, HydraMDP policy-gradient fine-tuning, planning inference and complete checkpoint continuation. SimEngine remains the GPU subsystem and is outside this acceptance.
 
-Upstream is pinned to `3eded7e8ac64e5bed817860765089b5914ab698f`. NAVSIM **v1.1**, required by upstream, is pinned as a submodule to `3e8291bfa89ff247231e0227778840cd0a036896`. Keep the submodule pin; NAVSIM main is a different evaluation version.
+Upstream: `3eded7e8ac64e5bed817860765089b5914ab698f`. The required official NAVSIM **v1.1** submodule is pinned to `3e8291bfa89ff247231e0227778840cd0a036896`.
 
-## What was actually exercised
+## Acceptance on 2026-10-13
 
-All full-model tests retain 200x200 BEV, 900 queries, four temporal frames, eight cameras, the full 8192x40x3 vocabulary, FP32 and the original configuration's freeze policy. The dataset is a functional subset of three official NAVTEST logs: 140 annotation frames and 64 anchors. It has **zero held-out samples**. No trajectory or PDM label was invented.
+The full model geometry is retained: FP32 tensors, 200x200 BEV, 900 queries, four temporal frames, eight cameras and the 8192x40x3 trajectory vocabulary. The real subset is split by entire logs: **42 training anchors in two logs, 22 independent evaluation anchors in a third log**. Fine-tuning selects one genuine official failure anchor and one normal anchor. This is useful for functional acceptance, not a representative rare-case training benchmark.
 
-| Path | Functional evidence | Boundary |
+These are the three original planning configurations named by the launcher:
+`e2e_vadv2_50pct`, `e2e_vadv2_50pct_rlft_rare_log`, and
+`e2e_hydramdp_50pct_rlft_rare_log`. Original freezing settings remain: imitation
+freezes the image backbone; fine-tuning freezes perception and trains the
+configured heads/LoRA. The measured trainable parameter counts were 33,716,740,
+3,561,547 and 2,240,582 respectively. Full-network geometry does not imply that
+all perception tasks or every parameter were trained.
+
+| Item | Observed result | Boundary |
 |---|---|---|
-| VADv2 imitation | One NPU, batch 1, 10 AdamW updates; raw losses/gradients/updates/checkpoint checked | Original backbone freeze; planning imitation loss, not all UniAD perception tasks |
-| VADv2 reward/LoRA | One NPU, batch 2, 5 updates; one genuine official failure token plus one normal anchor | Original `rl_finetuning=False`: no policy-gradient loss |
-| HydraMDP policy gradient | One NPU, batch 2, 5 updates; nonzero actual `loss.RL.PG`, real PDM labels and LoRA updates | Initialized from the functional VADv2 checkpoint, not the released HydraMDP epoch-8 baseline |
-| Planning inference | Original `scripts/test.py`, 64 real anchors, finite trajectories and cached PDM CSV | Reuses functional anchors; not held-out accuracy or official independent NAVSIM rescoring |
-| HCCL | Four ranks x 10 updates previously exercised with the same operator/device patch | Watched parameter synchronization, not every tensor or multi-node scaling |
-| Original global batch | Eight NPUs x batch 2 x 5 updates, HCCL, full-size VADv2 model, finite gradients and synchronized watched parameters | Global batch 16 matches the original eight-GPU recipe; mini data and short lr schedule remain functional validation |
+| Clean image | No-cache build from the exact imported official ARM64 base; archive save/load preserved its image ID | Same host; separate hardware/OS/driver installation untested |
+| Published bases | VADv2 and HydraMDP epoch-8 checkpoints downloaded and publisher SHA256 checked; matched initialization tensors checked | No full-data convergence claim |
+| Native epoch | 8 ranks, batch 2/rank, 8 complete mini epochs, 24 AdamW updates/rank | Original optimizer and epoch semantics; small data and workers=0 |
+| Fine-tuning | VADv2 reward/LoRA and HydraMDP actual nonzero PG, 30 updates each, real images and PDM targets | Two training anchors repeat; VADv2 configuration has PG disabled |
+| Resume | Model, optimizer, LR horizon, every rank's RNG, sampler progress and topology/data/source/image contract restored | Exact tensor restoration passes; numerical continuation has limits below |
+| Independent scoring | Four model variants, each 22/22 valid outputs, unmodified official CPU NAVSIM scorer | No GPU parity or complete official benchmark |
+| Portable data | 1,120 referenced original JPEGs, labels and split filters, 242.3 MB compressed; NPU run passed without old camera directory mounts | Labels retained; small-data scope |
 
-The tested single-NPU imitation run peaked at **12.96 GiB allocated / 18.45 GiB reserved**. VADv2 and HydraMDP fine-tuning each used approximately **6.8 GiB allocated / 12.34 GiB reserved**. These are PyTorch allocator measurements, not total board HBM or full-dataset CPU RAM requirements.
+Eight ranks completed 460 updates each, with at least 3609.89 seconds of measured training per rank. Observed steady end-to-end throughput was 2.042 anchor exposures/s; median compute time 5.610 s/update. Peak allocator usage was 27.04/38.34 GiB allocated/reserved per logical device. This is repeated small-data FP32 training with monitoring and frequent sampler epoch rollover, not a full-data or GPU performance benchmark.
 
-At batch 2, the eight-rank imitation run used a maximum of **27.04 GiB allocated / 38.34 GiB reserved across ranks**, on one logical NPU from each of eight physical cards. One server completed this run. Planning inference used **3.47 GiB allocated / 8.12 GiB reserved** and processed 64 anchors in **184.51 seconds**, including dataset/model setup and metrics. This is an offline FP32 functional path, not an optimized online latency or GPU comparison.
+Independent official small-data PDMS was **0.910051 / 0.876269** for VADv2 base/fine-tuned and **0.934006 / 0.934006** for HydraMDP base/fine-tuned. VADv2 degraded on this small log; HydraMDP selected the same trajectories in this evaluation. Functional fine-tuning is demonstrated, quality improvement is not accepted.
 
-**Hardware support boundary:** physical execution was on an Atlas 800I A3 inference-series system with Ascend910_9362 devices. The published ModelZoo training table distinguishes A3 training-series support from inference-series support. Successful bounded backpropagation does not extend the vendor's supported hardware list. Use a supported training-series system or obtain support confirmation for the specific hardware when planning supported training delivery.
+### Numerical continuation boundary
 
-References: [ModelZoo hardware support](https://gitcode.com/Ascend/ModelZoo-PyTorch/blob/master/PyTorch/docs/zh/install_guide.md), [DrivingSDK hardware guidance](https://github.com/Ascend/DrivingSDK/blob/master/docs/zh/installation/installation.md).
+All resumed cases strictly checked every saved model and optimizer tensor immediately after loading. VADv2 LoRA's continuation passed `atol=1e-6`, `rtol=1e-5` and loss tolerance `1e-4`. Base-model continuation and HydraMDP PG did **not** pass the same complete numerical gate. Data tokens, LR and final RNG states match. HydraMDP's maximum parameter difference was `2.34818435e-06`; controlled eight-rank base continuation had parameter/loss differences `0.000323150307` / `0.000865221024`.
 
-## Runtime and source
+An isolated fixed-input MSDA repeat had identical forwards but up to `4.76837158203125e-7` variation in the value gradient, including with deterministic algorithms requested. The official DrivingSDK kernel contains floating-point atomic accumulation. This establishes an operator repeatability limitation; it does not attribute every model difference to that operator. `--deterministic` requests determinism and cannot guarantee it for every custom operator. Failed gates are retained.
+
+## Source and runtime
 
 ```bash
-git clone --branch ascend-910c-algengine --recurse-submodules \
-  https://github.com/ZhengDeL/WorldEngine.git
+git clone --branch ascend-910c-algengine --recurse-submodules https://github.com/ZhengDeL/WorldEngine.git
 cd WorldEngine
 git submodule status
 ```
 
-`runtime.lock.json` records the tested image ID and versions: CANN 9.1.0, PyTorch 2.7.1, torch_npu 2.7.1.post6, DrivingSDK 26.1.0.post2, MMCV 1.7.2, MMDet 2.24.0, MMDet3D 1.0.0rc4 and NumPy 1.23.5. Do not install the upstream CUDA wheels into this image. The `+cpu` PyTorch version string is expected in this Ascend stack; actual tensors and kernels execute on NPU.
-
-The tested image is local, not a public registry image. Transfer it with `docker save` / `docker load` when preparing another host, and verify:
+The newly built and tested image is local:
 
 ```bash
-docker image inspect --format '{{.Id}}' \
-  local/migration-worldengine:26.1.0-a3-20261011
-# sha256:ff85edc4a3e51385d814d9b3bfa442efdf040fc6c78e74e667ba9850f7b1b4a3
+IMAGE=local/worldengine:26.1.0-a3-clean-20261013
+IMAGE_ID=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f
+docker image inspect --format '{{.Id}}' "$IMAGE"
 ```
 
-Alternatively, `docker/Dockerfile` describes the tested dependency layers over the pinned official DrivingSDK image:
+Image archive: **23.444539904 GB**, SHA256 `5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac`. Import with `docker load -i worldengine_clean_20261013.tar` and verify the image ID. No public registry upload is implied. The launcher preserves its previous locked image default for old runs; select the clean image explicitly using both flags below.
+
+The executed recipe is `ascend/docker/Dockerfile`, with `--no-cache` and an imported official base whose config ID is `sha256:1a63c030ea4036467cfc486bef006acf6f1cfbb1cc3b0dc362d07f86b84349bd`, equivalent to the pinned official ARM64 manifest in `runtime.lock.json`. A registry-connected host can build from the Dockerfile's pinned official manifest. Rebuilt image IDs are locked separately; channel resolution is not a bit-identical image claim.
+
+CANN 9.1.0, PyTorch 2.7.1, torch_npu 2.7.1.post6, DrivingSDK 26.1.0.post2, MMCV 1.7.2, MMDet 2.24.0, MMDet3D 1.0.0rc4 and NumPy 1.23.5 were exercised. Torch's `+cpu` version string is expected for this NPU stack. Matmul HF32 was disabled and convolution HF32 allowed; FP32 denotes tensor/training dtype, not a GPU numerical-equivalence claim.
+
+Observed package versions are retained in `docker/versions-20261013.json`; the
+separate geospatial Conda prefix's resolved ARM64 packages and package checksums
+are in `docker/geo-linux-aarch64-20261013.explicit.txt`. Its Python patch version
+can differ from the main training prefix. These are build snapshots; the exact
+saved image is the verified offline reproduction artifact.
+
+The tested host was Atlas 800I A3 inference series, Ascend910_9362, with 64 GiB HBM per logical chip. Vendor training support for this SKU is a separate boundary: [official ModelZoo hardware table](https://gitcode.com/Ascend/ModelZoo-PyTorch/blob/master/PyTorch/docs/zh/install_guide.md). Experimental backpropagation does not extend that support table.
+
+## Small real data and official weights
+
+`fetch_assets.py` downloads only the two released planners, approximately 886 MB, with byte-range resume and final publisher hashes. The 5 TB publication is not downloaded.
 
 ```bash
-docker build -t worldengine-ascend:local ascend/docker
+python3 ascend/fetch_assets.py --output /datasets/worldengine/weights
 ```
 
-This combined cold-build recipe has not been re-executed as a new image acceptance test. A rebuilt image has its own ID: explicitly select `--image` and `--expected-image-id`, then repeat operator/model validation. The lock for the already tested image remains the reproducible runtime baseline.
-
-The launcher requires Linux, Docker, the Ascend driver/firmware directories and selected `/dev/davinci*` nodes. Run `npu-smi info` and select idle devices. It creates a new output directory, leaves exited containers and logs for review, and rejects an existing output directory. It does not install or restart host drivers/services.
-
-## Functional runs with already prepared mini assets
-
-The prepared directory must contain:
-
-```text
-prepared/
-  worldengine_navtest_smoke.pkl
-  worldengine_navtest_smoke_pdm.pkl
-  worldengine_navtest_smoke.yaml
-  manifest.json
-  cameras/                       # actual camera files or valid asset-parent symlinks
-```
-
-Its manifest describes the official subset, unchanged trajectory labels and `heldout_samples=0`. These data/checkpoint files are not included in Git. Camera symlinks must resolve inside the mounted asset parent. Set the following paths to existing assets:
+Use the delivered `mini_real_data.tar.gz` or create a log-disjoint split from an already prepared official subset:
 
 ```bash
-MINI=/datasets/worldengine/prepared
-PERCEPTION=/datasets/worldengine/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth
+python ascend/split_mini.py --prepared /datasets/worldengine/prepared \
+  --output /datasets/worldengine/log_split \
+  --rare-split projects/AlgEngine/configs/navsim_splits/navtest_split/navtest_failures_filtered.yaml
+```
+
+The manifest's phase-specific annotation/filter/PDM files and real `cameras/` must exist. The portable packet uses relative camera paths. Camera path changes alter annotation hashes: start a new run with a relocated/repacked dataset rather than changing data under a saved resume contract.
+
+## Run, save and resume
+
+```bash
+MINI=/datasets/worldengine/mini_real_data
+VAD=/datasets/worldengine/weights/e2e_vadv2_50pct_ep8.pth
+HYDRA=/datasets/worldengine/weights/e2e_hydramdp_50pct_ep8.pth
 VOCAB=/datasets/worldengine/test_8192_kmeans.npy
 RUNS=/experiments/worldengine
 
-# --devices contains HOST LOGICAL NPU IDs, not physical-card or server counts.
-python3 ascend/run_container.py --devices 0 --profile imitation \
-  --mini-prepared "$MINI" --checkpoint "$PERCEPTION" --vocab "$VOCAB" \
-  --output "$RUNS/imitation_1p" --steps 10 --batch-size 1 --inference-after --detach
+# Keep the schedule horizon at 30; stop at 10 without shortening cosine LR.
+python3 ascend/run_container.py --devices 0 --profile vadv2_ft --runtime \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --checkpoint "$VAD" --vocab "$VOCAB" \
+  --output "$RUNS/vad_partial" --steps 30 --stop-after 10 \
+  --batch-size 2 --workers 0 --deterministic --checkpoint-interval 10 --detach
 
-# Run these after the imitation checkpoint exists and the selected NPU is idle.
-python3 ascend/run_container.py --devices 0 --profile vadv2_ft \
-  --mini-prepared "$MINI" --checkpoint "$RUNS/imitation_1p/iter_10.pth" --vocab "$VOCAB" \
-  --output "$RUNS/vadv2_ft_1p" --steps 5 --batch-size 2 --detach
-
-python3 ascend/run_container.py --devices 0 --profile hydramdp_rl \
-  --mini-prepared "$MINI" --checkpoint "$RUNS/imitation_1p/iter_10.pth" --vocab "$VOCAB" \
-  --output "$RUNS/hydramdp_rl_1p" --steps 5 --batch-size 2 --detach
+# Wait for exit_code=0 and a complete iter_10.pth, then use a NEW output.
+python3 ascend/run_container.py --devices 0 --profile vadv2_ft --runtime \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --checkpoint "$VAD" --vocab "$VOCAB" \
+  --output "$RUNS/vad_resumed" --steps 30 --resume "$RUNS/vad_partial/iter_10.pth" \
+  --batch-size 2 --workers 0 --deterministic --checkpoint-interval 10 --detach
 ```
 
-The real mini fine-tuning selection intersects the upstream `navtest_failures_filtered.yaml` with the supplied subset; `normal_ratio=1`, `normal_only=False`. Its two anchors are repeated to exercise the graph. This is not a meaningful rare-case training sample size.
+For HydraMDP select `--profile hydramdp_rl` and its matching `--checkpoint "$HYDRA"`. For eight-rank native epochs select `--devices 0,2,4,6,8,10,12,14 --profile imitation --runtime --epochs 8 --batch-size 2 --workers 0 --memory 96g --cpus 32`; optionally stop with `--stop-after-epochs 2`, then resume `epoch_2.pth` with the **same** epoch horizon in a new output directory.
 
-Independent planning inference from an existing dumped configuration:
+Resume supports FP32/native AdamW, workers=0, unchanged source/image/data/topology/batch/seed/optimizer/LR schedule. Every rank RNG is embedded in the checkpoint. Full tensor restoration is checked immediately; use `runtime_rank*.json` and `runtime_rank*.jsonl` for actual updates, LR, tokens, RSS and allocator memory. `--checkpoint` initializes weights; **`--resume` restores training state**. Old weight-only checkpoints are not complete resume checkpoints. Keep the exact source revision used by a saved run.
+
+For a numerical continuation control, finish a continuous 30-step run that saves
+`iter_10.pth`, then resume that exact file in a new directory to step 30. Compare
+both final checkpoints on CPU; use the continuous run itself as the saved prefix
+so independent initialization differences do not enter the comparison:
+
+```bash
+mkdir -p "$RUNS/resume_checks"
+docker run --rm --memory 24g --cpus 8 --entrypoint bash \
+  -e OMP_NUM_THREADS=4 -e OPENBLAS_NUM_THREADS=4 \
+  -v "$PWD:/source:ro" -v "$RUNS:/runs:ro" \
+  -v "$RUNS/resume_checks:/checks:rw" "$IMAGE" -lc '
+    export PATH=/opt/conda/envs/bevformer/bin:$PATH
+    python /source/ascend/compare_resume.py \
+      --continuous /runs/vad_continuous/iter_30.pth \
+      --resumed /runs/vad_controlled_resumed/iter_30.pth \
+      --continuous-run /runs/vad_continuous --partial-run /runs/vad_continuous \
+      --resumed-run /runs/vad_controlled_resumed --output /checks/comparison.json
+  '
+```
+
+This compares model/optimizer tensors, loss, tokens, LR and final rank RNG. A
+nonzero exit preserves a failed numerical gate. The measured VADv2 LoRA case
+passed; the measured base and HydraMDP cases did not.
+
+## Inference and official scoring
 
 ```bash
 python3 ascend/run_container.py --devices 0 --task inference \
-  --config "$RUNS/imitation_1p/imitation_rank0.py" \
-  --mini-prepared "$MINI" --checkpoint "$RUNS/imitation_1p/iter_10.pth" --vocab "$VOCAB" \
-  --output "$RUNS/inference_1p" --detach
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "$RUNS/vad_resumed/vadv2_ft_rank0.py" \
+  --mini-prepared "$MINI" --checkpoint "$RUNS/vad_resumed/iter_30.pth" --vocab "$VOCAB" \
+  --output "$RUNS/vad_eval" --detach
 ```
 
-Both one-rank training and inference use `torchrun --launcher pytorch` internally. Upstream `test.py` raises `NotImplementedError` with the non-distributed launcher; `nproc_per_node=1` is the supported entry even on a single NPU.
-
-Check the result, not just Docker launch success:
+Inference verifies complete token coverage, finite 40x3 trajectories and exact selection from the official vocabulary. Its embedded metrics are cached targets. For independent official rescoring, use real scene logs and maps with pinned NAVSIM v1.1:
 
 ```bash
-docker inspect --format '{{.State.Status}} {{.State.ExitCode}}' worldengine-npu-imitation_1p
-cat "$RUNS/imitation_1p/train_exit_code"
-cat "$RUNS/imitation_1p/exit_code"
-cat "$RUNS/imitation_1p/ascend_validation_rank0.json"
-cat "$RUNS/imitation_1p/inference/inference_validation.json"
+export PYTHONPATH="$PWD/ascend/third_party/navsim:$PYTHONPATH"
+python ascend/official_score.py --prepared "$MINI" \
+  --logs /datasets/worldengine/navsim_logs --maps /datasets/worldengine/maps \
+  --cache /experiments/worldengine/metric_cache \
+  --predictions "$RUNS/vad_eval/predictions.pkl" \
+  --output /experiments/worldengine/vad_official_score.json
 ```
 
-An initial inference attempt in the tested environment computed all 64 predictions but failed during CPU-side export because NAVSIM was absent. The pinned submodule/PYTHONPATH and early NAVSIM import fix that dependency. `test.py` now saves `--out` and honors an explicit `jsonfile_prefix`, allowing checkpoints to be mounted read-only.
+The scorer uses upstream WorldEngine's 40-to-8 pose conversion (`[4::5]`), unmodified official cache generation, simulator and scorer. Invalid/missing tokens fail the run. GPU/NPU trajectory parity remains untested because GPU hardware was unavailable.
 
-## Full assets and equipment planning
-
-HF revision is locked in `assets.lock.json`; download is never automatic. The complete HF publication is approximately 4.864 TB; its AlgEngine section is approximately **54.2 GB**, including all published checkpoints. The huge SimEngine assets are unnecessary for offline AlgEngine log training. Full raw OpenScene images, maps and official NAVSIM metric cache are separate inputs; 54.2 GB is not the complete training data budget.
-
-```text
-DATA/
-  raw/openscene-v1.1/sensor_blobs/{trainval,test}/
-  alg_engine/merged_infos_navformer/nuplan_openscene_{navtrain,navtest}.pkl
-  alg_engine/pdms_cache/pdm_8192_gt_cache_{navtrain,navtest}.pkl
-  alg_engine/test_8192_kmeans.npy
-  alg_engine/ckpts/...
-```
-
-The published navtrain metadata and PDM PKLs alone total approximately **39.86 GB on disk**. Each training rank loads these through Python; deserialized objects, validation data and dataloader workers add memory. Eight ranks therefore already correspond to about **318.9 GB of serialized training inputs**, before in-memory expansion. Full-dataset CPU RSS has not been measured. Size RAM from actual deserialization; the mini run's 64 GB limit cannot establish full training sufficiency. Full launches require an explicit `--memory`.
-
-After full assets have been provisioned, this is the full-epoch entry. It is a **procedure to validate**, not a claim that the full 8 epochs have been completed:
+## Sustained run and equipment
 
 ```bash
-DATA=/datasets/worldengine
-python3 ascend/run_container.py --devices 0,2,4,6,8,10,12,14 --profile imitation \
-  --data-root "$DATA" \
-  --checkpoint "$DATA/alg_engine/ckpts/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth" \
-  --vocab "$DATA/alg_engine/test_8192_kmeans.npy" \
-  --output /experiments/worldengine/full_imitation \
-  --memory 1t --cpus 32 --shm-size 16g --workers 0 --detach
+python3 ascend/run_container.py --devices 0,2,4,6,8,10,12,14 --profile imitation --runtime \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --checkpoint "$VAD" --vocab "$VOCAB" \
+  --output "$RUNS/hour_8p" --steps 100000 --upstream-schedule --duration-seconds 3600 \
+  --batch-size 2 --workers 0 --memory 96g --cpus 32 --checkpoint-interval 100 --check-interval 20 --detach
 ```
 
-Here `1t` is a RAM sizing starting point for a host that actually has more than 1 TiB available; full RSS and dataloader tuning remain unverified. Without `--steps`, the wrapper retains the upstream epoch schedule, learning rate and default per-rank batch. For VADv2 imitation that is **8 epochs, batch 2 per rank, lr=2e-4**. The bounded tests deliberately use lr=5e-5 and a short iter schedule. Changing the rank count changes the global batch; convergence equivalence requires a separate schedule/accuracy comparison.
+This pressure-test horizon is 100000 iterations with a measured one-hour stop, original optimizer LR/warmup parameters and an iter-based cosine schedule. It is distinct from the original eight-epoch dataset schedule. Checks include raw head losses every iteration, gradients on the first and every twentieth step, checkpoints, watched DDP parameter synchronization, CPU RSS and NPU allocator memory. Throughput includes the actual validation/IO/checkpoint overhead.
 
-For formal VADv2 or HydraMDP fine-tuning, choose `--profile vadv2_ft` or `--profile hydramdp_rl` and supply the corresponding **released base planner checkpoint**, not the 10-step functional checkpoint. The wrapper preserves the selected profile's loss switches. Complete the full epoch, independent NAVTEST scoring and rare/normal regression comparison before accepting accuracy.
+One 64 GiB logical NPU runs the measured single-rank tasks. One server with eight suitable logical NPUs runs global batch 16; eight NPUs do not mean eight servers. The exercised mapping used one chip from each of eight physical cards. Other placements and all sixteen chips are untested.
 
-One 64 GiB logical NPU is sufficient for the measured single-rank functionality. More NPUs are throughput capacity, not a prerequisite imposed by a 5 TB dataset. Four-rank and eight-rank HCCL are exercised. Multi-node scaling, all sixteen logical devices, BF16/whole-model FP16, UniAD all-task training, DiffusionDrive, resume-training state and GPU-versus-NPU accuracy/throughput comparisons remain outside the demonstrated acceptance.
+Complete available NAVTEST caches (3.640 GB serialized, 19470 annotation frames and 12146 PDM tokens) used **4.467 GB / 4.16 GiB peak RSS** in a single CPU process. This does not measure NAVTRAIN: its two serialized training PKLs total 39.86 GB per rank, approximately 318.9 GB across eight ranks before object expansion and runtime overhead. Begin full-data RAM sizing on a sufficiently large host (for example an available 1 TiB budget) and measure actual RSS; no full-data capacity guarantee is made.
 
-## Changes and operating limits
+For full data use `--data-root` with original `raw/openscene-v1.1/sensor_blobs/{trainval,test}` and AlgEngine merged-info/PDM files, `--runtime --epochs 8 --workers 0`, plus an explicit CPU memory budget. Do not install upstream CUDA wheels over this pinned NPU stack. Full-data training/quality, GPU comparisons, separate-machine driver reproduction, BF16/whole-model AMP, additional AlgEngine configurations, multi-node scaling and 24-hour stability require separate acceptance.
 
-The adaptation imports torch_npu/transfer_to_npu, selects HCCL and MMCV NPU parallel wrappers, and explicitly dispatches four deformable-attention paths to `mx_driving.multi_scale_deformable_attn`. A Matplotlib style compatibility fallback keeps legacy dataset imports usable. No SimEngine source file is changed.
+### Run the official CPU scorer in the tested image
 
-The validation hook checks raw head outputs and losses **before upstream `nan_to_num`**, actual gradients and optimizer updates, selected parameter synchronization and saved optimizer steps. Synchronization is sampled; the hook does not compare every model tensor. Full-epoch runs use the upstream optimizer hook rather than the bounded diagnostic hook.
+The scoring Python command above needs the pinned dependencies. A fresh host can
+use the delivered image without installing those dependencies on the host:
 
-The portable launcher here is single-host. Multi-node training needs an explicit node/rank rendezvous launcher and HCCL network validation. The FP32 inference smoke is an offline test, not an optimized real-time driving service. No faster-than-GPU claim or official WorldEngine NPU support claim is made by these measurements.
+```bash
+SCORING=/datasets/worldengine/scoring  # contains navsim_logs/ and maps/
+mkdir -p "$RUNS/cpu_score"
+docker run --rm --memory 24g --cpus 8 --entrypoint bash \
+  -v "$PWD:/source:ro" -v "$MINI:/mini:ro" \
+  -v "$SCORING:/scoring:ro" -v "$RUNS/vad_eval:/predictions:ro" \
+  -v "$RUNS/cpu_score:/output:rw" "$IMAGE" -lc '
+    export PATH=/opt/conda/envs/bevformer/bin:$PATH
+    export PYTHONPATH=/source/ascend/third_party/navsim:$PYTHONPATH
+    cd /source
+    python ascend/official_score.py --prepared /mini \
+      --logs /scoring/navsim_logs --maps /scoring/maps --cache /output/cache \
+      --predictions /predictions/predictions.pkl --output /output/vad_score.json
+  '
+```
+
+This regenerates official metric caches from genuine logs and maps. The
+reproduction packet also includes 22 previously generated official cache
+payloads and the three raw logs; their metadata CSV paths must be regenerated
+after relocation. Reusing those payloads with NAVSIM's official
+`run_pdm_score_from_submission` entry does not require downloading all maps
+again. Maps are needed when regenerating cache payloads.
+
+The packet includes source, its pinned NAVSIM files, image, planners, vocabulary,
+mini data and official cache. Verify its `SHA256SUMS` before import. These
+artifacts provide a small-data reproduction route; they do not certify another
+host's driver installation or complete numerical replay.
+
+The packet's `score_from_cache.py` and `README.md` provide a CPU-only container
+command that uses a freshly extracted cache and exported `predictions.pkl`,
+without a map or NPU mount. Four variants passed relocation with all official
+mean metrics identical. The helper regenerates metadata paths and calls the
+unchanged official scorer; use a fresh cache extraction for each evaluation.

@@ -76,6 +76,13 @@ def main():
                     elapsed_seconds=time.monotonic()-started,peak_allocated_bytes=torch.npu.max_memory_allocated(),
                     peak_reserved_bytes=torch.npu.max_memory_reserved(),
                     acceptance='Functional inference and embedded/cached PDM only. Reused mini anchors are not held-out accuracy.')
+        manifest_path=Path(cfg.data.test.nav_filter_path).parent/'manifest.json'
+        if manifest_path.is_file():
+            manifest=json.loads(manifest_path.read_text())
+            independent=bool(manifest.get('heldout_samples')==len(tokens) and manifest.get('train_eval_token_overlap')==0)
+            report.update(independent_log_split=independent,dataset_scope=manifest.get('dataset_scope'))
+            if independent:
+                report['acceptance']='Independent small-data inference; exported cached metrics still require separate official NAVSIM rescoring. No GPU comparison or full-benchmark claim.'
         (args.output/'inference_validation.json').write_text(json.dumps(report,indent=2))
         print(json.dumps(report,indent=2),flush=True)
 

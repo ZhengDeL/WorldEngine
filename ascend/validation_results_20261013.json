@@ -1,0 +1,201 @@
+{
+  "assessment_date": "2026-10-13",
+  "scope": "AlgEngine only; bounded FP32 real-small-data functional acceptance",
+  "upstream_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+  "navsim_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "image_archive_sha256": "5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac",
+  "dataset": {
+    "training_anchors": 42,
+    "evaluation_anchors": 22,
+    "disjoint_logs": true,
+    "finetuning_anchors": 2,
+    "referenced_original_images": 1120
+  },
+  "native_epoch": {
+    "world_size": 8,
+    "batch_per_rank": 2,
+    "epochs": 8,
+    "updates_per_rank": 24
+  },
+  "sustained": {
+    "world_size": 8,
+    "initial_iter": 0,
+    "final_iter": 460,
+    "updates": 460,
+    "final_epoch": 152,
+    "profile": "imitation",
+    "restoration": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "peak_allocated_bytes": 29036803072,
+    "peak_reserved_bytes": 41169190912,
+    "peak_rss_bytes": 4552368128,
+    "sum_rank_peak_rss_bytes": 30393487360,
+    "minimum_train_seconds": 3609.891582736047,
+    "median_compute_seconds": 5.609507378510898,
+    "first_loss": 5.530811309814453,
+    "last_loss": 2.312580108642578,
+    "initialized_tensors": 889,
+    "trainable_parameters": 33716740,
+    "steady_end_to_end_samples_per_second": 2.0419161770131957,
+    "processed_anchor_exposures": 7360,
+    "first10_rss_median": 2840311808.0,
+    "last10_rss_median": 3505715200.0,
+    "first10_npu_alloc_median": 683514880.0,
+    "last10_npu_alloc_median": 684623104.0,
+    "docker_sampled_memory_peak_bytes": 22366042193.92,
+    "docker_resource_samples": 300,
+    "docker_memory_samples_unavailable": 1,
+    "docker_memory_measurement": "Docker stats rounded display at approximately ten-second intervals"
+  },
+  "complete_resume_state_restoration": true,
+  "numerical_comparisons": {
+    "clean_iter_resume": {
+      "result": "fail",
+      "max_loss_difference": 4.649162292480469e-05,
+      "identical_batch_tokens": true,
+      "identical_learning_rates": true,
+      "identical_final_rng_states": true,
+      "world_size": 1,
+      "completed_updates": 8,
+      "model_max_abs": 9.006261825561523e-05,
+      "model_equal_tensors": 630,
+      "optimizer_and_model_max_abs": 0.005448677111417055,
+      "model_tensor_count": 889,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_tolerance": 0.0001
+    },
+    "clean_epoch_resume": {
+      "result": "fail",
+      "max_loss_difference": 0.007572174072265625,
+      "identical_batch_tokens": true,
+      "identical_learning_rates": true,
+      "identical_final_rng_states": true,
+      "world_size": 8,
+      "completed_updates": 24,
+      "model_max_abs": 0.000784166157245636,
+      "model_equal_tensors": 630,
+      "optimizer_and_model_max_abs": 0.022221321240067482,
+      "model_tensor_count": 889,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_tolerance": 0.0001
+    },
+    "controlled_epoch_numeric": {
+      "result": "fail",
+      "max_loss_difference": 0.0008652210235595703,
+      "identical_batch_tokens": true,
+      "identical_learning_rates": true,
+      "identical_final_rng_states": true,
+      "world_size": 8,
+      "completed_updates": 24,
+      "model_max_abs": 0.00032315030694007874,
+      "model_equal_tensors": 631,
+      "optimizer_and_model_max_abs": 0.025300204753875732,
+      "model_tensor_count": 889,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_tolerance": 0.0001
+    },
+    "clean_vadv2_ft_resume": {
+      "result": "pass",
+      "max_loss_difference": 9.5367431640625e-07,
+      "identical_batch_tokens": true,
+      "identical_learning_rates": true,
+      "identical_final_rng_states": true,
+      "world_size": 1,
+      "completed_updates": 30,
+      "model_max_abs": 1.9744038581848145e-07,
+      "model_equal_tensors": 899,
+      "optimizer_and_model_max_abs": 3.348104655742645e-07,
+      "model_tensor_count": 989,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_tolerance": 0.0001
+    },
+    "clean_hydramdp_rl_resume": {
+      "result": "fail",
+      "max_loss_difference": 9.5367431640625e-07,
+      "identical_batch_tokens": true,
+      "identical_learning_rates": true,
+      "identical_final_rng_states": true,
+      "world_size": 1,
+      "completed_updates": 30,
+      "model_max_abs": 2.3481843527406454e-06,
+      "model_equal_tensors": 910,
+      "optimizer_and_model_max_abs": 2.405722625553608e-06,
+      "model_tensor_count": 989,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_tolerance": 0.0001
+    }
+  },
+  "official_small_data_scores": {
+    "vadv2_base": {
+      "no_at_fault_collisions": 1.0,
+      "drivable_area_compliance": 1.0,
+      "ego_progress": 0.8295772065083007,
+      "time_to_collision_within_bound": 0.9545454545454546,
+      "comfort": 1.0,
+      "driving_direction_compliance": 0.9545454545454546,
+      "score": 0.910051108772398
+    },
+    "vadv2_finetuned": {
+      "no_at_fault_collisions": 1.0,
+      "drivable_area_compliance": 0.9545454545454546,
+      "ego_progress": 0.8121367426193111,
+      "time_to_collision_within_bound": 0.9545454545454546,
+      "comfort": 1.0,
+      "driving_direction_compliance": 1.0,
+      "score": 0.8762690973035009
+    },
+    "hydramdp_base": {
+      "no_at_fault_collisions": 1.0,
+      "drivable_area_compliance": 1.0,
+      "ego_progress": 0.8416154036912791,
+      "time_to_collision_within_bound": 1.0,
+      "comfort": 1.0,
+      "driving_direction_compliance": 0.9545454545454546,
+      "score": 0.9340064182046998
+    },
+    "hydramdp_finetuned": {
+      "no_at_fault_collisions": 1.0,
+      "drivable_area_compliance": 1.0,
+      "ego_progress": 0.8416154036912791,
+      "time_to_collision_within_bound": 1.0,
+      "comfort": 1.0,
+      "driving_direction_compliance": 0.9545454545454546,
+      "score": 0.9340064182046998
+    }
+  },
+  "unavailable_or_unaccepted": [
+    "GPU/NPU trajectory parity",
+    "Full NAVTRAIN convergence and capacity",
+    "Quality improvement",
+    "All training numerical replay",
+    "Separate-host driver reproduction",
+    "24-hour stability",
+    "BF16/whole-model AMP",
+    "16-chip and multi-node scaling",
+    "Vendor training support for the inference SKU"
+  ]
+}

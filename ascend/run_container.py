@@ -33,13 +33,23 @@ def main():
     p.add_argument('--expected-image-id',default=IMAGE_ID)
     p.add_argument('--detach',action='store_true')
     p.add_argument('--inference-after',action='store_true',help='After bounded training, run the original test path on configured test anchors')
+    p.add_argument('--runtime',action='store_true')
+    p.add_argument('--resume',type=Path)
+    p.add_argument('--epochs',type=int)
+    p.add_argument('--stop-after',type=int)
+    p.add_argument('--stop-after-epochs',type=int)
+    p.add_argument('--duration-seconds',type=float)
+    p.add_argument('--checkpoint-interval',type=int)
+    p.add_argument('--check-interval',type=int)
+    p.add_argument('--upstream-schedule',action='store_true')
+    p.add_argument('--deterministic',action='store_true')
     args=p.parse_args()
     devices=args.devices.split(',')
     if not devices or len(set(devices))!=len(devices) or not all(v.isdigit() for v in devices):
         p.error('Distinct numeric host device IDs required')
     if bool(args.mini_prepared)==bool(args.data_root):
         p.error('Select exactly one of --mini-prepared and --data-root')
-    if args.task=='train' and args.mini_prepared and not args.steps:
+    if args.task=='train' and args.mini_prepared and not (args.steps or args.epochs):
         p.error('Mini data is functional validation only; provide --steps')
     if args.task=='inference' and not args.config:
         p.error('--task inference requires --config')
@@ -60,6 +70,9 @@ def main():
          '-v','/usr/local/Ascend/driver:/usr/local/Ascend/driver:ro',
          '-v','/usr/local/Ascend/firmware:/usr/local/Ascend/firmware:ro','-w','/workspace/WorldEngine']
     if args.detach:cmd+=['-d']
+    cmd+=['-e','WORLDENGINE_IMAGE_ID='+image_id]
+    if args.deterministic:
+        cmd+=['-e','HCCL_DETERMINISTIC=true']
     for node in ['davinci'+d for d in devices]+['davinci_manager','devmm_svm','hisi_hdc']:
         if not (Path('/dev')/node).is_char_device():raise RuntimeError('Missing device node '+node)
         cmd+=['--device','/dev/'+node]
@@ -69,9 +82,16 @@ def main():
         cmd+=['-e',key+'='+value]
     train=['ascend/train.py','--profile',args.profile,'--output','/output','--checkpoint','/weights/initial.pth',
            '--vocab','/weights/vocab.npy']
-    for key in ('batch_size','workers','lr'):
+    for key in ('batch_size','workers','lr','epochs','stop_after','stop_after_epochs','duration_seconds','checkpoint_interval','check_interval'):
         value=getattr(args,key)
         if value is not None:train+=['--'+key.replace('_','-'),str(value)]
+    if args.runtime:train+=['--runtime']
+    if args.upstream_schedule:train+=['--upstream-schedule']
+    if args.deterministic:train+=['--deterministic']
+    if args.resume:
+        path=args.resume.resolve(strict=True)
+        cmd+=['-v',f'{path}:/weights/resume.pth:ro']
+        train+=['--resume','/weights/resume.pth']
     for path,target in [(args.checkpoint,'/weights/initial.pth'),(args.vocab,'/weights/vocab.npy')]:
         path=path.resolve(strict=True)
         cmd+=['-v',f'{path}:{target}:ro']
@@ -79,6 +99,10 @@ def main():
         mini=args.mini_prepared.resolve(strict=True)
         # Prepared camera symlinks may reference the original asset parent.
         cmd+=['-v',f'{mini}:/data/mini:ro','-v',f'{mini.parent}:{mini.parent}:ro']
+        camera=mini/'cameras'
+        if camera.is_symlink():
+            target=camera.resolve(strict=True)
+            cmd+=['-v',f'{target}:{target}:ro']
         train+=['--mini-prepared','/data/mini']
     else:
         data=args.data_root.resolve(strict=True)

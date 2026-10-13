@@ -1,5 +1,6 @@
 """Run an original AlgEngine configuration on Ascend, with optional mini data."""
 import argparse
+import hashlib
 import json
 import os
 import runpy
@@ -34,7 +35,23 @@ def main():
     parser.add_argument('--workers', type=int, help='Default 0 for bounded tests, upstream value for full runs')
     parser.add_argument('--lr', type=float, help='Override learning rate; bounded tests default to 5e-5')
     parser.add_argument('--seed', type=int, default=20261012)
+    parser.add_argument('--runtime', action='store_true', help='Native optimizer, resource observation and complete resume checkpoints')
+    parser.add_argument('--resume', type=Path, help='Complete runtime checkpoint, including optimizer and every rank RNG')
+    parser.add_argument('--epochs', type=int, help='Epoch schedule horizon; compatible with --runtime')
+    parser.add_argument('--stop-after', type=int, help='Stop at this global update while preserving --steps LR horizon')
+    parser.add_argument('--stop-after-epochs', type=int, help='Stop at an epoch boundary while preserving the epoch LR horizon')
+    parser.add_argument('--duration-seconds', type=float, help='Stop iter training after this measured duration')
+    parser.add_argument('--checkpoint-interval', type=int, default=100)
+    parser.add_argument('--check-interval', type=int, default=10)
+    parser.add_argument('--upstream-schedule', action='store_true', help='Keep original optimizer LR and warmup parameters')
+    parser.add_argument('--deterministic', action='store_true', help='Request deterministic PyTorch/CANN algorithms for numerical replay checks')
     args = parser.parse_args()
+    if args.resume or args.stop_after or args.duration_seconds or args.epochs or args.stop_after_epochs:
+        args.runtime = True
+    if args.steps and args.epochs:parser.error('Choose a step or epoch schedule')
+    if args.resume and (args.workers or 0)!=0:parser.error('Exact resume requires --workers 0')
+    if args.checkpoint_interval<1 or args.check_interval<1:parser.error('Intervals must be positive')
+    if args.runtime and args.workers is None:args.workers=0
     if not (args.mini_prepared or args.data_root):
         parser.error('Provide --mini-prepared or --data-root with raw/ and alg_engine/')
     if (args.batch_size is not None and args.batch_size < 1) or (args.steps is not None and args.steps < 1):
@@ -44,17 +61,21 @@ def main():
             raise FileNotFoundError(p)
     os.environ['WORLDENGINE_ROOT'] = str(ROOT)
     torch.npu.set_device(int(os.environ.get('LOCAL_RANK', '0')))
+    if args.deterministic:torch.use_deterministic_algorithms(True)
     sys.path[:0] = [str(ALG), str(ROOT)]
     cfg = Config.fromfile(str(ALG / 'configs' / PROFILES[args.profile]), import_custom_modules=False)
     cfg.dist_params.backend = 'hccl'
     cfg.load_from = str(args.checkpoint.resolve())
     cfg.resume_from = None
+    if args.resume:
+        if not args.resume.is_file():raise FileNotFoundError(args.resume)
+        cfg.resume_from=str(args.resume.resolve())
     cfg.model.planning_head.vocab_path = str(args.vocab.resolve())
     cfg.data.samples_per_gpu = args.batch_size if args.batch_size is not None else (1 if args.steps else cfg.data.samples_per_gpu)
     cfg.data.workers_per_gpu = args.workers if args.workers is not None else (0 if args.steps else cfg.data.workers_per_gpu)
     if args.lr is not None:
         cfg.optimizer.lr = args.lr
-    elif args.steps is not None:
+    elif args.steps is not None and not args.upstream_schedule:
         cfg.optimizer.lr = 5e-5
     cfg.optimizer.foreach = False
     cfg.pop('fp16', None)
@@ -63,18 +84,22 @@ def main():
     scope = 'official full train/val assets; epoch/accuracy acceptance required separately'
     if args.mini_prepared:
         mini = args.mini_prepared.resolve()
-        for name in ('worldengine_navtest_smoke.pkl', 'worldengine_navtest_smoke.yaml', 'worldengine_navtest_smoke_pdm.pkl', 'manifest.json'):
-            if not (mini/name).is_file():
-                raise FileNotFoundError(mini/name)
         manifest = json.loads((mini/'manifest.json').read_text())
-        if manifest.get('trajectory_labels_changed') or manifest.get('heldout_samples') != 0:
+        names=['worldengine_navtest_smoke.pkl','worldengine_navtest_smoke.yaml','worldengine_navtest_smoke_pdm.pkl']
+        if manifest.get('splits'):
+            names=[name for spec in manifest['splits'].values() for name in
+                   (spec['annotations'],spec['filter'],spec['pdm_prefix']+'.pkl')]
+        for name in names:
+            if not (mini/name).is_file():raise FileNotFoundError(mini/name)
+        if manifest.get('trajectory_labels_changed'):
             raise RuntimeError('Unexpected functional dataset manifest')
         scope = manifest['dataset_scope']
         for phase in ('train', 'val', 'test'):
             ds = cfg.data[phase]
-            ds.ann_file = str(mini/'worldengine_navtest_smoke.pkl')
-            ds.nav_filter_path = str(mini/'worldengine_navtest_smoke.yaml')
-            ds.test_pdm_path = str(mini/'worldengine_navtest_smoke_pdm')
+            spec=manifest.get('splits',{}).get('train' if phase=='train' else 'eval',{})
+            ds.ann_file = str(mini/spec.get('annotations','worldengine_navtest_smoke.pkl'))
+            ds.nav_filter_path = str(mini/spec.get('filter','worldengine_navtest_smoke.yaml'))
+            ds.test_pdm_path = str(mini/spec.get('pdm_prefix','worldengine_navtest_smoke_pdm'))
             ds.data_root = str(mini/'cameras')
             ds.pipeline[0].img_root = str(mini/'cameras')
         train = cfg.data.train
@@ -112,18 +137,54 @@ def main():
         cfg.pop('total_epochs', None)
         cfg.runner = dict(type='IterBasedRunner', max_iters=args.steps)
         cfg.checkpoint_config = dict(by_epoch=False, interval=args.steps, save_optimizer=True, max_keep_ckpts=1)
-        cfg.lr_config = dict(policy='CosineAnnealing', by_epoch=False, warmup='linear', warmup_iters=min(2,args.steps), warmup_ratio=1/3, min_lr_ratio=0.001)
+        if args.upstream_schedule:
+            cfg.lr_config.by_epoch=False
+        else:
+            cfg.lr_config = dict(policy='CosineAnnealing', by_epoch=False, warmup='linear', warmup_iters=min(2,args.steps), warmup_ratio=1/3, min_lr_ratio=0.001)
         cfg.log_config = dict(interval=1, hooks=[dict(type='TextLoggerHook', by_epoch=False)])
         cfg.optimizer_config = dict(type='AscendValidationHook', profile=args.profile, expected_steps=args.steps,
                                     expected_pg=args.profile=='hydramdp_rl', dataset_scope=scope, initialization_checkpoint=cfg.load_from,
                                     grad_clip=dict(max_norm=35,norm_type=2))
         cfg.custom_imports = dict(imports=['mmdet3d_plugin','ascend.validation_hook'], allow_failed_imports=False)
         cfg.evaluation.interval = 100000
+    if args.runtime:
+        if args.epochs:
+            cfg.total_epochs=args.epochs
+            cfg.runner=dict(type='EpochBasedRunner',max_epochs=args.epochs)
+        def digest(path):
+            h=hashlib.sha256()
+            with Path(path).open('rb') as stream:
+                for block in iter(lambda:stream.read(8*1024*1024),b''):h.update(block)
+            return h.hexdigest()
+        contract=dict(profile=args.profile,world_size=int(os.environ.get('WORLD_SIZE','1')),
+                      batch=cfg.data.samples_per_gpu,workers=cfg.data.workers_per_gpu,seed=args.seed,
+                      annotation=digest(cfg.data.train.ann_file),filter=digest(cfg.data.train.nav_filter_path),
+                      pdm=digest(cfg.data.train.test_pdm_path+'.pkl' if args.mini_prepared else cfg.data.train.train_pdm_path+'.pkl'),
+                      vocab=digest(args.vocab),optimizer=dict(cfg.optimizer),lr=dict(cfg.lr_config),runner=dict(cfg.runner))
+        fingerprint=hashlib.sha256()
+        for file in sorted(list(ALG.rglob('*.py'))+list((ROOT/'ascend').glob('*.py'))):
+            fingerprint.update(str(file.relative_to(ROOT)).encode())
+            fingerprint.update(file.read_bytes().replace(b'\r\n',b'\n'))
+        contract.update(source_sha256=fingerprint.hexdigest(),image_id=os.environ.get('WORLDENGINE_IMAGE_ID'),
+                        torch_version=str(torch.__version__),torch_npu_version=torch_npu.__version__,deterministic=args.deterministic,
+                        rare_filters=[digest(x) for x in cfg.data.train.get('finetune_yaml',[])])
+        cfg.runner.type='AscendIterRunner' if args.steps else 'AscendEpochRunner'
+        cfg.runner.resume_contract=contract
+        cfg.optimizer_config=dict(grad_clip=dict(max_norm=35,norm_type=2))
+        cfg.checkpoint_config=None
+        cfg.custom_imports=dict(imports=['mmdet3d_plugin','ascend.runtime'],allow_failed_imports=False)
+        cfg.custom_hooks=[dict(type='AscendRuntimeHook',priority='LOWEST',profile=args.profile,
+                              initialization_checkpoint=None if args.resume else cfg.load_from,
+                              checkpoint_interval=args.checkpoint_interval,stop_after=args.stop_after,
+                              stop_after_epochs=args.stop_after_epochs,duration_seconds=args.duration_seconds,
+                              check_interval=args.check_interval)]
+        cfg.log_config=dict(interval=10,hooks=[dict(type='TextLoggerHook',by_epoch=not bool(args.steps))])
     cfg.find_unused_parameters = True
     path = args.output/f'{args.profile}_rank{os.environ.get("LOCAL_RANK","0")}.py'
     cfg.dump(str(path))
     sys.argv = ['scripts/train.py', str(path), '--launcher', 'pytorch', '--work-dir', str(args.output), '--seed', str(args.seed)]
-    if args.steps is not None:
+    if args.deterministic:sys.argv.append('--deterministic')
+    if args.steps is not None or args.runtime:
         sys.argv.append('--no-validate')
     os.chdir(ALG)
     runpy.run_path(str(ALG/'scripts/train.py'), run_name='__main__')

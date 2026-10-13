@@ -19,5 +19,14 @@
     "mmdet3d": "1.0.0rc4",
     "numpy": "1.23.5"
   },
-  "acceptance": "Pinned image plus source-level NAVSIM dependency; reconstructed cold builds need their own image ID and revalidation."
+  "acceptance": "Pinned image plus source-level NAVSIM dependency; reconstructed cold builds need their own image ID and revalidation.",
+  "clean_image_20261013": {
+    "image": "local/worldengine:26.1.0-a3-clean-20261013",
+    "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+    "no_cache_build": true,
+    "base_config_id": "sha256:1a63c030ea4036467cfc486bef006acf6f1cfbb1cc3b0dc362d07f86b84349bd",
+    "archive_sha256": "5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac",
+    "same_host_archive_roundtrip": true,
+    "acceptance": "FP32 real subset, native epochs, official CPU scoring and complete state restoration; numerical replay limits are documented"
+  }
 }
