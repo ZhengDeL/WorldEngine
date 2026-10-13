@@ -15,7 +15,7 @@
 
 </div>
 
-**Ascend 910C / A3 AlgEngine migration:** see [ascend/README.md](ascend/README.md) for pinned runtime, tested paths, equipment sizing and reproducible commands.
+**Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [bounded measured results](ascend/evidence/full-algengine-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance.
 
 <div id="top" align="center">
 <p align="center">

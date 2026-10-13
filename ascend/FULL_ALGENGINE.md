@@ -1,5 +1,10 @@
 # Full AlgEngine migration candidate
 
+[中文操作文档](README_zh.md) provides deployment, data preparation, training,
+fine-tuning, inference, complete resume and acceptance commands for this same
+Python fingerprint and measured result set. See also the
+[bounded machine-readable evidence](evidence/full-algengine-20261013.json).
+
 This is a candidate for the complete **published AlgEngine scope**, based on
 upstream `3eded7e8ac64e5bed817860765089b5914ab698f`. SimEngine rendering and scene
 generation remain GPU tasks. No 5 TB download is required for the existing
@@ -194,6 +199,115 @@ python3 ascend/fetch_assets.py --group warmstarts --source modelscope \
 whole ModelScope dataset by default. For large cache files arranged by the user,
 keep their original names and verify the lock after transfer. Use explicit
 server output/cache paths for every download.
+
+When network access requires the provided server proxy, limit it to the download
+process; replace the example address with the agreed proxy:
+
+```bash
+PROXY_URL=http://proxy-host:1080
+http_proxy="$PROXY_URL" https_proxy="$PROXY_URL" \
+  python3 ascend/fetch_assets.py --group warmstarts --source hf-mirror \
+    --output /datasets/worldengine/weights
+```
+
+## Clean-image and real-mini reproduction commands
+
+The previously executed no-cache build, save/load and relocated-mini tests used
+the exact clean image described in [README.md](README.md#source-and-runtime).
+Its saved archive has 23,444,539,904 bytes and SHA256
+`5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac`.
+There is no public image-registry upload claim. On the Linux server:
+
+```bash
+IMAGE=local/worldengine:26.1.0-a3-clean-20261013
+IMAGE_ID=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f
+sha256sum worldengine_clean_20261013.tar
+docker load -i worldengine_clean_20261013.tar
+docker image inspect --format '{{.Id}}' "$IMAGE"
+
+# An online recipe rebuild is a new image that needs its own verification/lock.
+docker build --no-cache --platform linux/arm64 \
+  -f ascend/docker/Dockerfile -t local/worldengine:rebuild ascend/docker
+```
+
+The saved image preserves its exercised ID. Re-resolving package channels in a
+new recipe build is not a bit-identical image guarantee. Record the rebuilt
+image ID and versions, run the functional gates, then specify both `--image`
+and `--expected-image-id`; the original image's acceptance does not automatically
+apply to that new image or another host's driver installation.
+
+After extracting the delivered real-mini packet and arranging maps/weights:
+
+```bash
+MINI=/datasets/worldengine/mini_real_data
+WEIGHTS=/datasets/worldengine/weights
+VOCAB=/datasets/worldengine/test_8192_kmeans.npy
+MAPS=/datasets/worldengine/data/raw/nuplan/dataset/maps
+RUNS=/experiments/worldengine
+npu-smi info
+
+# Unfrozen backbone + tracking + mapping, original BEVFormer initialization.
+python3 ascend/run_container.py --devices 0 \
+  --config projects/AlgEngine/configs/worldengine/track_map_nuplan_r50_navtrain_50pct.py \
+  --mini-prepared "$MINI" --checkpoint "$WEIGHTS/bevformerv2-r50-t1-base_epoch_48.pth" \
+  --vocab "$VOCAB" --maps "$MAPS" --steps 3 --batch-size 1 --workers 0 \
+  --output "$RUNS/perception_short" --detach
+
+# Eight-rank perception: measured-duration stop with an unchanged 10000 horizon.
+python3 ascend/run_container.py --devices 0,2,4,6,8,10,12,14 \
+  --config projects/AlgEngine/configs/worldengine/track_map_nuplan_r50_navtrain_50pct.py \
+  --mini-prepared "$MINI" --checkpoint "$WEIGHTS/bevformerv2-r50-t1-base_epoch_48.pth" \
+  --vocab "$VOCAB" --maps "$MAPS" --steps 10000 --upstream-schedule \
+  --duration-seconds 3600 --batch-size 1 --workers 0 --memory 128g --cpus 64 \
+  --checkpoint-interval 100 --check-interval 20 --output "$RUNS/perception_hour" --detach
+
+# Genuine DiffusionDrive generation, not vocabulary selection.
+python3 ascend/run_container.py --devices 0,2,4,6,8,10,12,14 \
+  --config projects/AlgEngine/configs/diffusiondrive/e2e_diffusiondrive_100pct.py \
+  --mini-prepared "$MINI" \
+  --checkpoint "$WEIGHTS/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth" --vocab "$VOCAB" \
+  --steps 3 --batch-size 1 --workers 0 --inference-after \
+  --memory 128g --cpus 64 --output "$RUNS/dd_short" --detach
+```
+
+Run these sequentially after the previous job has released the selected chips.
+Each output must be a new directory. The 128g limit is the observed mini
+configuration, not a full NAVTRAIN memory allowance. The iter-based pressure
+horizon is distinct from the original epoch schedule. Reward/LoRA, Hydra PG and
+controlled numerical-resume examples are in [README.md](README.md#run-save-and-resume).
+
+For native two-rank perception mini epochs, use the same perception config and
+initializer with `--devices 0,2 --epochs 2 --stop-after-epochs 1 --validate`,
+B1/workers0, maps and a new output. After `epoch_1.pth` and exit 0, remove the
+stop argument, retain the two-epoch horizon and all other settings, and add
+`--resume <partial-output>/epoch_1.pth` in another new output. Exact restoration
+supports conditional Adam counts; it does not assert strict numerical replay
+of every subsequent perception step.
+
+For independent perception inference select `--task inference`, the dumped
+`track_map_nuplan_r50_navtrain_50pct_rank0.py` from the training output, its
+complete checkpoint, the unchanged mini and maps. For independent planning
+scoring, pass the generated `predictions.pkl` to the CPU-only official scorer
+command in [README.md](README.md#run-the-official-cpu-scorer-in-the-tested-image).
+The small-data scoring container limit there does not size full-data scoring.
+
+Completion requires the specific container's exit code and OOM status, actual
+updates, raw loss/gradient checks and complete evaluation coverage. Read
+`launch.json`, `runtime_rank*.json/jsonl`, `validation/epoch_*/evaluation.json`,
+official score files and `inference_validation.json`. For example:
+
+```bash
+docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State.OOMKilled}}' \
+  worldengine-npu-perception_hour
+cat "$RUNS/perception_hour/exit_code"
+tail -n 50 "$RUNS/perception_hour/console.log"
+npu-smi info
+```
+
+Keep the delivered source tar's original config bytes for existing checkpoints.
+A Git checkout with changed config line endings can have the same normalized
+Python fingerprint but still fail the raw `original_config` resume contract.
+Use a fresh run for changed data/source rather than bypassing that guard.
 
 ## Input gate and training
 

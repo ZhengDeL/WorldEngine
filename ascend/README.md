@@ -1,5 +1,9 @@
 # AlgEngine on Ascend 910C / A3
 
+[中文部署、训练、续训与验收操作文档](README_zh.md) ·
+[English full-module guide](FULL_ALGENGINE.md) ·
+[Bounded measured results](evidence/full-algengine-20261013.json)
+
 This branch implements and exercises AlgEngine training, VADv2 reward/LoRA fine-tuning, HydraMDP policy-gradient fine-tuning, planning inference and complete checkpoint continuation. SimEngine remains the GPU subsystem and is outside this acceptance.
 
 The expanded candidate accepts all 44 published AlgEngine configurations through
