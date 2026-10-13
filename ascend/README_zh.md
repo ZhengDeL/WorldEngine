@@ -361,8 +361,8 @@ npu-smi info
 
 这次适配提供统一的原配置入口、HCCL 多卡、完整状态恢复、原始评价与独立官方 CPU 打分，可以在没有 GPU 对照机时先确认 NPU 功能与官方指标。真实小数据路线避免等待 5 TB 完整下载；保存镜像、数据和源码哈希后能区分版本漂移与算子/数据错误。CPU 打分与 NPU 训练分开执行，保留上游评分语义。
 
-代价是旧 OpenMMLab/CUDA 依赖要固定到已验证的 NPU 软件栈；unfrozen backbone 的 fused MaxPool 无 backward，需要 PyTorch NPU 路径；map decoder 独立 MMCV MSDA 需要官方 DrivingSDK NPU forward/backward 桥接、连续 Tensor 与 int32 元数据。容器输出必须可写用于 CANN 编译/cache，源代码只读不能直接存这些文件。CPU 大 PKL、地图和 I/O 仍需单独容量设计。
+代价是旧 OpenMMLab/CUDA 依赖要固定到已验证的 NPU 软件栈；unfrozen backbone 的 fused MaxPool 无 backward，需要 PyTorch NPU 路径。当前 FP32 MSDA 使用原生 NPU grid_sample 前后向、query 分块及后向重算，完整模型仍有矩阵求逆的 CPU fallback。新实现的带监测一小时吞吐为 0.35381 锚点曝光/秒，性能优化与完整数据容量仍需实测。容器输出必须可写用于 CANN 编译/cache，源代码只读不能直接存这些文件。CPU 大 PKL、地图和 I/O 仍需单独容量设计。
 
-**严格精度门禁仍有失败：**200×200/300-query MSDA 的位置梯度对 CPU32，在 atol=1e-3/rtol=1e-4 下有 35/19200 个元素不通过，最大差 0.0309448，relative L2 2.73677e-6；forward、value 和 weight 梯度通过，较小 shape 三组梯度均通过。CPU64 诊断显示 CPU32 本身也有坐标算术误差，但不将原 CPU32 门禁改写为通过，也不等于已经证明 GPU/业务质量相同。NPU MSDA 后向 atomic accumulation 的重复性限制、历史 base/Hydra 严格续训失败继续保留。没有放宽阈值或用一项 LoRA 通过覆盖这些失败。
+**当前严格 MSDA 门禁已通过：**`858f9d…` FP32 路径在原 CPU32 参考、原容差下通过正常、特殊布局及完整 Q40000 几何的前向与三梯度检查，原 seed29 超差元素已由 35/19200 变为 0。两组单 rank VADv2/Hydra 受控严格续训也已通过。历史 `96a7bef…` fused 路径曾有 35/19200 元素失败、最大差 0.0309448、relative L2 2.73677e-6，原 atomic accumulation 观察和历史多卡续训失败保留为旧源码证据，不再列作当前位置梯度缺项。八 rank 全状态恢复已通过，目标多卡严格数值重放仍需独立验证。详细条件见 [MSDA 修复实测](MSDA_zh.md)。
 
-完整 NAVTRAIN 收敛、完整独立 NAVTEST common/rare 质量、真正合成 8 配置、严格大 shape 梯度、所有配置严格数值重放、完整数据 CPU RAM/性能、目标时长稳定性、GPU 模型对照、AMP/BF16、16 芯片/多机和厂商正式训练支持，均尚未验收。当前发布物是**可复现的迁移候选、操作方法和有边界的实测证据**。
+完整 NAVTRAIN 收敛、完整独立 NAVTEST common/rare 质量、真正合成 8 配置、目标多卡/长训练严格数值重放、完整数据 CPU RAM/I/O/工期、目标 batch/workers 的性能和持续稳定性仍需验收。GPU 模型对照和具体机型的厂商正式训练支持需要外部条件；AMP/BF16、二阶梯度、16 芯片/多机是扩展能力，不能列为已测 FP32 单机路径的运行失败。当前发布物包含可执行的迁移代码、操作方法和有边界的实测证据，完整数据正式验收尚未完成。

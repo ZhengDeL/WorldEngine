@@ -17,8 +17,9 @@ configurations. See [the full-module guide](FULL_ALGENGINE.md) for the additiona
 data requirements, actual tested revisions and pending acceptance. Whole
 NAVTRAIN convergence and the eight genuine synthetic/SimScale configurations
 are **not accepted**. The expanded source and each exercised revision are
-distinguished in the evidence. See the full-module guide for current regression
-results and remaining numerical, data and convergence boundaries.
+distinguished in the evidence. See [the current MSDA supplement](MSDA.md) for
+current regression and numerical results. The full-module guide preserves
+historical measurements and provides full-data operation/acceptance templates.
 
 Upstream: `3eded7e8ac64e5bed817860765089b5914ab698f`. The required official NAVSIM **v1.1** submodule is pinned to `3e8291bfa89ff247231e0227778840cd0a036896`.
 

@@ -15,7 +15,7 @@
 
 </div>
 
-**Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [bounded measured results](ascend/evidence/full-algengine-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance.
+**Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [current bounded measured results](ascend/evidence/msda-precision-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance. [Earlier fused-path results](ascend/evidence/full-algengine-20261013.json) retain their historical source fingerprint.
 
 **FP32 MSDA repair:** [English](ascend/MSDA.md), [中文](ascend/MSDA_zh.md), and [versioned strict-gradient/model results](ascend/evidence/msda-precision-20261013.json). Earlier fused-path performance remains historical evidence for its original fingerprint.
 

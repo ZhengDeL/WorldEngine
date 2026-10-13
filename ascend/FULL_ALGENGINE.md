@@ -91,7 +91,8 @@ PyTorch's NPU-dispatched implementation. On three representative shapes its
 forward exactly matched both CPU and the fused forward; the largest observed
 gradient difference against CPU was `9.5367431640625e-7`.
 
-The map decoder uses MMCV's independent MSDA autograd function. Its CUDA-style
+The historical `96a7bef...` map decoder bridge used MMCV's independent MSDA
+autograd function. Its CUDA-style
 extension path caused `MultiScaleDeformableAttentionGrad_fp32` Vector Core
 exceptions. The candidate connects this NPU path to the official DrivingSDK
 forward/backward API and preserves `int32` spatial shapes/start indices.
@@ -103,6 +104,9 @@ gradient entries failed atol=1e-3 / rtol=1e-4 (maximum 0.0309448, relative L2
 in the CPU32 baseline (119 failed entries versus 92 for NPU under that gate).
 This does not turn the original strict CPU32 gate into a pass; no threshold was
 relaxed and no GPU/model quality equivalence is inferred.
+The current `858f9d...` FP32 native NPU implementation passes this unchanged
+CPU32 gate and the expanded complete-gradient matrix. See [the current MSDA
+results](MSDA.md); the failures above remain historical evidence.
 The standard CPU/CUDA branch is retained. These process-scoped fixes do not
 modify installed packages or the saved image.
 
@@ -366,8 +370,11 @@ For interrupted native epochs keep the original configuration, horizon, data,
 batch, world size, workers, seed, source and image unchanged. Add
 `--stop-after-epochs 2` to an eight-epoch run; resume its complete `epoch_2.pth`
 with `--resume` in a new output directory and the same horizon. Check the explicit
-saved-state restoration result and subsequent metrics. Strict numerical replay
-still has the documented MSDA atomic-accumulation limitations.
+saved-state restoration result and subsequent metrics. On the current FP32
+source, the single-rank VADv2/Hydra controlled numerical comparisons passed;
+eight-rank complete-state restoration/continuation passed, while strict
+multi-rank numerical replay remains unverified. The earlier fused SDK atomic
+accumulation observation is historical, not a new-source failure verdict.
 
 ## Genuine synthetic and SimScale inputs
 
@@ -396,10 +403,13 @@ prerequisites, not observed NPU operator failures.
 
 ## Remaining acceptance
 
-The strict large-shape location-gradient gate, full NAVTRAIN deserialization/RAM,
-representative complete-data training,
-all genuine synthetic consumers, original-horizon convergence, final official
-NAVTEST common/rare quality, sustained target-config training, mixed precision,
-cross-server execution, independent GPU/NPU model comparison and formal vendor
-training support remain separately recorded. The published base scores are
-reference values for the exact benchmark; they are not measured NPU results.
+The current FP32 strict large-shape MSDA gate is passed. Remaining complete-module
+acceptance includes full NAVTRAIN deserialization/RAM, representative complete-data
+training, all eight genuine synthetic consumers, original-horizon convergence,
+full NAVTEST common/rare quality, target-batch/worker performance and sustained
+training, and strict multi-rank numerical replay. GPU comparison and formal
+vendor training support require separate external evidence. Mixed precision,
+second-order gradients, 16-chip and cross-server execution are additional scope,
+not prerequisites for the demonstrated FP32 one-host path. Published benchmark
+base scores are reference values, not measured NPU results. Current bounded
+measurements are in [MSDA.md](MSDA.md) and its versioned results.
