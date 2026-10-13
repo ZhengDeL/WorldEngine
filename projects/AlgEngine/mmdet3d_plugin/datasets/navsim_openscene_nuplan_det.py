@@ -27,6 +27,13 @@ logger = get_logger(__name__)
 class NavSimOpenSceneE2EDet(NavSimOpenSceneE2E):
     r"""OpenScene detection Dataset"""
 
+    # The NuPlan evaluator uses the standard nuScenes error names. This class
+    # inherits the planning dataset rather than MMDet3D's NuScenesDataset.
+    ErrNameMapping = {
+        'trans_err': 'mATE', 'scale_err': 'mASE', 'orient_err': 'mAOE',
+        'vel_err': 'mAVE', 'attr_err': 'mAAE',
+    }
+
     def __init__(
         self, 
         *args,
@@ -578,13 +585,17 @@ class NavSimOpenSceneE2EDet(NavSimOpenSceneE2E):
                 crossing_union += results[i]["ret_iou"]["crossing_union"]
                 contour_intersection += results[i]["ret_iou"]["contour_intersection"]
                 contour_union += results[i]["ret_iou"]["contour_union"]
+            def map_iou(intersection, union):
+                # Empty GT and prediction coverage has no defined IoU. Keep
+                # this explicit; never turn an absent class into a zero score.
+                return float(intersection / union) if union > 0 else float('nan')
             results_dict.update(
                 {
-                    "drivable_iou": float(drivable_intersection / drivable_union),
-                    "lanes_iou": float(lanes_intersection / lanes_union),
-                    "divider_iou": float(divider_intersection / divider_union),
-                    "crossing_iou": float(crossing_intersection / crossing_union),
-                    "contour_iou": float(contour_intersection / contour_union),
+                    "drivable_iou": map_iou(drivable_intersection, drivable_union),
+                    "lanes_iou": map_iou(lanes_intersection, lanes_union),
+                    "divider_iou": map_iou(divider_intersection, divider_union),
+                    "crossing_iou": map_iou(crossing_intersection, crossing_union),
+                    "contour_iou": map_iou(contour_intersection, contour_union),
                 }
             )
 

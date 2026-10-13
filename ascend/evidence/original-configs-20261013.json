@@ -1,0 +1,1619 @@
+{
+  "result": "pass_44_original_configs_resolved",
+  "configs": [
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive.py",
+      "config_sha256": "5908f19daced8db6407997d71f2971d16349cf0edd90800b4b6b96373d2d97f6",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_100pct.py",
+      "config_sha256": "1cf83ae9ececd00fa9bdbc89b44781fab82583b70a462067ea85a8e870797045",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_13pct.py",
+      "config_sha256": "c4ff8eb3a61f81f571fc213fed45c093c42fffc35542d2efb6c77ed2bc3e30f7",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_13pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_25pct.py",
+      "config_sha256": "3d4473a76e765685db0ad2866efc99d6093aa6cd9652d26e4ea79ac3a7a536e5",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_25pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_50pct.py",
+      "config_sha256": "15dbb388f047773bbe1e52c0672d1236025285652bb21499a6a025f8f7573280",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_60pct.py",
+      "config_sha256": "ccd479bf64a1fe44e4977e2eebe46f441480891adc149e7ab2e72996fb92e89d",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_60pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_70pct.py",
+      "config_sha256": "96d3ea81926c4a2f2378cb4cb4f9b83f943c96f47c23f4c3f5d8903315410211",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_70pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_80pct.py",
+      "config_sha256": "89fa10c7ed74214c0a5e09320b7db3d3e35f0cfce3a5d8e2cd5dad75e1266b6c",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_80pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/diffusiondrive/e2e_diffusiondrive_90pct.py",
+      "config_sha256": "59d2afde8f7b753b492b9392cabb8e6a27f097d441c097c1e375698e5d32f5b1",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain_90pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_100pct.py",
+      "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_13pct.py",
+      "config_sha256": "ab7292f3cbaea29cd7ec09350b25dac514cb540308961aec4306f13fd14544d5",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_13pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_25pct.py",
+      "config_sha256": "6bc803bce388368bbe531e5b59f82035b373cde3eec96a51765c3cd5766c8458",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_25pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct.py",
+      "config_sha256": "bec50154dfbcff9393f11359c76c9057fc1adf083ead4e5af5b8804618501d79",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_ilft_rare_log.py",
+      "config_sha256": "972a50292e271232700c361b5aa8705039b6806e7b27a51024496169b7cf82eb",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_common_log.py",
+      "config_sha256": "d9719d8c5f15d4b5530bf102be142efd94eab2dfcf227eadfa94b459ef7b23bc",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py",
+      "config_sha256": "66ce2bdc082529022e67468f0ff1c930751a76aa6492ab950247911f289aeaea",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_rollout.py",
+      "config_sha256": "54620a0a559dbf4ac807dabc17c31dd41930678795d49de37022c9a85b5bae87",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "e2e_hydramdp_50pct_collision_navtrain_hydramdp_50pct_collision_NR_260723"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_rollout_bwm.py",
+      "config_sha256": "05089f9c7ff3e3a82db41ed4c37dcf2d5efa46ecd802088f57c3e6dfbc9b6208",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "/path/to/synthetic/rollouts/collision",
+        "/path/to/synthetic/rollouts/ep_1pct",
+        "/path/to/synthetic/rollouts/off_road",
+        "/path/to/synthetic/rollouts/collision_augmented"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_syn_replay.py",
+      "config_sha256": "e83555d2cab596c03c4d2b406c6eface2367f8d2a4b3c243c424f0eeb2f59873",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_hydramdp_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "e2e_hydramdp_50pct_collision_navtrain_hydramdp_50pct_collision_NR_260723"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_hydramdp_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_60pct.py",
+      "config_sha256": "8f1a7e7e7779b1a7c40d92c93207cdcfc1909f6537372e05363bd576bb6bf3f7",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_60pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_70pct.py",
+      "config_sha256": "7035c717c4378d1c2b87e0557c35e2df363da87654d188919c1a4034c3c64bb0",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_70pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_80pct.py",
+      "config_sha256": "e1ac14d1bfa6b50954064d5980f32e6c298daf75c549955a2c33dffb1c38fe37",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_80pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/hydramdp/e2e_hydramdp_90pct.py",
+      "config_sha256": "6515923b7dd7f4c5f5a387a9a1117ca7158ccf6edc5aa20770966f6b4798fcaa",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_90pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/navformer/e2e_diffusiondrive.py",
+      "config_sha256": "f594b186cf4bc614d05db3e492fb165c0ca740ed63304266fccb08f2e4af8eec",
+      "model_type": "NAVFormer",
+      "head_type": "DiffusionPlanningHead",
+      "original_epochs": 100,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "/workspace/WorldEngine/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0006,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.0001
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/navformer/e2e_hydramdp.py",
+      "config_sha256": "a9555793a3df5efa66b7764bf3a362cba69f27b956e6f10492c5e95bedc25d60",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/navformer/e2e_vadv2.py",
+      "config_sha256": "b1ed3b5d0ae465506442f74100803d111c793f31112705d74db68c46c5c30480",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/navformer/track_map_nuplan_r50_navtrain.py",
+      "config_sha256": "89579daf107f3a94de610842ed7cfa109199cd581c2b1c4998b9cf790a970c52",
+      "model_type": "UniAD",
+      "head_type": null,
+      "original_epochs": 20,
+      "original_batch_per_rank": 1,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "bevformerv2-r50-t1-base_epoch_48.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EDet",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 3,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/simscale/e2e_vadv2_simscale_co_train_pdm_1round_8epoch.py",
+      "config_sha256": "c14cef60ef4ea4b65a431a30e0fb243598fe329f766d118fe676f682905100b3",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSimScale",
+      "folder_names": [
+        "synthetic_reaction_pdm_v1.0-0"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/simscale/e2e_vadv2_simscale_finetune_pdm_1round_8epoch.py",
+      "config_sha256": "56825d52fe39d151ea0ef30c0a55a12bc723a2dd816e58133d3b5430524bfe1b",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSimScale",
+      "folder_names": [
+        "synthetic_reaction_pdm_v1.0-0"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_100pct.py",
+      "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_13pct.py",
+      "config_sha256": "5c1bfb192baf6f4dd908f0b371e403c1986a401865fa5aaca6a0a81a8c101862",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_13pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_25pct.py",
+      "config_sha256": "5329f5d06e928e38d696670ba3474b8e1777db1e1e94dd23e3ba56f4f8a82d34",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_25pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct.py",
+      "config_sha256": "35eb27bc6526ef0cee2b3ec8bd02154f8533d7a52117f0fa864889d4432f4f9a",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_ilft_rare_log.py",
+      "config_sha256": "a9959b43ce4e20570004636392371074a8d4bbfaddd17ca50e59784dcf83238b",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_rlft_common_log.py",
+      "config_sha256": "28ecefbb99c4db8d29a830961525ef584ec6ddf3985afac08ef01d9b3ba4aa34",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_rlft_rare_log.py",
+      "config_sha256": "824cc282e06ebd2ec3d54e96286aa3f00a146d6abb4bd128bec2cb8ab6e83f03",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTune",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_rlft_rare_rollout.py",
+      "config_sha256": "7f1241b21f11347c6afe36aed1a4e1d648bfbb1141ac71578351935690ec14bd",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "/path/to/synthetic/rollouts/collision",
+        "/path/to/synthetic/rollouts/ep_1pct",
+        "/path/to/synthetic/rollouts/off_road"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_rlft_rare_rollout_bwm.py",
+      "config_sha256": "961f6f60522f5e593f5c5f6151d2a38c850f11f3775425c11a851c00956245ae",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "/path/to/synthetic/rollouts/collision",
+        "/path/to/synthetic/rollouts/ep_1pct",
+        "/path/to/synthetic/rollouts/off_road",
+        "/path/to/synthetic/rollouts/collision_augmented"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_50pct_rlft_rare_syn_replay.py",
+      "config_sha256": "e562be734992df1a0a9b9c299ab59b37031de064d9681e5b125c26f6d254b217",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHeadRL",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "e2e_vadv2_50pct_ep8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EFineTuneSynthetic",
+      "folder_names": [
+        "/path/to/synthetic/rollouts/collision",
+        "/path/to/synthetic/rollouts/ep_1pct",
+        "/path/to/synthetic/rollouts/off_road"
+      ],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_collision.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_ep_1pct.yaml",
+        "configs/navsim_splits/navtrain_split/e2e_vadv2_50pct_rare/navtrain_50pct_off_road.yaml"
+      ],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_60pct.py",
+      "config_sha256": "e16e8206bffea2a30ed3ab51c933ce10bdf8306111bd98d057477fc98535a579",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_60pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_70pct.py",
+      "config_sha256": "7a4c4a816d0b4efa0ff71c6f5d6d0d50d2e7e81c82130e565585b9cfd24adb3d",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_70pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_80pct.py",
+      "config_sha256": "2f86d07602607ec69927cc89ceeb8ffb2fea3ec2639d8d9e53c585ae3a4658f7",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_80pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/e2e_vadv2_90pct.py",
+      "config_sha256": "849ba0078093930eb75d90c2927feb23a39be135acf14435fb01ed2b7b255f12",
+      "model_type": "NAVFormer",
+      "head_type": "TrajScoringHead",
+      "original_epochs": 8,
+      "original_batch_per_rank": 2,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
+      "train_dataset_type": "NavSimOpenSceneE2E",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_90pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 4,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    },
+    {
+      "config": "configs/worldengine/track_map_nuplan_r50_navtrain_50pct.py",
+      "config_sha256": "3cfb3cde26a160672e80515632d67517701af0d7b515b255e685582544dad034",
+      "model_type": "UniAD",
+      "head_type": null,
+      "original_epochs": 40,
+      "original_batch_per_rank": 1,
+      "original_workers_per_rank": 4,
+      "initial_checkpoint": "bevformerv2-r50-t1-base_epoch_48.pth",
+      "train_dataset_type": "NavSimOpenSceneE2EDet",
+      "folder_names": [],
+      "train_filter": "configs/navsim_splits/navtrain_split/navtrain_50pct.yaml",
+      "fine_tune_filters": [],
+      "queue_length": 3,
+      "history_frame_num": 3,
+      "optimizer": {
+        "type": "AdamW",
+        "lr": 0.0002,
+        "paramwise_cfg": {
+          "custom_keys": {
+            "img_backbone": {
+              "lr_mult": 0.1
+            }
+          }
+        },
+        "weight_decay": 0.01
+      },
+      "learning_rate": {
+        "policy": "CosineAnnealing",
+        "warmup": "linear",
+        "warmup_iters": 500,
+        "warmup_ratio": 0.3333333333333333,
+        "min_lr_ratio": 0.001
+      }
+    }
+  ]
+}

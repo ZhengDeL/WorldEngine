@@ -29,12 +29,14 @@ class NavSimOpenSceneE2EFineTuneSynthetic(NavSimOpenSceneE2EFineTune):
         use_lane_keeping = False,
         customized_filter = None,
         include_real_failures = True,
+        synthetic_root = None,
         **kwargs):
 
         # Synthetic:
-        self.synthetic_path = os.path.join(WORLDENGINE_ROOT, 'data/alg_engine/openscene-synthetic/meta_datas')
-        self.synthetic_img_root = os.path.join(WORLDENGINE_ROOT, 'data/alg_engine/openscene-synthetic/sensor_blobs')
-        self.syn_pdm_path = os.path.join(WORLDENGINE_ROOT, 'data/alg_engine/openscene-synthetic/pdms_pkl')
+        root = synthetic_root or os.path.join(WORLDENGINE_ROOT, 'data/alg_engine/openscene-synthetic')
+        self.synthetic_path = os.path.join(root, 'meta_datas')
+        self.synthetic_img_root = os.path.join(root, 'sensor_blobs')
+        self.syn_pdm_path = os.path.join(root, 'pdms_pkl')
         self.folder_names = folder_name
         if isinstance(self.folder_names, str):
             self.folder_names = [self.folder_names]

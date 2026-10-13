@@ -202,6 +202,10 @@ def custom_train_detector(
             cfg.work_dir, "val", time.ctime().replace(" ", "_").replace(":", "_")
         )        
         eval_hook = DistEvalHook if distributed else EvalHook
+        if cfg.get('ascend_epoch_evaluation',False):
+            if not distributed:raise RuntimeError('Ascend epoch evaluation requires distributed launcher')
+            from ascend.evaluation import AscendDistEvalHook
+            eval_hook=AscendDistEvalHook
         runner.register_hook(eval_hook(val_dataloader, **eval_cfg))
 
     # user-defined hooks

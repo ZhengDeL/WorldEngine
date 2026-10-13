@@ -43,6 +43,21 @@
       "path": "data/alg_engine/test_8192_kmeans.npy",
       "bytes": 3932288,
       "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+    },
+    {
+      "path": "data/alg_engine/ckpts/bevformerv2-r50-t1-base_epoch_48.pth",
+      "bytes": 244021691,
+      "sha256": "2a00b5656aa14c578896ac9a6ccac84c80587b17b3a7250c7e7f5a55869eb1a8"
+    },
+    {
+      "path": "data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "bytes": 319958048,
+      "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a"
     }
+  ],
+  "server_only_downloads": true,
+  "domestic_sources": [
+    "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine",
+    "https://www.modelscope.cn/datasets/OpenDriveLab/WorldEngine"
   ]
 }

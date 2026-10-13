@@ -2,9 +2,22 @@
 
 This branch implements and exercises AlgEngine training, VADv2 reward/LoRA fine-tuning, HydraMDP policy-gradient fine-tuning, planning inference and complete checkpoint continuation. SimEngine remains the GPU subsystem and is outside this acceptance.
 
+The expanded candidate accepts all 44 published AlgEngine configurations through
+`--config`, including DiffusionDrive and the two UniAD perception pretraining
+configurations. See [the full-module guide](FULL_ALGENGINE.md) for the additional
+data requirements, actual tested revisions and pending acceptance. Whole
+NAVTRAIN convergence and the eight genuine synthetic/SimScale configurations
+are **not accepted**. The expanded source and each exercised revision are
+distinguished in the evidence. See the full-module guide for current regression
+results and remaining numerical, data and convergence boundaries.
+
 Upstream: `3eded7e8ac64e5bed817860765089b5914ab698f`. The required official NAVSIM **v1.1** submodule is pinned to `3e8291bfa89ff247231e0227778840cd0a036896`.
 
-## Acceptance on 2026-10-13
+## Earlier three-profile acceptance: 4fbd616 (2026-10-13)
+
+This section records the earlier published revision. Current full-module results
+are in [FULL_ALGENGINE.md](FULL_ALGENGINE.md) and the
+[bounded evidence](evidence/full-algengine-20261013.json).
 
 The full model geometry is retained: FP32 tensors, 200x200 BEV, 900 queries, four temporal frames, eight cameras and the 8192x40x3 trajectory vocabulary. The real subset is split by entire logs: **42 training anchors in two logs, 22 independent evaluation anchors in a third log**. Fine-tuning selects one genuine official failure anchor and one normal anchor. This is useful for functional acceptance, not a representative rare-case training benchmark.
 
@@ -52,7 +65,7 @@ IMAGE_ID=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f
 docker image inspect --format '{{.Id}}' "$IMAGE"
 ```
 
-Image archive: **23.444539904 GB**, SHA256 `5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac`. Import with `docker load -i worldengine_clean_20261013.tar` and verify the image ID. No public registry upload is implied. The launcher preserves its previous locked image default for old runs; select the clean image explicitly using both flags below.
+Image archive: **23.444539904 GB**, SHA256 `5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac`. Import with `docker load -i worldengine_clean_20261013.tar` and verify the image ID. No public registry upload is implied. The launcher now defaults to the clean image and its exact image ID; prior image information remains in the lock for historical runs.
 
 The executed recipe is `ascend/docker/Dockerfile`, with `--no-cache` and an imported official base whose config ID is `sha256:1a63c030ea4036467cfc486bef006acf6f1cfbb1cc3b0dc362d07f86b84349bd`, equivalent to the pinned official ARM64 manifest in `runtime.lock.json`. A registry-connected host can build from the Dockerfile's pinned official manifest. Rebuilt image IDs are locked separately; channel resolution is not a bit-identical image claim.
 

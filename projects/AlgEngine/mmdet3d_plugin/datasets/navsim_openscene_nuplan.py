@@ -70,6 +70,7 @@ class NavSimOpenSceneE2E(Custom3DDataset):
         future_frame_num=8,
         fix_can_bus_rotation=False,
         diffusiondrive_data_mode=False,
+        strict_pdm=False,
         map_root=None,
         with_velocity=True,
         use_valid_flag=False,
@@ -86,6 +87,7 @@ class NavSimOpenSceneE2E(Custom3DDataset):
             self.map_root = map_root
         self.fix_can_bus_rotation = fix_can_bus_rotation
         self.diffusiondrive_data_mode = diffusiondrive_data_mode
+        self.strict_pdm = strict_pdm
         self.nav_filter_path = nav_filter_path
 
         if "navtrain" in os.path.basename(self.nav_filter_path):
@@ -202,6 +204,10 @@ class NavSimOpenSceneE2E(Custom3DDataset):
         if cache_file and os.path.isfile(cache_file):
             with open(cache_file, 'rb') as f:
                 self.pdm_dict = pickle.load(f)
+            if self.strict_pdm:
+                missing=[self.data_infos[i]['token'] for i in self.index_map
+                         if self.data_infos[i].get('token') not in self.pdm_dict and 'syn_name' not in self.data_infos[i]]
+                if missing:raise ValueError(f'PDM cache misses {len(missing)} selected anchors: {missing[:10]}')
             logger.info(f'loaded PDM score cache of {len(self.pdm_dict)} tokens.')
             return
         raise FileNotFoundError(

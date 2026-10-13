@@ -5,8 +5,8 @@
     "branch": "v1.1",
     "commit": "3e8291bfa89ff247231e0227778840cd0a036896"
   },
-  "image": "local/migration-worldengine:26.1.0-a3-20261011",
-  "image_id": "sha256:ff85edc4a3e51385d814d9b3bfa442efdf040fc6c78e74e667ba9850f7b1b4a3",
+  "image": "local/worldengine:26.1.0-a3-clean-20261013",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
   "source_image": "swr.cn-south-1.myhuaweicloud.com/ascendhub/drivingsdk@sha256:52326fada68feb9d26e8c170bb7fdeea0e81aeba24fa1a84a316a19feba3c801",
   "tested_versions": {
     "python": "3.10.21",
@@ -28,5 +28,9 @@
     "archive_sha256": "5c730fd509d9dea6ac1599094c7e1e60ab0fad78996031fcb46e7571988c5cac",
     "same_host_archive_roundtrip": true,
     "acceptance": "FP32 real subset, native epochs, official CPU scoring and complete state restoration; numerical replay limits are documented"
+  },
+  "legacy_image": {
+    "image": "local/migration-worldengine:26.1.0-a3-20261011",
+    "image_id": "sha256:ff85edc4a3e51385d814d9b3bfa442efdf040fc6c78e74e667ba9850f7b1b4a3"
   }
 }

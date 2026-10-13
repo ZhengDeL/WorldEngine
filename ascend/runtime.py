@@ -44,6 +44,16 @@ def finite(value):
     return True
 
 
+def optimizer_counters(optimizer,completed_updates=None):
+    steps=sorted({float(v['step']) for v in optimizer.state.values() if 'step' in v})
+    if completed_updates is not None:
+        # Conditional/unused parameters legitimately have fewer Adam updates
+        # than the runner. Exact state restoration is checked independently.
+        if any(not np.isfinite(step) or step<0 or step>completed_updates or step!=int(step) for step in steps):
+            raise RuntimeError('Invalid saved optimizer counter outside completed runner updates')
+    return steps
+
+
 class ResumeMixin:
     def resume(self, checkpoint, resume_optimizer=True, map_location='cpu'):
         saved=torch.load(checkpoint,map_location='cpu',weights_only=False)
@@ -157,23 +167,53 @@ class AscendRuntimeHook(Hook):
                     self.initialization_matches.append(name)
             if len(self.initialization_matches)<100:raise RuntimeError('Insufficient official checkpoint matches')
             del saved,initial,state
-        self.optimizer_initial_steps=sorted({float(v['step']) for v in runner.optimizer.state.values() if 'step' in v})
-        if runner.iter and self.optimizer_initial_steps != [float(runner.iter)]:
-            raise RuntimeError('Resumed optimizer steps differ from completed runner updates')
-        self.watch=next((p for n,p in self.model.named_parameters()
-                         if p.requires_grad and 'planning_head' in n and n.endswith('weight')))
+        self.optimizer_initial_steps=optimizer_counters(runner.optimizer,runner.iter if runner.iter else None)
+        candidates=[(n,p) for n,p in self.model.named_parameters() if p.requires_grad and n.endswith('weight')]
+        if not candidates:raise RuntimeError('No trainable weight to validate')
+        name,self.watch=next(((n,p) for n,p in candidates if 'planning_head' in n),candidates[0])
+        self.watched_parameter_name=name
         self.before=self.watch.detach().clone()
-        head=self.model.planning_head
-        original=head.loss
+        head=getattr(self.model,'planning_head',None)
+        self.expected_pg=bool(getattr(head,'rl_finetuning',False)) if head is not None else False
         self.raw_losses=[]
+        self.raw_loss_count=0
+        self.pg_observed_nonzero=False
+        if os.environ.get('WORLDENGINE_DEBUG_AUTOGRAD')=='1':
+            import warnings
+            warnings.simplefilter('always',UserWarning)
+            torch.autograd.set_detect_anomaly(True)
+        owner=head if head is not None else self.model
+        method='loss' if head is not None else 'loss_weighted_and_prefixed'
+        original=getattr(owner,method)
         def checked_loss(*args,**kwargs):
             result=original(*args,**kwargs)
-            if not finite(result): raise RuntimeError('Nonfinite raw planning loss before nan_to_num')
-            if (self.profile=='hydramdp_rl') != ('loss.RL.PG' in result):
+            if not finite(result): raise RuntimeError('Nonfinite raw model loss before nan_to_num')
+            if head is not None and self.expected_pg != ('loss.RL.PG' in result):
                 raise RuntimeError('Wrong policy-gradient participation')
-            self.raw_losses.append({k:float(v.detach()) for k,v in result.items()})
+            def scalar(value):
+                if isinstance(value,(list,tuple)):return sum(scalar(v) for v in value)
+                return float(value.detach()) if torch.is_tensor(value) else float(value)
+            row={k:scalar(v) for k,v in result.items()}
+            self.raw_loss_count+=1
+            if os.environ.get('WORLDENGINE_DEBUG_AUTOGRAD')=='1' and self.raw_loss_count<=4:
+                stack=[v.grad_fn for v in result.values() if torch.is_tensor(v) and v.grad_fn is not None]
+                visited=set();functions=[]
+                while stack:
+                    node=stack.pop()
+                    if node in visited:continue
+                    visited.add(node)
+                    cls=getattr(node,'_forward_cls',None)
+                    if cls:
+                        functions.append(dict(name=cls.__name__,module=cls.__module__,backward=str(cls.backward)))
+                    stack.extend(n for n,_ in node.next_functions if n is not None)
+                (self.out_dir/f'autograd_rank{self.rank}_loss{self.raw_loss_count}.json').write_text(json.dumps(functions,indent=2))
+            self.pg_observed_nonzero |= abs(row.get('loss.RL.PG',0))>0
+            self.raw_losses.append(row)
+            # Full 100-epoch runs keep a bounded report; all observed losses stream to JSONL.
+            if len(self.raw_losses)>1000:del self.raw_losses[0]
+            self.current_raw_losses.update(row)
             return result
-        head.loss=checked_loss
+        setattr(owner,method,checked_loss)
         torch.npu.reset_peak_memory_stats()
         self.run_started=time.monotonic()
 
@@ -182,6 +222,7 @@ class AscendRuntimeHook(Hook):
         self.iter_started=time.monotonic()
         if self.start is None:self.start=self.iter_started
         self.tokens=[]
+        self.current_raw_losses={}
         batch=getattr(runner,'data_batch',{})
         metas=batch.get('img_metas') if isinstance(batch,dict) else None
         if metas is not None:
@@ -232,8 +273,8 @@ class AscendRuntimeHook(Hook):
                  elapsed_seconds=time.monotonic()-self.start,loss=float(runner.outputs['loss'].detach()),
                  lr=self.lr,tokens=self.tokens,samples=runner.outputs['num_samples'],rss_bytes=rss,
                  rss_peak_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
-                 npu_allocated=torch.npu.memory_allocated(),npu_reserved=torch.npu.memory_reserved())
-        self.records.append(row)
+                 npu_allocated=torch.npu.memory_allocated(),npu_reserved=torch.npu.memory_reserved(),
+                 raw_losses=self.current_raw_losses)
         with (self.out_dir/f'runtime_rank{self.rank}.jsonl').open('a') as stream:stream.write(json.dumps(row)+'\n')
         if isinstance(runner,IterBasedRunner):
             completed=runner.iter+1
@@ -255,7 +296,7 @@ class AscendRuntimeHook(Hook):
     def after_run(self,runner):
         changed=bool((self.before!=self.watch.detach()).any())
         if not changed:raise RuntimeError('Watched trainable planning parameter did not update')
-        if self.profile=='hydramdp_rl' and not any(abs(x['loss.RL.PG'])>0 for x in self.raw_losses):
+        if self.expected_pg and not self.pg_observed_nonzero:
             raise RuntimeError('No nonzero real policy-gradient loss')
         gathered=[torch.empty_like(self.watch) for _ in range(dist.get_world_size())]
         dist.all_gather(gathered,self.watch.detach().contiguous())
@@ -272,6 +313,8 @@ class AscendRuntimeHook(Hook):
                     resume_contract=runner.resume_contract)
         report.update(initialization_matches=self.initialization_matches,optimizer_initial_steps=self.optimizer_initial_steps,
                       restoration=getattr(runner,'_ascend_restoration',None),
+                      watched_parameter_name=self.watched_parameter_name,raw_loss_count=self.raw_loss_count,
+                      expected_pg=self.expected_pg,pg_observed_nonzero=self.pg_observed_nonzero,
                       model_parameters=sum(p.numel() for p in self.model.parameters()),
                       trainable_parameters=sum(p.numel() for p in self.model.parameters() if p.requires_grad))
         (self.out_dir/f'runtime_rank{self.rank}.json').write_text(json.dumps(report,indent=2))

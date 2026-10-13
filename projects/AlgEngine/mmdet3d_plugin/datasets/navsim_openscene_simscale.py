@@ -31,7 +31,8 @@ class NavSimOpenSceneE2EFineTuneSimScale(NavSimOpenSceneE2EFineTuneSynthetic):
         **kwargs):
         # SimScale Only
         self.cotrain=cotrain
-        self.simscale_path = os.path.join(WORLDENGINE_ROOT,'data/alg_engine/openscene-synthetic/meta_datas_navformer')
+        root=kwargs.get('synthetic_root') or os.path.join(WORLDENGINE_ROOT,'data/alg_engine/openscene-synthetic')
+        self.simscale_path = os.path.join(root,'meta_datas_navformer')
         self.simscale_filter_path = os.path.join(WORLDENGINE_ROOT, 'projects/AlgEngine/configs/navsim_splits/simscale_split')
         
         super(NavSimOpenSceneE2EFineTuneSimScale, self).__init__(*args, **kwargs)

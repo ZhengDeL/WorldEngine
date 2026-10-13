@@ -13,6 +13,7 @@ import torch_npu
 from torch_npu.contrib import transfer_to_npu
 from mmcv import Config
 import yaml
+from ascend.compat import enable_training_compat
 
 ROOT = Path(__file__).resolve().parents[1]
 ALG = ROOT/'projects/AlgEngine'
@@ -28,6 +29,7 @@ def main():
     sys.path.insert(0,str(ROOT/'ascend/third_party/navsim'))
     os.environ['WORLDENGINE_ROOT']=str(ROOT)
     torch.npu.set_device(int(os.environ.get('LOCAL_RANK','0')))
+    enable_training_compat()
     cfg=Config.fromfile(str(args.config),import_custom_modules=False)
     cfg.pop('fp16',None)
     cfg.dist_params.backend='hccl'
@@ -52,27 +54,51 @@ def main():
             results=pickle.load(stream)
         with open(cfg.data.test.nav_filter_path) as stream:
             expected=set(yaml.safe_load(stream)['tokens'])
+        perception=cfg.model.get('planning_head') is None
+        if perception:
+            annotations=pickle.load(open(cfg.data.test.ann_file,'rb'))
+            infos=annotations['infos'] if isinstance(annotations,dict) else annotations
+            indices=set()
+            history=cfg.data.test.get('history_frame_num',3)
+            for i,info in enumerate(infos):
+                if info['token'] in expected:indices.update(j for j in range(i-history,i+1) if j>=0)
+            expected={infos[i]['token'] for i in indices}
         tokens=[r['token'] for r in results]
         if len(tokens)!=len(expected) or set(tokens)!=expected:
             raise RuntimeError('Inference did not cover every configured anchor exactly once')
+        if perception:
+            from ascend.perception import validate_perception_outputs
+            checked=validate_perception_outputs(results)
+            report=dict(result='pass_real_perception_inference',frames=len(tokens),unique_tokens=len(set(tokens)),
+                        **checked,original_detection_mapping_evaluator_executed=True,
+                        elapsed_seconds=time.monotonic()-started,peak_allocated_bytes=torch.npu.max_memory_allocated(),
+                        peak_reserved_bytes=torch.npu.max_memory_reserved(),
+                        acceptance='Functional original detection/mapping inference on mini frames. Full detection/mapping quality and GPU comparison are separate acceptance items.')
+            (args.output/'inference_validation.json').write_text(json.dumps(report,indent=2))
+            print(json.dumps(report,indent=2),flush=True)
+            return
         trajectories=[np.asarray(r['trajectory']) for r in results]
         if any(t.shape!=(40,3) or not np.isfinite(t).all() for t in trajectories):
             raise RuntimeError('Invalid actual planning trajectory')
-        vocabulary=np.load(cfg.model.planning_head.vocab_path)
-        indices=[int(r['chosen_ind']) for r in results]
-        if vocabulary.shape!=(8192,40,3) or any(i<0 or i>=8192 for i in indices):
-            raise RuntimeError('Invalid trajectory vocabulary or selected index')
-        selected_matches=all(np.allclose(t,vocabulary[i],atol=1e-6,rtol=1e-6) for t,i in zip(trajectories,indices))
-        if not selected_matches:
-            raise RuntimeError('Exported trajectory differs from the selected vocabulary entry')
+        generated=cfg.model.planning_head.type=='DiffusionPlanningHead'
+        selected_matches=None
+        if not generated:
+            vocabulary=np.load(cfg.model.planning_head.vocab_path)
+            indices=[int(r['chosen_ind']) for r in results]
+            if vocabulary.shape!=(8192,40,3) or any(i<0 or i>=8192 for i in indices):
+                raise RuntimeError('Invalid trajectory vocabulary or selected index')
+            selected_matches=all(np.allclose(t,vocabulary[i],atol=1e-6,rtol=1e-6) for t,i in zip(trajectories,indices))
+            if not selected_matches:raise RuntimeError('Exported trajectory differs from the selected vocabulary entry')
         keys=['ade_4s','fde_4s','no_at_fault_collisions','drivable_area_compliance',
               'ego_progress','time_to_collision_within_bound','comfort','score']
-        metrics={k:float(np.mean([r[k] for r in results])) for k in keys}
+        metric_keys=keys[:2] if generated else keys
+        metrics={k:float(np.mean([r[k] for r in results])) for k in metric_keys}
         if not all(np.isfinite(list(metrics.values()))):
             raise RuntimeError('Nonfinite planning metric')
         report=dict(result='pass_real_planning_inference',anchors=len(tokens),unique_tokens=len(set(tokens)),
                     trajectory_shape=[40,3],all_trajectories_finite=True,metrics=metrics,
-                    selection_indices_in_range=True,selected_trajectories_match_vocabulary=selected_matches,
+                    selection_indices_in_range=None if generated else True,selected_trajectories_match_vocabulary=selected_matches,
+                    generated_trajectories=generated,requires_official_rescoring=generated,
                     elapsed_seconds=time.monotonic()-started,peak_allocated_bytes=torch.npu.max_memory_allocated(),
                     peak_reserved_bytes=torch.npu.max_memory_reserved(),
                     acceptance='Functional inference and embedded/cached PDM only. Reused mini anchors are not held-out accuracy.')
