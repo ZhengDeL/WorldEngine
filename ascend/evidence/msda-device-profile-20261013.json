@@ -1,0 +1,585 @@
+{
+  "result": "pass_conditional_fp32_gradients",
+  "rows": [
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        true,
+        false,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        true,
+        false,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        false,
+        true,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        false,
+        true,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        false,
+        false,
+        true
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        false,
+        false,
+        true
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        false,
+        true,
+        true
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        false,
+        true,
+        true
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        true,
+        true,
+        true
+      ],
+      "ambient_npu_autocast": true,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        true,
+        true,
+        true
+      ],
+      "ambient_npu_autocast": true,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mmcv",
+      "requires_grad": [
+        false,
+        false,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    },
+    {
+      "api": "mx",
+      "requires_grad": [
+        false,
+        false,
+        false
+      ],
+      "ambient_npu_autocast": false,
+      "output_dtype": "torch.float32",
+      "forward_pass": true,
+      "gradient_pass": [
+        true,
+        true,
+        true
+      ],
+      "passed": true
+    }
+  ],
+  "profiler_files": [
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/profiler_info.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/profiler_metadata.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113117_733_OperatorViewParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113117_731_TraceViewParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113115_498_TracePreParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113118_745_CommunicationParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113118_740_IntegrateParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113117_726_CANNAnalyzeParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113117_735_TraceStepTimeParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113118_738_KernelViewParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113118_742_MemoryViewParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113115_491_CANNExportParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/logs/profiler_20261013113115_482_ProfilingParser.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/start_info.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/end_info.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/info.json.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/sample.json.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/start_info",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/sample.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/host_start.log.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/host_start.log",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/info.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/end_info",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_4",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.compact.expand_stream_spec.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_4.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.compact.task_track.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_1.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.compact.expand_stream_spec.slice_0.complete",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_5.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_2",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_3.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.additional.context_id_info.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_3",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.api_event.data.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.compact.expand_stream_spec.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.hash_dic.slice_1",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_5",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.additional.context_id_info.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_2.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/all_file.complete",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.hash_dic.slice_1.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.compact.stream_sq_info.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.hash_dic.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.compact.task_track.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.compact.stream_sq_info.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.hash_dic.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/aging.api_event.data.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/host/data/unaging.additional.type_info_dic.slice_1",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/end_info.0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/info.json.0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/dev_start.log.0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/sample.json.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/start_info.0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/end_info.0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/host_start.log.0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/sample.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/host_start.log.0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/start_info.0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/dev_start.log.0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/info.json.0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/data/stars_soc.data.0.slice_0.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/data/stars_soc.data.0.slice_0",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/PROF_000001_20261013113114479_00000001GMKFRCFG/device_0/data/all_file.complete",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/trace_view.json",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/ascend_pytorch_profiler.db",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/analyse.done",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/step_trace_time.csv",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/analysis.db",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/FRAMEWORK/torch.op_range",
+    "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/FRAMEWORK/torch.op_mark"
+  ],
+  "grid_sampler_device_records": [
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aten::grid_sampler",
+        "Input Shapes": "8,32,200,200;\n8,300,4,2;\n;\n;\n",
+        "Call Stack": "",
+        "Host Self Duration(us)": "6.68",
+        "Host Total Duration(us)": "35.08",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "176.6765",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aten::grid_sampler_2d",
+        "Input Shapes": "8,32,200,200;\n8,300,4,2;\n;\n;\n",
+        "Call Stack": "",
+        "Host Self Duration(us)": "16.86",
+        "Host Total Duration(us)": "28.4",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "176.6765",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aclnnGridSampler2D",
+        "Input Shapes": "",
+        "Call Stack": "",
+        "Host Self Duration(us)": "7.6",
+        "Host Total Duration(us)": "7.6",
+        "Device Self Duration(us)": "176.6765",
+        "Device Total Duration(us)": "176.6765",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aten::grid_sampler",
+        "Input Shapes": "8,32,200,200;\n8,300,4,2;\n;\n;\n",
+        "Call Stack": "",
+        "Host Self Duration(us)": "8.46",
+        "Host Total Duration(us)": "36.72",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "160.6368125",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aten::grid_sampler_2d",
+        "Input Shapes": "8,32,200,200;\n8,300,4,2;\n;\n;\n",
+        "Call Stack": "",
+        "Host Self Duration(us)": "15.13",
+        "Host Total Duration(us)": "28.26",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "160.6368125",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aclnnGridSampler2D",
+        "Input Shapes": "",
+        "Call Stack": "",
+        "Host Self Duration(us)": "7.58",
+        "Host Total Duration(us)": "7.58",
+        "Device Self Duration(us)": "160.6368125",
+        "Device Total Duration(us)": "160.6368125",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "autograd::engine::evaluate_function: GridSampler2DBackward0",
+        "Input Shapes": "",
+        "Call Stack": "",
+        "Host Self Duration(us)": "9.56",
+        "Host Total Duration(us)": "43.1",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "1768.164625",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "GridSampler2DBackward0",
+        "Input Shapes": "8,32,300,4",
+        "Call Stack": "",
+        "Host Self Duration(us)": "10.31",
+        "Host Total Duration(us)": "33.54",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "1768.164625",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aten::grid_sampler_2d_backward",
+        "Input Shapes": "8,32,300,4;\n8,32,200,200;\n8,300,4,2;\n;\n;\n;\n",
+        "Call Stack": "",
+        "Host Self Duration(us)": "14.52",
+        "Host Total Duration(us)": "23.23",
+        "Device Self Duration(us)": "0",
+        "Device Total Duration(us)": "1768.164625",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/operator_details.csv",
+      "record": {
+        "Name": "aclnnGridSampler2DBackward",
+        "Input Shapes": "",
+        "Call Stack": "",
+        "Host Self Duration(us)": "3.53",
+        "Host Total Duration(us)": "3.53",
+        "Device Self Duration(us)": "1768.164625",
+        "Device Total Duration(us)": "1768.164625",
+        "Device Self Duration With AICore(us)": "0",
+        "Device Total Duration With AICore(us)": "0"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074541856.309\t",
+        "Duration(us)": "13.920",
+        "Wait Time(us)": "87.620000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074541870.269\t",
+        "Duration(us)": "100.298",
+        "Wait Time(us)": "0.080000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_GridSample_GridSample",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074541970.587\t",
+        "Duration(us)": "62.459",
+        "Wait Time(us)": "0.000000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543013.926\t",
+        "Duration(us)": "13.560",
+        "Wait Time(us)": "122.960000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543027.526\t",
+        "Duration(us)": "93.098",
+        "Wait Time(us)": "0.000000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2D_GridSample_GridSample",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543120.644\t",
+        "Duration(us)": "53.979",
+        "Wait Time(us)": "0.152000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543773.091\t",
+        "Duration(us)": "12.380",
+        "Wait Time(us)": "47.730000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543785.511\t",
+        "Duration(us)": "119.277",
+        "Wait Time(us)": "0.120000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543904.808\t",
+        "Duration(us)": "12.160",
+        "Wait Time(us)": "0.000000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_GridSamplerGrad_MemSet",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543916.988\t",
+        "Duration(us)": "29.059",
+        "Wait Time(us)": "0.090000",
+        "Block Num": "40"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_GridSamplerGrad_GridSampler2DGrad",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074543947.087\t",
+        "Duration(us)": "1520.250",
+        "Wait Time(us)": "0.941000",
+        "Block Num": "8"
+      }
+    },
+    {
+      "file": "profiler/b9c917924a5b_1_20261013113114456_ascend_pt/ASCEND_PROFILER_OUTPUT/kernel_details.csv",
+      "record": {
+        "Device_id": "0",
+        "Name": "aclnnGridSampler2DBackward_TransposeAiCore_Transpose",
+        "Type": "N/A",
+        "Accelerator Core": "N/A",
+        "Start Time(us)": "1791891074545468.217\t",
+        "Duration(us)": "75.039",
+        "Wait Time(us)": "1.000000",
+        "Block Num": "40"
+      }
+    }
+  ],
+  "scope": "All FP32 floating tensors execute on NPU; small integer shapes/start metadata transfers are intentional. FP32 ambient-autocast guard tested, not whole-model AMP acceptance."
+}

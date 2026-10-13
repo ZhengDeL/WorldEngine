@@ -1,0 +1,200 @@
+{
+  "source_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "evidence": {
+    "result": "pass_three_independent_planners_and_official_scoring",
+    "profiles": [
+      {
+        "profile": "vad",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "4a5a20969264b572189ede014c7c12741ade3610310268603e57f950a007e319",
+        "checkpoint_bytes": 434899219,
+        "config_sha256": "11386a654646d8ad9532b19f9b5e64aa3c03b6a089e58edff3e094002e3bb31c",
+        "predictions_sha256": "1e669ea659cb06cafef8f00ed6a989d1f934fc45312dbc9e616a941fee4778bc",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 4.25754976272583,
+            "fde_4s": 7.5819854736328125,
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.9060353121974252,
+            "time_to_collision_within_bound": 0.8181818181818182,
+            "comfort": 0.8181818181818182,
+            "score": 0.8396359248594805
+          },
+          "generated_trajectories": false,
+          "independent_log_split": true,
+          "elapsed_seconds": 143.69999174203258,
+          "peak_allocated_bytes": 3786333696,
+          "peak_reserved_bytes": 9196011520
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.9090909090909091,
+              "drivable_area_compliance": 1.0,
+              "ego_progress": 0.7753713884354906,
+              "time_to_collision_within_bound": 0.8181818181818182,
+              "comfort": 0.8181818181818182,
+              "driving_direction_compliance": 0.9318181818181818,
+              "score": 0.7851926239693333
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "c173ad68e0a344491e866dd6128466a4b30830117e00109810880237ebe8c531",
+          "metrics": {
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.7753713884354906,
+            "time_to_collision_within_bound": 0.8181818181818182,
+            "comfort": 0.8181818181818182,
+            "driving_direction_compliance": 0.9318181818181818,
+            "score": 0.7851926239693333
+          }
+        }
+      },
+      {
+        "profile": "hydra",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "818ec85d297246e4dc0bab03b9a4a4eb3e4a669b23ed12d687497c1a9c4585a5",
+        "checkpoint_bytes": 450777155,
+        "config_sha256": "19972e2d42f62b0e6eda449198b94ae309d057cde20ddefb4812666e68509c92",
+        "predictions_sha256": "c3262970e2e3b963de172dd1a0b215151c681bcf4f58a917dab44f6656f47b9d",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 7.61236572265625,
+            "fde_4s": 12.194945335388184,
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.5339006862857125,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 0.6818181818181818,
+            "score": 0.6807919496839697
+          },
+          "generated_trajectories": false,
+          "independent_log_split": true,
+          "elapsed_seconds": 143.70898328500334,
+          "peak_allocated_bytes": 3797772288,
+          "peak_reserved_bytes": 9204400128
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.9090909090909091,
+              "drivable_area_compliance": 1.0,
+              "ego_progress": 0.3148307636200324,
+              "time_to_collision_within_bound": 1.0,
+              "comfort": 0.6818181818181818,
+              "driving_direction_compliance": 1.0,
+              "score": 0.6084522121144075
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "f47df23c9f1a5a7b881a2fc3d01f015da240b621e064b5e71813ccbb94c26f2f",
+          "metrics": {
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.3148307636200324,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 0.6818181818181818,
+            "driving_direction_compliance": 1.0,
+            "score": 0.6084522121144075
+          }
+        }
+      },
+      {
+        "profile": "dd",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "eef2994ff6232f43ed640da187683d561bfbc26c2c8dbd271a45bc03c6dc56ae",
+        "checkpoint_bytes": 301024650,
+        "config_sha256": "a5193a50b53b5fa6e4cddc0353d8b41e74a7412b0018e3a3c4922b13b8f280b7",
+        "predictions_sha256": "67ded465667fbf8a68ea825cdab755d8dd01ce954d3beafb5fb382b75a2c2a20",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 11.422893524169922,
+            "fde_4s": 20.63299560546875
+          },
+          "generated_trajectories": true,
+          "independent_log_split": true,
+          "elapsed_seconds": 142.33322705700994,
+          "peak_allocated_bytes": 3692141056,
+          "peak_reserved_bytes": 9047113728
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.38636363636363635,
+              "drivable_area_compliance": 0.5,
+              "ego_progress": 0.2313236251560821,
+              "time_to_collision_within_bound": 0.18181818181818182,
+              "comfort": 0.3181818181818182,
+              "driving_direction_compliance": 0.5681818181818182,
+              "score": 0.18729393472412512
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "01bce3120a62c7e2026cddf41d713f0f941abc0179c1327f16433412d9413225",
+          "metrics": {
+            "no_at_fault_collisions": 0.38636363636363635,
+            "drivable_area_compliance": 0.5,
+            "ego_progress": 0.2313236251560821,
+            "time_to_collision_within_bound": 0.18181818181818182,
+            "comfort": 0.3181818181818182,
+            "driving_direction_compliance": 0.5681818181818182,
+            "score": 0.18729393472412512
+          }
+        }
+      }
+    ],
+    "cpu_scoring_actual_exit": 0,
+    "artifact": {
+      "private_artifact": "representative_planning_v6_registered_score.json",
+      "sha256": "45404b863ace3f8b47e316b716a69b065355b9227d40f409a1d4427fe4abfcea"
+    },
+    "scope": "Three representative checkpoints and independent 22-anchor original inference/official NAVSIM rescoring; not trained planner quality, GPU comparison or full NAVTEST acceptance.",
+    "dependency_path_fix": {
+      "original_summary_sha256": "b242c08a5291bac470f902b286ada0d668d51b5c6fe6890bede9387946544436",
+      "original_scoring_code_sha256": "9a2de5bafd35db2b715fae06372095231c105deaa9ebcbdfbd11d303908880ad",
+      "retry_scoring_code_sha256": "9a2de5bafd35db2b715fae06372095231c105deaa9ebcbdfbd11d303908880ad",
+      "no_scorer_change": true,
+      "interpretation": "The original private helper replaced the image PYTHONPATH and hid the nuplan dependency. The retry restores inherited pinned-image dependency directories, keeps the same predictions and unchanged official scoring code, and preserves the original failed report."
+    },
+    "retry_helper_sha256": "162391b04546e9e58f9c56cc066045fd44e80ebf5646031c24153c49eb9da4c4"
+  }
+}

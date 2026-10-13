@@ -1,0 +1,742 @@
+{
+  "source_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "evidence": {
+    "result": "pass_complete_saved_checkpoint_audit",
+    "distinct_paths": 45,
+    "passed_checkpoints": 45,
+    "failed_checkpoints": 0,
+    "discovery_errors": [],
+    "artifact": {
+      "private_artifact": "checkpoint_audit_registered_v6/checkpoint_audit.json",
+      "sha256": "5a0d830423a5468336354367376857157ecf78362134fae44c232e63eb7dd64a"
+    },
+    "checkpoints": [
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "b283fa2fb6fe9cbf8b02b44bbfba06c5ba0bb080270fc99157085e6003ca2904",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 4,
+        "optimizer_steps": [
+          4
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "818ec85d297246e4dc0bab03b9a4a4eb3e4a669b23ed12d687497c1a9c4585a5",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "f1da0ea008798be83f44e8c1ba313b56c2afb6a8106c371cbaf3ceae266b9912",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "dd25c234362b6d07086518797a3ecfc357010d5468a09ca0aaa0d43799516aed",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 4,
+        "optimizer_steps": [
+          4
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "4a5a20969264b572189ede014c7c12741ade3610310268603e57f950a007e319",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "af2f9e05e82dec3f9549294b67e0659b10b942ff39c5050bbfcf7f086732ac71",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047436,
+        "sha256": "7c6773b94dddb86feea3250536b36001ccfc04aa37a04b76ca0881e7c84ce92f",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 103,
+        "optimizer_steps": [
+          84,
+          103
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047500,
+        "sha256": "7802bb2a42f8267d380a265893ddfd7c6c297d7ed6bf64d1271007dfaccbf4f1",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 100,
+        "optimizer_steps": [
+          83,
+          100
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047884,
+        "sha256": "76fe6962432810b11f2ca1f13a5e81d3ec86a6bad1a055e248370d0157584fed",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 160,
+        "optimizer_steps": [
+          127,
+          160
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "97903dc55eb585ce610da1a03e3295b58e2c7fc93745d32e469f5aacb5fc0554",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "08ecaa0f0e7ba2dd0f7bd4280c443d25892116462d14d381b102d9e5fb7cf2af",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "596404cec74617aac46bca0d852062248de65539949ce94828d20e5bb6373223",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "e07e132d8173617509a169e11bbb24405b250dfeac825d67b5fa7100864a67e8",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "eef2994ff6232f43ed640da187683d561bfbc26c2c8dbd271a45bc03c6dc56ae",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "aebb3763f85e9ef95942130f907f5dc9d9e671fa66fa3283d06b4607d4375a78",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "2a55d940cf3ab5681d857d22304f20b818fc32a55d2a2406d1de40404db6d1e2",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "d96d33564154e2b3ee6a551d0d731c3f2e00a5651a11cee89f36fddeec34f47d",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "7651fd311f4c216a54f5a56d9115a694663474954c0ea290c972b1c93b5a8c0e",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "e18514b65f73bfa42c702bbccee3fe14b493c55cbab26076be0412bdedf82397",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "d005e5f1f8204ffc711fb259dab32f0a610b7adf11f077d54ec02c3d709ac89d",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cc0a2218444e4000fd8f42ea5e1bac386d7d879b04d8cc1fd78363fc1457eabd",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "e1aea0936b77a602d1bf1a3a0f4b5202c798c18d7e1ff9c0bb53d5517d5d58de",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 239277676,
+        "sha256": "11a4b7010a296e3081f834d62e326ff32ec23fef9c065327b244648a9091f63b",
+        "model_tensor_count": 949,
+        "optimizer_tensor_count": 180,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 60,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 246813256,
+        "sha256": "4e50f83e5d1c41d6a3e36a41d9844911127193ece4560f2eed0efe5f34b07e92",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 240,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 80,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 246813256,
+        "sha256": "6fc107a9b71ce658257dfa703269f9728a680310e9af3036782403f37d3c55d6",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 240,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 80,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cf6d9e97102c599b5e6e16cd69316b200a057c61ef06b99a27893812f9504ce0",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "72771e128cef6b885c2753012ae9bb1c0de8d4a38ce1482e6d5d54efbc529746",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cb15e0cd18869023c10bcfbcf4a23bc4787c1c6670b7d7b4b1054a14201a7a68",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "b22ec71022e8766737925ade528214c30e4a4bd68f37d9dc9081f12b48755ab8",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 449572843,
+        "sha256": "2828cc65f9e66efa96bb49f239f22c39d51aec441314afe7d7797301701edd87",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 999,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 333,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "beaad3f00c5e643120ae28a5ece2c2a4c73fa3bb05fe4dec5dbead3239eb1ea1",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "1d33314808653522d249aa53051ed5fed962a3949a1b15ef447b008bbc3afad2",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 858939482,
+        "sha256": "d4cb86abbb68f8f9e32d64a3bcb2997c4947af240b4c82d1fe5900d6d46f6946",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "2b1b0afe348a31df4ebfe892eeda81f2bbf400c4b78fa5c7c20a25d8810e72c0",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434898131,
+        "sha256": "222dc2916d835554af6e8c9fd2f2f84d44cd903ccf304a015488118033c981c9",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "e34e4ba48b8ab35afd992f3cc217ed7d9c2d7bab0e35103fd99b76ab5352b627",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "b56b36d0d6aa5e08fde3b2df8a63bc74decfd895929e09ddea3d66849b4929fc",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 239277612,
+        "sha256": "281644de24cacad34622f64935386833e8798f143d5ae581231e245a6d5a7133",
+        "model_tensor_count": 949,
+        "optimizer_tensor_count": 180,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 60,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 257397452,
+        "sha256": "6fb6467840cd42267b7cde56a70804470a3ae7f84bdf7bf6470ab4713b2f4523",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 300,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 100,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 257397516,
+        "sha256": "b282e572a0f8dcd10716c1b9aa49f261228ff9245e52abe1e87b473d8a5160be",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 300,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 100,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "d6222b1cc058b04129d3cd31e5c81e6bd0760963b55e8a38f3e3dd331c8545e7",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "98be2692b3264b34cf5953cf3e6ceef7c99b20b6b0d2797020a0c66848cdcac1",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "5b5c041ed3090108d5b5955fc6691fd61feb9f80a01c516086602930f6bb2f56",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "bf12769448455c446dd2b07cfdd6c48e36ac07892755fbb8ef38832b9ef0787f",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 858938906,
+        "sha256": "730a82ebc5da0b469a07508685b12a07ba2e4d12725019f3415e1956b8411c64",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          2,
+          3
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      }
+    ],
+    "scope": "Single-file CPU loading/finiteness/source/counter/rank-RNG audit; separate from numerical replay and quality. Initial CPU deserializer/CPU-map failures do not establish bad checkpoint tensors."
+  }
+}

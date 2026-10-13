@@ -1,0 +1,153 @@
+{
+  "source_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "evidence": {
+    "controlled_base_hydra_replay": {
+      "result": "pass_both_original_numerical_gates",
+      "cases": [
+        {
+          "case": "navformer_vadv2",
+          "result": "pass",
+          "training_and_restore": {
+            "continuous_passed": true,
+            "resumed_passed": true
+          },
+          "max_loss_difference": 0.0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_final_rng_states": true,
+          "completed_updates": 8,
+          "world_size": 1,
+          "tensor_tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          },
+          "loss_absolute_tolerance": 0.0001,
+          "model": {
+            "tensors": 889,
+            "bitwise_equal_tensors": 889,
+            "max_absolute_difference": 0.0,
+            "failed_tensor_paths": 0
+          },
+          "model_and_optimizer": {
+            "tensors": 1668,
+            "bitwise_equal_tensors": 1668,
+            "max_absolute_difference": 0.0,
+            "failed_paths": 0,
+            "counter_scope": "Original comparator writes these statistics after RNG checks, so the tensor count includes CPU and NPU RNG byte tensors (two for this one-rank control)."
+          },
+          "artifact": {
+            "private_artifact": "controlled_replays_v6/navformer_vadv2_v6/comparison_cpu_registered/compare_resume.json",
+            "sha256": "bcf6cf6296fa31af50ea9d1aac96111ed84df2c01acb04188d6c769b2018d340"
+          },
+          "independent_saved_tensor_counts": {
+            "model_tensor_count": 889,
+            "optimizer_tensor_count": 777,
+            "rng_rank_count": 1
+          }
+        },
+        {
+          "case": "navformer_hydramdp",
+          "result": "pass",
+          "training_and_restore": {
+            "continuous_passed": true,
+            "resumed_passed": true
+          },
+          "max_loss_difference": 0.0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_final_rng_states": true,
+          "completed_updates": 8,
+          "world_size": 1,
+          "tensor_tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          },
+          "loss_absolute_tolerance": 0.0001,
+          "model": {
+            "tensors": 909,
+            "bitwise_equal_tensors": 909,
+            "max_absolute_difference": 0.0,
+            "failed_tensor_paths": 0
+          },
+          "model_and_optimizer": {
+            "tensors": 1748,
+            "bitwise_equal_tensors": 1748,
+            "max_absolute_difference": 0.0,
+            "failed_paths": 0,
+            "counter_scope": "Original comparator writes these statistics after RNG checks, so the tensor count includes CPU and NPU RNG byte tensors (two for this one-rank control)."
+          },
+          "artifact": {
+            "private_artifact": "controlled_replays_v6/navformer_hydramdp_v6/comparison_cpu_registered/compare_resume.json",
+            "sha256": "150d549675a31d5c1143e6f719a84205d6a5fdab9ac632262154f655eef7b67c"
+          },
+          "independent_saved_tensor_counts": {
+            "model_tensor_count": 909,
+            "optimizer_tensor_count": 837,
+            "rng_rank_count": 1
+          }
+        }
+      ],
+      "scope": "Original tensor atol=1e-6/rtol=1e-5 and loss absolute difference<1e-4; same continuous-run prefix checkpoint, horizon/data/source/topology. Initial CPU comparison attempts stopped at NPU deserialization before producing numerical results."
+    },
+    "official_cpu_checkpoint_loading": {
+      "result": "pass_original_gates_with_official_registered_cpu_load",
+      "wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+      "jobs": [
+        {
+          "kind": "navformer_vadv2",
+          "actual_exit": 0,
+          "loader": {
+            "result": "pass_unchanged_target_official_cpu_loader",
+            "official_loader_identity": true,
+            "RE_MAP_CPU_before_runpy": false,
+            "RE_MAP_CPU_after_runpy": true,
+            "no_npu_initialization": true,
+            "target_source_unchanged": true,
+            "target_sha256_before": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+            "target_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+            "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+            "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+          }
+        },
+        {
+          "kind": "navformer_hydramdp",
+          "actual_exit": 0,
+          "loader": {
+            "result": "pass_unchanged_target_official_cpu_loader",
+            "official_loader_identity": true,
+            "RE_MAP_CPU_before_runpy": false,
+            "RE_MAP_CPU_after_runpy": true,
+            "no_npu_initialization": true,
+            "target_source_unchanged": true,
+            "target_sha256_before": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+            "target_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+            "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+            "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+          }
+        },
+        {
+          "kind": "checkpoint_audit",
+          "actual_exit": 0,
+          "loader": {
+            "result": "pass_unchanged_target_official_cpu_loader",
+            "official_loader_identity": true,
+            "RE_MAP_CPU_before_runpy": false,
+            "RE_MAP_CPU_after_runpy": true,
+            "no_npu_initialization": true,
+            "target_source_unchanged": true,
+            "target_sha256_before": "5b90eb5aadb0aa61e0ff7a5893c7081b8a4dfbd0ac8110f7fa40cdf7528a0b3a",
+            "target_sha256_after": "5b90eb5aadb0aa61e0ff7a5893c7081b8a4dfbd0ac8110f7fa40cdf7528a0b3a",
+            "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+            "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+          }
+        }
+      ],
+      "artifact": {
+        "private_artifact": "postload_retry_registered_v6.json",
+        "sha256": "802f9b6f977b91a28319b6e60904cab131851728fa87710c5f899548ae22fba9"
+      },
+      "scope": "Early import of installed official torch_npu serialization hooks before unchanged runpy target. Original CPU map_location and strict gates retained; no custom loader, checkpoint edits or NPU initialization."
+    }
+  }
+}

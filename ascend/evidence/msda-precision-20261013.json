@@ -1,0 +1,3210 @@
+{
+  "result": "pass_strict_msda_and_bounded_training_restore_inference_scoring",
+  "source": {
+    "python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242,
+    "scope": "AlgEngine recursive Python and Ascend top-level Python, LF-normalized; supplemental probe separately hashed",
+    "exercised_snapshot_manifest": {
+      "bytes": 22260871,
+      "sha256": "a491daaa20531a9727e7016118c57b33ef045b4a6a73688f6d416040a5d4d38e",
+      "files": 667,
+      "python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "source_scope": "Uncommitted experimental snapshot; claim only exercised tests on this fingerprint"
+    },
+    "files": {
+      "ascend/msda.py": "dede983a6c9cef055d7329bf90532bf2ffd0641313418a9c5ac24d359c290471",
+      "ascend/compat.py": "70ca8be7339ae814b4bebd8797493398c76cbe78974e3027e4a5b20d347a0287",
+      "ascend/validate_msda.py": "5a898191f716dec2536ab1b7e208c0651ef750b2fdf929c4eaec37d2e1b78d5d",
+      "ascend/validate_msda_layout.py": "6b4c946c5881eb2f398582c7eb7c7c9155de7517f3f82e4bb5170e9c623224b1",
+      "ascend/probes/full_shape_gate_probe.py": "a7421b6835e8cf8903398f71259b0bd1a455d883c96c6ade595f41d912cbf449"
+    }
+  },
+  "runtime": {
+    "image": "local/worldengine:26.1.0-a3-clean-20261013",
+    "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+    "hardware": "Atlas 800I A3 / Ascend910_9362, eight physical cards, sixteen logical chips, 64 GiB per chip",
+    "precision": "FP32"
+  },
+  "strict_gates": {
+    "reference": "Unmodified MMCV PyTorch CPU32",
+    "forward_atol": 2e-05,
+    "forward_rtol": 2e-05,
+    "gradient_atol": 0.001,
+    "gradient_rtol": 0.0001,
+    "normal_cases": 18,
+    "normal_entry_comparisons": 36,
+    "raw_map_cases": 4,
+    "full_shape_cases": 4,
+    "full_shape_entry_comparisons": 6,
+    "all_complete_forward_and_three_input_gradients_passed": true,
+    "failed_elements_ignored": 0
+  },
+  "original_large_seed29": {
+    "previous_location_failures": 35,
+    "location_elements": 19200,
+    "current_location_failures": 0,
+    "maximum_absolute_error": 0.001220703125,
+    "interpretation": "Pass under unchanged combined absolute/relative rule, not bitwise equality or GPU parity"
+  },
+  "conditional_gradients_and_native_device_profile": {
+    "checks": 12,
+    "passed": 12,
+    "native_npu_grid_sampler_forward_backward_recorded": true,
+    "floating_point_cpu_fallback_inside_msda": false,
+    "whole_model_matrix_inverse_cpu_fallback_remains": true
+  },
+  "real_original_configs": {
+    "passed_configs": 36,
+    "steps_each": 3,
+    "elapsed_seconds": 550.8560418310808,
+    "original_geometry_preserved": true,
+    "original_initializers_publisher_hash_verified": true,
+    "excluded_genuine_synthetic_configs": 8,
+    "configs": [
+      {
+        "config": "configs/navformer/track_map_nuplan_r50_navtrain.py",
+        "actual_config_sha256": "89579daf107f3a94de610842ed7cfa109199cd581c2b1c4998b9cf790a970c52",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 711,
+        "peak": {
+          "peak_allocated_bytes": 46816344576,
+          "peak_reserved_bytes": 50165972992,
+          "peak_rss_bytes": 5106536448
+        },
+        "geometry": {
+          "model_type": "UniAD",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.seg_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.seg_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.seg_head.num_query",
+              "value": 100
+            }
+          ],
+          "dumped_config_sha256": "5a01178e8555e587235fa0ee96c66f85f1149d86e3d19b72b5282489db4a6c02"
+        }
+      },
+      {
+        "config": "configs/worldengine/track_map_nuplan_r50_navtrain_50pct.py",
+        "actual_config_sha256": "3cfb3cde26a160672e80515632d67517701af0d7b515b255e685582544dad034",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 711,
+        "peak": {
+          "peak_allocated_bytes": 46818790400,
+          "peak_reserved_bytes": 50163875840,
+          "peak_rss_bytes": 5104107520
+        },
+        "geometry": {
+          "model_type": "UniAD",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.seg_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.seg_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.seg_head.num_query",
+              "value": 100
+            }
+          ],
+          "dumped_config_sha256": "3d93ed6dbf2a7caebc0f6008ca3abbc4dc70431face9fea90bab06cf199bcd32"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive.py",
+        "actual_config_sha256": "5908f19daced8db6407997d71f2971d16349cf0edd90800b4b6b96373d2d97f6",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3244310528
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "b298fbe4e1483ff1aebf01416a2b6d8b6a1cfe32c731012673d2c364476d0809"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_100pct.py",
+        "actual_config_sha256": "1cf83ae9ececd00fa9bdbc89b44781fab82583b70a462067ea85a8e870797045",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3243593728
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "312fedd4ecabfd402487599b691457c7c888758d8aeea8d6c287932d7849d1dc"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_13pct.py",
+        "actual_config_sha256": "c4ff8eb3a61f81f571fc213fed45c093c42fffc35542d2efb6c77ed2bc3e30f7",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3240177664
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "38da4aab7795704250df1e3a376d68c59ef22c6c8ff2ff2fa59b38ad0d470675"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_25pct.py",
+        "actual_config_sha256": "3d4473a76e765685db0ad2866efc99d6093aa6cd9652d26e4ea79ac3a7a536e5",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3243810816
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "411f826551cb835a6fed204c6198ba7524bc9c1d69eeb163767df0235f10f8f7"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_50pct.py",
+        "actual_config_sha256": "15dbb388f047773bbe1e52c0672d1236025285652bb21499a6a025f8f7573280",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3243315200
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "a5193a50b53b5fa6e4cddc0353d8b41e74a7412b0018e3a3c4922b13b8f280b7"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_60pct.py",
+        "actual_config_sha256": "ccd479bf64a1fe44e4977e2eebe46f441480891adc149e7ab2e72996fb92e89d",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3240570880
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "2b37e82fdb56be2a9ac52fb7c2a794f43ce2991812702359970034856868b118"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_70pct.py",
+        "actual_config_sha256": "96d3ea81926c4a2f2378cb4cb4f9b83f943c96f47c23f4c3f5d8903315410211",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3241152512
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "97779003482b002dbab2ca926c5b78f6f22646726336aa3ddf14a320e7eeca3b"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_80pct.py",
+        "actual_config_sha256": "89fa10c7ed74214c0a5e09320b7db3d3e35f0cfce3a5d8e2cd5dad75e1266b6c",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3243438080
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "8fe6dd3b1a4f88a26bbb5b10c06b6a8abf84043f81e2949343852aa9ec25c517"
+        }
+      },
+      {
+        "config": "configs/diffusiondrive/e2e_diffusiondrive_90pct.py",
+        "actual_config_sha256": "59d2afde8f7b753b492b9392cabb8e6a27f097d441c097c1e375698e5d32f5b1",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 3793454592,
+          "peak_reserved_bytes": 9122611200,
+          "peak_rss_bytes": 3245117440
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "34716d97d61a3f50f4e5a1045b927b84fb65d21d0225290724956382edc7d6ac"
+        }
+      },
+      {
+        "config": "configs/navformer/e2e_diffusiondrive.py",
+        "actual_config_sha256": "f594b186cf4bc614d05db3e492fb165c0ca740ed63304266fccb08f2e4af8eec",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15519965696,
+          "peak_reserved_bytes": 21273509888,
+          "peak_rss_bytes": 3639152640
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "ea5c75789b611a28dbe8da5663c92e8bbb34e968b2bcc7122092f1c2912b8ace"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_100pct.py",
+        "actual_config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3564744704
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "fc942424daa4972bd8e03c6c458fb90d5b87d8dd1a3b87023d1520b5e54d4ec6"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_13pct.py",
+        "actual_config_sha256": "ab7292f3cbaea29cd7ec09350b25dac514cb540308961aec4306f13fd14544d5",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3566366720
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "3093afee916cfc51ead0252e5a0b3d307adb417fb0361e8a891f429e6572a2a0"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_25pct.py",
+        "actual_config_sha256": "6bc803bce388368bbe531e5b59f82035b373cde3eec96a51765c3cd5766c8458",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3568017408
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "6d1bca8ca6dfc87e9b813bd92205f32d0d2f7be5d7133e504cad9c4952b0126b"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_50pct.py",
+        "actual_config_sha256": "bec50154dfbcff9393f11359c76c9057fc1adf083ead4e5af5b8804618501d79",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3565268992
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "7a72666c2e12ee97c407f98cd8b31a314d5173df275ad7821cb7538844c487fc"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_50pct_ilft_rare_log.py",
+        "actual_config_sha256": "972a50292e271232700c361b5aa8705039b6806e7b27a51024496169b7cf82eb",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 889,
+        "peak": {
+          "peak_allocated_bytes": 3670155264,
+          "peak_reserved_bytes": 9107931136,
+          "peak_rss_bytes": 3053416448
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "38cd39ab917e5e8e6ef47caa5b44bb3126cab6c51f94c56b626c03bd15927565"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_common_log.py",
+        "actual_config_sha256": "d9719d8c5f15d4b5530bf102be142efd94eab2dfcf227eadfa94b459ef7b23bc",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 909,
+        "peak": {
+          "peak_allocated_bytes": 3676898816,
+          "peak_reserved_bytes": 9126805504,
+          "peak_rss_bytes": 3087613952
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "b414a53672c80dafdd2ec9b871348fc14992f575f6a7659d423b2b30e15ebba8"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py",
+        "actual_config_sha256": "66ce2bdc082529022e67468f0ff1c930751a76aa6492ab950247911f289aeaea",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 909,
+        "peak": {
+          "peak_allocated_bytes": 3676898816,
+          "peak_reserved_bytes": 9126805504,
+          "peak_rss_bytes": 3083288576
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "f89c101553dbf5acd4f1995ddc7d57958ea2562a26c20317616fd91942687ce8"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_60pct.py",
+        "actual_config_sha256": "8f1a7e7e7779b1a7c40d92c93207cdcfc1909f6537372e05363bd576bb6bf3f7",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3568132096
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "fe7e6a63c8364b30d087bc1cf602d1bcac7f189c8d28bf89a637f81039b24092"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_70pct.py",
+        "actual_config_sha256": "7035c717c4378d1c2b87e0557c35e2df363da87654d188919c1a4034c3c64bb0",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3563065344
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "01bd0ffb494440d85fe132a16006ae3a17839da9cace549e02d5ca6c0dc71aaf"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_80pct.py",
+        "actual_config_sha256": "e1ac14d1bfa6b50954064d5980f32e6c298daf75c549955a2c33dffb1c38fe37",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3569520640
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "b75d7a22dcf608c50a8eb59e4f4c82de73d0c1b8caacaadeb63d299389102569"
+        }
+      },
+      {
+        "config": "configs/hydramdp/e2e_hydramdp_90pct.py",
+        "actual_config_sha256": "6515923b7dd7f4c5f5a387a9a1117ca7158ccf6edc5aa20770966f6b4798fcaa",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3567616000
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "16834af6047fb7da22eabd8a267b3dcf3d933d47a3a386005ef3bd5d2571490f"
+        }
+      },
+      {
+        "config": "configs/navformer/e2e_hydramdp.py",
+        "actual_config_sha256": "a9555793a3df5efa66b7764bf3a362cba69f27b956e6f10492c5e95bedc25d60",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15526472704,
+          "peak_reserved_bytes": 21275607040,
+          "peak_rss_bytes": 3561115648
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "101593a9ef109fb4f40673746543d4160a5ad85c30c4ef96cfb5ada15192c221"
+        }
+      },
+      {
+        "config": "configs/navformer/e2e_vadv2.py",
+        "actual_config_sha256": "b1ed3b5d0ae465506442f74100803d111c793f31112705d74db68c46c5c30480",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3522600960
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "596a53226acec70b11f74034fc2ad719276f36f4d74ef0bf676bfad0387e6f3c"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_100pct.py",
+        "actual_config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3535429632
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "fe1de8ab345fa7ab2ad997c3774d7ecded99a26af0cb3e18549b80bf523c0245"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_13pct.py",
+        "actual_config_sha256": "5c1bfb192baf6f4dd908f0b371e403c1986a401865fa5aaca6a0a81a8c101862",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3519565824
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "f72280807d45f4de20be08513e87a0ccba8d3a2827590a16fa616e95079cc031"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_25pct.py",
+        "actual_config_sha256": "5329f5d06e928e38d696670ba3474b8e1777db1e1e94dd23e3ba56f4f8a82d34",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3522215936
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "1266026ca74b953d7369f18fc3d7160a6cd9f2709a2ef15bfce93d6ae7712063"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_50pct.py",
+        "actual_config_sha256": "35eb27bc6526ef0cee2b3ec8bd02154f8533d7a52117f0fa864889d4432f4f9a",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3537289216
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "08f10a9fde6bac44c5bb5470e5d1a8a17b4b639a304e0e65646ac75d7e52d5d6"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_50pct_ilft_rare_log.py",
+        "actual_config_sha256": "a9959b43ce4e20570004636392371074a8d4bbfaddd17ca50e59784dcf83238b",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 889,
+        "peak": {
+          "peak_allocated_bytes": 3670155264,
+          "peak_reserved_bytes": 9107931136,
+          "peak_rss_bytes": 3055439872
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "70d194c72210502ed7b269ee79fc79a0e1b39596ad9e97353c3092088a462a43"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_50pct_rlft_common_log.py",
+        "actual_config_sha256": "28ecefbb99c4db8d29a830961525ef584ec6ddf3985afac08ef01d9b3ba4aa34",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 889,
+        "peak": {
+          "peak_allocated_bytes": 3704956928,
+          "peak_reserved_bytes": 9126805504,
+          "peak_rss_bytes": 3100573696
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "ca351c8cb6629776ebf3b9e1a82b41cc4c5417195e638287ca14f67b30502733"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_50pct_rlft_rare_log.py",
+        "actual_config_sha256": "824cc282e06ebd2ec3d54e96286aa3f00a146d6abb4bd128bec2cb8ab6e83f03",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 889,
+        "peak": {
+          "peak_allocated_bytes": 3704956928,
+          "peak_reserved_bytes": 9126805504,
+          "peak_rss_bytes": 3098636288
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "e3d2fbc9320e2fcaa547db45d62e5dceb09f9ab51fd6bcd9e25190a62c24190e"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_60pct.py",
+        "actual_config_sha256": "e16e8206bffea2a30ed3ab51c933ce10bdf8306111bd98d057477fc98535a579",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3532652544
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "ea8da7233bc3f8589106f23a70289caabf1ec49d9d952901d34dafc34387e922"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_70pct.py",
+        "actual_config_sha256": "7a4c4a816d0b4efa0ff71c6f5d6d0d50d2e7e81c82130e565585b9cfd24adb3d",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3524108288
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "4cece8b9cb6bc9190702c1a47917983738d3970eed98b8cf11ae408ec071d17e"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_80pct.py",
+        "actual_config_sha256": "2f86d07602607ec69927cc89ceeb8ffb2fea3ec2639d8d9e53c585ae3a4658f7",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3526340608
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "1dfc351d5336b7f73c1683581f24e1fa8c6ae947570d1a9fa3d3f9a90c83803b"
+        }
+      },
+      {
+        "config": "configs/worldengine/e2e_vadv2_90pct.py",
+        "actual_config_sha256": "849ba0078093930eb75d90c2927feb23a39be135acf14435fb01ed2b7b255f12",
+        "status": "pass",
+        "observed_updates": 3,
+        "initialization_matching_tensors": 810,
+        "peak": {
+          "peak_allocated_bytes": 15489866240,
+          "peak_reserved_bytes": 21267218432,
+          "peak_rss_bytes": 3536289792
+        },
+        "geometry": {
+          "model_type": "NAVFormer",
+          "bev_h": 200,
+          "bev_w": 200,
+          "tracking_num_query": 900,
+          "all_geometry_fields": [
+            {
+              "path": "model.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.bev_w",
+              "value": 200
+            },
+            {
+              "path": "model.pts_bbox_head.num_query",
+              "value": 900
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.pts_bbox_head.transformer.encoder.transformerlayers.attn_cfgs[1].num_cams",
+              "value": 8
+            },
+            {
+              "path": "model.planning_head.bev_h",
+              "value": 200
+            },
+            {
+              "path": "model.planning_head.bev_w",
+              "value": 200
+            }
+          ],
+          "dumped_config_sha256": "9b65de786eee5acf79d7920036cdbd070aa9113547ec7d7ccf1615b3208a7961"
+        }
+      }
+    ]
+  },
+  "hour_training": {
+    "result": "pass_bounded_one_hour",
+    "ranks": 8,
+    "updates_per_rank": 160,
+    "total_anchor_exposures": 1280,
+    "train_seconds_min": 3616.849489587941,
+    "train_seconds_max": 3617.7747315020533,
+    "global_anchor_exposures_per_second": 0.35380865172568676,
+    "peak_allocated_bytes": 46843542016,
+    "peak_reserved_bytes": 52206501888,
+    "charged_cpu_memory_peak_bytes": 66488492032,
+    "cpu_memory_limit_bytes": 137438953472,
+    "memory_failcnt": 0,
+    "world_size": 8,
+    "batch_per_rank": 1,
+    "workers_per_rank": 0,
+    "training_unique_anchors": 42,
+    "lr_horizon_updates": 10000,
+    "upstream_optimizer_and_warmup": true,
+    "raw_losses_observed_each_update": true,
+    "gradient_check_interval": 10,
+    "all_actual_exit_codes_zero": true,
+    "oom_killed": false,
+    "runtime_artifact_sha256": {
+      "rank0": "fe1981d5edc531fd54c9270f5be3b9f977af612e6e553f21790f714ec140ab51",
+      "rank1": "66a4d13806b4f8b0197937cec8930b608017f8dce6b7eb8216fe5b02c483ff08",
+      "rank2": "043f853bc81b0aa9e982f9ec810813a35ed99c3355e2b3f2489ce393168a0848",
+      "rank3": "9f18990a5ea34cda2a96dfc1a748bec8b6ab927da9a74d690faffb20faa76c01",
+      "rank4": "ddad5c2f462236d961d9ccdcadf096418c3ff5545d9f467a4608a13ebcdecf06",
+      "rank5": "a86302ccf4a4b163dd44b3cdb9e79eef0fed1427462fcf1be7cbf5291a95562a",
+      "rank6": "123ca0969a806293490e97b951b16710d990b74890db2c175265ef28908de45f",
+      "rank7": "085d736aee544a650afb10bb2d472834eda889e78c2b161af6debf3859621a9b"
+    },
+    "host_memory_artifact_sha256": "e213c26d76236f94b0aea020ce31fe1a9255abffb73735623155bdbfbf8da057",
+    "historical_reference": {
+      "source_python_sha256": "96a7bef17fd27a681b5f90c367507a3a9f72767e5698fbe514d077d20ec0f997",
+      "global_anchor_exposures_per_second": 0.94808,
+      "paired_benchmark": false,
+      "interpretation": "The current observed rate is lower. Different MSDA/layout semantics and observation/check frequency prevent attributing the full gap to one isolated change or extrapolating full NAVTRAIN time."
+    },
+    "scope": "Repeats 42 real anchors with sampler padding; includes training/observation/checkpoint work. Not full-data throughput, convergence, 24-hour stability or memory-leak exclusion."
+  },
+  "resume_and_independent_inference": {
+    "result": "pass_complete_restore_and_independent_perception",
+    "ranks": 8,
+    "restored_update": 100,
+    "final_update": 103,
+    "updates_after_restore": 3,
+    "restored_model_tensors_per_rank": [
+      1393,
+      1393,
+      1393,
+      1393,
+      1393,
+      1393,
+      1393,
+      1393
+    ],
+    "restored_optimizer_tensors_per_rank": [
+      3594,
+      3594,
+      3594,
+      3594,
+      3594,
+      3594,
+      3594,
+      3594
+    ],
+    "perception": {
+      "result": "pass_real_perception_inference",
+      "frames": 37,
+      "unique_tokens": 37,
+      "finite_prediction_fields": 370,
+      "mapping_counts": {
+        "drivable_intersection": 189294.0,
+        "drivable_union": 583187.0,
+        "lanes_intersection": 0.0,
+        "lanes_union": 65790.0,
+        "divider_intersection": 0.0,
+        "divider_union": 0.0,
+        "crossing_intersection": 0.0,
+        "crossing_union": 65790.0,
+        "contour_intersection": 0.0,
+        "contour_union": 0.0
+      },
+      "mapping_iou": {
+        "drivable": 0.3245854245722213,
+        "lanes": 0.0,
+        "divider": null,
+        "crossing": 0.0,
+        "contour": null
+      },
+      "empty_union_categories": [
+        "divider",
+        "contour"
+      ],
+      "original_detection_mapping_evaluator_executed": true,
+      "elapsed_seconds": 57.73210938705597,
+      "peak_allocated_bytes": 3647582208,
+      "peak_reserved_bytes": 4211081216
+    },
+    "inference_artifact": {
+      "private_artifact": "perception_inference_v6/inference_validation.json",
+      "sha256": "45703fb06a3d48f084b5210bb8047d275304d461eee9179cf84447819b4d1afd"
+    },
+    "runtime_artifact_sha256": {
+      "rank0": "c3a865a132f94206f3ae130d7e3eb44365ebfe682ff6d8111b5243f6501b9894",
+      "rank1": "f243af1e97131d6e96940d214f749586ebe1a0e8569e3528ac195000a0325050",
+      "rank2": "23d5f83d9db614795f4a574ef72f2c7103fe7247055ec7cad936708266d12705",
+      "rank3": "9804fa4bc39475b7d2243fae89e10bf50e228164ba48a4dc71cb7175f587941b",
+      "rank4": "9ad4d55fbe42648fbdedd23a27c4f9115ccef082e685a196a8f177db62eeb7f2",
+      "rank5": "99f6e97d5aea81ca4524688fa3ee99a792c92566995616c788c6d47664c2544a",
+      "rank6": "9e5eacbb29b2e679e50cd3525e90f467d2ed670ea772f0e6063e54e781cfaa49",
+      "rank7": "2c9896125a935ed6a355de1362e4deb3f78a90f4e074f684029a49425f77777a"
+    },
+    "scope": "Exact copying of the saved full model/optimizer state and rank RNG, followed by three updates and 37-frame original detection/mapping inference. Not strict numerical replay or full benchmark quality."
+  },
+  "archive_question": {
+    "navtrain_current_history_archives": 8,
+    "compressed_bytes": 449046313693,
+    "requires_extraction": true,
+    "expanded_bytes": null,
+    "large_archives_downloaded_during_this_repair": false
+  },
+  "remaining_acceptance": [
+    "Full NAVTRAIN convergence and independent full NAVTEST quality",
+    "Eight genuine synthetic configurations and corresponding extra initializer where required",
+    "Full-data CPU memory, I/O and training time",
+    "GPU device comparison",
+    "Non-FP32/whole-model AMP/second-order gradients",
+    "Manufacturer training support for the inference SKU; 24-hour, 16-chip and multinode operation"
+  ],
+  "evidence": {
+    "msda-strict-matrix-20261013.json": "8429f274e3d0e068e872c0a0fd2a9c264046772909dbbbbed047ef4b55d268d7",
+    "msda-map-layout-20261013.json": "b962f8aba45fba7cd0263901c30bf489503a1700d41c997b95cda83fab1d07a8",
+    "msda-full-shape-20261013.json": "eb4ecc4f5df544148c23b01bbb186b4116a8564a1bec84ec60cd68a7ec532596",
+    "msda-device-profile-20261013.json": "3cfc4946c6a987940a8536df8a16173fc5f0319c137d11efe75d4c8193e8e7c8",
+    "msda-source-assets-20261013.json": "6bfce2a973a081673f97e20500d61e70ee463244372288e26476aa1fab801686",
+    "msda-training-stability-20261013.json": "ffbe0088d0937ea07f01b19171bb8d3a7bb65c4f73a2ee200b812d5bda0502dd",
+    "msda-checkpoint-audit-20261013.json": "29a5cff2e70060098f91c2c15848b6a0a56f44b5363e2633dd6bbfbe184722a9",
+    "msda-replay-20261013.json": "513f69d6f5a97fb9cf59253993422a260178f65e1cb8afd836ee98bf7d20533e",
+    "msda-planning-20261013.json": "c34e75dd689b99392faef38e06919669baa9e52815f647dd04e07c626b59e74e"
+  },
+  "checkpoint_serialization_audit": {
+    "result": "pass_complete_saved_checkpoint_audit",
+    "distinct_paths": 45,
+    "passed_checkpoints": 45,
+    "failed_checkpoints": 0,
+    "discovery_errors": [],
+    "artifact": {
+      "private_artifact": "checkpoint_audit_registered_v6/checkpoint_audit.json",
+      "sha256": "5a0d830423a5468336354367376857157ecf78362134fae44c232e63eb7dd64a"
+    },
+    "checkpoints": [
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "b283fa2fb6fe9cbf8b02b44bbfba06c5ba0bb080270fc99157085e6003ca2904",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 4,
+        "optimizer_steps": [
+          4
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "818ec85d297246e4dc0bab03b9a4a4eb3e4a669b23ed12d687497c1a9c4585a5",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "f1da0ea008798be83f44e8c1ba313b56c2afb6a8106c371cbaf3ceae266b9912",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "dd25c234362b6d07086518797a3ecfc357010d5468a09ca0aaa0d43799516aed",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 4,
+        "optimizer_steps": [
+          4
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "4a5a20969264b572189ede014c7c12741ade3610310268603e57f950a007e319",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "af2f9e05e82dec3f9549294b67e0659b10b942ff39c5050bbfcf7f086732ac71",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 8,
+        "optimizer_steps": [
+          8
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047436,
+        "sha256": "7c6773b94dddb86feea3250536b36001ccfc04aa37a04b76ca0881e7c84ce92f",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 103,
+        "optimizer_steps": [
+          84,
+          103
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047500,
+        "sha256": "7802bb2a42f8267d380a265893ddfd7c6c297d7ed6bf64d1271007dfaccbf4f1",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 100,
+        "optimizer_steps": [
+          83,
+          100
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 859047884,
+        "sha256": "76fe6962432810b11f2ca1f13a5e81d3ec86a6bad1a055e248370d0157584fed",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 160,
+        "optimizer_steps": [
+          127,
+          160
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 8,
+        "contract_world_size": 8,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "97903dc55eb585ce610da1a03e3295b58e2c7fc93745d32e469f5aacb5fc0554",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "08ecaa0f0e7ba2dd0f7bd4280c443d25892116462d14d381b102d9e5fb7cf2af",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "596404cec74617aac46bca0d852062248de65539949ce94828d20e5bb6373223",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "e07e132d8173617509a169e11bbb24405b250dfeac825d67b5fa7100864a67e8",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "eef2994ff6232f43ed640da187683d561bfbc26c2c8dbd271a45bc03c6dc56ae",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "aebb3763f85e9ef95942130f907f5dc9d9e671fa66fa3283d06b4607d4375a78",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "2a55d940cf3ab5681d857d22304f20b818fc32a55d2a2406d1de40404db6d1e2",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "d96d33564154e2b3ee6a551d0d731c3f2e00a5651a11cee89f36fddeec34f47d",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 301024650,
+        "sha256": "7651fd311f4c216a54f5a56d9115a694663474954c0ea290c972b1c93b5a8c0e",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 456,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 152,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "e18514b65f73bfa42c702bbccee3fe14b493c55cbab26076be0412bdedf82397",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "d005e5f1f8204ffc711fb259dab32f0a610b7adf11f077d54ec02c3d709ac89d",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cc0a2218444e4000fd8f42ea5e1bac386d7d879b04d8cc1fd78363fc1457eabd",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "e1aea0936b77a602d1bf1a3a0f4b5202c798c18d7e1ff9c0bb53d5517d5d58de",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 239277676,
+        "sha256": "11a4b7010a296e3081f834d62e326ff32ec23fef9c065327b244648a9091f63b",
+        "model_tensor_count": 949,
+        "optimizer_tensor_count": 180,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 60,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 246813256,
+        "sha256": "4e50f83e5d1c41d6a3e36a41d9844911127193ece4560f2eed0efe5f34b07e92",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 240,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 80,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 246813256,
+        "sha256": "6fc107a9b71ce658257dfa703269f9728a680310e9af3036782403f37d3c55d6",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 240,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 80,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cf6d9e97102c599b5e6e16cd69316b200a057c61ef06b99a27893812f9504ce0",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "72771e128cef6b885c2753012ae9bb1c0de8d4a38ce1482e6d5d54efbc529746",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "cb15e0cd18869023c10bcfbcf4a23bc4787c1c6670b7d7b4b1054a14201a7a68",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "b22ec71022e8766737925ade528214c30e4a4bd68f37d9dc9081f12b48755ab8",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 449572843,
+        "sha256": "2828cc65f9e66efa96bb49f239f22c39d51aec441314afe7d7797301701edd87",
+        "model_tensor_count": 963,
+        "optimizer_tensor_count": 999,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 333,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 450777155,
+        "sha256": "beaad3f00c5e643120ae28a5ece2c2a4c73fa3bb05fe4dec5dbead3239eb1ea1",
+        "model_tensor_count": 909,
+        "optimizer_tensor_count": 837,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 279,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "1d33314808653522d249aa53051ed5fed962a3949a1b15ef447b008bbc3afad2",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 858939482,
+        "sha256": "d4cb86abbb68f8f9e32d64a3bcb2997c4947af240b4c82d1fe5900d6d46f6946",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "2b1b0afe348a31df4ebfe892eeda81f2bbf400c4b78fa5c7c20a25d8810e72c0",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434898131,
+        "sha256": "222dc2916d835554af6e8c9fd2f2f84d44cd903ccf304a015488118033c981c9",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "e34e4ba48b8ab35afd992f3cc217ed7d9c2d7bab0e35103fd99b76ab5352b627",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "b56b36d0d6aa5e08fde3b2df8a63bc74decfd895929e09ddea3d66849b4929fc",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 239277612,
+        "sha256": "281644de24cacad34622f64935386833e8798f143d5ae581231e245a6d5a7133",
+        "model_tensor_count": 949,
+        "optimizer_tensor_count": 180,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 60,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 257397452,
+        "sha256": "6fb6467840cd42267b7cde56a70804470a3ae7f84bdf7bf6470ab4713b2f4523",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 300,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 100,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 257397516,
+        "sha256": "b282e572a0f8dcd10716c1b9aa49f261228ff9245e52abe1e87b473d8a5160be",
+        "model_tensor_count": 989,
+        "optimizer_tensor_count": 300,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 100,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "d6222b1cc058b04129d3cd31e5c81e6bd0760963b55e8a38f3e3dd331c8545e7",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "98be2692b3264b34cf5953cf3e6ceef7c99b20b6b0d2797020a0c66848cdcac1",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "5b5c041ed3090108d5b5955fc6691fd61feb9f80a01c516086602930f6bb2f56",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 434899219,
+        "sha256": "bf12769448455c446dd2b07cfdd6c48e36ac07892755fbb8ef38832b9ef0787f",
+        "model_tensor_count": 889,
+        "optimizer_tensor_count": 777,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          3
+        ],
+        "optimizer_step_parameter_count": 259,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      },
+      {
+        "result": "pass",
+        "bytes": 858938906,
+        "sha256": "730a82ebc5da0b469a07508685b12a07ba2e4d12725019f3415e1956b8411c64",
+        "model_tensor_count": 1393,
+        "optimizer_tensor_count": 3594,
+        "completed_updates": 3,
+        "optimizer_steps": [
+          2,
+          3
+        ],
+        "optimizer_step_parameter_count": 1198,
+        "rng_rank_count": 1,
+        "contract_world_size": 1,
+        "rng_world_size_matches": true,
+        "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+      }
+    ],
+    "scope": "Single-file CPU loading/finiteness/source/counter/rank-RNG audit; separate from numerical replay and quality. Initial CPU deserializer/CPU-map failures do not establish bad checkpoint tensors."
+  },
+  "controlled_base_hydra_replay": {
+    "result": "pass_both_original_numerical_gates",
+    "cases": [
+      {
+        "case": "navformer_vadv2",
+        "result": "pass",
+        "training_and_restore": {
+          "continuous_passed": true,
+          "resumed_passed": true
+        },
+        "max_loss_difference": 0.0,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "completed_updates": 8,
+        "world_size": 1,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model": {
+          "tensors": 889,
+          "bitwise_equal_tensors": 889,
+          "max_absolute_difference": 0.0,
+          "failed_tensor_paths": 0
+        },
+        "model_and_optimizer": {
+          "tensors": 1668,
+          "bitwise_equal_tensors": 1668,
+          "max_absolute_difference": 0.0,
+          "failed_paths": 0,
+          "counter_scope": "Original comparator writes these statistics after RNG checks, so the tensor count includes CPU and NPU RNG byte tensors (two for this one-rank control)."
+        },
+        "artifact": {
+          "private_artifact": "controlled_replays_v6/navformer_vadv2_v6/comparison_cpu_registered/compare_resume.json",
+          "sha256": "bcf6cf6296fa31af50ea9d1aac96111ed84df2c01acb04188d6c769b2018d340"
+        },
+        "independent_saved_tensor_counts": {
+          "model_tensor_count": 889,
+          "optimizer_tensor_count": 777,
+          "rng_rank_count": 1
+        }
+      },
+      {
+        "case": "navformer_hydramdp",
+        "result": "pass",
+        "training_and_restore": {
+          "continuous_passed": true,
+          "resumed_passed": true
+        },
+        "max_loss_difference": 0.0,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "completed_updates": 8,
+        "world_size": 1,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model": {
+          "tensors": 909,
+          "bitwise_equal_tensors": 909,
+          "max_absolute_difference": 0.0,
+          "failed_tensor_paths": 0
+        },
+        "model_and_optimizer": {
+          "tensors": 1748,
+          "bitwise_equal_tensors": 1748,
+          "max_absolute_difference": 0.0,
+          "failed_paths": 0,
+          "counter_scope": "Original comparator writes these statistics after RNG checks, so the tensor count includes CPU and NPU RNG byte tensors (two for this one-rank control)."
+        },
+        "artifact": {
+          "private_artifact": "controlled_replays_v6/navformer_hydramdp_v6/comparison_cpu_registered/compare_resume.json",
+          "sha256": "150d549675a31d5c1143e6f719a84205d6a5fdab9ac632262154f655eef7b67c"
+        },
+        "independent_saved_tensor_counts": {
+          "model_tensor_count": 909,
+          "optimizer_tensor_count": 837,
+          "rng_rank_count": 1
+        }
+      }
+    ],
+    "scope": "Original tensor atol=1e-6/rtol=1e-5 and loss absolute difference<1e-4; same continuous-run prefix checkpoint, horizon/data/source/topology. Initial CPU comparison attempts stopped at NPU deserialization before producing numerical results."
+  },
+  "official_cpu_checkpoint_loading": {
+    "result": "pass_original_gates_with_official_registered_cpu_load",
+    "wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+    "jobs": [
+      {
+        "kind": "navformer_vadv2",
+        "actual_exit": 0,
+        "loader": {
+          "result": "pass_unchanged_target_official_cpu_loader",
+          "official_loader_identity": true,
+          "RE_MAP_CPU_before_runpy": false,
+          "RE_MAP_CPU_after_runpy": true,
+          "no_npu_initialization": true,
+          "target_source_unchanged": true,
+          "target_sha256_before": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+          "target_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+          "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+          "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+        }
+      },
+      {
+        "kind": "navformer_hydramdp",
+        "actual_exit": 0,
+        "loader": {
+          "result": "pass_unchanged_target_official_cpu_loader",
+          "official_loader_identity": true,
+          "RE_MAP_CPU_before_runpy": false,
+          "RE_MAP_CPU_after_runpy": true,
+          "no_npu_initialization": true,
+          "target_source_unchanged": true,
+          "target_sha256_before": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+          "target_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+          "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+          "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+        }
+      },
+      {
+        "kind": "checkpoint_audit",
+        "actual_exit": 0,
+        "loader": {
+          "result": "pass_unchanged_target_official_cpu_loader",
+          "official_loader_identity": true,
+          "RE_MAP_CPU_before_runpy": false,
+          "RE_MAP_CPU_after_runpy": true,
+          "no_npu_initialization": true,
+          "target_source_unchanged": true,
+          "target_sha256_before": "5b90eb5aadb0aa61e0ff7a5893c7081b8a4dfbd0ac8110f7fa40cdf7528a0b3a",
+          "target_sha256_after": "5b90eb5aadb0aa61e0ff7a5893c7081b8a4dfbd0ac8110f7fa40cdf7528a0b3a",
+          "serialization_module_sha256": "71564980d5660419220d825ee132208584ca2b5b0a93fe26be00620cb999dff7",
+          "storage_module_sha256": "756726296c52abf1f04014aeebf4ff00652a47986c0c5cd9016747e07fc7aee3"
+        }
+      }
+    ],
+    "artifact": {
+      "private_artifact": "postload_retry_registered_v6.json",
+      "sha256": "802f9b6f977b91a28319b6e60904cab131851728fa87710c5f899548ae22fba9"
+    },
+    "scope": "Early import of installed official torch_npu serialization hooks before unchanged runpy target. Original CPU map_location and strict gates retained; no custom loader, checkpoint edits or NPU initialization."
+  },
+  "representative_planning": {
+    "result": "pass_three_independent_planners_and_official_scoring",
+    "profiles": [
+      {
+        "profile": "vad",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "4a5a20969264b572189ede014c7c12741ade3610310268603e57f950a007e319",
+        "checkpoint_bytes": 434899219,
+        "config_sha256": "11386a654646d8ad9532b19f9b5e64aa3c03b6a089e58edff3e094002e3bb31c",
+        "predictions_sha256": "1e669ea659cb06cafef8f00ed6a989d1f934fc45312dbc9e616a941fee4778bc",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 4.25754976272583,
+            "fde_4s": 7.5819854736328125,
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.9060353121974252,
+            "time_to_collision_within_bound": 0.8181818181818182,
+            "comfort": 0.8181818181818182,
+            "score": 0.8396359248594805
+          },
+          "generated_trajectories": false,
+          "independent_log_split": true,
+          "elapsed_seconds": 143.69999174203258,
+          "peak_allocated_bytes": 3786333696,
+          "peak_reserved_bytes": 9196011520
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.9090909090909091,
+              "drivable_area_compliance": 1.0,
+              "ego_progress": 0.7753713884354906,
+              "time_to_collision_within_bound": 0.8181818181818182,
+              "comfort": 0.8181818181818182,
+              "driving_direction_compliance": 0.9318181818181818,
+              "score": 0.7851926239693333
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "c173ad68e0a344491e866dd6128466a4b30830117e00109810880237ebe8c531",
+          "metrics": {
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.7753713884354906,
+            "time_to_collision_within_bound": 0.8181818181818182,
+            "comfort": 0.8181818181818182,
+            "driving_direction_compliance": 0.9318181818181818,
+            "score": 0.7851926239693333
+          }
+        }
+      },
+      {
+        "profile": "hydra",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "818ec85d297246e4dc0bab03b9a4a4eb3e4a669b23ed12d687497c1a9c4585a5",
+        "checkpoint_bytes": 450777155,
+        "config_sha256": "19972e2d42f62b0e6eda449198b94ae309d057cde20ddefb4812666e68509c92",
+        "predictions_sha256": "c3262970e2e3b963de172dd1a0b215151c681bcf4f58a917dab44f6656f47b9d",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 7.61236572265625,
+            "fde_4s": 12.194945335388184,
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.5339006862857125,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 0.6818181818181818,
+            "score": 0.6807919496839697
+          },
+          "generated_trajectories": false,
+          "independent_log_split": true,
+          "elapsed_seconds": 143.70898328500334,
+          "peak_allocated_bytes": 3797772288,
+          "peak_reserved_bytes": 9204400128
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.9090909090909091,
+              "drivable_area_compliance": 1.0,
+              "ego_progress": 0.3148307636200324,
+              "time_to_collision_within_bound": 1.0,
+              "comfort": 0.6818181818181818,
+              "driving_direction_compliance": 1.0,
+              "score": 0.6084522121144075
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "f47df23c9f1a5a7b881a2fc3d01f015da240b621e064b5e71813ccbb94c26f2f",
+          "metrics": {
+            "no_at_fault_collisions": 0.9090909090909091,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.3148307636200324,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 0.6818181818181818,
+            "driving_direction_compliance": 1.0,
+            "score": 0.6084522121144075
+          }
+        }
+      },
+      {
+        "profile": "dd",
+        "passed": true,
+        "launcher_actual_exit": 0,
+        "actual_exit": 0,
+        "checkpoint_sha256": "eef2994ff6232f43ed640da187683d561bfbc26c2c8dbd271a45bc03c6dc56ae",
+        "checkpoint_bytes": 301024650,
+        "config_sha256": "a5193a50b53b5fa6e4cddc0353d8b41e74a7412b0018e3a3c4922b13b8f280b7",
+        "predictions_sha256": "67ded465667fbf8a68ea825cdab755d8dd01ce954d3beafb5fb382b75a2c2a20",
+        "validation": {
+          "result": "pass_real_planning_inference",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "metrics": {
+            "ade_4s": 11.422893524169922,
+            "fde_4s": 20.63299560546875
+          },
+          "generated_trajectories": true,
+          "independent_log_split": true,
+          "elapsed_seconds": 142.33322705700994,
+          "peak_allocated_bytes": 3692141056,
+          "peak_reserved_bytes": 9047113728
+        },
+        "official_scoring": {
+          "passed": true,
+          "official_score": {
+            "valid_tokens": 22,
+            "metrics": {
+              "no_at_fault_collisions": 0.38636363636363635,
+              "drivable_area_compliance": 0.5,
+              "ego_progress": 0.2313236251560821,
+              "time_to_collision_within_bound": 0.18181818181818182,
+              "comfort": 0.3181818181818182,
+              "driving_direction_compliance": 0.5681818181818182,
+              "score": 0.18729393472412512
+            },
+            "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896"
+          },
+          "official_score_sha256": "01bce3120a62c7e2026cddf41d713f0f941abc0179c1327f16433412d9413225",
+          "metrics": {
+            "no_at_fault_collisions": 0.38636363636363635,
+            "drivable_area_compliance": 0.5,
+            "ego_progress": 0.2313236251560821,
+            "time_to_collision_within_bound": 0.18181818181818182,
+            "comfort": 0.3181818181818182,
+            "driving_direction_compliance": 0.5681818181818182,
+            "score": 0.18729393472412512
+          }
+        }
+      }
+    ],
+    "cpu_scoring_actual_exit": 0,
+    "artifact": {
+      "private_artifact": "representative_planning_v6_registered_score.json",
+      "sha256": "45404b863ace3f8b47e316b716a69b065355b9227d40f409a1d4427fe4abfcea"
+    },
+    "scope": "Three representative checkpoints and independent 22-anchor original inference/official NAVSIM rescoring; not trained planner quality, GPU comparison or full NAVTEST acceptance.",
+    "dependency_path_fix": {
+      "original_summary_sha256": "b242c08a5291bac470f902b286ada0d668d51b5c6fe6890bede9387946544436",
+      "original_scoring_code_sha256": "9a2de5bafd35db2b715fae06372095231c105deaa9ebcbdfbd11d303908880ad",
+      "retry_scoring_code_sha256": "9a2de5bafd35db2b715fae06372095231c105deaa9ebcbdfbd11d303908880ad",
+      "no_scorer_change": true,
+      "interpretation": "The original private helper replaced the image PYTHONPATH and hid the nuplan dependency. The retry restores inherited pinned-image dependency directories, keeps the same predictions and unchanged official scoring code, and preserves the original failed report."
+    },
+    "retry_helper_sha256": "162391b04546e9e58f9c56cc066045fd44e80ebf5646031c24153c49eb9da4c4"
+  },
+  "final_supervisor_artifact": {
+    "private_artifact": "final_supervisor_v6.json",
+    "sha256": "a41d3e69de7e8186d7a30c0e4852908223c3efefb0f32da1fce20c7b88ae29ff"
+  }
+}

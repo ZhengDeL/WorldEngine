@@ -1,8 +1,13 @@
 # Full AlgEngine migration candidate
 
+**2026-10-13 FP32 MSDA update:** use the [MSDA repair supplement](MSDA.md)
+and its [versioned results](evidence/msda-precision-20261013.json) for the current
+native NPU sampler, strict gradients and new model/resource regressions. The
+`96a7bef…` fingerprint and measurements below describe the earlier fused-path
+snapshot. They remain historical evidence and are not reassigned to the new source.
+
 [中文操作文档](README_zh.md) provides deployment, data preparation, training,
-fine-tuning, inference, complete resume and acceptance commands for this same
-Python fingerprint and measured result set. See also the
+fine-tuning, inference, complete resume and acceptance commands. See also the historical
 [bounded machine-readable evidence](evidence/full-algengine-20261013.json).
 
 This is a candidate for the complete **published AlgEngine scope**, based on

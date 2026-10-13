@@ -1,0 +1,1494 @@
+{
+  "result": "pass_raw_map_global_prefix_cpu32_compatibility",
+  "cases": [
+    {
+      "name": "encoded_layout_B1",
+      "spatial_shape": [
+        5,
+        7
+      ],
+      "batch": 1,
+      "queries": 3,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "pattern": "encoded",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 96,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              1,
+              35,
+              8,
+              32
+            ],
+            "stride": [
+              8960,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              3,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              768,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              3,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              384,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            5,
+            7
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "4909f7f05b0f4c9273b58020c5a34856f832f273879385b30151c2e412c8feb5",
+        "locations": "f10fff11f96b7f05a9179813af771d0d9880c53e1d49e190dd10b6b9c3a2e2b0",
+        "weights": "1d64f0553d922fa77901408ec5c74f3d0609d996855209276f393dc8ac1fa0a8"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            1,
+            3,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            192,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            3,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            96,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          1,
+          3,
+          256
+        ],
+        "stride": [
+          768,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          1,
+          3,
+          256
+        ],
+        "elements": 768,
+        "finite_elements": 768,
+        "failing_elements": 0,
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "7828df93f049bfe61543f7dfc49be4610def91ca78e009e4c4a25e075ea33288",
+        "reference_sha256": "7828df93f049bfe61543f7dfc49be4610def91ca78e009e4c4a25e075ea33288",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            1,
+            35,
+            8,
+            32
+          ],
+          "elements": 8960,
+          "finite_elements": 8960,
+          "failing_elements": 0,
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "7275646d5f7983d9bbe6b9bf87814a1ec64daf6a4280fc08a05bc128f19da628",
+          "reference_sha256": "7275646d5f7983d9bbe6b9bf87814a1ec64daf6a4280fc08a05bc128f19da628",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            1,
+            3,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 768,
+          "finite_elements": 768,
+          "failing_elements": 0,
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+          "reference_sha256": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 576,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 576,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            1,
+            3,
+            8,
+            4,
+            4
+          ],
+          "elements": 384,
+          "finite_elements": 384,
+          "failing_elements": 0,
+          "max_abs": 1.1444091796875e-05,
+          "relative_l2": 1.496993099568089e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "9703fb5f692290aefd56c25004ee66f9472cf8d92fea3707f56da0550cf5cdc3",
+          "reference_sha256": "468e13e253548b655847eef825e0cdfb817c7b83c4c2380c1a447add3b729146",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 288,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 288,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 0.2899076280882582
+    },
+    {
+      "name": "large_raw_map_seed29",
+      "spatial_shape": [
+        200,
+        200
+      ],
+      "batch": 1,
+      "queries": 300,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "pattern": "random",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 9600,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              32
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              300,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              76800,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              300,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              38400,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            200,
+            200
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "78eab08a8ed12365249c92563ad8c141ebf3b26cc378eb135b5f80df97915073",
+        "locations": "a276501ca272659e9c4a666e4a16b888b9ae48c3201c380d75c792fb76b7ac4d",
+        "weights": "d3d320464a58d6fc0e2764555ecc240ca5e80b76a32c670731dfbac777dc2288"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            1,
+            300,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            19200,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            300,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            9600,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          1,
+          300,
+          256
+        ],
+        "stride": [
+          76800,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          1,
+          300,
+          256
+        ],
+        "elements": 76800,
+        "finite_elements": 76800,
+        "failing_elements": 0,
+        "max_abs": 2.384185791015625e-07,
+        "relative_l2": 2.5989457087388285e-08,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "274bc9ac4b7b3e842242b02cddcbe5a13133851492fa597be644fee5406005e9",
+        "reference_sha256": "93a0081da8603a442b6f35edb40d11f80c776bd17940de276d4c5fc803ab32d7",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "77caa9876bff0ebf39f872e5ad5bd3f8a4dd8afb0deff1c7e03dc5befdf5f41b",
+          "reference_sha256": "77caa9876bff0ebf39f872e5ad5bd3f8a4dd8afb0deff1c7e03dc5befdf5f41b",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            1,
+            300,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 76800,
+          "finite_elements": 76800,
+          "failing_elements": 0,
+          "max_abs": 0.0009765625,
+          "relative_l2": 1.4653183150682095e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "60c10dfaa3344f36ec01ab9284a39f7bd6de12984ae82b0b1596e90283bc36ea",
+          "reference_sha256": "967429e5aa23552a816886ed983514e70301917c197aaecc35663b6e6e01ff54",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 57600,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 57600,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            1,
+            300,
+            8,
+            4,
+            4
+          ],
+          "elements": 38400,
+          "finite_elements": 38400,
+          "failing_elements": 0,
+          "max_abs": 2.86102294921875e-06,
+          "relative_l2": 1.0619791739164952e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "af734138b5405b5a34305ec857dfb02fd476a12e663a2ae31d7280620a754c1d",
+          "reference_sha256": "ac273748ec90f6719edd8dd052db82c3d1315d762de972980257be16e07a95d6",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 28800,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 28800,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 0.5361174030695111
+    },
+    {
+      "name": "small_raw_map_B2",
+      "spatial_shape": [
+        5,
+        7
+      ],
+      "batch": 2,
+      "queries": 13,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "pattern": "random",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 832,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              2,
+              35,
+              8,
+              32
+            ],
+            "stride": [
+              8960,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              2,
+              13,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              3328,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              2,
+              13,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              1664,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            5,
+            7
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "30c08b5877f2c5740419bf6c07cc97023102bcd696a16bf7a775d47611a2b672",
+        "locations": "06b8dd06c128ec3177811adf9bb41666be09c42795722103fe2c31768211154b",
+        "weights": "265b7b53706785daaefda0f4e27feb90e52d3f4b4e68a0f9a99225e258fc3349"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            2,
+            13,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            832,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            2,
+            13,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            416,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          2,
+          13,
+          256
+        ],
+        "stride": [
+          3328,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          2,
+          13,
+          256
+        ],
+        "elements": 6656,
+        "finite_elements": 6656,
+        "failing_elements": 0,
+        "max_abs": 2.384185791015625e-07,
+        "relative_l2": 3.0971252895780065e-08,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "b1195138687d06c61f3fa22784ab3e2e03dde172d4761f63dccd965d3b3da459",
+        "reference_sha256": "323097484594fdefe670330ac6181ac1f722d73697b3a4e5cf0b77ac633e9db8",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            2,
+            35,
+            8,
+            32
+          ],
+          "elements": 17920,
+          "finite_elements": 17920,
+          "failing_elements": 0,
+          "max_abs": 2.384185791015625e-07,
+          "relative_l2": 2.2400162626609455e-08,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "07057e813dfadeb30f8ae1867e9b4c1e2de3b62c9895cefef55c406b072fba2d",
+          "reference_sha256": "a23d16c83bc53b54807ac7329c0ffb6435207f9994d9b9108ad7cca8393cff22",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            2,
+            13,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 6656,
+          "finite_elements": 6656,
+          "failing_elements": 0,
+          "max_abs": 2.288818359375e-05,
+          "relative_l2": 1.4987020198837037e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "6393ad0b2d32c1d02a9209b25321fd1b4295f793939eeea4c2276cfc4ec063b6",
+          "reference_sha256": "c87ea4be39a86b5c3339a8b8babf8433a1fefa94e648997b2aa2fb8d84f44dff",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 4992,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 4992,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            2,
+            13,
+            8,
+            4,
+            4
+          ],
+          "elements": 3328,
+          "finite_elements": 3328,
+          "failing_elements": 0,
+          "max_abs": 1.9073486328125e-06,
+          "relative_l2": 1.0469173216073786e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "a5c0358d832bebf343388d2be1df705d15cb9b24a41700ea2e05dc2c185e7d78",
+          "reference_sha256": "8146ce6180c0d16cd3afa19055477ae815fae635ec9079fe95d6534bee715b79",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 2496,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 2496,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 0.009984408039599657
+    },
+    {
+      "name": "large_raw_map_seed7",
+      "spatial_shape": [
+        200,
+        200
+      ],
+      "batch": 1,
+      "queries": 300,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 7,
+      "pattern": "random",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 9600,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              32
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              300,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              76800,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              300,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              38400,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            200,
+            200
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "b0c083f805b4e09e180a218e7a32a17f704dbe9f2c0e8de0e79aa4d8cda6e67f",
+        "locations": "fed674751b2923e2ebed72b44a45e42b5f444136fdb5b1bbf64e7eed6a3e4ebd",
+        "weights": "9671c5cab96bba9cb4c84499d320328ab4571f8c45a8e110ed221491e88ac49c"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            1,
+            300,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            19200,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            300,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            9600,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          1,
+          300,
+          256
+        ],
+        "stride": [
+          76800,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          1,
+          300,
+          256
+        ],
+        "elements": 76800,
+        "finite_elements": 76800,
+        "failing_elements": 0,
+        "max_abs": 2.384185791015625e-07,
+        "relative_l2": 2.5404801038493506e-08,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "8cd0ebea0fa5d5b6b40d6a4438aad86183b003f7457e1b9884e8ac496506c229",
+        "reference_sha256": "9b240d162ddfdc1c8bb1fb7d4e717365a55330ef0fa7c517f6c72402255de5db",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 0.0,
+          "relative_l2": 0.0,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "cedef66e88d83b978ca1faec29c4059904fa3540d535359252c8296a77c29b49",
+          "reference_sha256": "cedef66e88d83b978ca1faec29c4059904fa3540d535359252c8296a77c29b49",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            1,
+            300,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 76800,
+          "finite_elements": 76800,
+          "failing_elements": 0,
+          "max_abs": 0.0009765625,
+          "relative_l2": 1.5131436068883915e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "67c9bdb9d2f76f1e8e0d00c62839458d577cd593d3ab50b1df7d87b8a3aae527",
+          "reference_sha256": "a215d058b72610103aebac08889cd1557f54f5486679bd658a36c9c07ce8eb8a",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 57600,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 57600,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            1,
+            300,
+            8,
+            4,
+            4
+          ],
+          "elements": 38400,
+          "finite_elements": 38400,
+          "failing_elements": 0,
+          "max_abs": 2.86102294921875e-06,
+          "relative_l2": 1.0702438428237242e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "acf8c4c9b6fea8eda7640d5a7ca4d8141417f7fd0944255f3088ae4a0d1683c8",
+          "reference_sha256": "05aae391a32cd3a7105e868c9cc4bb0f2a8848547ea7a8820378ca248c07be15",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 28800,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 28800,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 0.5078709680819884
+    }
+  ],
+  "reference": "unmodified_mmcv_pytorch_cpu32_after_valid_global_flat_prefix_view",
+  "storage_rule": "raw locations.reshape(-1,2)[:B*Q*heads*actualL*P] and raw weights.reshape(-1)[:B*Q*heads*actualL*P], reshaped to valid actualL",
+  "forward_atol": 2e-05,
+  "forward_rtol": 2e-05,
+  "gradient_atol": 0.001,
+  "gradient_rtol": 0.0001,
+  "scope": "Known original panoptic-map raw L4 versus spatial L1 storage compatibility only. The raw L4 tensors cannot be passed directly to the PyTorch CPU oracle. All floating outputs/three full raw gradients are checked. Unused raw tails must be exactly zero. No GPU device comparison, full-data quality, convergence or bitwise replay acceptance. This script records dispatched framework APIs/devices; native CANN kernel traces are separate evidence.",
+  "environment": {
+    "torch_version": "2.7.1+cpu",
+    "torch_npu_version": "2.7.1.post6",
+    "mx_driving_version": null,
+    "npu_device": "npu:0",
+    "npu_name": "Ascend910_9362",
+    "deterministic_algorithms": true,
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": true
+  },
+  "entrypoints": {
+    "patched_mmcv_forward": {
+      "module": "ascend.compat",
+      "qualname": "enable_training_compat.<locals>.npu_forward",
+      "source_file": "/workspace/WorldEngine/ascend/compat.py",
+      "source_file_sha256": "70ca8be7339ae814b4bebd8797493398c76cbe78974e3027e4a5b20d347a0287"
+    },
+    "cpu_reference": {
+      "module": "mmcv.ops.multi_scale_deform_attn",
+      "qualname": "multi_scale_deformable_attn_pytorch",
+      "source_file": "/workspace/bevformer/mmcv/mmcv/ops/multi_scale_deform_attn.py",
+      "source_file_sha256": "db9d364f1ffb3688487079bdfdcac460da4008d84fcb31bc3d5040664257c8df"
+    },
+    "raw_sdk_forward": {
+      "module": "mx_driving._C",
+      "qualname": "PyCapsule.multi_scale_deformable_attn"
+    }
+  },
+  "cpu_reference_source_sha256": "4ef9c84cb9016a3554b7fd62d35a6e8f8cb440099103679de01fc0491eaf5128",
+  "sdk_diagnostic": {
+    "result": "diagnostic_only",
+    "affects_fix_gate": false,
+    "api": "mx_driving._C.multi_scale_deformable_attn",
+    "scope": "Raw installed SDK forward is compared with two storage-indexing hypotheses. A mismatch or SDK exception is recorded, not classified as a compatibility-fix gate failure.",
+    "input_layouts": [
+      {
+        "shape": [
+          1,
+          35,
+          8,
+          32
+        ],
+        "stride": [
+          8960,
+          256,
+          32,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      {
+        "shape": [
+          1,
+          3,
+          8,
+          4,
+          4,
+          2
+        ],
+        "stride": [
+          768,
+          256,
+          32,
+          8,
+          2,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      {
+        "shape": [
+          1,
+          3,
+          8,
+          4,
+          4
+        ],
+        "stride": [
+          384,
+          128,
+          16,
+          4,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      }
+    ],
+    "actual_output_layout": {
+      "shape": [
+        1,
+        3,
+        256
+      ],
+      "stride": [
+        768,
+        256,
+        1
+      ],
+      "contiguous": true,
+      "storage_offset": 0,
+      "dtype": "torch.float32",
+      "device": "npu:0"
+    },
+    "vs_cuda_global_prefix_cpu32": {
+      "allclose": false,
+      "shape": [
+        1,
+        3,
+        256
+      ],
+      "elements": 768,
+      "finite_elements": 768,
+      "failing_elements": 512,
+      "max_abs": 51200.0,
+      "relative_l2": 2.9533701989722454,
+      "absolute_tolerance": 2e-05,
+      "relative_tolerance": 2e-05,
+      "actual_sha256": "a3f6acbb30e9c13fc569ecb9b86b33772660de39227a0dfa6de80e6b13726944",
+      "reference_sha256": "7828df93f049bfe61543f7dfc49be4610def91ca78e009e4c4a25e075ea33288",
+      "failure_samples": [
+        {
+          "index": [
+            0,
+            2,
+            231
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            239
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            238
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            237
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            236
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            235
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            234
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            233
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            232
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            225
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            226
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        },
+        {
+          "index": [
+            0,
+            2,
+            227
+          ],
+          "actual": 68240.0,
+          "reference": 17040.0,
+          "absolute_difference": 51200.0,
+          "allowed_difference": 0.34081998467445374
+        }
+      ]
+    },
+    "vs_per_query_prefix_cpu32": {
+      "allclose": true,
+      "shape": [
+        1,
+        3,
+        256
+      ],
+      "elements": 768,
+      "finite_elements": 768,
+      "failing_elements": 0,
+      "max_abs": 0.0,
+      "relative_l2": 0.0,
+      "absolute_tolerance": 2e-05,
+      "relative_tolerance": 2e-05,
+      "actual_sha256": "a3f6acbb30e9c13fc569ecb9b86b33772660de39227a0dfa6de80e6b13726944",
+      "reference_sha256": "a3f6acbb30e9c13fc569ecb9b86b33772660de39227a0dfa6de80e6b13726944",
+      "failure_samples": []
+    },
+    "hypotheses_differ": true,
+    "first_channel_by_query_and_head": {
+      "sdk": [
+        [
+          [
+            10.0,
+            100.0,
+            270.0,
+            520.0,
+            2050.0,
+            2700.0,
+            3430.0,
+            4240.0
+          ],
+          [
+            4010.0,
+            8100.0,
+            12270.0,
+            16520.0,
+            22050.0,
+            26700.0,
+            31430.0,
+            36240.0
+          ],
+          [
+            8010.0,
+            16100.0,
+            24270.0,
+            32520.0,
+            42050.0,
+            50700.0,
+            59430.0,
+            68240.0
+          ]
+        ]
+      ],
+      "cuda_global_prefix": [
+        [
+          [
+            10.0,
+            100.0,
+            270.0,
+            520.0,
+            2050.0,
+            2700.0,
+            3430.0,
+            4240.0
+          ],
+          [
+            810.0,
+            1700.0,
+            2670.0,
+            3720.0,
+            6050.0,
+            7500.0,
+            9030.0,
+            10640.0
+          ],
+          [
+            1610.0,
+            3300.0,
+            5070.0,
+            6920.0,
+            10050.0,
+            12300.0,
+            14630.0,
+            17040.0
+          ]
+        ]
+      ],
+      "per_query_prefix": [
+        [
+          [
+            10.0,
+            100.0,
+            270.0,
+            520.0,
+            2050.0,
+            2700.0,
+            3430.0,
+            4240.0
+          ],
+          [
+            4010.0,
+            8100.0,
+            12270.0,
+            16520.0,
+            22050.0,
+            26700.0,
+            31430.0,
+            36240.0
+          ],
+          [
+            8010.0,
+            16100.0,
+            24270.0,
+            32520.0,
+            42050.0,
+            50700.0,
+            59430.0,
+            68240.0
+          ]
+        ]
+      ]
+    },
+    "seconds": 0.2265473009319976
+  },
+  "seconds": 2.104943973943591,
+  "passed_cases": 4
+}

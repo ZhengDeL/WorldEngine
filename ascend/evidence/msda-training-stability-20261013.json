@@ -1,0 +1,123 @@
+{
+  "source_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "evidence": {
+    "hour_training": {
+      "result": "pass_bounded_one_hour",
+      "ranks": 8,
+      "updates_per_rank": 160,
+      "total_anchor_exposures": 1280,
+      "train_seconds_min": 3616.849489587941,
+      "train_seconds_max": 3617.7747315020533,
+      "global_anchor_exposures_per_second": 0.35380865172568676,
+      "peak_allocated_bytes": 46843542016,
+      "peak_reserved_bytes": 52206501888,
+      "charged_cpu_memory_peak_bytes": 66488492032,
+      "cpu_memory_limit_bytes": 137438953472,
+      "memory_failcnt": 0,
+      "world_size": 8,
+      "batch_per_rank": 1,
+      "workers_per_rank": 0,
+      "training_unique_anchors": 42,
+      "lr_horizon_updates": 10000,
+      "upstream_optimizer_and_warmup": true,
+      "raw_losses_observed_each_update": true,
+      "gradient_check_interval": 10,
+      "all_actual_exit_codes_zero": true,
+      "oom_killed": false,
+      "runtime_artifact_sha256": {
+        "rank0": "fe1981d5edc531fd54c9270f5be3b9f977af612e6e553f21790f714ec140ab51",
+        "rank1": "66a4d13806b4f8b0197937cec8930b608017f8dce6b7eb8216fe5b02c483ff08",
+        "rank2": "043f853bc81b0aa9e982f9ec810813a35ed99c3355e2b3f2489ce393168a0848",
+        "rank3": "9f18990a5ea34cda2a96dfc1a748bec8b6ab927da9a74d690faffb20faa76c01",
+        "rank4": "ddad5c2f462236d961d9ccdcadf096418c3ff5545d9f467a4608a13ebcdecf06",
+        "rank5": "a86302ccf4a4b163dd44b3cdb9e79eef0fed1427462fcf1be7cbf5291a95562a",
+        "rank6": "123ca0969a806293490e97b951b16710d990b74890db2c175265ef28908de45f",
+        "rank7": "085d736aee544a650afb10bb2d472834eda889e78c2b161af6debf3859621a9b"
+      },
+      "host_memory_artifact_sha256": "e213c26d76236f94b0aea020ce31fe1a9255abffb73735623155bdbfbf8da057",
+      "historical_reference": {
+        "source_python_sha256": "96a7bef17fd27a681b5f90c367507a3a9f72767e5698fbe514d077d20ec0f997",
+        "global_anchor_exposures_per_second": 0.94808,
+        "paired_benchmark": false,
+        "interpretation": "The current observed rate is lower. Different MSDA/layout semantics and observation/check frequency prevent attributing the full gap to one isolated change or extrapolating full NAVTRAIN time."
+      },
+      "scope": "Repeats 42 real anchors with sampler padding; includes training/observation/checkpoint work. Not full-data throughput, convergence, 24-hour stability or memory-leak exclusion."
+    },
+    "resume_and_independent_inference": {
+      "result": "pass_complete_restore_and_independent_perception",
+      "ranks": 8,
+      "restored_update": 100,
+      "final_update": 103,
+      "updates_after_restore": 3,
+      "restored_model_tensors_per_rank": [
+        1393,
+        1393,
+        1393,
+        1393,
+        1393,
+        1393,
+        1393,
+        1393
+      ],
+      "restored_optimizer_tensors_per_rank": [
+        3594,
+        3594,
+        3594,
+        3594,
+        3594,
+        3594,
+        3594,
+        3594
+      ],
+      "perception": {
+        "result": "pass_real_perception_inference",
+        "frames": 37,
+        "unique_tokens": 37,
+        "finite_prediction_fields": 370,
+        "mapping_counts": {
+          "drivable_intersection": 189294.0,
+          "drivable_union": 583187.0,
+          "lanes_intersection": 0.0,
+          "lanes_union": 65790.0,
+          "divider_intersection": 0.0,
+          "divider_union": 0.0,
+          "crossing_intersection": 0.0,
+          "crossing_union": 65790.0,
+          "contour_intersection": 0.0,
+          "contour_union": 0.0
+        },
+        "mapping_iou": {
+          "drivable": 0.3245854245722213,
+          "lanes": 0.0,
+          "divider": null,
+          "crossing": 0.0,
+          "contour": null
+        },
+        "empty_union_categories": [
+          "divider",
+          "contour"
+        ],
+        "original_detection_mapping_evaluator_executed": true,
+        "elapsed_seconds": 57.73210938705597,
+        "peak_allocated_bytes": 3647582208,
+        "peak_reserved_bytes": 4211081216
+      },
+      "inference_artifact": {
+        "private_artifact": "perception_inference_v6/inference_validation.json",
+        "sha256": "45703fb06a3d48f084b5210bb8047d275304d461eee9179cf84447819b4d1afd"
+      },
+      "runtime_artifact_sha256": {
+        "rank0": "c3a865a132f94206f3ae130d7e3eb44365ebfe682ff6d8111b5243f6501b9894",
+        "rank1": "f243af1e97131d6e96940d214f749586ebe1a0e8569e3528ac195000a0325050",
+        "rank2": "23d5f83d9db614795f4a574ef72f2c7103fe7247055ec7cad936708266d12705",
+        "rank3": "9804fa4bc39475b7d2243fae89e10bf50e228164ba48a4dc71cb7175f587941b",
+        "rank4": "9ad4d55fbe42648fbdedd23a27c4f9115ccef082e685a196a8f177db62eeb7f2",
+        "rank5": "99f6e97d5aea81ca4524688fa3ee99a792c92566995616c788c6d47664c2544a",
+        "rank6": "9e5eacbb29b2e679e50cd3525e90f467d2ed670ea772f0e6063e54e781cfaa49",
+        "rank7": "2c9896125a935ed6a355de1362e4deb3f78a90f4e074f684029a49425f77777a"
+      },
+      "scope": "Exact copying of the saved full model/optimizer state and rank RNG, followed by three updates and 37-frame original detection/mapping inference. Not strict numerical replay or full benchmark quality."
+    }
+  }
+}

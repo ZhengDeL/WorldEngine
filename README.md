@@ -17,6 +17,8 @@
 
 **Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [bounded measured results](ascend/evidence/full-algengine-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance.
 
+**FP32 MSDA repair:** [English](ascend/MSDA.md), [中文](ascend/MSDA_zh.md), and [versioned strict-gradient/model results](ascend/evidence/msda-precision-20261013.json). Earlier fused-path performance remains historical evidence for its original fingerprint.
+
 <div id="top" align="center">
 <p align="center">
 <img src="https://raw.githubusercontent.com/OpenDriveLab/opendrivelab.github.io/refs/heads/master/WorldEngine/imgs/README_overall.jpg" width="800px" >

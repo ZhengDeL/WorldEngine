@@ -1,0 +1,1592 @@
+{
+  "result": "pass_original_encoder_full_shape_cpu32_gates",
+  "expected_source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "probe_sha256": "a7421b6835e8cf8903398f71259b0bd1a455d883c96c6ade595f41d912cbf449",
+  "forward_atol": 2e-05,
+  "forward_rtol": 2e-05,
+  "gradient_atol": 0.001,
+  "gradient_rtol": 0.0001,
+  "expected_cases": 4,
+  "expected_entry_comparisons": 6,
+  "rows": [
+    {
+      "name": "normal_original_encoder_q40000_h8_c32_seed29",
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "queries": 40000,
+      "seed": 29,
+      "batch": 1,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "locations": "random",
+      "weights": "random",
+      "noncontiguous": false,
+      "cpu_reference_seconds": 0.958108065999113,
+      "cpu_input_layouts": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "cpu_grad_output_layout": {
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "stride": [
+          10240000,
+          256,
+          1
+        ],
+        "storage_offset": 0,
+        "contiguous": true,
+        "dtype": "torch.float32",
+        "device": "cpu"
+      },
+      "entries": [
+        {
+          "entry": "mmcv",
+          "npu_input_layouts": [
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "stride": [
+                10240000,
+                256,
+                32,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "stride": [
+                2560000,
+                64,
+                8,
+                8,
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "stride": [
+                1280000,
+                32,
+                4,
+                4,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            }
+          ],
+          "npu_metadata_layouts": [
+            {
+              "shape": [
+                1,
+                2
+              ],
+              "stride": [
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1
+              ],
+              "stride": [
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            }
+          ],
+          "npu_grad_output_layout": {
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "stride": [
+              10240000,
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "contiguous": true,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          "forward": {
+            "allclose": true,
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "dtype": "torch.float32",
+            "elements": 10240000,
+            "finite_elements": 10240000,
+            "failing_elements": 0,
+            "max_abs": 4.76837158203125e-07,
+            "relative_l2": 2.510249128003257e-08,
+            "reference_max_abs": 5.024130344390869,
+            "absolute_tolerance": 2e-05,
+            "relative_tolerance": 2e-05,
+            "actual_tensor_sha256": "1476b4f43ceae4e6713bc1d6da1a281a3760b48e99117d0a043b3c343fff4480",
+            "reference_tensor_sha256": "13fb708d63f2d1815a8c84f8898a626027dc93ac7d4747bea02f232f72c2be36",
+            "failure_samples": []
+          },
+          "gradients": {
+            "value": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "dtype": "torch.float32",
+              "elements": 10240000,
+              "finite_elements": 10240000,
+              "failing_elements": 0,
+              "max_abs": 9.5367431640625e-07,
+              "relative_l2": 7.809738458943992e-08,
+              "reference_max_abs": 5.644803524017334,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "bf1989befd5d1aaa954875002df2291cd09a50cd2232aa2b442c2909ca75d3e0",
+              "reference_tensor_sha256": "ab76e7d3fe80cbb1f5edbf251eeb8041988bc2e1673f784fda8aa677fc69b8f1",
+              "failure_samples": []
+            },
+            "sampling_locations": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "dtype": "torch.float32",
+              "elements": 2560000,
+              "finite_elements": 2560000,
+              "failing_elements": 0,
+              "max_abs": 0.00244140625,
+              "relative_l2": 1.4581170957978821e-07,
+              "reference_max_abs": 7035.3837890625,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "226ea0b38b2ad5d4d3b2e06fc57f87b8061317f496fa7029bee0165a73101a19",
+              "reference_tensor_sha256": "97474d307b9bdb8fe9110e3e0ca4472fbc339322448b29960d910ddb5ea3fc2e",
+              "failure_samples": []
+            },
+            "attention_weights": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "elements": 1280000,
+              "finite_elements": 1280000,
+              "failing_elements": 0,
+              "max_abs": 5.7220458984375e-06,
+              "relative_l2": 1.0423337761142537e-07,
+              "reference_max_abs": 23.21955680847168,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2a80b760a8ef93ee0062cf10b73d6699c9ef2018aa5ea32651a5f21da85bdf66",
+              "reference_tensor_sha256": "135a5b27c11983d75c05b512f111b924edc572f35073427afde7d0539edd9c4b",
+              "failure_samples": []
+            }
+          },
+          "passed": true,
+          "seconds": 1.1767238971078768
+        },
+        {
+          "entry": "mx_driving",
+          "npu_input_layouts": [
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "stride": [
+                10240000,
+                256,
+                32,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "stride": [
+                2560000,
+                64,
+                8,
+                8,
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "stride": [
+                1280000,
+                32,
+                4,
+                4,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            }
+          ],
+          "npu_metadata_layouts": [
+            {
+              "shape": [
+                1,
+                2
+              ],
+              "stride": [
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1
+              ],
+              "stride": [
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            }
+          ],
+          "npu_grad_output_layout": {
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "stride": [
+              10240000,
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "contiguous": true,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          "forward": {
+            "allclose": true,
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "dtype": "torch.float32",
+            "elements": 10240000,
+            "finite_elements": 10240000,
+            "failing_elements": 0,
+            "max_abs": 4.76837158203125e-07,
+            "relative_l2": 2.510249128003257e-08,
+            "reference_max_abs": 5.024130344390869,
+            "absolute_tolerance": 2e-05,
+            "relative_tolerance": 2e-05,
+            "actual_tensor_sha256": "1476b4f43ceae4e6713bc1d6da1a281a3760b48e99117d0a043b3c343fff4480",
+            "reference_tensor_sha256": "13fb708d63f2d1815a8c84f8898a626027dc93ac7d4747bea02f232f72c2be36",
+            "failure_samples": []
+          },
+          "gradients": {
+            "value": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "dtype": "torch.float32",
+              "elements": 10240000,
+              "finite_elements": 10240000,
+              "failing_elements": 0,
+              "max_abs": 9.5367431640625e-07,
+              "relative_l2": 7.809738458943992e-08,
+              "reference_max_abs": 5.644803524017334,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "bf1989befd5d1aaa954875002df2291cd09a50cd2232aa2b442c2909ca75d3e0",
+              "reference_tensor_sha256": "ab76e7d3fe80cbb1f5edbf251eeb8041988bc2e1673f784fda8aa677fc69b8f1",
+              "failure_samples": []
+            },
+            "sampling_locations": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "dtype": "torch.float32",
+              "elements": 2560000,
+              "finite_elements": 2560000,
+              "failing_elements": 0,
+              "max_abs": 0.00244140625,
+              "relative_l2": 1.4581170957978821e-07,
+              "reference_max_abs": 7035.3837890625,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "226ea0b38b2ad5d4d3b2e06fc57f87b8061317f496fa7029bee0165a73101a19",
+              "reference_tensor_sha256": "97474d307b9bdb8fe9110e3e0ca4472fbc339322448b29960d910ddb5ea3fc2e",
+              "failure_samples": []
+            },
+            "attention_weights": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "elements": 1280000,
+              "finite_elements": 1280000,
+              "failing_elements": 0,
+              "max_abs": 5.7220458984375e-06,
+              "relative_l2": 1.0423337761142537e-07,
+              "reference_max_abs": 23.21955680847168,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2a80b760a8ef93ee0062cf10b73d6699c9ef2018aa5ea32651a5f21da85bdf66",
+              "reference_tensor_sha256": "135a5b27c11983d75c05b512f111b924edc572f35073427afde7d0539edd9c4b",
+              "failure_samples": []
+            }
+          },
+          "passed": true,
+          "seconds": 0.8414183499990031
+        }
+      ],
+      "passed": true,
+      "seconds": 3.3843773029511794,
+      "layout_kind": "normal"
+    },
+    {
+      "name": "legacy_original_encoder_q40000_h8_c32_seed29",
+      "spatial_shape": [
+        200,
+        200
+      ],
+      "batch": 1,
+      "queries": 40000,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "pattern": "random",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 1280000,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              32
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              5120000,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            200,
+            200
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "78eab08a8ed12365249c92563ad8c141ebf3b26cc378eb135b5f80df97915073",
+        "locations": "76255a6976d205a2288ae6a6cedba7dcc7b1a665c3a4e6d15f0c150aaacffd79",
+        "weights": "e2d5a022da065bca1357c8145c4085d6d36f35d9b7565dab71b8e2d8832f4ad1"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "stride": [
+          10240000,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "elements": 10240000,
+        "finite_elements": 10240000,
+        "failing_elements": 0,
+        "max_abs": 4.76837158203125e-07,
+        "relative_l2": 2.505193139409122e-08,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "02ef4efb44ed06093e1ba7ba1023586b8c3a1e546f097e0dd767f3c39fce3b3e",
+        "reference_sha256": "2005a1e6bc9aaa4580b83d4e844c54b7be2b9891ceba7414bfe8a8d25d427ceb",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 9.5367431640625e-07,
+          "relative_l2": 7.815901264428936e-08,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "833b8573b7083d76410d4e966cd36690f79d5a7cf51586849d4d804d94571b12",
+          "reference_sha256": "fcf517a2d30e58d81783e85bd21e55b5abd3a215f55b96f96b711fb0aa205790",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 0.00244140625,
+          "relative_l2": 1.4601801491556705e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "09c46becc3c26d7c49c67749906234f1bb44e0f98fd7715e142319485ab1f302",
+          "reference_sha256": "f6e91ff7e37da8d735a9452eccd05be2fb60581321154253b905e360195dd2c9",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 7680000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 7680000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            4,
+            4
+          ],
+          "elements": 5120000,
+          "finite_elements": 5120000,
+          "failing_elements": 0,
+          "max_abs": 7.62939453125e-06,
+          "relative_l2": 1.0453591395697256e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "abe0b5f0db14161a85e771cf3c83872f123586612144e70d9bcab46ac7f80b14",
+          "reference_sha256": "5e71ba85a467e0342cf6bdeae9491b0983ea055dfdad6007e4f8ade10872204e",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 3840000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 3840000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 2.2242074640234932,
+      "layout_kind": "legacy"
+    },
+    {
+      "name": "normal_original_encoder_q40000_h8_c32_seed7",
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "queries": 40000,
+      "seed": 7,
+      "batch": 1,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "locations": "random",
+      "weights": "random",
+      "noncontiguous": false,
+      "cpu_reference_seconds": 0.7507149949669838,
+      "cpu_input_layouts": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "contiguous": true,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "cpu_grad_output_layout": {
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "stride": [
+          10240000,
+          256,
+          1
+        ],
+        "storage_offset": 0,
+        "contiguous": true,
+        "dtype": "torch.float32",
+        "device": "cpu"
+      },
+      "entries": [
+        {
+          "entry": "mmcv",
+          "npu_input_layouts": [
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "stride": [
+                10240000,
+                256,
+                32,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "stride": [
+                2560000,
+                64,
+                8,
+                8,
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "stride": [
+                1280000,
+                32,
+                4,
+                4,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            }
+          ],
+          "npu_metadata_layouts": [
+            {
+              "shape": [
+                1,
+                2
+              ],
+              "stride": [
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1
+              ],
+              "stride": [
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            }
+          ],
+          "npu_grad_output_layout": {
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "stride": [
+              10240000,
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "contiguous": true,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          "forward": {
+            "allclose": true,
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "dtype": "torch.float32",
+            "elements": 10240000,
+            "finite_elements": 10240000,
+            "failing_elements": 0,
+            "max_abs": 4.76837158203125e-07,
+            "relative_l2": 2.512369199298388e-08,
+            "reference_max_abs": 4.94541072845459,
+            "absolute_tolerance": 2e-05,
+            "relative_tolerance": 2e-05,
+            "actual_tensor_sha256": "3711400ae8beb969d0d44b36c72f40c897c4d3fcf6efc5162ebee241d4019f6a",
+            "reference_tensor_sha256": "080ed3de1ea44563ab8da23b8dc93a6d240df521c6fb7b17bbaa31b7a290c910",
+            "failure_samples": []
+          },
+          "gradients": {
+            "value": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "dtype": "torch.float32",
+              "elements": 10240000,
+              "finite_elements": 10240000,
+              "failing_elements": 0,
+              "max_abs": 1.430511474609375e-06,
+              "relative_l2": 7.80435870711729e-08,
+              "reference_max_abs": 5.658547878265381,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "483adbb4cd296b31b250ca09c44760bbf5cfa82a791b316c5ee9209e9b458d0a",
+              "reference_tensor_sha256": "7338eb16bed122709e67309809e5b7dce276d368b538cdd0151616fe7220fa8b",
+              "failure_samples": []
+            },
+            "sampling_locations": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "dtype": "torch.float32",
+              "elements": 2560000,
+              "finite_elements": 2560000,
+              "failing_elements": 0,
+              "max_abs": 0.001953125,
+              "relative_l2": 1.458596580049502e-07,
+              "reference_max_abs": 7715.49609375,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "d4446c90bdd18a4b1762202aafdfac768f36bd8746ffb51eb99d5742f9c86f30",
+              "reference_tensor_sha256": "52b149de2d61abaeec87a7e87f86e5508cd103e6170ab508136b9c5b39dc78e2",
+              "failure_samples": []
+            },
+            "attention_weights": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "elements": 1280000,
+              "finite_elements": 1280000,
+              "failing_elements": 0,
+              "max_abs": 5.7220458984375e-06,
+              "relative_l2": 1.0429870888321228e-07,
+              "reference_max_abs": 23.275211334228516,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "38edffa50df0e783d49f6e440e200d62cf58eee3cbfee4d9463fe510184e7932",
+              "reference_tensor_sha256": "dea07dfec26afed8879f28a9765c807990bd5ca8dfc0c98fab548d6d543bdf92",
+              "failure_samples": []
+            }
+          },
+          "passed": true,
+          "seconds": 0.8535857970127836
+        },
+        {
+          "entry": "mx_driving",
+          "npu_input_layouts": [
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "stride": [
+                10240000,
+                256,
+                32,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "stride": [
+                2560000,
+                64,
+                8,
+                8,
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "stride": [
+                1280000,
+                32,
+                4,
+                4,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.float32",
+              "device": "npu:0"
+            }
+          ],
+          "npu_metadata_layouts": [
+            {
+              "shape": [
+                1,
+                2
+              ],
+              "stride": [
+                2,
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            },
+            {
+              "shape": [
+                1
+              ],
+              "stride": [
+                1
+              ],
+              "storage_offset": 0,
+              "contiguous": true,
+              "dtype": "torch.int64",
+              "device": "npu:0"
+            }
+          ],
+          "npu_grad_output_layout": {
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "stride": [
+              10240000,
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "contiguous": true,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          "forward": {
+            "allclose": true,
+            "shape": [
+              1,
+              40000,
+              256
+            ],
+            "dtype": "torch.float32",
+            "elements": 10240000,
+            "finite_elements": 10240000,
+            "failing_elements": 0,
+            "max_abs": 4.76837158203125e-07,
+            "relative_l2": 2.512369199298388e-08,
+            "reference_max_abs": 4.94541072845459,
+            "absolute_tolerance": 2e-05,
+            "relative_tolerance": 2e-05,
+            "actual_tensor_sha256": "3711400ae8beb969d0d44b36c72f40c897c4d3fcf6efc5162ebee241d4019f6a",
+            "reference_tensor_sha256": "080ed3de1ea44563ab8da23b8dc93a6d240df521c6fb7b17bbaa31b7a290c910",
+            "failure_samples": []
+          },
+          "gradients": {
+            "value": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "dtype": "torch.float32",
+              "elements": 10240000,
+              "finite_elements": 10240000,
+              "failing_elements": 0,
+              "max_abs": 1.430511474609375e-06,
+              "relative_l2": 7.80435870711729e-08,
+              "reference_max_abs": 5.658547878265381,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "483adbb4cd296b31b250ca09c44760bbf5cfa82a791b316c5ee9209e9b458d0a",
+              "reference_tensor_sha256": "7338eb16bed122709e67309809e5b7dce276d368b538cdd0151616fe7220fa8b",
+              "failure_samples": []
+            },
+            "sampling_locations": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "dtype": "torch.float32",
+              "elements": 2560000,
+              "finite_elements": 2560000,
+              "failing_elements": 0,
+              "max_abs": 0.001953125,
+              "relative_l2": 1.458596580049502e-07,
+              "reference_max_abs": 7715.49609375,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "d4446c90bdd18a4b1762202aafdfac768f36bd8746ffb51eb99d5742f9c86f30",
+              "reference_tensor_sha256": "52b149de2d61abaeec87a7e87f86e5508cd103e6170ab508136b9c5b39dc78e2",
+              "failure_samples": []
+            },
+            "attention_weights": {
+              "allclose": true,
+              "shape": [
+                1,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "dtype": "torch.float32",
+              "elements": 1280000,
+              "finite_elements": 1280000,
+              "failing_elements": 0,
+              "max_abs": 5.7220458984375e-06,
+              "relative_l2": 1.0429870888321228e-07,
+              "reference_max_abs": 23.275211334228516,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "38edffa50df0e783d49f6e440e200d62cf58eee3cbfee4d9463fe510184e7932",
+              "reference_tensor_sha256": "dea07dfec26afed8879f28a9765c807990bd5ca8dfc0c98fab548d6d543bdf92",
+              "failure_samples": []
+            }
+          },
+          "passed": true,
+          "seconds": 1.0559132820926607
+        }
+      ],
+      "passed": true,
+      "seconds": 3.1428542470093817,
+      "layout_kind": "normal"
+    },
+    {
+      "name": "legacy_original_encoder_q40000_h8_c32_seed7",
+      "spatial_shape": [
+        200,
+        200
+      ],
+      "batch": 1,
+      "queries": 40000,
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 7,
+      "pattern": "random",
+      "raw_levels": 4,
+      "actual_spatial_levels": 1,
+      "used_global_prefix_points": 1280000,
+      "call": {
+        "api": "mmcv.ops.multi_scale_deform_attn.MultiScaleDeformableAttnFunction.apply",
+        "im2col_step": 64,
+        "inputs": [
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              32
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              4,
+              4,
+              2
+            ],
+            "stride": [
+              10240000,
+              256,
+              32,
+              8,
+              2,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          },
+          {
+            "shape": [
+              1,
+              40000,
+              8,
+              4,
+              4
+            ],
+            "stride": [
+              5120000,
+              128,
+              16,
+              4,
+              1
+            ],
+            "contiguous": true,
+            "storage_offset": 0,
+            "dtype": "torch.float32",
+            "device": "npu:0"
+          }
+        ],
+        "spatial_shapes": [
+          [
+            200,
+            200
+          ]
+        ],
+        "level_start_index": [
+          0
+        ]
+      },
+      "raw_input_sha256": {
+        "value": "b0c083f805b4e09e180a218e7a32a17f704dbe9f2c0e8de0e79aa4d8cda6e67f",
+        "locations": "4e9f995497ace582f24a99a88eb6e452908e4468b9fa2a78b88dd5542689636f",
+        "weights": "0c2ff3be94bab234b08ef16b56984be2bb2ebf02f0c7bbdedf70588b60547600"
+      },
+      "effective_cpu_layouts": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        },
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "contiguous": true,
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu"
+        }
+      ],
+      "actual_output_layout": {
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "stride": [
+          10240000,
+          256,
+          1
+        ],
+        "contiguous": true,
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "npu:0"
+      },
+      "forward": {
+        "allclose": true,
+        "shape": [
+          1,
+          40000,
+          256
+        ],
+        "elements": 10240000,
+        "finite_elements": 10240000,
+        "failing_elements": 0,
+        "max_abs": 4.76837158203125e-07,
+        "relative_l2": 2.5131394567186594e-08,
+        "absolute_tolerance": 2e-05,
+        "relative_tolerance": 2e-05,
+        "actual_sha256": "5dc6a016e6b334e97e2c52d039e5e5a889af35c887999926a1c50a892575d029",
+        "reference_sha256": "c2cafb2e8d163f907e56a714789fa039b89fab0f53ea166557f2f64ac3b89568",
+        "failure_samples": []
+      },
+      "gradients": {
+        "value": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 9.5367431640625e-07,
+          "relative_l2": 7.796397312456697e-08,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "2eb7712992647f2aefeb5f6b536f25f2c11ce092876a6e400d56dca3b82826c5",
+          "reference_sha256": "1923b0e9d9d22372a1e88cbaf4a6924805e45da98bfe2fea9c66f03b30119a5a",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0"
+        },
+        "sampling_locations": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            4,
+            4,
+            2
+          ],
+          "elements": 10240000,
+          "finite_elements": 10240000,
+          "failing_elements": 0,
+          "max_abs": 0.00146484375,
+          "relative_l2": 1.456804958593695e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "6a22bff2ce4c1e1de63c323ff9a368d067ef86d6515fcfa56621518a63879973",
+          "reference_sha256": "2412c2f4b6ba760111077c33188c7456a404a9287cb01374a7c8ac0de33b7a7a",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 7680000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 7680000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        },
+        "attention_weights": {
+          "allclose": true,
+          "shape": [
+            1,
+            40000,
+            8,
+            4,
+            4
+          ],
+          "elements": 5120000,
+          "finite_elements": 5120000,
+          "failing_elements": 0,
+          "max_abs": 5.7220458984375e-06,
+          "relative_l2": 1.0479595890492041e-07,
+          "absolute_tolerance": 0.001,
+          "relative_tolerance": 0.0001,
+          "actual_sha256": "4693b9e328b6fe9b3a4b5b04ebb796691348ae52a7eca3a13a5149a41ba8fbf3",
+          "reference_sha256": "a142768d2e9621d60a9f7a8ef53b7cd031e9587fc6874f718302f59d5a18300f",
+          "failure_samples": [],
+          "raw_gradient_shape_preserved": true,
+          "actual_gradient_device": "npu:0",
+          "unused_tail": {
+            "npu": {
+              "elements": 3840000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            },
+            "cpu": {
+              "elements": 3840000,
+              "nonzero_elements": 0,
+              "max_abs": 0.0,
+              "exact_zero": true
+            }
+          }
+        }
+      },
+      "passed": true,
+      "seconds": 2.8736236300319433,
+      "layout_kind": "legacy"
+    }
+  ],
+  "scope": "Original BEV 200x200/Q40000/H8/C32/P4/B1 operator geometry, seeds 29 and 7. Unmodified CPU32 reference and original tolerances. Both normal-layout entry points; MMCV-only original raw-map L4/spatial L1 global-prefix compatibility. Full outputs and all three full gradients, plus exact-zero unused legacy tails. No measured GPU parity, model convergence, sustained training or bitwise replay claim.",
+  "source": "/workspace/WorldEngine",
+  "source_fingerprint": {
+    "sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242
+  },
+  "public_validator_sha256": {
+    "validate_msda.py": "5a898191f716dec2536ab1b7e208c0651ef750b2fdf929c4eaec37d2e1b78d5d",
+    "validate_msda_layout.py": "6b4c946c5881eb2f398582c7eb7c7c9155de7517f3f82e4bb5170e9c623224b1"
+  },
+  "environment": {
+    "torch_version": "2.7.1+cpu",
+    "torch_npu_version": "2.7.1.post6",
+    "device": "npu:0",
+    "device_name": "Ascend910_9362",
+    "deterministic_algorithms": true,
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": true,
+    "HCCL_DETERMINISTIC": "true",
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "cpu_threads": 4
+  },
+  "cpu_reference_source_sha256": "4ef9c84cb9016a3554b7fd62d35a6e8f8cb440099103679de01fc0491eaf5128",
+  "seconds": 12.319040011032484,
+  "passed_cases": 4,
+  "entry_comparisons": 6,
+  "source_fingerprint_after": {
+    "sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242
+  },
+  "source_unchanged": true
+}

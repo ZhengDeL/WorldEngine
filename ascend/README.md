@@ -1,5 +1,10 @@
 # AlgEngine on Ascend 910C / A3
 
+The current FP32 sampler and its strict-gradient/model regressions are documented
+in [English](MSDA.md), [中文](MSDA_zh.md), and the
+[versioned MSDA results](evidence/msda-precision-20261013.json). Measurements in
+the original full-module result retain their historical source fingerprint.
+
 [中文部署、训练、续训与验收操作文档](README_zh.md) ·
 [English full-module guide](FULL_ALGENGINE.md) ·
 [Bounded measured results](evidence/full-algengine-20261013.json)

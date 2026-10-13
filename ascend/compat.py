@@ -1,5 +1,8 @@
 """Scoped compatibility for the pinned DrivingSDK environment."""
+import torch
 import torch.nn.functional as F
+from ascend.msda import reference_forward, reference_backward
+
 
 def enable_training_compat():
     import mx_driving
@@ -15,8 +18,17 @@ def enable_training_compat():
     from torch.autograd.function import once_differentiable
     module=importlib.import_module('mx_driving.ops.multi_scale_deformable_attn')
     cls=module.MultiScaleDeformableAttnFunction
+    if not getattr(cls,'_worldengine_reference_precision',False):
+        original_mx_forward=cls.forward
+        def npu_reference_forward(ctx,value,shapes,starts,locations,weights,**kwargs):
+            if value.device.type=='npu' and value.dtype==torch.float32:
+                return reference_forward(ctx,value,shapes,starts,locations,weights)
+            return original_mx_forward(ctx,value,shapes,starts,locations,weights,**kwargs)
+        cls.forward=staticmethod(npu_reference_forward)
+        cls._worldengine_reference_precision=True
     if not getattr(cls,'_worldengine_contiguous_backward',False):
         original=cls.backward
+        @once_differentiable
         def contiguous_backward(ctx,grad_output):
             if os.environ.get('WORLDENGINE_DEBUG_AUTOGRAD')=='1':
                 row=dict(shape=list(grad_output.shape),stride=list(grad_output.stride()),
@@ -24,6 +36,8 @@ def enable_training_compat():
                 with (Path('/output')/'msda_backward_layout.jsonl').open('a') as file:file.write(json.dumps(row)+'\n')
             grad=grad_output.contiguous()
             if grad.storage_offset():grad=grad.clone()
+            if getattr(ctx,'_worldengine_reference_msda',False):
+                return reference_backward(ctx,grad)
             return original(ctx,grad)
         cls.backward=staticmethod(contiguous_backward)
         cls._worldengine_contiguous_backward=True
@@ -32,9 +46,12 @@ def enable_training_compat():
     mmcv_module=importlib.import_module('mmcv.ops.multi_scale_deform_attn')
     mmcv_cls=mmcv_module.MultiScaleDeformableAttnFunction
     if not getattr(mmcv_cls,'_worldengine_npu_bridge',False):
-        original_forward,original_backward=mmcv_cls.forward,mmcv_cls.backward
+        original_mmcv_forward,original_mmcv_backward=mmcv_cls.forward,mmcv_cls.backward
         def npu_forward(ctx,value,shapes,starts,locations,weights,im2col_step):
-            if value.device.type!='npu':return original_forward(ctx,value,shapes,starts,locations,weights,im2col_step)
+            if value.device.type!='npu':return original_mmcv_forward(ctx,value,shapes,starts,locations,weights,im2col_step)
+            if value.dtype==torch.float32:
+                return reference_forward(ctx,value,shapes,starts,locations,weights,
+                                         allow_legacy_map_layout=True)
             ctx._worldengine_npu=True
             shapes,starts=shapes.int().contiguous(),starts.int().contiguous()
             locations,weights=locations.type_as(value).contiguous(),weights.type_as(value).contiguous()
@@ -43,7 +60,9 @@ def enable_training_compat():
             return mx_driving._C.multi_scale_deformable_attn(value,shapes,starts,locations,weights)
         @once_differentiable
         def npu_backward(ctx,grad_output):
-            if not getattr(ctx,'_worldengine_npu',False):return original_backward(ctx,grad_output)
+            if getattr(ctx,'_worldengine_reference_msda',False):
+                return (*reference_backward(ctx,grad_output),None)
+            if not getattr(ctx,'_worldengine_npu',False):return original_mmcv_backward(ctx,grad_output)
             value,shapes,starts,locations,weights=ctx.saved_tensors
             grad=grad_output.contiguous()
             gv,gl,gw=mx_driving._C.multi_scale_deformable_attn_backward(value,shapes,starts,locations,weights,grad)
