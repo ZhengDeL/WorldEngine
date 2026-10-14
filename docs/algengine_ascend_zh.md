@@ -71,7 +71,7 @@ VAD_BASE="$WEIGHTS/vadv2/e2e_vadv2_50pct_ep8.pth"
 HYDRA_BASE="$WEIGHTS/hydramdp/e2e_hydramdp_50pct_ep8.pth"
 ```
 
-下载工具固定发布 revision，按原文件大小和 SHA256 校验。国内线路还可用 `--source modelscope`，官方线路用 `--source huggingface`；有效旧文件会复用。工具不下载相机包、地图、原始日志或 SimEngine 资产。线路不通时更换支持的来源，保留哈希校验。
+Hugging Face及hf-mirror线路请求固定发布revision。魔搭线路请求其 `master`，按同一内容锁的文件大小和SHA256校验，不宣称向魔搭请求了Hugging Face的commit。下载记录分别保存请求revision和内容参考revision。国内线路可选 `--source modelscope`，官方线路用 `--source huggingface`；有效旧文件会复用。工具不下载相机包、地图、原始日志或SimEngine资产，换线路时保留哈希校验。
 
 NAVTEST 标注和 PDM 合计约 **3.64 GB**，相机、词表、权重和地图另计。小样本最终只需实际引用的 JPEG，但这些真实图片需要已经从对应 OpenScene 数据或提供的小数据包中取得。仓库不承诺存在一个恰好包含所选 JPEG 的独立公开下载包。
 
@@ -171,6 +171,7 @@ DATA/
 ```bash
 RARE="$SOURCE/projects/AlgEngine/configs/navsim_splits/navtest_split/navtest_failures_filtered.yaml"
 MINI="$WORK/mini_real_data"
+MINI_RARE="$WORK/prepared/worldengine_navtest_smoke_rare.yaml"
 test -d "$DATA/raw/openscene-v1.1/sensor_blobs/test"
 docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g --cpus 8 \
   -v "$SOURCE:/source:ro" -v "$DATA:$DATA:ro" -v "$WORK:$WORK:rw" \
@@ -186,12 +187,12 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g -
       --output "$2/prepared"
     python ascend/split_mini.py --prepared "$2/prepared" \
       --output "$2/mini_real_data" \
-      --rare-split /source/projects/AlgEngine/configs/navsim_splits/navtest_split/navtest_failures_filtered.yaml
+      --rare-split "$2/prepared/worldengine_navtest_smoke_rare.yaml"
   ' bash "$DATA" "$WORK"
 cat "$MINI/manifest.json"
 ```
 
-`WORK/prepared` 和 `MINI` 必须是新目录。准备器默认复制选中 JPEG，要求至少一个真实 rare 日志和独立的普通日志，并检查当前及历史图像。如果图像缺失或无法形成日志独立的划分，先补齐输入，不能用随机图片或伪造样本替代。24g 是此 NAVTEST 小数据准备的资源示例，不是完整 NAVTRAIN 内存预算。
+`WORK/prepared` 和 `MINI` 必须是新目录。准备器默认复制选中 JPEG，要求至少一个真实 rare 锚点、同日志内可检索的非 rare 锚点，以及独立的普通日志，并检查当前及历史图像。完整 `RARE` 文件仅用于准备时定义稀有场景；生成的 `MINI_RARE` 只列出选中且原队列完整的 rare 锚点。拆分和 mini 微调都使用 `MINI_RARE`，避免仅作为历史帧保留的其他 rare token 被当作训练锚点。如果图像缺失或无法形成日志独立的划分，先补齐输入，不能用随机图片或伪造样本替代。24g 是此 NAVTEST 小数据准备的资源示例，不是完整 NAVTRAIN 内存预算。
 
 新准备器默认选择三个日志，每日志最多 22 个锚点，拆分前合计最多 66 个。实际训练／评价数量和哈希以本次 `manifest.json` 为准，不等同于此前实测包固定的 42／22 个锚点。用新数据开始新训练，并恢复自身断点；不能因文件名相同就引用旧包的数值或质量结果。
 
@@ -380,7 +381,7 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g -
 
 评分使用锁定的 NAVSIM v1.1、原 40 点到 8 点转换 `[4::5]`、cache generation、simulator 和 scorer。模型内部选取的 cache 标签不能当作独立评分。CPU scorer 不使用 NPU；24g 仅为该小样本的资源示例。
 
-已有覆盖对应 token 的官方 cache payload 时，可直接评分，无需重新生成 payload 或挂载 logs／maps。公开辅助器调用已有 `ascend.scoring.score_predictions`，只重建搬迁后的 metadata 索引：
+已有覆盖对应 token 的官方 cache payload 时，可直接评分，无需重新生成 payload 或挂载 logs／maps。公开辅助器从输入 cache 中精确选取本次 prediction token，拒绝缺失或重复匹配，再以搬迁后的索引调用已有 `ascend.scoring.score_predictions`。多余 cache token 不参加评分，原 payload 字节和评分数学保持不动：
 
 ```bash
 docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g --cpus 8 \
@@ -451,7 +452,11 @@ python3 ascend/run_container.py --devices 0 --task inference \
   --maps "$MAPS" --output "$RUNS/vad50_navtrain_eval"
 ```
 
-若筛选整个训练集合，将 `navtrain_50pct.yaml` 改为 `navtrain.yaml`。大集合可按同样方式拆成 token YAML 分块，在新输出逐块评价，再合并无重复 token 的结果；保持原 token。原 annotation／PDM 仍需完整载入，减少 filter 不会消除这部分内存。
+本节命令及下节完整数据微调示例使用 50% split。筛选整个训练集合时，要使用对应 100% 训练导出配置和 planner 断点，把推理 filter 和采样脚本的 `--base-split` 都改为 `navtrain.yaml`。合并文件改为 `navtrain_collision.yaml`、`navtrain_off_road.yaml`、`navtrain_ep_1pct.yaml`；前缀来自 base split 文件名，不来自模型名。此结果集使用独立的新输出。
+
+仓库发布的是50% rare-log微调配置，没有独立的 `100pct_rlft_rare_log.py`。派生全量数据微调时，须在已有rare-log配置上显式传 `--train-filter "$SOURCE/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml"`，同时使用本次完整split生成的 `--rare-split`。数据覆盖设置和初始化权重分别记录，并换新输出；它不是已发布或已验收的100%微调配方。复现100%基座实验时使用对应planner断点；同结构的50%权重也可初始化全量数据微调，但要明确记录其来源，不能称为100%训练的基座。只改推理filter不会改变微调数据集。
+
+大集合可按同样方式拆成 token YAML 分块，在新输出逐块评价，再合并无重复 token 的结果；保持原 token。原 annotation／PDM 仍需完整载入，减少 filter 不会消除这部分内存。
 
 从 CSV 去掉 `average` 汇总行，再调用原稀有场景脚本；把碰撞、驶出可行驶区域、低进度三类 token 合并成一个显式 `--rare-split` 输入：
 
@@ -510,7 +515,27 @@ python3 ascend/run_container.py --devices "$DEVICES" \
 
 也可用已发布的 `VAD_BASE` 初始化。这份原 VAD 配置启用 LoRA 和奖励微调，但 `rl_finetuning=False`，不能写成启用了 policy gradient。Hydra 配置 `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py` 从 base 启用 policy gradient。使用 `HYDRA_BASE` 或对应训练 Hydra 权重、Hydra 自己筛选的 rare 数据和新输出。不同训练的微调需重新建立 optimizer／schedule，使用 `--checkpoint` 初始化，不使用 `--resume`。
 
-先在真实 mini 上检查这两个分支时，可用 `--profile vadv2_ft --checkpoint "$VAD_BASE"` 或 `--profile hydramdp_rl --checkpoint "$HYDRA_BASE"`，将完整 `--data-root` 换成 `--mini-prepared "$MINI"`，传 `--rare-split "$RARE"`，增加 `--runtime --steps 8 --batch-size 1 --workers 0`；两个模型用独立输出，并保留显式镜像参数。这只完成短 schedule 的功能检查。
+先做小数据功能检查时，分别执行下面两条命令。`ascend/train.py` 的 profile 映射选择各自原微调配置。切换到 Hydra 时不能保留 VAD 的 `--config`，因为显式配置优先于 profile。八步命令不带 `--validate`，逐 epoch 评价不能与 `--steps` 同时使用。
+
+```bash
+python3 ascend/run_container.py --devices 0 --profile vadv2_ft \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --rare-split "$MINI_RARE" \
+  --checkpoint "$VAD_BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --batch-size 1 --workers 0 --precision fp32 \
+  --deterministic --upstream-schedule --checkpoint-interval 4 --check-interval 1 \
+  --memory 64g --cpus 16 --output "$RUNS/vad_rare_mini8"
+
+python3 ascend/run_container.py --devices 0 --profile hydramdp_rl \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --rare-split "$MINI_RARE" \
+  --checkpoint "$HYDRA_BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --batch-size 1 --workers 0 --precision fp32 \
+  --deterministic --upstream-schedule --checkpoint-interval 4 --check-interval 1 \
+  --memory 64g --cpus 16 --output "$RUNS/hydra_rare_mini8"
+```
+
+mini 必须包含真实 rare 锚点，以及这些日志内可检索的非 rare normal 候选；每个候选都要保留原四帧队列和相机图片。另一个训练日志中的 normal 锚点不满足原微调 dataset 的同日志检索规则。通过原 dataset 检查实际返回的 token 和两条分支。这两条八步命令只做功能检查，不作为完整微调或收敛结果。
 
 原仓共 44 个配置，[配置指南](config_guide.md)说明其关系。实际配置通过 `--config` 传入；两个感知配置原 batch=1，42 个规划配置原 batch=2。NPU 包装入口保留模型／head／dataset 分支，batch 和 schedule 的改动通过参数明确设置。
 

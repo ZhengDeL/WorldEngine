@@ -71,7 +71,7 @@ VAD_BASE="$WEIGHTS/vadv2/e2e_vadv2_50pct_ep8.pth"
 HYDRA_BASE="$WEIGHTS/hydramdp/e2e_hydramdp_50pct_ep8.pth"
 ```
 
-The downloader uses the pinned publication revision and byte/SHA256 locks. It can also use `--source modelscope` or `--source huggingface`. It does not download camera packages, maps, raw logs or SimEngine assets. Existing valid files are reused. If a route fails, switch the supported source; retain the checksum checks.
+The Hugging Face and hf-mirror routes request the pinned publication revision. The ModelScope route requests its `master` revision and verifies the same locked file sizes and SHA256 values; it does not claim to request the Hugging Face commit on ModelScope. The receipt records the requested revision and content-reference revision separately. Select the route with `--source modelscope` or `--source huggingface`. The downloader excludes camera packages, maps, raw logs and SimEngine assets. Existing valid files are reused; retain the checksum checks when changing routes.
 
 The NAVTEST annotation and PDM files total about **3.64 GB**, excluding camera images, vocabulary, weights and maps. A tiny prepared split can use only the genuinely referenced camera JPEGs, but those files must already be available from the corresponding OpenScene data or a supplied subset. The repository does not promise a separate public download containing exactly the selected JPEGs.
 
@@ -169,6 +169,7 @@ The preparation runs in the image on CPU, with **no NPU device mounts**. Keep `W
 ```bash
 RARE="$SOURCE/projects/AlgEngine/configs/navsim_splits/navtest_split/navtest_failures_filtered.yaml"
 MINI="$WORK/mini_real_data"
+MINI_RARE="$WORK/prepared/worldengine_navtest_smoke_rare.yaml"
 test -d "$DATA/raw/openscene-v1.1/sensor_blobs/test"
 docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g --cpus 8 \
   -v "$SOURCE:/source:ro" -v "$DATA:$DATA:ro" -v "$WORK:$WORK:rw" \
@@ -184,12 +185,12 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g -
       --output "$2/prepared"
     python ascend/split_mini.py --prepared "$2/prepared" \
       --output "$2/mini_real_data" \
-      --rare-split /source/projects/AlgEngine/configs/navsim_splits/navtest_split/navtest_failures_filtered.yaml
+      --rare-split "$2/prepared/worldengine_navtest_smoke_rare.yaml"
   ' bash "$DATA" "$WORK"
 cat "$MINI/manifest.json"
 ```
 
-Use a fresh `WORK/prepared` and `MINI`; the tools reject existing outputs. Preparation needs readable current/history JPEGs from more than one log, including a genuine rare training anchor. Missing images or an insufficient log-disjoint split must be corrected rather than replaced with fabricated samples. The 24g limit is a small NAVTEST preparation budget, not a full NAVTRAIN budget.
+Use a fresh `WORK/prepared` and `MINI`; the tools reject existing outputs. Preparation needs readable current/history JPEGs from more than one log, including a genuine rare training anchor and a retrievable non-rare anchor in that same log. The complete `RARE` file defines rare cases during preparation. The generated `MINI_RARE` lists only selected rare anchors with complete original queues; use it for splitting and mini fine-tuning so other rare tokens retained only as history are not treated as training anchors. Missing images or an insufficient log-disjoint split must be corrected rather than replaced with fabricated samples. The 24g limit is a small NAVTEST preparation budget, not a full NAVTRAIN budget.
 
 The new preparation tool defaults to three logs and at most 22 anchors per log, so it selects at most 66 anchors before splitting. Inspect its actual train/evaluation counts and hashes in `manifest.json`; these are not the fixed 42/22 counts of an earlier measured packet. Start fresh training with this generated data and use its own checkpoints. Historical numerical/quality measurements cannot be reassigned to the new mini merely because the filenames match.
 
@@ -303,7 +304,7 @@ python3 ascend/run_container.py --devices 0 \
   --output "$RUNS/vad_mini8_resumed"
 ```
 
-For a controlled epoch interruption, add `--stop-after-epochs 2` to the full command, keeping its original eight-epoch horizon. Once it exits and `epoch_2.pth` is present, repeat the same command without the stopping option and add `--resume "$RUNS/vad50_partial/epoch_2.pth"` plus a fresh output. Do not shorten the LR horizon to two epochs.
+For a controlled epoch interruption, add `--stop-after-epochs 2` to the full command and set its first output to `--output "$RUNS/vad50_partial"`, keeping the original eight-epoch horizon. Once it exits and `epoch_2.pth` is present, repeat the same command without the stopping option and add `--resume "$RUNS/vad50_partial/epoch_2.pth"` plus a fresh output. Do not shorten the LR horizon to two epochs.
 
 Exact-state continuation requires `--workers 0` and the same source/config bytes, image, precision/environment, world size, data/filter/vocabulary, batch, seed and schedule. A contract mismatch is an error to investigate. Keep the training checkout and original data; do not bypass checks to load an incompatible checkpoint. The launcher requires explicit `--resume`; it does not auto-resume merely because `latest.pth` exists.
 
@@ -378,7 +379,7 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g -
 
 This uses pinned NAVSIM v1.1, the original 40-to-8 pose conversion `[4::5]`, cache generation, simulator and scorer. Cached model-selection labels alone are not an independent score. The CPU scorer needs no NPU. Its 24g example is for this small split.
 
-If matching official cache payloads are already available, score directly without logs/maps or regenerating payloads. This helper calls the existing `ascend.scoring.score_predictions` and rebuilds only the relocated metadata index:
+If matching official cache payloads are already available, score directly without logs/maps or regenerating payloads. This helper selects exactly the prediction tokens from the supplied cache, rejects missing or duplicate matches, and calls the existing `ascend.scoring.score_predictions` with a relocated index. Extra cache tokens are excluded; original payload bytes and scoring mathematics remain unchanged:
 
 ```bash
 docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 24g --cpus 8 \
@@ -449,7 +450,11 @@ python3 ascend/run_container.py --devices 0 --task inference \
   --maps "$MAPS" --output "$RUNS/vad50_navtrain_eval"
 ```
 
-Use `navtrain.yaml` instead of `navtrain_50pct.yaml` when selecting failures from the whole training split. Large evaluations may be divided into YAML token chunks using the same pattern; retain the original tokens, evaluate each chunk in a fresh output, and merge per-token results without duplicate tokens. The command above loads the full annotation/PDM; changing a filter does not eliminate that resident memory.
+The commands in this section and the full-data fine-tuning example below use the 50% split. For whole-split rare-case selection, use the corresponding 100% training dump and planner checkpoint, set the inference filter to `navtrain.yaml`, and also change the sampler's `--base-split` to that file. Merge `navtrain_collision.yaml`, `navtrain_off_road.yaml` and `navtrain_ep_1pct.yaml`; their prefix comes from the base-split filename, not from the model name. Use a fresh output for this separate result set.
+
+The repository publishes 50% rare-log fine-tuning configs, not separate `100pct_rlft_rare_log.py` configs. A derived whole-split fine-tuning run must explicitly override the existing rare-log config with `--train-filter "$SOURCE/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml"` and provide the newly generated whole-split `--rare-split`. Record the dataset override and initializer separately, and retain a new output; this is not a published or validated 100% fine-tuning recipe. Reproducing a 100%-trained base experiment requires its matching planner checkpoint. A compatible 50%-trained initializer can also be used, but must be recorded as that initializer rather than a 100%-trained base. Changing only the inference filter does not change the fine-tuning dataset.
+
+Large evaluations may be divided into YAML token chunks using the same pattern; retain the original tokens, evaluate each chunk in a fresh output, and merge per-token results without duplicate tokens. The command above loads the full annotation/PDM; changing a filter does not eliminate that resident memory.
 
 Remove the summary row from the exported CSV, then call the original rare-case script. Merge its three token sets into one explicit `--rare-split` input for NPU fine-tuning:
 
@@ -508,7 +513,27 @@ python3 ascend/run_container.py --devices "$DEVICES" \
 
 The published `VAD_BASE` can also initialize this config. This original VAD config enables LoRA and reward-based fine-tuning, with `rl_finetuning=False`; it must not be described as having an enabled policy-gradient branch. The Hydra config `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py` enables the policy-gradient path through its base config. Use `HYDRA_BASE` or a matching trained Hydra checkpoint, Hydra-derived rare cases, and a fresh output. Fine-tuning starts a new optimizer/schedule; use `--checkpoint`, not `--resume`, to initialize it from a different run.
 
-To exercise these branches on the prepared real mini first, use `--profile vadv2_ft --checkpoint "$VAD_BASE"` or `--profile hydramdp_rl --checkpoint "$HYDRA_BASE"`, replace `--data-root` with `--mini-prepared "$MINI"`, supply `--rare-split "$RARE"`, and add `--runtime --steps 8 --batch-size 1 --workers 0`. Use separate outputs and the explicit image pair. This is a functional check with a short schedule, not a full fine-tuning result.
+For a small-data check, use the two profile commands below. They select the corresponding original fine-tuning configs through `ascend/train.py`'s profile mapping. Do not retain a VAD `--config` when switching to Hydra: an explicit config takes precedence over the profile. These iteration runs omit `--validate`; epoch validation cannot be combined with `--steps`.
+
+```bash
+python3 ascend/run_container.py --devices 0 --profile vadv2_ft \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --rare-split "$MINI_RARE" \
+  --checkpoint "$VAD_BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --batch-size 1 --workers 0 --precision fp32 \
+  --deterministic --upstream-schedule --checkpoint-interval 4 --check-interval 1 \
+  --memory 64g --cpus 16 --output "$RUNS/vad_rare_mini8"
+
+python3 ascend/run_container.py --devices 0 --profile hydramdp_rl \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --mini-prepared "$MINI" --rare-split "$MINI_RARE" \
+  --checkpoint "$HYDRA_BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --batch-size 1 --workers 0 --precision fp32 \
+  --deterministic --upstream-schedule --checkpoint-interval 4 --check-interval 1 \
+  --memory 64g --cpus 16 --output "$RUNS/hydra_rare_mini8"
+```
+
+The mini must include genuine rare anchors and retrievable non-rare candidates from those same logs, each with its original four-frame queue and camera coverage. A normal anchor in another training log does not meet the original fine-tuning dataset's same-log retrieval rule. Verify the returned tokens and both branches in the original dataset check. These eight-update commands are functional checks, not full fine-tuning or convergence results.
 
 There are 44 published configurations. The original [configuration guide](config_guide.md) explains their relationships. Pass the actual repository config using `--config`; two perception configs use original batch 1, while 42 planning configs use original batch 2. The NPU wrapper preserves the model/head/dataset branch and exposes schedule/batch overrides explicitly.
 

@@ -183,14 +183,14 @@ server; no dataset is downloaded to the Windows workspace.
 
 All 44 configurations resolved on the locked clean image. There are 36 real-data
 configurations and eight configurations requiring genuine synthetic/SimScale
-exports. The final candidate executed **36/36 real configurations**, three
+exports. The historical `96a7bef…` candidate executed **36/36 real configurations**, three
 real-mini optimizer updates each, using each config's original initializer.
 Both perception configurations started from the **official BEVFormer epoch-48
 initializer**, including unfrozen backbone, tracking and mapping losses. Mini
 filters, B1/workers0 and a short LR horizon are explicit overrides; the original
 data ratios and convergence have not been accepted.
 
-The final candidate's normalized AlgEngine/Ascend Python fingerprint is
+That historical candidate's normalized AlgEngine/Ascend Python fingerprint is
 `96a7bef17fd27a681b5f90c367507a3a9f72767e5698fbe514d077d20ec0f997`.
 An earlier regression attempt was interrupted at initialization by an external
 vLLM workload (`EL0020 / 507899`). After the devices were released the final

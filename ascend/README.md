@@ -330,7 +330,7 @@ This compares model/optimizer tensors, loss, tokens, LR and final rank RNG. A
 nonzero exit preserves a failed numerical gate. Importing the installed official
 `torch_npu` hooks first is required for these NPU-saved checkpoints; no NPU
 devices are mounted. The earlier `96a7bef…` VADv2 LoRA case passed, while its
-base/Hydra cases failed. Current `858f9d…` single-rank eight-update controls
+base/Hydra cases failed. Historical `858f9d…` single-rank eight-update controls
 passed; its eight-rank controls failed, as recorded in the
 [versioned results](evidence/eight-rank-resume-20261013-evening.json).
 

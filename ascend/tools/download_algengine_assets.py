@@ -53,9 +53,11 @@ def main(argv=None):
         actual = fetcher.digest(target)
         if actual != asset['sha256'] or target.stat().st_size != asset['bytes']:
             raise RuntimeError('Locked asset verification failed: '+str(relative))
-        records.append(dict(relative_path=relative.as_posix(), bytes=asset['bytes'], sha256=actual))
+        records.append(dict(relative_path=relative.as_posix(), bytes=asset['bytes'], sha256=actual, url=url))
     receipt = dict(result='pass_selected_locked_assets', group=args.group, source=args.source,
-                   dataset=lock['dataset'], revision=lock['revision'], files=records,
+                   dataset=lock['dataset'],
+                   requested_revision='master' if args.source == 'modelscope' else lock['revision'],
+                   content_reference_revision=lock['revision'], files=records,
                    cameras_downloaded=False, SimEngine_assets_downloaded=False)
     receipt_path = destination/'alg_engine'/('download_'+args.group+'.json')
     receipt_path.parent.mkdir(parents=True, exist_ok=True)

@@ -106,8 +106,8 @@ def check_rewards(row):
 def prepare(args):
     if args.output.exists() or args.output.is_symlink():
         raise ValueError("--output must not exist, including an empty directory")
-    if args.logs < 3 or not 1 <= args.anchors_per_log <= 1000:
-        raise ValueError("Need >=3 logs and 1..1000 anchors per log")
+    if args.logs < 3 or not 2 <= args.anchors_per_log <= 1000:
+        raise ValueError("Need >=3 logs and 2..1000 anchors per log to retain rare and same-log normal anchors")
     for name in ("annotations", "pdm", "rare_split"):
         setattr(args, name, getattr(args, name).resolve(strict=True))
     camera_root = args.cameras.resolve(strict=True)
@@ -192,6 +192,12 @@ def prepare(args):
             for index in order:
                 frame = infos[index]
                 token = frame["token"]
+                # Reserve at least one slot for a genuine same-log normal
+                # anchor. The original fine-tune loader retrieves normal data
+                # only from the failed anchor's own log, not the other logs.
+                if rare_phase and token in rare and sum(infos[i]["token"] in rare
+                        for i in candidates[log]) >= args.anchors_per_log - 1:
+                    continue
                 window = infos[index - 3:index + 1]
                 try:
                     scene = frame["log_token"]
@@ -213,9 +219,12 @@ def prepare(args):
                 candidates[log].append(index)
                 window_by_anchor[token] = list(range(index - 3, index + 1))
                 has_rare = any(infos[i]["token"] in rare for i in candidates[log])
-                if len(candidates[log]) >= args.anchors_per_log and (not rare_phase or has_rare):
+                has_normal = any(infos[i]["token"] not in rare for i in candidates[log])
+                if len(candidates[log]) >= args.anchors_per_log and (not rare_phase or (has_rare and has_normal)):
                     break
-            if not candidates[log] or (rare_phase and not any(infos[i]["token"] in rare for i in candidates[log])):
+            if not candidates[log] or (rare_phase and not (
+                    any(infos[i]["token"] in rare for i in candidates[log]) and
+                    any(infos[i]["token"] not in rare for i in candidates[log]))):
                 continue
             candidates[log].sort()
             (rare_logs if rare_phase else normal_logs).append(log)
@@ -224,7 +233,7 @@ def prepare(args):
         if rare_phase and not rare_logs:
             break
     if not rare_logs or len(normal_logs) < args.logs - 1:
-        raise ValueError("Need one genuine rare log and >=%d separate non-rare logs with valid "
+        raise ValueError("Need one genuine rare log with a valid same-log non-rare anchor and >=%d separate non-rare logs with valid "
                          "4-frame/8-camera/PDM anchors; found rare=%d nonrare=%d; rejected=%s" %
                          (args.logs - 1, len(rare_logs), len(normal_logs), dict(rejected)))
     selected_logs = [rare_logs[0]] + normal_logs[:args.logs - 1]
@@ -236,6 +245,11 @@ def prepare(args):
             first_rare = next(i for i in available if infos[i]["token"] in rare)
             chosen = sorted(set(chosen[:args.anchors_per_log - 1] + [first_rare]))
         anchor_indices.extend(chosen)
+    selected_rare = [infos[i]["token"] for i in anchor_indices if infos[i]["token"] in rare]
+    same_log_normal = {rare_logs[0]: [infos[i]["token"] for i in anchor_indices
+                       if infos[i]["log_name"] == rare_logs[0] and infos[i]["token"] not in rare]}
+    if not selected_rare or not same_log_normal[rare_logs[0]]:
+        raise ValueError("Selected rare anchors need at least one genuine same-log normal anchor")
     anchors = [infos[i]["token"] for i in sorted(anchor_indices)]
     anchor_set = set(anchors)
     retained_indices = sorted({i for t in anchors for i in window_by_anchor[t]})
@@ -287,6 +301,15 @@ def prepare(args):
     scene_filter.update(tokens=anchors, log_names=sorted(selected_logs))
     (out / "worldengine_navtest_smoke.yaml").write_text(
         yaml.safe_dump(scene_filter, sort_keys=False), encoding="utf-8")
+    # Original FineTune.load_annotations matches rare tokens against every
+    # retained info, including history-only frames outside scene_filter. Supply
+    # only the selected legal rare anchors so those extra history frames are
+    # never accidentally sampled with missing/different original predecessors.
+    mini_rare_filter = copy.deepcopy(rare_filter)
+    mini_rare_filter.pop("scenario_tokens", None)
+    mini_rare_filter.update(tokens=selected_rare, log_names=[rare_logs[0]])
+    (out / "worldengine_navtest_smoke_rare.yaml").write_text(
+        yaml.safe_dump(mini_rare_filter, sort_keys=False), encoding="utf-8")
     # Full hashes establish the original PKL/YAML inputs were unchanged.
     after = {name: file_record(getattr(args, name)) for name in inputs}
     if after != inputs:
@@ -308,6 +331,13 @@ def prepare(args):
         "anchor_history_tokens": {t: [infos[i]["token"] for i in window_by_anchor[t]] for t in anchors},
         "exact_original_history_verified": True,
         "rare_tokens": sorted(anchor_set & rare),
+        "same_log_normal_tokens": same_log_normal,
+        "same_log_normal_pool_verified": True,
+        "mini_rare_filter": "worldengine_navtest_smoke_rare.yaml",
+        "mini_finetuning_requires_selected_rare_filter": True,
+        "original_rare_filter_used_to_define_normal": True,
+        "history_only_original_rare_tokens": sorted({x["token"] for x in retained}
+                                                   & rare - anchor_set),
         "expected_heldout_log": sorted(normal_logs[:args.logs - 1])[-1],
         "split_rule": "Existing split_mini chooses last sorted selected non-rare log as eval",
         "camera_files": len(image_records), "jpeg_decode_verified": True,
@@ -318,7 +348,7 @@ def prepare(args):
         "rejected_anchor_counts": dict(rejected),
         "prepared_files": {name: file_record(out / name) for name in
                            ("worldengine_navtest_smoke.pkl", "worldengine_navtest_smoke_pdm.pkl",
-                            "worldengine_navtest_smoke.yaml")},
+                            "worldengine_navtest_smoke.yaml", "worldengine_navtest_smoke_rare.yaml")},
         "tool_sha256": sha256(Path(__file__)),
         "scope_not_verified": ["original dataset constructor and model pipeline",
                                "NPU training", "convergence", "official benchmark or GPU parity"],
@@ -346,7 +376,8 @@ def main():
         return 1
     print(json.dumps({key: report[key] for key in
                       ("result", "logs", "anchors", "frames", "camera_files",
-                       "rare_tokens", "expected_heldout_log", "dataset_scope")}, indent=2))
+                       "rare_tokens", "same_log_normal_tokens", "mini_rare_filter",
+                       "expected_heldout_log", "dataset_scope")}, indent=2))
     return 0
 
 
