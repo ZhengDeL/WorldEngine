@@ -1004,7 +1004,7 @@
       }
     ],
     "data_scope": "Repeated 42-anchor real mini, 8xB1 with sampler padding; exposure count is not unique dataset size or full NAVTRAIN convergence.",
-    "acceptance": "Bounded isolated-hour FP32 native full perception geometry/loss/optimizer/warmup. No leak exclusion, 24h, full-data, AMP, GPU speed comparison or training-SKU support claim."
+    "acceptance": "Bounded isolated-hour FP32 native full perception geometry/loss/optimizer/warmup. No leak exclusion, 24h, full-data, AMP or GPU speed comparison claim."
   },
   "perception_inference": {
     "result": "pass_real_perception_inference",
@@ -1517,7 +1517,6 @@
   "formal_full_data_quality": false,
   "gpu_model_comparison": false,
   "genuine_export_training_accepted": false,
-  "vendor_training_support_extended": false,
   "mixed_precision_accepted": false,
   "multi_server_accepted": false,
   "cpu_memory": {

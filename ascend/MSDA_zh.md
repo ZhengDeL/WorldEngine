@@ -97,7 +97,7 @@ python ascend/probes/full_shape_gate_probe.py --output /output/full_shape_gate.j
 
 命令须在固定 NPU 镜像和环境中运行，并核对整体退出码 0 及报告中的每项结果。真实训练、原生 epoch、完整断点续训和独立评价见 [中文操作文档](README_zh.md)。完整续训会检查源码、原配置、数据、拓扑、优化器/LR 和镜像；旧源码断点不能直接作为新源码完整续训的输入。
 
-完整 NAVTRAIN 收敛、八个真实合成配置、完整数据 CPU 内存/I/O/训练工期、GPU 对照和厂商正式训练支持仍待验收。八 rank 严格数值重放失败也需修复并按原门禁复验。MSDA 修复仅完成了该算子的验收，整套 AlgEngine 正式验收尚未完成。
+完整 NAVTRAIN 收敛、八个真实合成配置、完整数据 CPU 内存/I/O/训练工期、GPU 对照仍待验收。八 rank 严格数值重放失败也需修复并按原门禁复验。MSDA 修复仅完成了该算子的验收，整套 AlgEngine 正式验收尚未完成。
 
 ## CPU 严格重放对照如何复跑
 

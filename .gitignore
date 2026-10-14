@@ -22,6 +22,7 @@ sdist/
 var/
 wheels/
 pip-wheel-metadata/
+ascend/docker/*.whl
 share/python-wheels/
 *.egg-info/
 .installed.cfg

@@ -1,0 +1,5 @@
+*
+!extra_requirements.txt
+!Dockerfile
+!Dockerfile.post8
+!torch_npu-2.7.1.post8-cp310-cp310-manylinux_2_28_aarch64.whl

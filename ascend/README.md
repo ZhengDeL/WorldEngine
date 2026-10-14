@@ -1,5 +1,7 @@
 # AlgEngine on Ascend 910C / A3
 
+Start with the [NPU usage guide](../docs/algengine_ascend.md) for installation, data preparation, training, resume, evaluation and fine-tuning. This document retains the versioned measured results.
+
 ## Current acceptance snapshot: October 14, 2026
 
 AlgEngine can run the measured training, fine-tuning, inference and checkpoint
@@ -79,8 +81,7 @@ configuration and multi-node extension still need their own acceptance.
 
 Performance optimization remains deferred. The checks above concern correctness,
 function, capacity and bounded stability; historical speeds are not paired
-GPU/NPU benchmarks. Vendor training support for this inference SKU remains a
-separate unresolved item.
+GPU/NPU benchmarks.
 
 
 ### Additional short-window controls: results still bounded
@@ -251,7 +252,7 @@ are in `docker/geo-linux-aarch64-20261013.explicit.txt`. Its Python patch versio
 can differ from the main training prefix. These are build snapshots; the exact
 saved image is the verified offline reproduction artifact.
 
-The tested host was Atlas 800I A3 inference series, Ascend910_9362, with 64 GiB HBM per logical chip. Vendor training support for this SKU is a separate boundary: [official ModelZoo hardware table](https://gitcode.com/Ascend/ModelZoo-PyTorch/blob/master/PyTorch/docs/zh/install_guide.md). Experimental backpropagation does not extend that support table.
+The tested host was Atlas 800I A3 inference series, Ascend910_9362, with 64 GiB HBM per logical chip.
 
 ## Small real data and official weights
 
@@ -407,8 +408,11 @@ mini data and official cache. Verify its `SHA256SUMS` before import. These
 artifacts provide a small-data reproduction route; they do not certify another
 host's driver installation or complete numerical replay.
 
-The packet's `score_from_cache.py` and `README.md` provide a CPU-only container
-command that uses a freshly extracted cache and exported `predictions.pkl`,
-without a map or NPU mount. Four variants passed relocation with all official
-mean metrics identical. The helper regenerates metadata paths and calls the
-unchanged official scorer; use a fresh cache extraction for each evaluation.
+The earlier offline packet's private cache helper produced four successful
+relocation checks. For a repository checkout, use the public
+`ascend/tools/score_cached.py --predictions <predictions.pkl> --metric-cache
+<cache-root> --output <new-output>` in a CPU container, with no NPU device mounts.
+It calls the existing `ascend.scoring.score_predictions` implementation, which
+regenerates the metadata index and invokes the unchanged official scorer.
+The new CLI wrapper has local checks; it does not inherit a new device or
+scoring acceptance result from the earlier private helper.

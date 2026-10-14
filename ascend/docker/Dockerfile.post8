@@ -1,0 +1,13 @@
+ARG BASE_IMAGE=local/worldengine:26.1.0-a3-clean-20261013
+FROM ${BASE_IMAGE}
+
+# Build context: ascend/docker. Supply the exact official CPython 3.10 ARM64
+# wheel before building; the build itself does not resolve/download packages.
+COPY torch_npu-2.7.1.post8-cp310-cp310-manylinux_2_28_aarch64.whl /tmp/torch_npu.whl
+RUN set -eu; \
+    echo '3b65991505f215af76ca84ca05da7f64e942eedb0f6fd638f59a0976f6685f68  /tmp/torch_npu.whl' | sha256sum -c -; \
+    mv /tmp/torch_npu.whl /tmp/torch_npu-2.7.1.post8-cp310-cp310-manylinux_2_28_aarch64.whl; \
+    TORCH_DEVICE_BACKEND_AUTOLOAD=0 /opt/conda/envs/bevformer/bin/python -m pip install \
+      --no-deps --no-index --no-cache-dir \
+      /tmp/torch_npu-2.7.1.post8-cp310-cp310-manylinux_2_28_aarch64.whl; \
+    rm /tmp/torch_npu-2.7.1.post8-cp310-cp310-manylinux_2_28_aarch64.whl

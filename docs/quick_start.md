@@ -1,5 +1,7 @@
 # Quick Start Guide
 
+**Ascend AlgEngine:** start with the [NPU usage guide](algengine_ascend.md) ([中文](algengine_ascend_zh.md)) for image setup, real data preparation and NPU training. The quick test below uses the upstream SimEngine/GPU workflow.
+
 This guide will help you run your first WorldEngine experiment in minutes. We'll start with a quick test using pre-trained models, then point you to detailed guides for each subsystem.
 
 ## Prerequisites

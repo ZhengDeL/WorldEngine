@@ -195,7 +195,6 @@
     "Separate-host driver reproduction",
     "24-hour stability",
     "BF16/whole-model AMP",
-    "16-chip and multi-node scaling",
-    "Vendor training support for the inference SKU"
+    "16-chip and multi-node scaling"
   ]
 }

@@ -1,5 +1,7 @@
 # AlgEngine Usage Guide
 
+**Ascend 910C / A3:** follow the [NPU usage guide](algengine_ascend.md) ([中文](algengine_ascend_zh.md)). It uses the original configurations through the migration entry point. The original GPU shell scripts cap local processes at eight; passing `16` to them requests two nodes, so use the NPU shell entry points for a single 16-chip host.
+
 This guide covers how to use AlgEngine for training end-to-end autonomous driving models, running evaluations, extracting rare cases, and fine-tuning. AlgEngine is built on MMDetection3D and supports UniAD, VADv2, and HydraMDP architectures.
 
 ## Table of Contents

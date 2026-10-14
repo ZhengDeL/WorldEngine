@@ -2109,7 +2109,7 @@
     "Full-data CPU memory, I/O and training time",
     "GPU device comparison",
     "Non-FP32/whole-model AMP/second-order gradients",
-    "Manufacturer training support for the inference SKU; 24-hour, 16-chip and multinode operation"
+    "24-hour, 16-chip and multinode operation"
   ],
   "evidence": {
     "msda-strict-matrix-20261013.json": "8429f274e3d0e068e872c0a0fd2a9c264046772909dbbbbed047ef4b55d268d7",

@@ -39,7 +39,7 @@ The installed SDK forward experiment instead matched a per-query prefix and diff
 | Complete checkpoint CPU audit | 45/45 distinct checkpoint paths passed model/optimizer finiteness, source/counter/RNG checks |
 | Representative planning inference and official scoring | VADv2, Hydra and DiffusionDrive each passed 22 unique independent anchors and official CPU score coverage |
 
-The normal matrix also covers multiple seeds, four feature levels, nonsquare shapes, B2/B8, boundaries/adjacent FP32 values, size-one axes, noncontiguous inputs/gradients and varied attention weights. Original model regressions retain 200×200 BEV, 900 tracking queries and eight cameras. Eight genuine synthetic configurations, full NAVTRAIN convergence, full-data host RAM/I/O/training time, GPU comparison and manufacturer training support remain separate acceptance items.
+The normal matrix also covers multiple seeds, four feature levels, nonsquare shapes, B2/B8, boundaries/adjacent FP32 values, size-one axes, noncontiguous inputs/gradients and varied attention weights. Original model regressions retain 200×200 BEV, 900 tracking queries and eight cameras. Eight genuine synthetic configurations, full NAVTRAIN convergence, full-data host RAM/I/O/training time, and GPU comparison remain separate acceptance items.
 
 ## New implementation: measured training and continuation
 

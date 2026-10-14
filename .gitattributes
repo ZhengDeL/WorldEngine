@@ -3,3 +3,6 @@ ascend/data_tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab
 ascend/execution/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 ascend/results/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 ascend/evidence/eight-rank-resume-20261013-evening.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/evidence/msda-precision-20261013.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/validation_results_20261013.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

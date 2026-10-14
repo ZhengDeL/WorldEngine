@@ -684,5 +684,5 @@
       "python_files": 243
     }
   },
-  "scope": "Two fresh VAD/Hydra repetitions with original production fp32 and queue/blocking unset; owniter4, all16, mini functional replay. Post8 upgrade is not a sufficient fix. No full NAVTRAIN convergence, GPU parity, formal quality/performance/support acceptance."
+  "scope": "Two fresh VAD/Hydra repetitions with original production fp32 and queue/blocking unset; owniter4, all16, mini functional replay. Post8 upgrade is not a sufficient fix. No full NAVTRAIN convergence, GPU parity, formal quality/performance acceptance."
 }

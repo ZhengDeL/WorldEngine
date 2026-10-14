@@ -79,8 +79,7 @@ configuration and multi-node extension still need their own acceptance.
 
 Performance optimization remains deferred. The checks above concern correctness,
 function, capacity and bounded stability; historical speeds are not paired
-GPU/NPU benchmarks. Vendor training support for this inference SKU remains a
-separate unresolved item.
+GPU/NPU benchmarks.
 
 
 ### Additional short-window controls: results still bounded
@@ -283,8 +282,7 @@ do not validate the original data proportions or convergence.
 ## Hardware and capacity
 
 The exercised host is Atlas 800I A3 inference series, Ascend910_9362, with eight
-physical cards / 16 logical chips and 64 GiB HBM per logical chip. Experimental
-backpropagation does not establish vendor training support for this SKU.
+physical cards / 16 logical chips and 64 GiB HBM per logical chip.
 
 A single logical chip with 64 GiB executed the full-geometry perception model at
 B1: the observed allocator peak was about **43.61 GiB allocated / 46.00 GiB
@@ -598,9 +596,9 @@ Hydra passed the original tolerances with maximum difference
 2.9802322387695312e-8. Each model has one positive repetition; candidate
 repeatability and sustained training remain unaccepted.
 
-Performance optimization remains deferred. GPU comparison, formal vendor
-training support, mixed precision, second-order gradients and cross-server
-scaling require separate evidence. Sixteen-chip functionality and exact state
+Performance optimization remains deferred. GPU comparison, mixed precision,
+second-order gradients and cross-server scaling require separate evidence.
+Sixteen-chip functionality and exact state
 restoration have been executed. The synchronous candidate has two bounded
 sixteen-chip numerical positives, while default execution and repeated
 acceptance remain unresolved. Published benchmark scores are reference values, not measured NPU

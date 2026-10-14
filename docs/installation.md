@@ -1,5 +1,7 @@
 # Installation Guide
 
+**Ascend AlgEngine:** use the [NPU environment installation](../ascend/docker/README.md) ([中文](../ascend/docker/README_zh.md)) and [NPU usage guide](algengine_ascend.md). The CUDA packages below belong to the upstream GPU environment.
+
 WorldEngine consists of two main subsystems that require **separate conda environments** due to different Python version requirements:
 
 - **SimEngine** (`simengine` env, Python 3.9) - Closed-loop simulation with photorealistic rendering

@@ -877,7 +877,6 @@
       "all eight genuine synthetic/SimScale configurations",
       "full independent NAVTEST common/rare quality",
       "GPU numerical/trajectory comparison",
-      "formal vendor support for training on this inference-series SKU",
       "completed overnight stability, final full-state resume and independent inference checks"
     ]
   }

@@ -1,5 +1,7 @@
 # Data Organization Guide
 
+**Ascend AlgEngine:** the [NPU usage guide](algengine_ascend.md) ([中文](algengine_ascend_zh.md)) downloads selected locked AlgEngine files and describes real-mini preparation. Use that selective path before the full-dataset commands below.
+
 This guide explains how to organize data for WorldEngine. The platform uses a modular data structure where each subsystem (AlgEngine, SimEngine) has its own data requirements while sharing common formats.
 
 ## Quick Overview

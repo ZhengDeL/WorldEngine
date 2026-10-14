@@ -211,5 +211,5 @@
   },
   "root_cause_identified": false,
   "production_fix_accepted": false,
-  "acceptance_boundary": "One complete Hydra positive in the explicit queue0/blocking1 candidate configuration. VAD has separate evidence; independent repeated controlled pairs are not proven by this file. This does not establish a universal fix, GPU parity, complete NAVTRAIN convergence, formal quality, sustained performance or vendor training support."
+  "acceptance_boundary": "One complete Hydra positive in the explicit queue0/blocking1 candidate configuration. VAD has separate evidence; independent repeated controlled pairs are not proven by this file. This does not establish a universal fix, GPU parity, complete NAVTRAIN convergence, formal quality or sustained performance."
 }

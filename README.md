@@ -17,6 +17,8 @@
 
 **Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [current bounded measured results](ascend/evidence/msda-precision-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance. [Earlier fused-path results](ascend/evidence/full-algengine-20261013.json) retain their historical source fingerprint.
 
+**Start using AlgEngine on NPU:** [中文使用指南](docs/algengine_ascend_zh.md) / [English usage guide](docs/algengine_ascend.md), followed by [NPU environment installation](ascend/docker/README.md). These follow the original training, evaluation, rare-case and fine-tuning workflow, with explicit NPU commands and data preparation.
+
 **FP32 MSDA repair:** [English](ascend/MSDA.md), [中文](ascend/MSDA_zh.md), and [versioned strict-gradient/model results](ascend/evidence/msda-precision-20261013.json). Earlier fused-path performance remains historical evidence for its original fingerprint.
 
 **2026-10-14 measured status:** [post8 production replay](ascend/results/strict-replay-post8-20261014.json) completed four fresh 16-chip pairs with one pass and three failures at the unchanged numerical thresholds. [Full-rank state diagnosis](ascend/results/full-rank-state-diagnostic-20261014.json) verified restored model/optimizer bytes and recorded live layouts before update 5, while both final numerical comparisons still failed. The migration is partially validated; neither successful loading nor a backend upgrade establishes strict replay correctness.
@@ -172,6 +174,8 @@ WorldEngine consists of two tightly coupled subsystems:
 
 
 ## Getting Started
+
+For Ascend AlgEngine, begin with the [NPU usage guide](docs/algengine_ascend.md) or [中文指南](docs/algengine_ascend_zh.md). It includes image construction, selective downloads, real-mini preparation and the original-style `e2e_dist_train_npu.sh` / `e2e_dist_eval_npu.sh` commands. The CUDA installation and GPU-count examples below describe the upstream workflow.
 
 ### Documentation Overview
 
