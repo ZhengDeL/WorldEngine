@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "result": "single_untraced_vad_candidate_pair_bitwise_pass_not_universal_fix",
+  "raw_summary_sha256": "dfb9ee91dad86b7cc683a32e35e1a5fc147642ae6eaec9cf6d0890da0fca9ccd",
+  "raw_watchdog_sha256": "1a29cf77c19990c0f640b8adce4fc03a5af850fc0afc9ccd37eb843ef97e8640",
+  "actual_controller_sha256": "7401e2963cb22717bea09f6b1996bc9a31582c188f0b69450ed36889ca8097d7",
+  "source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "source_python_files": 243,
+  "source_fingerprint_before": {
+    "sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+    "python_files": 243
+  },
+  "source_fingerprint_after": {
+    "sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+    "python_files": 243
+  },
+  "source_unchanged": true,
+  "image_id": "sha256:3fef77b906c6b1e5cdf68c08d43135dc7b0509fb938a4665bb0d478bd8b64e45",
+  "physical_cards": 8,
+  "logical_chips": 16,
+  "world_size": 16,
+  "per_rank_batch": 1,
+  "global_batch": 16,
+  "original_planning_GPU_cards": 8,
+  "original_planning_per_GPU_batch": 2,
+  "original_planning_global_batch": 16,
+  "original_GPU_NPU_numerical_equivalence_verified": false,
+  "precision": "fp32",
+  "workers_per_rank": 0,
+  "initial_Docker_environment": {
+    "TASK_QUEUE_ENABLE": "0",
+    "ASCEND_LAUNCH_BLOCKING": "1",
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "HCCL_DETERMINISTIC": "true"
+  },
+  "private_model_wrapper": false,
+  "private_precision_wrapper": false,
+  "private_training_observer": false,
+  "NPU_to_CPU_diagnostic_copy": false,
+  "private_environment_shim": true,
+  "only_two_initial_ENV_values_changed": true,
+  "original_numerical_gate_changed": false,
+  "profiles": [
+    "vad"
+  ],
+  "repetitions": 1,
+  "completed_pairs": 1,
+  "actual_training_jobs": 2,
+  "actual_runtime_rank_reports": 32,
+  "actual_before_after_precision_snapshots": 64,
+  "config_sha256": "b1ed3b5d0ae465506442f74100803d111c793f31112705d74db68c46c5c30480",
+  "official_initializer_sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+  "mini_manifest_sha256": "aeae155493e0c2e09e70b2f81e339d431382e945ab3945bea83fa924ed9e27c6",
+  "data_scope": "NAVTEST-derived42 training anchors and22 held-out anchors; not complete NAVTRAIN.",
+  "own_checkpoint_scope": "Fresh continuous8 and same-source own update4 restoration to8; no checkpoint borrowed from another run.",
+  "runs": {
+    "continuous": {
+      "actual_wrapper_exit": 0,
+      "actual_container_exit": 0,
+      "OOMKilled": false,
+      "original_runtime_gate_passed": true,
+      "rank_reports": 16,
+      "rank_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "actual_precision_snapshots": 32,
+      "all_actual_public_HF32_false": true,
+      "all_actual_Torch_deterministic_true": true,
+      "all_actual_environments_equal": true,
+      "actual_environment": {
+        "CLOSE_MATMUL_K_SHIFT": "1",
+        "HCCL_DETERMINISTIC": "true",
+        "TASK_QUEUE_ENABLE": "0",
+        "ASCEND_LAUNCH_BLOCKING": "1"
+      },
+      "actual_backend_versions": [
+        "2.7.1.post8"
+      ],
+      "actual_backend_git_versions": [
+        "a783f11e456f27d7451a1ea745f1556823357c95"
+      ],
+      "restored_model_tensor_counts": null,
+      "restored_optimizer_tensor_counts": null
+    },
+    "resumed": {
+      "actual_wrapper_exit": 0,
+      "actual_container_exit": 0,
+      "OOMKilled": false,
+      "original_runtime_gate_passed": true,
+      "rank_reports": 16,
+      "rank_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "actual_precision_snapshots": 32,
+      "all_actual_public_HF32_false": true,
+      "all_actual_Torch_deterministic_true": true,
+      "all_actual_environments_equal": true,
+      "actual_environment": {
+        "CLOSE_MATMUL_K_SHIFT": "1",
+        "HCCL_DETERMINISTIC": "true",
+        "TASK_QUEUE_ENABLE": "0",
+        "ASCEND_LAUNCH_BLOCKING": "1"
+      },
+      "actual_backend_versions": [
+        "2.7.1.post8"
+      ],
+      "actual_backend_git_versions": [
+        "a783f11e456f27d7451a1ea745f1556823357c95"
+      ],
+      "restored_model_tensor_counts": [
+        889
+      ],
+      "restored_optimizer_tensor_counts": [
+        777
+      ]
+    }
+  },
+  "original_numeric_gate": {
+    "result": "pass",
+    "actual_wrapper_exit": 0,
+    "actual_container_exit": 0,
+    "OOMKilled": false,
+    "valid_actual_numerical_result": true,
+    "model": {
+      "tensors": 889,
+      "bitwise_equal_tensors": 889,
+      "max_absolute_difference": 0.0,
+      "failed_paths": [],
+      "failed_path_count": 0
+    },
+    "optimizer": {
+      "failed_paths": [],
+      "failed_path_count": 0,
+      "max_absolute_difference": null,
+      "maximum_scope": "Optimizer-only maximum is not separately reported; no fabricated value.",
+      "max_absolute_difference_upper_bound": 0.0
+    },
+    "combined_model_optimizer_and_rank_rng": {
+      "tensors": 1698,
+      "bitwise_equal_tensors": 1698,
+      "max_absolute_difference": 0.0,
+      "count_scope": "Includes two RNG tensors per rank; not all model+optimizer tensors."
+    },
+    "max_loss_difference": 0.0,
+    "identical_batch_tokens": true,
+    "identical_learning_rates": true,
+    "identical_final_rng_states": true,
+    "world_size": 16,
+    "completed_updates": 8,
+    "tensor_tolerance": {
+      "atol": 1e-06,
+      "rtol": 1e-05
+    },
+    "loss_absolute_tolerance": 0.0001,
+    "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+    "original_comparator_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+    "official_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+    "official_CPU_loader_identity": true,
+    "no_NPU_initialization": true,
+    "RE_MAP_CPU_after_runpy": true,
+    "original_target_source_unchanged": true,
+    "failure_list_display_scope": "Original shared failure-list display retained in raw artifact; public counts filter actual model/optimizer path prefixes. Gates and tensors unchanged."
+  },
+  "cleanup": {
+    "remaining_own_running_count": 0,
+    "ownership_errors": 0,
+    "cleanup_error_present": false,
+    "watchdog_result": "completed_no_registered_owned_running",
+    "watchdog_forced_stops": 0,
+    "stop_margin_seconds": 60,
+    "scope": "Only registered jobs of this candidate."
+  },
+  "comparison_to_previous_evidence": {
+    "previous_untraced_default_queue_scope": "TASK_QUEUE_ENABLE and ASCEND_LAUNCH_BLOCKING unset",
+    "previous_default_four_pairs_passed": 1,
+    "previous_default_four_pairs_failed": 3,
+    "previous_public_evidence": "post8_untraced_production16_20261014_public.json",
+    "paired_matched_repeated_causal_proof_complete": false
+  },
+  "root_cause_identified": false,
+  "production_fix_accepted": false,
+  "acceptance_boundary": "One complete VAD positive in the explicit queue0/blocking1 candidate configuration. Hydra and independent repeated controlled pairs are not proven by this file. This does not establish a universal fix, GPU parity, complete NAVTRAIN convergence, formal quality, sustained performance or vendor training support."
+}

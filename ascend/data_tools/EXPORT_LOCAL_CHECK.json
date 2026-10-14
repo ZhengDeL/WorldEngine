@@ -1,0 +1,92 @@
+{
+  "result": "PASS_LOCAL_SCHEMA_AND_DRYRUN_ONLY_NOT_REAL_EXPORT",
+  "tool_sha256": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708",
+  "checks": [
+    {
+      "check": "original_predecessor_queue_preserves_jitter_and_input",
+      "passed": true
+    },
+    {
+      "check": "duplicate_token_rejected",
+      "passed": true
+    },
+    {
+      "check": "different_log_rejected",
+      "passed": true
+    },
+    {
+      "check": "nonmonotonic_timestamp_rejected",
+      "passed": true
+    },
+    {
+      "check": "missing_camera_rejected",
+      "passed": true
+    },
+    {
+      "check": "archive_regular",
+      "passed": true
+    },
+    {
+      "check": "archive_absolute",
+      "passed": true
+    },
+    {
+      "check": "archive_parent",
+      "passed": true
+    },
+    {
+      "check": "archive_link",
+      "passed": true
+    },
+    {
+      "check": "archive_duplicate",
+      "passed": true
+    },
+    {
+      "check": "unsafe_relative_/abs",
+      "passed": true
+    },
+    {
+      "check": "unsafe_relative_../outside",
+      "passed": true
+    },
+    {
+      "check": "unsafe_relative_back\\slash",
+      "passed": true
+    },
+    {
+      "check": "default_dryrun_no_inputs_or_device_imports",
+      "passed": true
+    },
+    {
+      "check": "parser_wrong_folder_rejected",
+      "passed": true
+    },
+    {
+      "check": "parser_insufficient_reserve_rejected",
+      "passed": true
+    },
+    {
+      "check": "parser_invalid_runtime_SHA_rejected",
+      "passed": true
+    },
+    {
+      "check": "parser_path_as_scene_rejected",
+      "passed": true
+    }
+  ],
+  "actual_server_CPU_replay": false,
+  "actual_training_accepted": false,
+  "fixture": "F:\\lizhengde\\000_codex\\116_qianyi\\_worldengine_overnight_20261013\\_portable_export_fixture_f0ea3437",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

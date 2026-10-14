@@ -1,10 +1,174 @@
 # Full AlgEngine migration candidate
 
+## Current acceptance snapshot: October 14, 2026
+
+AlgEngine can run the measured training, fine-tuning, inference and checkpoint
+restoration workflows on the NPU. Complete migration acceptance remains open.
+MSDA's strict location-gradient issue is resolved at the original tolerances;
+the remaining sixteen-rank numerical failure has not been attributed to MSDA.
+
+The current runtime under evaluation is `cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88`
+(243 runtime Python files). On its post8 candidate image, the four fresh,
+untraced sixteen-rank VAD/Hydra continuous-eight/own-checkpoint-four/resume-eight
+pairs used the original unset queue/blocking environment and completed their
+original runtime and saved-state restoration gates. The
+unchanged final numerical comparator passed **one pair and failed three**.
+The tensor tolerances remain `atol=1e-6, rtol=1e-5`; loss tolerance remains `1e-4`.
+See the [untraced strict replay results](results/strict-replay-post8-20261014.json).
+
+| Post8 sixteen-rank pair | Numerical result | Model maximum absolute difference | Complete comparison maximum difference | Model / optimizer tensors above tolerance |
+| --- | --- | ---: | ---: | ---: |
+| VAD, repetition 1 | Fail | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
+| Hydra, repetition 1 | Fail | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
+| VAD, repetition 2 | Fail | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
+| Hydra, repetition 2 | Pass, bitwise equal | 0 | 0 | 0 / 0 |
+
+Complete comparisons include rank RNG tensors. A passing pair does not establish
+a general determinism repair, and loading a checkpoint exactly does not ensure
+that all subsequent computations reproduce a continuous run. Root cause remains
+unconfirmed. The additional state diagnosis completed with failures below.
+The first synchronous-execution control ended as a partial run; the later VAD
+and Hydra candidates below each passed once. These are different runs. Partial progress,
+timely device release or a single positive candidate does not establish a general
+determinism repair.
+
+| Acceptance area | Verified result | Work still required |
+| --- | --- | --- |
+| Genuine data | Both full NAVTRAIN PKLs, totaling 39,862,469,866 bytes, are present and hash-verified. Raw metadata QC covers 246,165 unique frames in 1,192 logs and all 103,288 official split tokens. All 619,728 required PDM arrays are finite `float32[8192]`, range 0–1. | Complete current/history camera coverage and independent full NAVTEST/cache preparation. The QC read **zero image files**; 1,969,320 valid camera references are not JPEG availability/decode acceptance. |
+| Eight synthetic configurations | Portable preparation, original four-branch getitem, and one/two-rank own-checkpoint controls passed for **two configurations** using one genuine scene and WE-derived 8192 rewards. All tested tensors were bitwise equal. | The other **six rollout/replay/BWM configurations** lack complete genuine exports. The narrowed normal pool and four-second WE logged-traffic protocol do not establish published SimScale-v2 reward or full-data sampling equivalence. |
+| Full training and independent quality | Small-data training, original evaluators and earlier independent official CPU scoring work. | Full NAVTRAIN horizons/convergence, independent full NAVTEST common/rare quality and GPU output comparison are unaccepted. |
+| CPU/device capacity | Original full-PKL dataset/Compose construction passed with 1, 8 and 16 independent resident datasets under the original 50% filter: 246,165 frames, 50,000 anchors and 103,288 PDM entries per dataset. Sixteen-dataset summed RSS reached 834,131,996,672 bytes. | Actual full-image/model/optimizer/worker training memory and I/O capacity. The constructor used source858/post6 and an explicit SDK import-time metadata bridge; it is not an unshimmed CPU-only deployment or a training-memory result. |
+| Stability and restoration | The source858/post6 eight-rank perception run exceeded eight hours, completed 1,023 updates per rank, restored its own final checkpoint for three more updates, completed 37-frame perception inference/evaluation and audited both checkpoints on CPU. | Target-source/post8 sustained training and the unresolved sixteen-rank strict numerical gate. No 24-hour, full-data or universal replay acceptance. |
+
+The full metadata QC's 34,747,150,336-byte sequential process RSS is separate
+from original dataset construction. One constructor peaked around 52.208 GB;
+eight resident datasets reached 416,754,966,528 summed RSS bytes. The sixteen
+dataset result does not include decoded full-training images or NPU model work.
+The seventh `driving_direction_compliance` cache field received schema inventory
+only; it must not be counted as a seventh numerically accepted metric.
+
+The eight-hour result belongs to source `858f9d…` (242 files), image `a182…`
+and `torch_npu 2.7.1.post6`. Minimum recorded rank training time was
+28,827.677454 seconds. All four training/resume/inference/audit containers exited
+0 without OOM; all sixteen original rank streams were checked on the server:
+8,208 contiguous update records and 837,216 finite raw-loss scalars. The original
+gradient guard checks the first update and every tenth update, not all gradients
+at every step. CPU checkpoint RNG checks establish field/type/count structure,
+not RNG equality or strict numerical replay. That old run has no new per-rank
+precision before/after snapshots and cannot be reassigned to cc91/post8.
+
+Portable data preparation has an independent three-CLI SHA manifest. Its recipe
+requires 47.50 GB of pinned public inputs, excluding maps/source/image/output;
+it does not require the incompatible 19.3 GB published 16384-reward file, all
+449 GB of NAVTRAIN cameras or the 5 TB scene publication. Finetune uses the
+published 100pct checkpoint as an **explicit override**; the original
+`e2e_vadv2_ep8.pth` basename remains unavailable. Reproduction evidence is
+`data_tools/CPU_REPRODUCTION_VERIFIED.json`, `GETITEM_CPU_VERIFIED.json`,
+`NPU_SINGLE_RANK_VERIFIED.json` and `NPU_TWO_RANK_VERIFIED.json`; the full-data QC
+and old eight-hour supplements are [complete NAVTRAIN metadata QC](results/full-navtrain-metadata-qc-20261014.json)
+and [old-source eight-hour stability](results/eight-hour-perception-stability-20261014.json).
+
+The original catalogue contains 44 configurations: **42 planning configurations
+use batch 2 per GPU**, and two perception configurations use batch 1. For the
+planning baselines, 16 NPU ranks at B1 match the original 8-GPU global sample
+count of 16; they do not establish numerical or grouping equivalence. The
+eight-rank old stability run used eight physical cards, one chip per card.
+The genuine two-rank controls used two physical cards, one chip per card;
+neither proves a one-card dual-chip topology. A four-card/eight-chip B2 capacity
+configuration and multi-node extension still need their own acceptance.
+
+Performance optimization remains deferred. The checks above concern correctness,
+function, capacity and bounded stability; historical speeds are not paired
+GPU/NPU benchmarks. Vendor training support for this inference SKU remains a
+separate unresolved item.
+
+
+### Additional short-window controls: results still bounded
+
+A follow-up post8 sixteen-rank state-observation run completed all four
+VAD/Hydra training/restoration jobs and the CPU checkpoint identity audits.
+Both original numerical comparisons failed. Each model completed 144 state
+joins with zero blocked entries and 16 tensor-differing joins, all at final
+update 8; see [the full-state diagnosis](results/full-rank-state-diagnostic-20261014.json). Recorded registered model/optimizer state and layout before update 5
+matched, but later execution diverged. This does not establish equality of
+unregistered caches or every backend state; root cause remains unconfirmed.
+Source remained cc91/243, with no remaining owned jobs or cleanup errors. The
+observer reads NPU state onto CPU and can change timing; this diagnosis is
+separate from untraced production replay and is not evidence of a repair.
+
+The separate synchronous-execution candidate
+`TASK_QUEUE_ENABLE=0, ASCEND_LAUNCH_BLOCKING=1` failed initialization on the
+second node with `EL0020 / Device0 occupied by multiple containers / 507899`.
+It performed zero updates and produced no numerical comparison. No reset,
+sharing-mode change or shared-workload stop was used. Healthy npu-smi output
+and absent host PID/FD evidence alone did not establish usable driver state.
+
+The independent untraced single-VAD synchronous control on the first node
+ended as a partial execution. Its continuous run completed eight updates,
+exited 0 and passed all sixteen original runtime gates. Resuming its own
+checkpoint at update 4 completed only two further updates to 6. The original
+helper's earlier 120-second cutoff stopped the owned resume job at 01:38:10 UTC;
+its exit was 137 without OOM. It did not reach update 8 and the original strict
+comparator did not run. This is neither a numerical pass nor a numerical fail,
+and provides no Hydra or two-repeat acceptance.
+
+That first short device window ended. All owned jobs were released with no
+remaining owned work or cleanup errors. The independent watchdog completed
+with an empty stops list; the earlier stop came from the original helper. The
+last session closed at 01:39:59 UTC, before the 01:40:10 authorization cutoff.
+The running v1 was not restarted or replaced to extend the window. The variant
+with unified 60-second guards was not run in that first window.
+
+In the subsequent window ending at 02:00 UTC / 10:00 CST, one fresh untraced
+VAD pair completed continuous updates 1–8 and resumed its own update-4 checkpoint
+through update 8. With initial `TASK_QUEUE_ENABLE=0` and
+`ASCEND_LAUNCH_BLOCKING=1`, both training jobs exited 0 and all 32 rank runtime
+reports passed. All 64 before/after precision snapshots recorded FP32 with
+both public HF32 flags false and the expected deterministic environment.
+The unchanged numerical comparator, using the official Torch-NPU CPU loader,
+found all 889 model tensors and all
+1,698 complete comparison tensors (including rank RNG) bitwise equal, with
+maximum difference and loss difference both 0. Source remained cc91/243,
+with no remaining owned jobs or cleanup errors. This is one VAD candidate
+positive; see the [synchronous VAD result](results/sync-vad-16chip-20261014.json).
+
+The separate Hydra pair also completed both training jobs and all 32 rank
+runtime gates, including 64 matching before/after precision snapshots, with
+the same synchronous environment and unchanged source/image. Its original
+comparison passed at the original tolerances: model maximum and complete
+comparison maximum were both `2.9802322387695312e-8`, and loss difference was 0.
+868 of 909 model tensors and 1,468 of 1,778 complete comparison tensors were
+bitwise equal; **Hydra was not fully bitwise equal**. Batch tokens, LR and final
+rank RNG states matched. See the [synchronous Hydra result](results/sync-hydra-16chip-20261014.json).
+
+These are one VAD and one Hydra candidate pair, one repetition each. They do
+not establish four-pair repeatability, a root cause, universal determinism or
+full-data acceptance. Both completed with no remaining owned jobs or cleanup
+errors; the Hydra watchdog completed with an empty stops list. The complete
+CPU-input diagnostic controller was prepared locally and never executed.
+Production defaults and numerical tolerances remain unchanged.
+
+For the bounded candidate, see [synchronous reproduction commands](execution/README.md). The public adapter has local command-construction evidence; the NPU results above came from the earlier controlled launch flow.
+
+
 **2026-10-13 FP32 MSDA update:** use the [MSDA repair supplement](MSDA.md)
 and its [versioned results](evidence/msda-precision-20261013.json) for the current
 native NPU sampler, strict gradients and new model/resource regressions. The
 `96a7bef…` fingerprint and measurements below describe the earlier fused-path
 snapshot. They remain historical evidence and are not reassigned to the new source.
+
+**2026-10-13 evening update:** the historical `2bed8f4d7c78` / `858f9d…` FP32
+source completed four eight-rank continuous/resumed jobs, with all 32 runtime
+checks and exact saved-state restoration passing. The unchanged final numerical
+gate nevertheless **failed for both VADv2 and HydraMDP**: 12 model / 21 optimizer
+and 2 model / 2 optimizer tensors exceeded tolerance, respectively. Batch tokens,
+LR and final RNG states matched. The [evening evidence](evidence/eight-rank-resume-20261013-evening.json)
+records original configuration/initializer hashes, tensor paths and reporting
+limitations. At the October13 22:44 snapshot the planned perception run was still running.
+The separately completed old-source eight-hour result is reported above; it
+does not retroactively pass the earlier interrupted job. Performance optimization is
+deferred by the user, outside the current five correctness acceptance items;
+full-data RAM, I/O and device-capacity checks remain necessary.
 
 [中文操作文档](README_zh.md) provides deployment, data preparation, training,
 fine-tuning, inference, complete resume and acceptance commands. See also the historical
@@ -125,21 +289,24 @@ backpropagation does not establish vendor training support for this SKU.
 A single logical chip with 64 GiB executed the full-geometry perception model at
 B1: the observed allocator peak was about **43.61 GiB allocated / 46.00 GiB
 reserved**. The original planning B2 eight-rank run used up to 27.04/38.34 GiB
-allocated/reserved per chip. At least one server can therefore run the measured
-small-data cases; the usual original eight-rank global batch can use eight
-logical chips in one server. Full NAVTRAIN RAM, I/O throughput, runtime and
-convergence have not been measured. Do not infer full training RAM from PKL
+allocated/reserved per chip. At least one server can run the measured small-data cases. Original planning
+8GPU/B2 gives global batch16; measured16NPU/B1 matches this sample count.
+Eight NPU chips at B2 on four complete dual-chip cards still need their own
+capacity and numerical acceptance. Full-PKL constructor RAM is now measured
+separately; full-image/model training RAM, I/O, runtime and convergence remain
+unaccepted. Do not infer full training RAM from PKL
 file size or extrapolate these peaks to arbitrary batches.
 
-Start full-data deserialization in one CPU container before allocating eight
-training ranks. `preflight.py` retains both train and evaluation inputs and
+The completed1/8/16 full-PKL constructor measurements above are prerequisites
+for sizing, not training-memory budgets. Verify full camera/model/worker capacity
+before starting full-data training. `preflight.py` retains both train and evaluation inputs and
 records actual RSS. Its rank projection is only data-process RSS multiplied by
 ranks; model/optimizer memory, validation, workers and runtime headroom must
 also be measured. Exact resume currently requires `--workers 0`.
 
 ## Required real data
 
-Use a dedicated root such as `/var/ai-model/lzd/worldengine/data`, or the agreed
+Use a dedicated root such as `/srv/worldengine/data`, or the agreed
 NAS path through that root. The inspected local filesystem had about 595.86 GB
 free before the expanded tests; a large dataset's compressed archives plus
 extraction will need a larger agreed storage target. No mount or shared service
@@ -198,10 +365,10 @@ count. The authoritative WorldEngine data revision is
 ```bash
 # Run on the Linux server; this downloads only selected official weights.
 python3 ascend/fetch_assets.py --group warmstarts --source hf-mirror \
-  --output /var/ai-model/lzd/worldengine/weights
+  --output /srv/worldengine/weights
 # If the selected source fails, select the publisher's domestic repository.
 python3 ascend/fetch_assets.py --group warmstarts --source modelscope \
-  --output /var/ai-model/lzd/worldengine/weights
+  --output /srv/worldengine/weights
 ```
 
 `assets.lock.json` contains original file sizes and SHA256. Do not download the
@@ -343,13 +510,13 @@ can use the native eight-epoch schedule:
 ```bash
 python3 ascend/run_container.py --devices 0,2,4,6,8,10,12,14 \
   --config projects/AlgEngine/configs/worldengine/e2e_vadv2_50pct.py \
-  --data-root /var/ai-model/lzd/worldengine/data \
-  --checkpoint /var/ai-model/lzd/worldengine/weights/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth \
-  --vocab /var/ai-model/lzd/worldengine/data/alg_engine/test_8192_kmeans.npy \
-  --maps /var/ai-model/lzd/worldengine/data/raw/nuplan/dataset/maps \
-  --official-metric-cache /var/ai-model/lzd/worldengine/metric_cache_navtest \
+  --data-root /srv/worldengine/data \
+  --checkpoint /srv/worldengine/weights/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth \
+  --vocab /srv/worldengine/data/alg_engine/test_8192_kmeans.npy \
+  --maps /srv/worldengine/data/raw/nuplan/dataset/maps \
+  --official-metric-cache /srv/worldengine/metric_cache_navtest \
   --validate --workers 0 --memory "$MEASURED_CPU_MEMORY_LIMIT" --cpus 64 \
-  --output /var/ai-model/lzd/worldengine/runs/navtrain_vad50 --detach
+  --output /srv/worldengine/runs/navtrain_vad50 --detach
 ```
 
 The CPU memory placeholder must be filled from measured complete-cache and
@@ -370,11 +537,14 @@ For interrupted native epochs keep the original configuration, horizon, data,
 batch, world size, workers, seed, source and image unchanged. Add
 `--stop-after-epochs 2` to an eight-epoch run; resume its complete `epoch_2.pth`
 with `--resume` in a new output directory and the same horizon. Check the explicit
-saved-state restoration result and subsequent metrics. On the current FP32
-source, the single-rank VADv2/Hydra controlled numerical comparisons passed;
-eight-rank complete-state restoration/continuation passed, while strict
-multi-rank numerical replay remains unverified. The earlier fused SDK atomic
-accumulation observation is historical, not a new-source failure verdict.
+saved-state restoration result and subsequent metrics. On the historical source858 FP32
+snapshot, the single-rank VADv2/Hydra controlled numerical comparisons passed.
+Eight-rank complete-state restoration/continuation also passed, but the new
+eight-rank continuous-eight-update versus same-run-iter-four-resume-to-eight
+comparison **failed the original final tensor gate for both models**. See the
+[actual eight-rank results](evidence/eight-rank-resume-20261013-evening.json).
+The cause has not been isolated in this run; the earlier fused SDK atomic
+accumulation observation cannot establish the cause of this new-source failure.
 
 ## Genuine synthetic and SimScale inputs
 
@@ -385,31 +555,54 @@ or `meta_datas_navformer` (SimScale). Preserve each config's `folder_name` and
 filters. WorldEngine rollouts also consume `plan_idx.csv`; SimScale consumes
 per-folder reward PKLs and split YAMLs.
 
-These configurations remain unexecuted without genuine exports. The inspected
-public SimScale reward filenames advertise 16384 trajectories; the WorldEngine
-configs use the 8192 vocabulary. Actual vocabulary order, reward dimensions and
-conversion must be verified before reuse. A matching filename or a renamed PKL
-does not establish compatibility. No substitute real mini log is presented as
-a genuine synthetic rollout. A synthetic config's `--synthetic-root` gate fails
-early instead of silently training a different dataset.
+Two SimScale configurations have now completed portable CPU production,
+original dataset getitem and one/two-rank NPU own-checkpoint controls for one
+genuine scene. The other six rollout/replay/BWM configurations still lack
+complete genuine exports. No real mini log is substituted for a synthetic
+rollout. The original synthetic-root/filter checks remain active.
 
-The original Hydra BWM config contains `/path/to/synthetic/rollouts/...`
-placeholders. These must be replaced by the actual exported folder names in a
-reviewable configuration; `--synthetic-root` does not resolve that placeholder
-mapping automatically. The SimScale fine-tune config names `e2e_vadv2_ep8.pth`;
-its exact original initialization asset/alias must also be established rather
-than silently substituting the tested 50% planner. These are data/configuration
-prerequisites, not observed NPU operator failures.
+The inspected19.3 GB published reward has16384 candidates and different metric
+fields; the original loader's conditional removal produces16383. Exact full
+trajectory-row matches from the8192 vocabulary into the16384 vocabulary are
+0/8192. Truncation, a renamed PKL or an assumed index mapping is not a valid
+adapter. The portable recipe freshly computes8192 labels with original WE
+four-second logged-traffic scoring and explicitly does not establish
+SimScale-v2 reward equivalence or native nuPlanDB/full-engine equivalence.
+
+Hydra BWM still needs its `/path/to/synthetic/rollouts/...` placeholders mapped
+to actual genuine exports; synthetic-root does not supply those files.
+The SimScale fine-tune basename `e2e_vadv2_ep8.pth` remains unavailable.
+The tested recipe explicitly overrides it with published
+`e2e_vadv2_100pct_ep8.pth`,434,885,463 bytes, SHA256
+`fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a`.
+It is not silently renamed or presented as the missing initializer.
+These remaining export/configuration conditions are distinct from observed NPU
+operator failures.
 
 ## Remaining acceptance
 
-The current FP32 strict large-shape MSDA gate is passed. Remaining complete-module
-acceptance includes full NAVTRAIN deserialization/RAM, representative complete-data
-training, all eight genuine synthetic consumers, original-horizon convergence,
-full NAVTEST common/rare quality, target-batch/worker performance and sustained
-training, and strict multi-rank numerical replay. GPU comparison and formal
-vendor training support require separate external evidence. Mixed precision,
-second-order gradients, 16-chip and cross-server execution are additional scope,
-not prerequisites for the demonstrated FP32 one-host path. Published benchmark
-base scores are reference values, not measured NPU results. Current bounded
-measurements are in [MSDA.md](MSDA.md) and its versioned results.
+The strict large-shape MSDA gate is passed at the original tolerances.
+Full-PKL NAVTRAIN dataset construction at1/8/16 residents and all six required
+PDM arrays across the original103,288-token split are now checked. Remaining
+work is full-image/model/worker capacity, representative complete-data training,
+the other six genuine synthetic exports, original-horizon convergence and
+independent complete NAVTEST common/rare quality.
+
+Old-source858/post6 eight-hour operational stability and final-checkpoint
+continuation passed. This does not accept target-sourcecc91/post8 sustained
+training or general replay correctness. The untraced default post8 sixteen-rank
+comparison passed1/4 pairs and failed3/4; retain those failures. State-observation
+controls also failed. The first synchronous attempt was partial, followed by
+two fresh completed pairs in the extended window: VAD was bitwise equal and
+Hydra passed the original tolerances with maximum difference
+2.9802322387695312e-8. Each model has one positive repetition; candidate
+repeatability and sustained training remain unaccepted.
+
+Performance optimization remains deferred. GPU comparison, formal vendor
+training support, mixed precision, second-order gradients and cross-server
+scaling require separate evidence. Sixteen-chip functionality and exact state
+restoration have been executed. The synchronous candidate has two bounded
+sixteen-chip numerical positives, while default execution and repeated
+acceptance remain unresolved. Published benchmark scores are reference values, not measured NPU
+results. Historical source-specific measurements remain in [MSDA.md](MSDA.md)
+and its versioned results.

@@ -1,0 +1,271 @@
+{
+  "result": "pass_fresh_portable_export_two_original_configs_two_rank_own_checkpoint_strict_replays",
+  "completed_at_utc": "2026-10-13T21:00:51.469785+00:00",
+  "runtime_source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "image_id": "sha256:ba17931d5af64c6070417bc2059887096abf42d76b44484a9bd45262e3918707",
+  "torch_npu_version": "2.7.1.post8",
+  "torch_npu_git_version": "a783f11e456f27d7451a1ea745f1556823357c95",
+  "artifact_unchanged": true,
+  "export_receipt_sha256": "99d0ec1a979d897bb8e019bee1bfe750bb65f9a3e14f630b2d09f3da5f9dc7d6",
+  "preparation_tool_sha256": {
+    "simscale_convert.py": "3db9779124634a102f6ccedc7432704c425b9f1d80bcfa9859275156fe007ce6",
+    "worldengine_8192_logged_reward.py": "82528bae108918c74ef6a896d12cf652f14bd751353479cfc63924e8d0a6223c",
+    "export_simscale_minimum.py": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708"
+  },
+  "controller_sha256": "62529a856b53276acc881852d66e3a23e3f2a499f9054de30b82379dfd3ee158",
+  "original_compare_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+  "official_CPU_loader_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+  "cases": [
+    {
+      "config": "finetune",
+      "world_size": 2,
+      "continuous_final_update": 8,
+      "own_checkpoint_update": 4,
+      "resumed_final_update": 8,
+      "continuous_actual_exit": 0,
+      "resumed_actual_exit": 0,
+      "all_rank_original_training_gates": {
+        "continuous": [
+          {
+            "rank": 0,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 0,
+            "final_iter": 8,
+            "updates_this_run": 8,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": null,
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "6,8",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 0,
+              "local_rank": 0
+            }
+          },
+          {
+            "rank": 1,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 0,
+            "final_iter": 8,
+            "updates_this_run": 8,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": null,
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "6,8",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 1,
+              "local_rank": 1
+            }
+          }
+        ],
+        "resumed": [
+          {
+            "rank": 0,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 4,
+            "final_iter": 8,
+            "updates_this_run": 4,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": {
+              "result": "pass_exact_saved_state_restore",
+              "model_tensors": 989,
+              "optimizer_tensors": 300
+            },
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "6,8",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 0,
+              "local_rank": 0
+            }
+          },
+          {
+            "rank": 1,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 4,
+            "final_iter": 8,
+            "updates_this_run": 4,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": {
+              "result": "pass_exact_saved_state_restore",
+              "model_tensors": 989,
+              "optimizer_tensors": 300
+            },
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "6,8",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 1,
+              "local_rank": 1
+            }
+          }
+        ]
+      },
+      "both_original_branches": [
+        "normal",
+        "synthetic"
+      ],
+      "model_tensor_count": 989,
+      "complete_tensor_count_including_rank_RNG": 1293,
+      "all_compared_tensors_bitwise_equal": true,
+      "max_absolute_difference": 0,
+      "max_loss_difference": 0,
+      "identical_tokens_LR_final_RNG": true,
+      "original_compare_exit": 0,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_absolute_tolerance": 0.0001,
+      "official_CPU_loader_result": "pass_unchanged_target_official_cpu_loader"
+    },
+    {
+      "config": "cotrain",
+      "world_size": 2,
+      "continuous_final_update": 8,
+      "own_checkpoint_update": 4,
+      "resumed_final_update": 8,
+      "continuous_actual_exit": 0,
+      "resumed_actual_exit": 0,
+      "all_rank_original_training_gates": {
+        "continuous": [
+          {
+            "rank": 0,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 0,
+            "final_iter": 8,
+            "updates_this_run": 8,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": null,
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "10,12",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 0,
+              "local_rank": 0
+            }
+          },
+          {
+            "rank": 1,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 0,
+            "final_iter": 8,
+            "updates_this_run": 8,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": null,
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "10,12",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 1,
+              "local_rank": 1
+            }
+          }
+        ],
+        "resumed": [
+          {
+            "rank": 0,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 4,
+            "final_iter": 8,
+            "updates_this_run": 4,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": {
+              "result": "pass_exact_saved_state_restore",
+              "model_tensors": 909,
+              "optimizer_tensors": 837
+            },
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "10,12",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 0,
+              "local_rank": 0
+            }
+          },
+          {
+            "rank": 1,
+            "result": "pass",
+            "world_size": 2,
+            "initial_iter": 4,
+            "final_iter": 8,
+            "updates_this_run": 4,
+            "parameter_updated": true,
+            "expected_pg": true,
+            "pg_observed_nonzero": true,
+            "restoration": {
+              "result": "pass_exact_saved_state_restore",
+              "model_tensors": 909,
+              "optimizer_tensors": 837
+            },
+            "device_provenance": {
+              "WORLDENGINE_HOST_DEVICE_IDS": "10,12",
+              "ASCEND_RT_VISIBLE_DEVICES": "0,1",
+              "rank": 1,
+              "local_rank": 1
+            }
+          }
+        ]
+      },
+      "both_original_branches": [
+        "normal",
+        "synthetic"
+      ],
+      "model_tensor_count": 909,
+      "complete_tensor_count_including_rank_RNG": 1750,
+      "all_compared_tensors_bitwise_equal": true,
+      "max_absolute_difference": 0,
+      "max_loss_difference": 0,
+      "identical_tokens_LR_final_RNG": true,
+      "original_compare_exit": 0,
+      "tensor_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "loss_absolute_tolerance": 0.0001,
+      "official_CPU_loader_result": "pass_unchanged_target_official_cpu_loader"
+    }
+  ],
+  "watchdog": {
+    "result": "completed",
+    "stops": []
+  },
+  "scope": {
+    "one_genuine_synthetic_scene": true,
+    "one_explicit_normal_anchor_per_config": true,
+    "original_WE_4s_logged_traffic_8192_derived_reward": true,
+    "published_SimScale_v2_equivalent": false,
+    "sixteen_rank_strict_issue_resolved": false,
+    "all_eight_synthetic_configs_accepted": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "quality_accepted": false
+  },
+  "original_full_summary_sha256": "29a5cd9765db27f0429e11a4d058d7e3fb5606180829503d0eb126f8113d0057",
+  "private_collection_receipt_sha256": "00029f532e0cf9db734683f05a2868c0f8025c5b8adba993783f5160ef48a74c",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

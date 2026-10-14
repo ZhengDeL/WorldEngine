@@ -12,6 +12,7 @@ import torch_npu
 from torch_npu.contrib import transfer_to_npu
 from mmcv import Config
 from ascend.compat import enable_training_compat
+from ascend.precision import precision_state, device_provenance
 
 ROOT = Path(__file__).resolve().parents[1]
 ALG = ROOT / 'projects/AlgEngine'
@@ -22,6 +23,8 @@ PROFILES = {
 }
 
 
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--profile', choices=PROFILES, default='imitation')
@@ -30,6 +33,7 @@ def main():
     parser.add_argument('--checkpoint', type=Path, required=True)
     parser.add_argument('--vocab', type=Path, required=True)
     parser.add_argument('--data-root', type=Path)
+    parser.add_argument('--train-filter', type=Path, help='Explicit NAVTRAIN anchor filter for --data-root; hashed in the resume contract')
     parser.add_argument('--mini-prepared', type=Path)
     parser.add_argument('--rare-split', type=Path)
     parser.add_argument('--synthetic-root', type=Path, help='Existing genuine SimEngine/SimScale exported dataset')
@@ -50,8 +54,16 @@ def main():
     parser.add_argument('--check-interval', type=int, default=10)
     parser.add_argument('--upstream-schedule', action='store_true', help='Keep original optimizer LR and warmup parameters')
     parser.add_argument('--deterministic', action='store_true', help='Request deterministic PyTorch/CANN algorithms for numerical replay checks')
+    parser.add_argument('--precision', choices=('fp32','fp32-hf32-conv'), default='fp32',
+                        help='Training FP32 with Matmul/Conv HF32 disabled; fp32-hf32-conv reproduces legacy Conv HF32')
     parser.add_argument('--debug-anomaly', action='store_true', help='Record the forward origin of a failing backward operation')
     args = parser.parse_args()
+    if args.train_filter and (not args.data_root or args.mini_prepared):
+        parser.error('--train-filter requires --data-root without --mini-prepared')
+    if args.train_filter:
+        args.train_filter=args.train_filter.resolve()
+        if not args.train_filter.is_file() or 'navtrain' not in args.train_filter.name or 'navtest' in args.train_filter.name:
+            parser.error('--train-filter must be a NAVTRAIN file whose resolved basename contains navtrain and excludes navtest; the original dataset selects its PDM cache by this name')
     if args.resume or args.stop_after or args.duration_seconds or args.epochs or args.stop_after_epochs:
         args.runtime = True
     if args.steps and args.epochs:parser.error('Choose a step or epoch schedule')
@@ -66,11 +78,21 @@ def main():
     for p in (args.checkpoint, args.vocab):
         if not p.is_file():
             raise FileNotFoundError(p)
+    if args.deterministic and (os.environ.get('CLOSE_MATMUL_K_SHIFT')!='1' or
+                               os.environ.get('HCCL_DETERMINISTIC')!='true'):
+        parser.error('--deterministic requires CLOSE_MATMUL_K_SHIFT=1 and HCCL_DETERMINISTIC=true before the Torch process starts; use ascend/run_container.py or export both first')
     os.environ['WORLDENGINE_ROOT'] = str(ROOT)
     torch.npu.set_device(int(os.environ.get('LOCAL_RANK', '0')))
+    # Bind this rank before public runtime setters, and set precision before
+    # original model construction. Tensor storage/config/loss remain unchanged.
+    torch.npu.matmul.allow_hf32=False
+    torch.npu.conv.allow_hf32=args.precision=='fp32-hf32-conv'
     enable_training_compat()
     if args.debug_anomaly:torch.autograd.set_detect_anomaly(True)
     if args.deterministic:torch.use_deterministic_algorithms(True)
+    actual_precision=precision_state(args.precision)
+    if actual_precision['public']!=dict(matmul_allow_hf32=False,conv_allow_hf32=args.precision=='fp32-hf32-conv'):
+        raise RuntimeError('Public NPU precision settings differ from --precision')
     sys.path[:0] = [str(ALG), str(ROOT)]
     config = args.config or Path('configs') / PROFILES[args.profile]
     config = config if config.is_absolute() else ALG / config
@@ -136,15 +158,27 @@ def main():
             if not train.get('normal_only',False):train.normal_ratio = 1
     else:
         data = args.data_root.resolve()
-        required = [data/'raw/openscene-v1.1/sensor_blobs/trainval', data/'raw/openscene-v1.1/sensor_blobs/test',
-                    data/'alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl',
-                    data/'alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl']
+        # Match scripts/train.py's actual --no-validate behavior. A second
+        # workflow dataset is still built even when the eval hook is disabled.
+        script_validation = args.validate or not (args.steps is not None or args.runtime)
+        workflow_validation = len(cfg.workflow) == 2 or any(phase == 'val' for phase, _ in cfg.workflow)
+        requires_navtest = script_validation or workflow_validation
+        image_roots = [data/'raw/openscene-v1.1/sensor_blobs/trainval']
+        pickle_files = [data/'alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl']
         if needs_pdm:
-            required += [data/'alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl',
-                         data/'alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl']
-        missing = [str(p) for p in required if not p.exists()]
+            pickle_files.append(data/'alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl')
+        if requires_navtest:
+            image_roots.append(data/'raw/openscene-v1.1/sensor_blobs/test')
+            pickle_files.append(data/'alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl')
+            if needs_pdm:
+                pickle_files.append(data/'alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl')
+        missing = ([str(path) for path in image_roots if not path.is_dir()] +
+                   [str(path) for path in pickle_files if not path.is_file()])
         if missing:
             raise RuntimeError('Missing full assets: '+json.dumps(missing))
+        if not requires_navtest:
+            scope = ('Official NAVTRAIN metadata/PDM paths with selected training images; '
+                     'complete selected-image coverage and full convergence require separate verification')
         for phase in ('train', 'val', 'test'):
             ds = cfg.data[phase]
             split = 'trainval' if phase == 'train' else 'test'
@@ -155,6 +189,10 @@ def main():
             ds.pipeline[0].img_root = str(data/'raw/openscene-v1.1/sensor_blobs'/split)
         if args.rare_split:
             cfg.data.train.finetune_yaml = [str(args.rare_split.resolve())]
+        if args.train_filter:
+            cfg.data.train.nav_filter_path = str(args.train_filter.resolve(strict=True))
+            scope = ('Explicit selected NAVTRAIN anchors with original metadata and PDM schema; '
+                     'subset coverage and full convergence require separate verification')
     if synthetic:
         root=args.synthetic_root.resolve(strict=True)
         needed=['sensor_blobs','pdms_pkl','meta_datas_navformer' if 'SimScale' in train_type else 'meta_datas']
@@ -188,7 +226,8 @@ def main():
             with Path(path).open('rb') as stream:
                 for block in iter(lambda:stream.read(8*1024*1024),b''):h.update(block)
             return h.hexdigest()
-        contract=dict(profile=args.profile,world_size=int(os.environ.get('WORLD_SIZE','1')),
+        contract=dict(contract_version=2,precision=actual_precision,
+                      profile=args.profile,world_size=int(os.environ.get('WORLD_SIZE','1')),
                       batch=cfg.data.samples_per_gpu,workers=cfg.data.workers_per_gpu,seed=args.seed,
                       annotation=digest(cfg.data.train.ann_file),filter=digest(cfg.data.train.nav_filter_path),
                       pdm=digest(cfg.data.train.test_pdm_path+'.pkl' if args.mini_prepared else cfg.data.train.train_pdm_path+'.pkl') if needs_pdm else None,
@@ -200,7 +239,9 @@ def main():
             fingerprint.update(str(file.relative_to(ROOT)).encode())
             fingerprint.update(file.read_bytes().replace(b'\r\n',b'\n'))
         contract.update(source_sha256=fingerprint.hexdigest(),image_id=os.environ.get('WORLDENGINE_IMAGE_ID'),
-                        torch_version=str(torch.__version__),torch_npu_version=torch_npu.__version__,deterministic=args.deterministic,
+                        torch_version=str(torch.__version__),torch_npu_version=torch_npu.__version__,
+                        torch_npu_git_version=getattr(getattr(torch_npu,'version',None),'git_version',None),
+                        deterministic=args.deterministic,
                         rare_filters=[digest(x) for x in cfg.data.train.get('finetune_yaml',[])])
         cfg.runner.type='AscendIterRunner' if args.steps else 'AscendEpochRunner'
         cfg.runner.resume_contract=contract
@@ -211,7 +252,7 @@ def main():
                               initialization_checkpoint=None if args.resume else cfg.load_from,
                               checkpoint_interval=args.checkpoint_interval,stop_after=args.stop_after,
                               stop_after_epochs=args.stop_after_epochs,duration_seconds=args.duration_seconds,
-                              check_interval=args.check_interval)]
+                              check_interval=args.check_interval,device_provenance=device_provenance())]
         cfg.log_config=dict(interval=10,hooks=[dict(type='TextLoggerHook',by_epoch=not bool(args.steps))])
     cfg.find_unused_parameters = True
     if args.validate:

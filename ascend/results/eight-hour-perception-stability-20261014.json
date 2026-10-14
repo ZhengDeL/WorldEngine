@@ -1,0 +1,777 @@
+{
+  "result": "pass_bounded_eight_hour_old_source_perception_operational_stability_and_postchecks",
+  "reviewed_collection_sha256": "a7857640f67fa5babf8b1b89416ef844a703edc67b3cc7bfdfbc2d1efd71bfe3",
+  "completed_at_utc": "2026-10-13T23:57:05.485846+00:00",
+  "source_before": {
+    "sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242
+  },
+  "source_after": {
+    "sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242
+  },
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "torch_version": "2.7.1+cpu",
+  "torch_npu_version": "2.7.1.post6",
+  "profile": "navformer/track_map_nuplan_r50_navtrain.py",
+  "original_config_sha256": "89579daf107f3a94de610842ed7cfa109199cd581c2b1c4998b9cf790a970c52",
+  "devices": {
+    "logical_chips": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15
+    ],
+    "world_size": 8,
+    "physical_cards_used": 8,
+    "chips_per_card_used": 1,
+    "per_rank_batch": 1,
+    "global_batch": 8,
+    "workers_per_rank": 0
+  },
+  "environment": {
+    "initial_container_config": {
+      "CLOSE_MATMUL_K_SHIFT": "1",
+      "HCCL_DETERMINISTIC": "true"
+    },
+    "deterministic_requested_and_runtime_contract": true,
+    "per_rank_precision_before_after_instrumented": false,
+    "precision_scope": "Legacy post6/source858 execution; new public before/after precision snapshots are absent. Legacy Conv HF32 setting is source/prior-getter evidence, not eight-hour per-rank readback."
+  },
+  "mini_inputs": {
+    "origin": "NAVTEST-derived real subset split by complete driving log",
+    "training_anchors": 42,
+    "independent_anchors": 22,
+    "train_eval_token_overlap": 0,
+    "prepared_files": 1126,
+    "prepared_camera_files": 1120,
+    "prepared_bytes": 259069796,
+    "manifest_sha256": "aeae155493e0c2e09e70b2f81e339d431382e945ab3945bea83fa924ed9e27c6",
+    "all_1126_file_hashes_unchanged": true,
+    "annotation_frames": 140
+  },
+  "initializer_asset_inventory": [
+    {
+      "bytes": 434885591,
+      "sha256": "3f8efa98c9874c54ad1e8e547136cf6f4c92fd2c24454d4dbe39b538e8c64b98",
+      "name": "e2e_vadv2_50pct_ep8.pth"
+    },
+    {
+      "bytes": 450763271,
+      "sha256": "7e39dcd2d64e3bca32cbeca3a3e127de736a505c220ef47a24d854b4cf093065",
+      "name": "e2e_hydramdp_50pct_ep8.pth"
+    },
+    {
+      "bytes": 244021691,
+      "sha256": "2a00b5656aa14c578896ac9a6ccac84c80587b17b3a7250c7e7f5a55869eb1a8",
+      "name": "bevformerv2-r50-t1-base_epoch_48.pth"
+    },
+    {
+      "bytes": 319956525,
+      "sha256": "2a81595fcee9df0ef93e9f76d7e735752786802f8a907c0c06949afb03ecea7a",
+      "name": "track_map_nuplan_r50_navtrain_50pct_bs1x8.pth"
+    },
+    {
+      "bytes": 319958048,
+      "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+      "name": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth"
+    }
+  ],
+  "five_asset_hashes_unchanged": true,
+  "long_training": {
+    "requested_seconds": 28800.0,
+    "scheduled_seconds": 28800.0,
+    "shortened_for_deadline": false,
+    "updates_per_rank": 1023,
+    "minimum_rank_train_seconds": 28827.67745432991,
+    "maximum_rank_train_seconds": 28828.276774380007,
+    "anchor_exposures": 8184,
+    "maximum_allocated_bytes": 46908357632,
+    "maximum_reserved_bytes": 52208599040,
+    "observed_cgroup_memory_peak_bytes": 74654064640,
+    "capacity_scope": "Observed allocated/reserved/sample-charged memory for this run; not full NAVTRAIN capacity or a performance benchmark.",
+    "gradient_check_policy": "Original runtime finite-gradient guard at first update and update multiples of 10, not an all-updates gradient dump.",
+    "loss_collection_scope": "Original full per-update JSONL was subsequently checked on the server: all 16 streams, 8208 update records and 837216 raw-loss scalars are finite. The curated runtime JSON retains 1000 method-call records per long-run rank; 2046 method calls are two calls per update, not 2046 updates."
+  },
+  "final_resume": {
+    "initial_update": 1023,
+    "final_update": 1026,
+    "updates_per_rank": 3,
+    "all_eight_ranks_exact_saved_state_restore": true,
+    "restored_model_tensors_per_rank": 1393,
+    "restored_optimizer_tensors_per_rank": 3594,
+    "strict_continuous_vs_resumed_numeric_replay_performed": false
+  },
+  "independent_perception": {
+    "result": "pass_real_perception_inference",
+    "frames": 37,
+    "unique_tokens": 37,
+    "finite_prediction_fields": 370,
+    "mapping_iou": {
+      "drivable": 0.37218404620432105,
+      "lanes": 0.0,
+      "divider": null,
+      "crossing": 0.0,
+      "contour": null
+    },
+    "empty_union_categories": [
+      "divider",
+      "contour"
+    ],
+    "original_detection_mapping_evaluator_executed": true,
+    "elapsed_seconds": 65.75911227997858
+  },
+  "independent_evaluation_scope": "37 perception frames from the held-out log in the 22-anchor eval split. Original detection/mapping evaluator, not NAVSIM planning PDMS or quality acceptance.",
+  "checkpoints": [
+    {
+      "bytes": 859047820,
+      "sha256": "93ddf33e11acb614a126c8a50bd29a30f31a1b64d38dad5657b6293b5a7cc1e3",
+      "tensors": {
+        "model": 1393,
+        "optimizer": 3594
+      },
+      "completed_updates": 1023,
+      "rng_ranks": 8,
+      "rng_verification_scope": "Required fields/type/count only, not state equality or hardware restoration",
+      "passed": true
+    },
+    {
+      "bytes": 859047756,
+      "sha256": "b40f8575259eb43d78626118aba2dbd4509bb6da5a0c7d2d22fe3f7ccb3ab5c4",
+      "tensors": {
+        "model": 1393,
+        "optimizer": 3594
+      },
+      "completed_updates": 1026,
+      "rng_ranks": 8,
+      "rng_verification_scope": "Required fields/type/count only, not state equality or hardware restoration",
+      "passed": true
+    }
+  ],
+  "official_CPU_loader": {
+    "wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+    "target_sha256_before": "521bd7a486387b357303ace1edebaed478546d4e34517bc1e86e1c42e26154d9",
+    "target_sha256_after": "521bd7a486387b357303ace1edebaed478546d4e34517bc1e86e1c42e26154d9",
+    "official_loader_identity": true,
+    "RE_MAP_CPU_before_runpy": false,
+    "RE_MAP_CPU_after_runpy": true,
+    "no_npu_initialization": true,
+    "target_source_unchanged": true,
+    "wrapper_actual_exit": 0,
+    "target_exit_code": 0
+  },
+  "CPU_RNG_audit_scope": "Required field/type/count structure only; not RNG state equality, hardware restoration or deterministic numerical replay.",
+  "stages": {
+    "CPU_checkpoint_audit": {
+      "actual_image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+      "actual_exit": 0,
+      "OOMKilled": false,
+      "started_at_utc": "2026-10-13T23:56:53.739807671Z",
+      "finished_at_utc": "2026-10-13T23:57:03.230052571Z",
+      "devices_mapped": 0,
+      "artifact_hashes": {
+        "checkpoint_audit.json": {
+          "bytes": 1275,
+          "sha256": "61553d4b1a6cded4547e1f71f89f3bf0471f66efce77319f8332e24239d0eea6"
+        },
+        "official_cpu_load.json": {
+          "bytes": 1769,
+          "sha256": "42e4964f5dff058e44c2162c9c13bd26a9ed6456050559446393959083ff2650"
+        },
+        "receipt.json": {
+          "bytes": 5026,
+          "sha256": "cf7d327a94442d8245dfcec6685b9f387bf96c18ee3c4c614f12081de86758bf"
+        }
+      }
+    },
+    "final_resume": {
+      "actual_image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+      "actual_exit": 0,
+      "OOMKilled": false,
+      "started_at_utc": "2026-10-13T23:52:21.200116981Z",
+      "finished_at_utc": "2026-10-13T23:55:05.446582881Z",
+      "devices_mapped": 8,
+      "artifact_hashes": {
+        "supervisor_validation.json": {
+          "bytes": 6024,
+          "sha256": "085d00b76aa6288a88e2a49fa4c32fde9e18745e1c135691e4713f790850d27e"
+        }
+      }
+    },
+    "independent_perception": {
+      "actual_image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+      "actual_exit": 0,
+      "OOMKilled": false,
+      "started_at_utc": "2026-10-13T23:55:23.306004121Z",
+      "finished_at_utc": "2026-10-13T23:56:49.710869351Z",
+      "devices_mapped": 1,
+      "artifact_hashes": {
+        "inference_validation.json": {
+          "bytes": 1002,
+          "sha256": "7920948f7179b95082707b0bfc6475d58a63425eefbe0033fd9006cb408520cb"
+        }
+      }
+    },
+    "long_training": {
+      "actual_image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+      "actual_exit": 0,
+      "OOMKilled": false,
+      "started_at_utc": "2026-10-13T15:50:45.984657311Z",
+      "finished_at_utc": "2026-10-13T23:52:02.805471091Z",
+      "devices_mapped": 8,
+      "artifact_hashes": {
+        "supervisor_validation.json": {
+          "bytes": 4763,
+          "sha256": "072a86b6e975d45555b4b135a7c154f94716fda9608dce93d5ea001181aa8a22"
+        }
+      }
+    }
+  },
+  "runtime_artifacts": [
+    {
+      "stage": "final_resume",
+      "rank": 0,
+      "name": "runtime_rank0.json",
+      "bytes": 17543,
+      "sha256": "b12b1d849f3602b6b9cc2f57927097e9e24848a0394be36c48313c9820198781",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 1,
+      "name": "runtime_rank1.json",
+      "bytes": 17427,
+      "sha256": "e0161fd5deeae085ce6947a7d9bf0dd3c712da425985ff5b06b7def5d310b5ea",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 2,
+      "name": "runtime_rank2.json",
+      "bytes": 17518,
+      "sha256": "5cacf6a8e76d467269208620ad6b6c92ce698fc7cc06f2af755871e428d31206",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 3,
+      "name": "runtime_rank3.json",
+      "bytes": 17485,
+      "sha256": "9a77a55ba9d52cf60f2ea6c7e80b2f83a5e7562d97804677664106a6f8e6f75e",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 4,
+      "name": "runtime_rank4.json",
+      "bytes": 17501,
+      "sha256": "035800959aa7b3e4984b5e7014e71b042c7ccbe3c9ae94c8906d1497df1a078b",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 5,
+      "name": "runtime_rank5.json",
+      "bytes": 17505,
+      "sha256": "8eda48d5413fd8e6d5c344572af87315e8a52238564163d28ec76d568acaeb30",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 6,
+      "name": "runtime_rank6.json",
+      "bytes": 17543,
+      "sha256": "f95c2806280d200443e04ede20dc56680fa02cf5e8be1eb2173e5e50cf520990",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "final_resume",
+      "rank": 7,
+      "name": "runtime_rank7.json",
+      "bytes": 17486,
+      "sha256": "5651740a26e4053e542e2e0f01aa3b96346a7d3a1acedabc0506d904ab7dd141",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 6,
+      "raw_loss_records_in_collection": 6,
+      "raw_loss_fields_in_collection": 306,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 0,
+      "name": "runtime_rank0.json",
+      "bytes": 2552770,
+      "sha256": "986d64e426df8caa5731fd85046082786f776c14ec8e9d447fd894b70d4681ea",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 1,
+      "name": "runtime_rank1.json",
+      "bytes": 2552522,
+      "sha256": "10d5e91f90085fb4db6c56515569b21c9225c2ac6961037e5af53adc3c94238f",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 2,
+      "name": "runtime_rank2.json",
+      "bytes": 2552847,
+      "sha256": "d9be5401420f7ffdce3628ff1fa9c9e7a906657ada6de03f703b2fbe914a9c11",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 3,
+      "name": "runtime_rank3.json",
+      "bytes": 2552471,
+      "sha256": "856a8bae412108ddfe494e60282092194101755a9d27d6cc51ae1f9322c2b7ac",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 4,
+      "name": "runtime_rank4.json",
+      "bytes": 2552635,
+      "sha256": "6029cd295182cae06327da9cf7dde827e552ea57f9ad6d1baf21e86cfebdbfea",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 5,
+      "name": "runtime_rank5.json",
+      "bytes": 2551966,
+      "sha256": "0f3639b0c12bbe1ebfcec4ad17d0a77cddec2334fb0fbb781ce66bec89186750",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 6,
+      "name": "runtime_rank6.json",
+      "bytes": 2552567,
+      "sha256": "71aad63c67c1af0d946b25884d8c76c72e0cb9d7d02da59933b4bef4caf541e6",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    },
+    {
+      "stage": "long_training",
+      "rank": 7,
+      "name": "runtime_rank7.json",
+      "bytes": 2552896,
+      "sha256": "e8633977d55a05d5ab6e7110227a9fd7c7ef1652191617b48d617dc15f239be3",
+      "source_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+      "raw_loss_calls_reported_by_runtime": 2046,
+      "raw_loss_records_in_collection": 1000,
+      "raw_loss_fields_in_collection": 51000,
+      "all_collected_raw_loss_values_finite": true,
+      "per_rank_precision_before_after_recorded": false
+    }
+  ],
+  "full_stream_supplement": {
+    "reviewed_collection_sha256": "40374bc1b196e6d35e5900adb3ccbf4f364b273e95692024e3da7049f75aa071",
+    "collected_at_utc": "2026-10-14T00:01:10.732603+00:00",
+    "original_rank_streams_checked": 16,
+    "update_records_checked": 8208,
+    "raw_loss_scalars_checked": 837216,
+    "all_recorded_numeric_fields_finite": true,
+    "checks_executed_on_server": true,
+    "raw_stream_files_copied_to_local_workspace": false,
+    "stream_artifacts": [
+      {
+        "stage": "long_training",
+        "rank": 0,
+        "bytes": 34605455,
+        "sha256": "4eb777c483b754dcf60d5385b04e70370d21fd609bf8923f1a7ab7c1e97b9e5d",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3346550784,
+        "max_rss_bytes": 4735537152,
+        "first_rss_bytes": 3346550784,
+        "last_rss_bytes": 4358111232
+      },
+      {
+        "stage": "long_training",
+        "rank": 1,
+        "bytes": 34604674,
+        "sha256": "088c1aae54e772df084204febf9c5f585044fabbf60e9520bfdaaf3b9c356048",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3307188224,
+        "max_rss_bytes": 3549036544,
+        "first_rss_bytes": 3307188224,
+        "last_rss_bytes": 3517906944
+      },
+      {
+        "stage": "long_training",
+        "rank": 2,
+        "bytes": 34605031,
+        "sha256": "04135551338b4a5a2776cd0fcc8aae43ea1868e82cfe0c272093b49bcd80385a",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3333754880,
+        "max_rss_bytes": 3532038144,
+        "first_rss_bytes": 3333754880,
+        "last_rss_bytes": 3495985152
+      },
+      {
+        "stage": "long_training",
+        "rank": 3,
+        "bytes": 34604820,
+        "sha256": "a45157531fa1b3b859482881d91446bd9f83e161407c16f0a0998c75d8676ce5",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3328524288,
+        "max_rss_bytes": 3538092032,
+        "first_rss_bytes": 3328524288,
+        "last_rss_bytes": 3508797440
+      },
+      {
+        "stage": "long_training",
+        "rank": 4,
+        "bytes": 34605083,
+        "sha256": "d3a39bca5b97fe8a89f3558411f15ad5e11b0c475a30e17eb5e3e5ec767a802d",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3340963840,
+        "max_rss_bytes": 3527974912,
+        "first_rss_bytes": 3340963840,
+        "last_rss_bytes": 3500482560
+      },
+      {
+        "stage": "long_training",
+        "rank": 5,
+        "bytes": 34604212,
+        "sha256": "38d1ce72251c2ced86a5f304bb4098c5a5872fd54f7f21dd23f750ad8316da6c",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3357478912,
+        "max_rss_bytes": 3533398016,
+        "first_rss_bytes": 3357478912,
+        "last_rss_bytes": 3504599040
+      },
+      {
+        "stage": "long_training",
+        "rank": 6,
+        "bytes": 34604739,
+        "sha256": "14a015b989cd2720975e2cac22a381d83c0ee193704e184bc499bf85c59eaab3",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3304648704,
+        "max_rss_bytes": 3559899136,
+        "first_rss_bytes": 3304648704,
+        "last_rss_bytes": 3517960192
+      },
+      {
+        "stage": "long_training",
+        "rank": 7,
+        "bytes": 34604684,
+        "sha256": "418630dec87dde1ab1062f52625211fc39e7c09349418076fe25bf3dbcd3c876",
+        "records": 1023,
+        "initial_iter": 1,
+        "final_iter": 1023,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 104346,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3353354240,
+        "max_rss_bytes": 3527708672,
+        "first_rss_bytes": 3353354240,
+        "last_rss_bytes": 3493765120
+      },
+      {
+        "stage": "final_resume",
+        "rank": 0,
+        "bytes": 101793,
+        "sha256": "af3b0109532b1dd5f930f7368176637459c0de6fa554d14b9fb04e8bd59ce469",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3339169792,
+        "max_rss_bytes": 3447492608,
+        "first_rss_bytes": 3339169792,
+        "last_rss_bytes": 3447492608
+      },
+      {
+        "stage": "final_resume",
+        "rank": 1,
+        "bytes": 101674,
+        "sha256": "f7f0692bf1560054966c1fb39c3f550423295198e0fbf9023391d89b5776c633",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3345399808,
+        "max_rss_bytes": 3390337024,
+        "first_rss_bytes": 3345399808,
+        "last_rss_bytes": 3390337024
+      },
+      {
+        "stage": "final_resume",
+        "rank": 2,
+        "bytes": 101772,
+        "sha256": "ac9f88646379ce2f4b828582a76f5598d3659d637e07cb6a79b1473813075e6a",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3345412096,
+        "max_rss_bytes": 3451596800,
+        "first_rss_bytes": 3345412096,
+        "last_rss_bytes": 3451596800
+      },
+      {
+        "stage": "final_resume",
+        "rank": 3,
+        "bytes": 101736,
+        "sha256": "13bad5b041c7bdcd3951c3ea2abc33e627abb662e56eb694ff8a6b3d1c1a902d",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3383263232,
+        "max_rss_bytes": 3446415360,
+        "first_rss_bytes": 3383263232,
+        "last_rss_bytes": 3446415360
+      },
+      {
+        "stage": "final_resume",
+        "rank": 4,
+        "bytes": 101750,
+        "sha256": "cc75a50a48343e1ae65206df109a56d3638406f4decf0c54fc60d96078eb7a05",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3406839808,
+        "max_rss_bytes": 3440349184,
+        "first_rss_bytes": 3406839808,
+        "last_rss_bytes": 3440349184
+      },
+      {
+        "stage": "final_resume",
+        "rank": 5,
+        "bytes": 101757,
+        "sha256": "f5e8d0333923ee25f6d38030b7292144ff46732dfd17cf63ed3a4616e6e7aeac",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3341205504,
+        "max_rss_bytes": 3400454144,
+        "first_rss_bytes": 3341205504,
+        "last_rss_bytes": 3400454144
+      },
+      {
+        "stage": "final_resume",
+        "rank": 6,
+        "bytes": 101796,
+        "sha256": "e4881214c1011b73125587c6c0cfd67a51cb902f5970ba3d3fab93f49c73eca1",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3376521216,
+        "max_rss_bytes": 3434323968,
+        "first_rss_bytes": 3376521216,
+        "last_rss_bytes": 3434323968
+      },
+      {
+        "stage": "final_resume",
+        "rank": 7,
+        "bytes": 101737,
+        "sha256": "5e86f7b038af68075db0f1816b65c3a8ff32506167f68d68e6e88a120574e679",
+        "records": 3,
+        "initial_iter": 1024,
+        "final_iter": 1026,
+        "contiguous_original_iter_range": true,
+        "all_numeric_fields_finite": true,
+        "raw_loss_scalar_fields": 306,
+        "every_record_has_102_loss_fields": true,
+        "min_rss_bytes": 3410432000,
+        "max_rss_bytes": 3433766912,
+        "first_rss_bytes": 3410665472,
+        "last_rss_bytes": 3433766912
+      }
+    ],
+    "resource_artifacts": [
+      {
+        "stage": "long_training",
+        "samples": 962,
+        "bytes": 3579973,
+        "sha256": "2905b173dc49bef2a1275bbf2700e03b06faf4f80b0858c16b878e90a9049415",
+        "maximum_observed_cgroup_values": {
+          "memory.usage_in_bytes": 72972382208,
+          "memory.max_usage_in_bytes": 74654064640,
+          "memory.limit_in_bytes": 137438953472,
+          "memory.failcnt": 0
+        },
+        "scope": "Charged cgroup memory includes cache. RSS and sampling are not a proof of no future leak. I/O not tuned."
+      },
+      {
+        "stage": "final_resume",
+        "samples": 7,
+        "bytes": 16449,
+        "sha256": "2a02325e74d937dee7567c8145a7ddbbef27f5c5c628b54ddcfef3db5f10a07b",
+        "maximum_observed_cgroup_values": {
+          "memory.usage_in_bytes": 60314947584,
+          "memory.max_usage_in_bytes": 62673928192,
+          "memory.limit_in_bytes": 137438953472,
+          "memory.failcnt": 0
+        },
+        "scope": "Charged cgroup memory includes cache. RSS and sampling are not a proof of no future leak. I/O not tuned."
+      }
+    ],
+    "owned_controller_and_watchdog_processes_absent": true,
+    "accelerator_health_scope": "All 16 chips were reported healthy; an unowned chip0 process entry remained in npu-smi. No claim that all 16 chips were idle or that the entry was stale.",
+    "all_16_chips_idle_verified": false
+  },
+  "watchdog": {
+    "result": "completed_no_owned_running",
+    "stops": [],
+    "remaining_owned_running": []
+  },
+  "not_accepted_by_this_run": [
+    "sourcecc91",
+    "torch_npu_post8",
+    "full_NAVTRAIN_training",
+    "NAVTRAIN_convergence",
+    "official_full_quality",
+    "GPU_parity",
+    "all_eight_genuine_synthetic_configurations",
+    "24_hour_stability",
+    "strict_16_rank_numerical_repair",
+    "performance_optimization"
+  ],
+  "publication_accepted": false
+}

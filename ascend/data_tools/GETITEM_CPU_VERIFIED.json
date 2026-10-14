@@ -1,0 +1,324 @@
+{
+  "result": "pass_fresh_portable_export_original_two_configs_four_getitem_branches_CPU_not_NPU_training",
+  "source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "actual_image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "Docker_exit": 0,
+  "OOMKilled": false,
+  "NPU_devices": [],
+  "started_at_utc": "2026-10-13T20:39:00.056655461Z",
+  "finished_at_utc": "2026-10-13T20:39:34.566531311Z",
+  "report_sha256": "5907cc705eed149dd058f2a5b07a346c04c3378c69f94b0b0a4d6fc3b2c37dfa",
+  "export_receipt_sha256": "99d0ec1a979d897bb8e019bee1bfe750bb65f9a3e14f630b2d09f3da5f9dc7d6",
+  "preparation_tool_sha256": {
+    "simscale_convert.py": "3db9779124634a102f6ccedc7432704c425b9f1d80bcfa9859275156fe007ce6",
+    "worldengine_8192_logged_reward.py": "82528bae108918c74ef6a896d12cf652f14bd751353479cfc63924e8d0a6223c",
+    "export_simscale_minimum.py": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708"
+  },
+  "configs": [
+    {
+      "config": "e2e_vadv2_simscale_finetune_pdm_1round_8epoch.py",
+      "config_sha256": "56825d52fe39d151ea0ef30c0a55a12bc723a2dd816e58133d3b5430524bfe1b",
+      "original_dataset_class": "NavSimOpenSceneE2EFineTuneSimScale",
+      "annotation_infos": 16,
+      "index_map": [
+        3,
+        15
+      ],
+      "actual_anchor_tokens": [
+        "ab75b7addff3512d-000",
+        "4b96572a4b9d5ea7"
+      ],
+      "original_pdm_tokens": 1,
+      "synthetic_fallback_selected": false,
+      "batches": [
+        {
+          "token": "ab75b7addff3512d-000",
+          "full_frame_tokens": [
+            "4b1b518353fb5c60-000",
+            "24b024b588015519-000",
+            "ca4b68eb58e150e1-000",
+            "ab75b7addff3512d-000"
+          ],
+          "image_shape": [
+            4,
+            8,
+            3,
+            544,
+            960
+          ],
+          "metrics": {
+            "no_at_fault_collisions": [
+              8192
+            ],
+            "drivable_area_compliance": [
+              8192
+            ],
+            "ego_progress": [
+              8192
+            ],
+            "time_to_collision_within_bound": [
+              8192
+            ],
+            "comfort": [
+              8192
+            ],
+            "score": [
+              8192
+            ]
+          },
+          "numeric_finite_leaves": 202,
+          "actual_fail_mask": -1,
+          "original_prepare_non_none": true,
+          "original_getitem_exact_token": true
+        },
+        {
+          "token": "4b96572a4b9d5ea7",
+          "full_frame_tokens": [
+            "5ea9ac1622af524a",
+            "3f61acfe381f5798",
+            "256734c4fb08576f",
+            "4b96572a4b9d5ea7"
+          ],
+          "image_shape": [
+            4,
+            8,
+            3,
+            544,
+            960
+          ],
+          "metrics": {
+            "no_at_fault_collisions": [
+              8192
+            ],
+            "drivable_area_compliance": [
+              8192
+            ],
+            "ego_progress": [
+              8192
+            ],
+            "time_to_collision_within_bound": [
+              8192
+            ],
+            "comfort": [
+              8192
+            ],
+            "score": [
+              8192
+            ]
+          },
+          "numeric_finite_leaves": 202,
+          "actual_fail_mask": 0,
+          "original_prepare_non_none": true,
+          "original_getitem_exact_token": true
+        }
+      ]
+    },
+    {
+      "config": "e2e_vadv2_simscale_co_train_pdm_1round_8epoch.py",
+      "config_sha256": "c14cef60ef4ea4b65a431a30e0fb243598fe329f766d118fe676f682905100b3",
+      "original_dataset_class": "NavSimOpenSceneE2EFineTuneSimScale",
+      "annotation_infos": 16,
+      "index_map": [
+        3,
+        15
+      ],
+      "actual_anchor_tokens": [
+        "ab75b7addff3512d-000",
+        "fff002cb15c15a7a"
+      ],
+      "original_pdm_tokens": 1,
+      "synthetic_fallback_selected": false,
+      "batches": [
+        {
+          "token": "ab75b7addff3512d-000",
+          "full_frame_tokens": [
+            "4b1b518353fb5c60-000",
+            "24b024b588015519-000",
+            "ca4b68eb58e150e1-000",
+            "ab75b7addff3512d-000"
+          ],
+          "image_shape": [
+            4,
+            8,
+            3,
+            544,
+            960
+          ],
+          "metrics": {
+            "no_at_fault_collisions": [
+              8192
+            ],
+            "drivable_area_compliance": [
+              8192
+            ],
+            "ego_progress": [
+              8192
+            ],
+            "time_to_collision_within_bound": [
+              8192
+            ],
+            "comfort": [
+              8192
+            ],
+            "score": [
+              8192
+            ]
+          },
+          "numeric_finite_leaves": 202,
+          "actual_fail_mask": -1,
+          "original_prepare_non_none": true,
+          "original_getitem_exact_token": true
+        },
+        {
+          "token": "fff002cb15c15a7a",
+          "full_frame_tokens": [
+            "dd90ebbd35d65774",
+            "c06e52d718955d57",
+            "9a13c3dba3ec5062",
+            "fff002cb15c15a7a"
+          ],
+          "image_shape": [
+            4,
+            8,
+            3,
+            544,
+            960
+          ],
+          "metrics": {
+            "no_at_fault_collisions": [
+              8192
+            ],
+            "drivable_area_compliance": [
+              8192
+            ],
+            "ego_progress": [
+              8192
+            ],
+            "time_to_collision_within_bound": [
+              8192
+            ],
+            "comfort": [
+              8192
+            ],
+            "score": [
+              8192
+            ]
+          },
+          "numeric_finite_leaves": 202,
+          "actual_fail_mask": 0,
+          "original_prepare_non_none": true,
+          "original_getitem_exact_token": true
+        }
+      ]
+    }
+  ],
+  "getitem_observer_calls": [
+    {
+      "config": "e2e_vadv2_simscale_finetune_pdm_1round_8epoch.py",
+      "filtered_requested_index": 0,
+      "raw_requested_index": 3,
+      "requested_token": "ab75b7addff3512d-000",
+      "requested_syn_name": "synthetic_reaction_pdm_v1.0-0",
+      "prepare_calls": [
+        {
+          "raw_index": 3,
+          "token": "ab75b7addff3512d-000",
+          "syn_name": "synthetic_reaction_pdm_v1.0-0"
+        }
+      ],
+      "none_return_count": 0,
+      "rand_another_calls": [],
+      "original_prepare_bound_function_restored": true,
+      "original_rand_bound_function_restored": true,
+      "returned_token": "ab75b7addff3512d-000",
+      "returned_syn_name_meta": null,
+      "returned_syn_name_meta_collected": false,
+      "returned_fail_mask": -1
+    },
+    {
+      "config": "e2e_vadv2_simscale_finetune_pdm_1round_8epoch.py",
+      "filtered_requested_index": 1,
+      "raw_requested_index": 15,
+      "requested_token": "4b96572a4b9d5ea7",
+      "requested_syn_name": null,
+      "prepare_calls": [
+        {
+          "raw_index": 15,
+          "token": "4b96572a4b9d5ea7",
+          "syn_name": null
+        }
+      ],
+      "none_return_count": 0,
+      "rand_another_calls": [],
+      "original_prepare_bound_function_restored": true,
+      "original_rand_bound_function_restored": true,
+      "returned_token": "4b96572a4b9d5ea7",
+      "returned_syn_name_meta": null,
+      "returned_syn_name_meta_collected": false,
+      "returned_fail_mask": 0
+    },
+    {
+      "config": "e2e_vadv2_simscale_co_train_pdm_1round_8epoch.py",
+      "filtered_requested_index": 0,
+      "raw_requested_index": 3,
+      "requested_token": "ab75b7addff3512d-000",
+      "requested_syn_name": "synthetic_reaction_pdm_v1.0-0",
+      "prepare_calls": [
+        {
+          "raw_index": 3,
+          "token": "ab75b7addff3512d-000",
+          "syn_name": "synthetic_reaction_pdm_v1.0-0"
+        }
+      ],
+      "none_return_count": 0,
+      "rand_another_calls": [],
+      "original_prepare_bound_function_restored": true,
+      "original_rand_bound_function_restored": true,
+      "returned_token": "ab75b7addff3512d-000",
+      "returned_syn_name_meta": null,
+      "returned_syn_name_meta_collected": false,
+      "returned_fail_mask": -1
+    },
+    {
+      "config": "e2e_vadv2_simscale_co_train_pdm_1round_8epoch.py",
+      "filtered_requested_index": 1,
+      "raw_requested_index": 15,
+      "requested_token": "fff002cb15c15a7a",
+      "requested_syn_name": null,
+      "prepare_calls": [
+        {
+          "raw_index": 15,
+          "token": "fff002cb15c15a7a",
+          "syn_name": null
+        }
+      ],
+      "none_return_count": 0,
+      "rand_another_calls": [],
+      "original_prepare_bound_function_restored": true,
+      "original_rand_bound_function_restored": true,
+      "returned_token": "fff002cb15c15a7a",
+      "returned_syn_name_meta": null,
+      "returned_syn_name_meta_collected": false,
+      "returned_fail_mask": 0
+    }
+  ],
+  "CPU_import_metadata_bridge": {
+    "query_count": 2,
+    "all_ends_restore_no_init": true
+  },
+  "CPU_import_bridge_scope": "Two SDK import-time device-name metadata queries use the previously observed real chip identity; original getter restored; no NPU initialization. Not an unshimmed CPU import claim.",
+  "source_bytes_unchanged": true,
+  "new_export_NPU_training_accepted": false,
+  "private_collection_receipt_sha256": "39e002d86242e90343a4b4793d6ccfa72b943945529a5fcc9701de6234f198f0",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "scope": "Minimum one-scene original-8192 logged-traffic reproduction inputs; maps/source/image additional. Download on server only. Published incompatible16384 reward is not a training prerequisite.",
+  "total_bytes_excluding_maps_source_image": 47500431504,
+  "assets": [
+    {
+      "role": "annotation",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl"
+    },
+    {
+      "role": "normal_pdm",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl"
+    },
+    {
+      "role": "vocab",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/test_8192_kmeans.npy",
+      "bytes": 3932288,
+      "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/test_8192_kmeans.npy",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/test_8192_kmeans.npy"
+    },
+    {
+      "role": "finetune_initializer_explicit_override",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "bytes": 434885463,
+      "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth"
+    },
+    {
+      "role": "cotrain_initializer",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "bytes": 319958048,
+      "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth"
+    },
+    {
+      "role": "synthetic_metadata",
+      "repo": "OpenDriveLab/SimScale",
+      "revision": "06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae",
+      "path": "SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_meta_datas.tar.gz",
+      "bytes": 3320437526,
+      "sha256": "a7a6d725d926d1200410e5e9b8c39368b5b519bba6535816bf528bcc965331da",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_meta_datas.tar.gz",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_meta_datas.tar.gz"
+    },
+    {
+      "role": "synthetic_history_index",
+      "repo": "OpenDriveLab/SimScale",
+      "revision": "06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae",
+      "path": "SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist.json",
+      "bytes": 1824152,
+      "sha256": "a1d2eb52a8f93d6ba6e3037e0375a88706bcdc471d44117e1bba0a853e4c42ee",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist.json",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist.json"
+    },
+    {
+      "role": "synthetic_history_camera",
+      "repo": "OpenDriveLab/SimScale",
+      "revision": "06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae",
+      "path": "SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist_65.tar.gz",
+      "bytes": 241575885,
+      "sha256": "25ab91a08a38e7a7270ed983b51e01fc6d6f02bbb955ef8f4abdfcccfc9fc48c",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist_65.tar.gz",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/SimScale/resolve/06a4fc88f48d8c3ac7c16cc1df05f3caab6397ae/SimScale_data/synthetic_reaction_pdm_v1.0-0/simscale_pdm_v1.0-0_sensor_blobs_hist_65.tar.gz"
+    },
+    {
+      "role": "normal_camera_mini12",
+      "repo": "OpenDriveLab/OpenScene",
+      "revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+      "path": "openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz",
+      "bytes": 2781004086,
+      "sha256": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz"
+    },
+    {
+      "role": "raw_logged_traffic_metadata",
+      "repo": "OpenDriveLab/OpenScene",
+      "revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+      "path": "openscene-v1.1/openscene_metadata_mini.tgz",
+      "bytes": 534344190,
+      "sha256": "c2e08867e062ba916eccd56df191e728d42fb94de854c28f2226eed14cecd8be",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_metadata_mini.tgz",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_metadata_mini.tgz"
+    }
+  ],
+  "maps": {
+    "required_version": "nuplan-maps-v1.0",
+    "required_files": [
+      "nuplan-maps-v1.0.json",
+      "referenced genuine .gpkg map payloads"
+    ],
+    "existing_official_maps_may_be_reused": true,
+    "absolute_map_size_unknown_not_estimated": true
+  },
+  "publisher_links_from_pinned_inventories": true
+}

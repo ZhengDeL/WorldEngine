@@ -1,0 +1,5 @@
+# Keep raw-byte SHA256 locks valid across Windows and Linux checkouts.
+ascend/data_tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/execution/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/results/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+ascend/evidence/eight-rank-resume-20261013-evening.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

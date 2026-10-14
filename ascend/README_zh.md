@@ -1,32 +1,101 @@
 # WorldEngine AlgEngine：Ascend 910C 部署、训练与验收操作文档
 
-**2026-10-13 MSDA 更新：**当前 FP32 原生 NPU 采样实现、严格梯度、新模型回归与资源结果见 [MSDA 修复补充](MSDA_zh.md)及其[版本化实测结果](evidence/msda-precision-20261013.json)。下文 `96a7bef…` 指纹、旧一小时吞吐/内存和旧门禁失败均属于此前 fused 路径历史版本；不要将这些旧数字归给新源码。
+## 2026 年 10 月 14 日验收现状
 
-本文与 [英文操作文档](FULL_ALGENGINE.md)、[已有三个规划入口的复跑说明](README.md) 使用同一份代码和实测证据。当前结论是**真实小数据功能部分通过，完整训练与质量尚未验收**。迁移代码已发布，不等于保证整套框架、全部数据和全部精度模式没有问题。
+AlgEngine已经能在NPU上执行本次实测的训练、微调、推理及完整检查点恢复。整套正式验收仍未完成。MSDA严格位置梯度已按原容差通过，当前16 rank数值问题的根因尚未确认，不能再次归因于旧MSDA问题。
+
+当前待验收运行源码为 `cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88`（243个运行Python文件）。post8候选镜像上的四对16 rank训练保留原Queue/Blocking均未设置的环境，均完成原功能及精确断点载入门禁，但最终严格数值比较为**一对通过、三对失败**，见[原无观察器严格重放结果](results/strict-replay-post8-20261014.json)。每对先连续训练8次更新，再从自身iter4完整恢复到8；原 `atol=1e-6, rtol=1e-5` 和loss门槛 `1e-4` 未改。
+
+| post8 16 rank对照 | 数值结果 | 模型最大绝对差 | 完整Tensor对照最大差 | 超容差模型 / 优化器Tensor数 |
+| --- | --- | ---: | ---: | ---: |
+| VAD第1次重复 | 失败 | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
+| Hydra第1次重复 | 失败 | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
+| VAD第2次重复 | 失败 | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
+| Hydra第2次重复 | 通过，逐位相同 | 0 | 0 | 0 / 0 |
+
+完整Tensor计数包含rank RNG。单次通过不能证明已修复多卡确定性；精确载入保存状态，也不保证后续每一步计算都与连续训练相同。追加状态诊断及同步执行候选的实际终态见下文，不把启动、部分运行或按期释放设备写成数值通过。
+
+| 五项工作 | 已有实测 | 尚需完成 |
+| --- | --- | --- |
+| 真实数据 | 完整NAVTRAIN标注/PDM两个PKL共39,862,469,866字节已取得并校验。元数据检查覆盖246,165个唯一帧、1,192个日志及原103,288个split token；六项PDM共619,728个数组均为有限 `float32[8192]`，范围0–1。 | 完整当前/历史相机及独立完整NAVTEST/cache。此次QC读图数为**0**，1,969,320条有效相机路径引用不等于JPEG存在或解码通过。 |
+| 8个合成配置 | 两个配置已用一个真实场景及原WE派生8192奖励完成公开准备工具CPU链、原getitem四分支、单rank及双rank连续/恢复训练，原严格比较均逐位相同。 | 其余六个rollout/replay/BWM配置的真实导出尚未齐备。每配置一个normal锚点的窄检索池、原WE四秒记录交通协议，不等价于SimScale v2公开奖励或全数据采样。 |
+| 正式训练与独立质量 | 小数据训练、原评价器及此前独立官方CPU评分链已执行。 | 完整NAVTRAIN原horizon及收敛、完整独立NAVTEST common/rare质量、GPU输出对照均未验收。 |
+| 容量与资源 | 1、8、16个独立原dataset/Compose完整PKL构造与同时驻留均通过；保留原50%过滤，每份246,165帧、50,000锚点及103,288 PDM项。16份合计RSS为834,131,996,672字节。 | 完整图像、模型/优化器及worker训练内存、实际I/O。构造实测使用旧858源码/post6和明确的SDK导入期元数据桥，不能写成无桥CPU部署通过，也不是训练内存。 |
+| 续训与稳定性 | 旧858/post6八rank感知训练超过8小时，每rank1,023次更新；从自身最终断点恢复3次，完成37帧独立感知评价及两个检查点CPU审计。 | 目标cc91/post8持续训练及未解决的16 rank严格数值门禁；未验收24小时、完整数据或普遍数值重放。 |
+
+完整元数据QC的顺序处理峰值RSS为34,747,150,336字节，与原dataset构造不同。原单份构造峰值约52.208 GB，8份合计RSS为416,754,966,528字节。16份构造不含完整训练图像解码或NPU模型计算。第七项 `driving_direction_compliance` 仅做字段结构清点，不能写成七项数值指标都通过。
+
+八小时结果属于 `858f9d…`（242文件）、`a182…`镜像及 `torch_npu 2.7.1.post6`，最短rank训练28,827.677454秒。四个训练/恢复/推理/CPU审计容器均退出0、无OOM；服务器补检16份完整rank JSONL，共8,208条连续更新记录、837,216个原始loss标量，全部有限。梯度有限值门禁在首步及每10步执行，没有每步全梯度转储。CPU RNG审计检查字段、类型及rank数量，不证明RNG相等或严格数值重放。该批旧运行没有新增逐rank精度前后回读，不能把八小时通过挂到cc91/post8。
+
+真实小样本准备工具有独立的三CLI SHA清单，公开输入合计47.50 GB，maps、源码、镜像及新输出另计。不要求作为历史兼容性调查用的19.3 GB不兼容16384奖励、不要求下载全部449 GB训练相机或5 TB资产。Finetune明确覆盖为官方100pct checkpoint，原 `e2e_vadv2_ep8.pth` basename仍未找到，不能改名冒充。复现结果见 `data_tools/CPU_REPRODUCTION_VERIFIED.json`、`GETITEM_CPU_VERIFIED.json`、`NPU_SINGLE_RANK_VERIFIED.json` 和 `NPU_TWO_RANK_VERIFIED.json`；完整元数据与旧八小时补充文件分别为 [完整NAVTRAIN元数据QC](results/full-navtrain-metadata-qc-20261014.json)及[旧源码八小时稳定性](results/eight-hour-perception-stability-20261014.json)。
+
+原44配置中，42个规划配置每GPU batch=2，两项感知配置batch=1。规划原8GPU全局batch=16，本次16 NPU、B1同样为16，只代表样本数量一致，不代表分组或数值等价。旧八rank长训实际使用8张物理卡各一个芯片；真实双rank对照使用两张物理卡各一个芯片，未证明一张物理卡双芯布局。4张物理卡/8芯片B2的容量及多机扩展仍须独立验收。
+
+性能专项优化按用户要求后续单独开展。当前记录正确性、功能、基础容量和有限时长稳定性，不把历史速率当成GPU/NPU成对性能对照；该推理SKU的厂商正式训练支持仍待确认。
+
+
+### 追加短时控制的实际状态
+
+post8 16 rank全状态观察任务已完成VAD/Hydra四个训练/恢复任务及CPU检查点身份审计，两组原严格数值比较均失败。完整状态JSON关联已完成：每个模型144项关联，blocked=0，各有16项Tensor差异，全部位于最终update8。已记录的update5前注册model/optimizer状态与布局相同，后续执行仍出现分叉。这不能证明未注册缓存或全部后端状态相同，根因尚未确定。四个任务正常完成，源码仍为cc91/243，结束时无自有任务运行、无清理错误；见[完整状态诊断](results/full-rank-state-diagnostic-20261014.json)。这项诊断把NPU状态拷到CPU，可能改变时序，应与无观察器复跑分开记录，不能据此宣称修复。
+
+另一节点上的同步执行候选 `TASK_QUEUE_ENABLE=0, ASCEND_LAUNCH_BLOCKING=1` 冷启动遇到 `EL0020 / Device0 occupied by multiple containers / 507899`。实际更新数为0，没有数值对照结果。没有reset、开启共享模式或停止共享任务。芯片健康、宿主PID与设备FD查不到活动，不足以证明驱动能初始化。
+
+第一节点的独立无观察器单VAD同步对照已终止：连续训练完成8次更新，actual exit0，16份原运行门禁通过；从自身iter4恢复后只完成2次更新到iter6。原helper的120秒截止于01:38:10 UTC触发自有任务停止，恢复容器exit137、无OOM。没有完成到iter8，也没有运行原严格比较器，因此既不是数值PASS，也不是数值FAIL。该结果仅为部分运行，不覆盖Hydra或两次重复。
+
+第一轮短时设备窗口已结束。自有任务全部释放，无剩余自有运行或清理错误，独立watchdog完成且stops列表为空；较早停止来自原helper。最后会话于01:39:59 UTC关闭，早于01:40:10授权截止。没有为延长时间替换或重启运行中的v1；统一60秒门禁的v2没有在该窗口执行。
+
+随后截至02:00 UTC / 10:00 CST的追加窗口中，一对全新无观察器VAD对照已完整执行：连续训练1–8次更新，从自身iter4恢复到8。仅在初始环境设置 `TASK_QUEUE_ENABLE=0`、`ASCEND_LAUNCH_BLOCKING=1`，两个训练容器均退出0，32份rank运行门禁全部通过；64次精度前后回读均为FP32、两个公共HF32标志关闭，确定性环境符合要求。
+
+使用官方Torch-NPU CPU加载器执行未修改的数值比较器，889个模型Tensor及1,698个完整Tensor（含rank RNG）全部逐位相同，最大差和loss差均为0；源码仍为cc91/243，无剩余自有任务或清理错误。这是一对VAD候选的实测正例，不是四对重复或普遍确定性验收，见[同步VAD实测](results/sync-vad-16chip-20261014.json)。
+
+另一对Hydra对照也已完成两个训练任务、32份rank运行门禁及64次匹配的精度前后回读，使用相同同步环境，源码和镜像不变。原严格比较在原容差内通过：模型及完整Tensor的最大差均为 `2.9802322387695312e-8`，loss差为0。909个模型Tensor中868个逐位相同，1,778个完整Tensor中1,468个逐位相同，**Hydra并非全部逐位相同**；batch token、LR及最终各rank RNG相同，见[同步Hydra实测](results/sync-hydra-16chip-20261014.json)。
+
+这两项是VAD、Hydra各一对、各一次重复的候选正例，没有完成四对重复，也不证明根因、普遍确定性或完整数据验收。两对结束后均无自有任务运行及清理错误；Hydra watchdog正常完成，stops为空。完整CPU输入诊断控制器仅本机准备，未执行。生产默认环境和原数值门槛未改。
+
+候选复跑步骤见[同步操作文档](execution/README_zh.md)。公开辅助器已通过本地命令构造检查，尚未直接在NPU执行；上述NPU结果来自此前受控启动流程。
+
+
+2026 年 10 月 13 日的 FP32 MSDA 修复已通过严格位置梯度检查，原容差未改。实现、模型回归和资源实测见 [MSDA 修复说明](MSDA_zh.md)及[对应结果](evidence/msda-precision-20261013.json)。下文 `96a7bef…` 指纹、一小时吞吐/内存及旧门禁失败属于此前 fused 实现，当前源码的结果另行记录。
+
+历史快照截至 2026 年 10 月 13 日 22:44， `2bed8f4d7c78` / `858f9d…` FP32 版本已完成 VADv2、HydraMDP 的八 rank 断点重放。各模型连续训练 8 步，再从同一次训练的第 4 步完整检查点恢复至第 8 步。四个任务均实际退出 0，32 份 rank 运行门禁通过；载入断点时，每 rank 分别逐张量核对 889/777、909/837 个模型/优化器张量，完全一致。
+
+**两组最终严格数值对照均失败。**原 `atol=1e-6`、`rtol=1e-5`、loss 差 `<1e-4` 未改。batch token、LR 和最终 RNG 均一致，部分模型和优化器张量仍超出容差。
+
+| 八 rank 对照 | 模型最大绝对差 | 模型/优化器/RNG 联合最大绝对差 | 超容差模型 / 优化器张量数 | 最大 loss 差 |
+|---|---:|---:|---:|---:|
+| VADv2 | 4.546716809e-6 | 2.530345228e-5 | 12 / 21 | 1.907348633e-6 |
+| HydraMDP | 2.862885594e-6 | 2.862885594e-6 | 2 / 2 | 9.536743164e-7 |
+
+测试条件、失败张量路径及原比较器的计数/列表显示限制见[八 rank 夜间实测](evidence/eight-rank-resume-20261013-evening.json)。数据来自 NAVTEST，按驾驶日志划分为 42 个训练锚点和 22 个独立评估锚点，1126 个文件哈希已核对。该测试未验证正式 NAVTRAIN 收敛。当时感知长训在22:44仍运行；后来独立完成的旧源码八小时任务见本文新验收段。此前主动停止的任务不记为八小时通过。性能专项优化已延期；当前继续检查正确性、功能、容量和稳定性，完整数据的 CPU RAM、I/O 与设备需求还需实测。
+
+本文与 [英文操作文档](FULL_ALGENGINE.md)、[三个规划入口的复跑说明](README.md) 使用同一份代码和实测证据。已发布迁移代码支持下述运行方式；目前真实小数据功能部分通过，完整训练与质量尚未验收。全部数据、精度模式和框架配置仍需分别验证。
 
 ## 1. 先明确模块、版本与验收对象
 
-WorldEngine 有两个模块：**SimEngine** 负责仿真与场景生成，继续使用 GPU，本次没有部署；**AlgEngine** 负责感知预训练、端到端轨迹规划、训练和微调，是本次 NPU 适配对象。AlgEngine 中消费 SimEngine/SimScale 导出数据的训练配置也在评估范围内，但这些配置仍需要真正的导出图像、标注和奖励。
+WorldEngine 包含两个模块。SimEngine 负责仿真与场景生成，继续使用 GPU，本次没有部署。AlgEngine 负责感知预训练、端到端轨迹规划、训练和微调，是本次 NPU 适配对象。使用 SimEngine/SimScale 导出数据的 AlgEngine 配置也需要验证，前提是取得真实导出图像、标注和奖励。
 
 | 固定项 | 值 |
 |---|---|
 | 上游 WorldEngine | `3eded7e8ac64e5bed817860765089b5914ab698f` |
 | 迁移分支 | [ascend-910c-algengine](https://github.com/ZhengDeL/WorldEngine/tree/ascend-910c-algengine) |
-| 已发布的实测代码提交 | `f804a8754e6c08d07e5302599dda6b068a41586c`；之后的文档提交不改变下面的 Python 指纹 |
-| AlgEngine/Ascend Python 指纹 | `96a7bef17fd27a681b5f90c367507a3a9f72767e5698fbe514d077d20ec0f997`，239 个 Python 文件，路径排序且 CRLF 规范为 LF |
+| 历史实测代码提交 | `f804a8754e6c08d07e5302599dda6b068a41586c`；对应下列历史 Python 指纹 |
+| 历史 AlgEngine/Ascend Python 指纹 | `96a7bef17fd27a681b5f90c367507a3a9f72767e5698fbe514d077d20ec0f997`，239 个 Python 文件，路径排序且 CRLF 规范为 LF |
+| 历史 MSDA 修复及夜间测试版本 | `2bed8f4d7c78`；Python 指纹 `858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d`，242 个文件，详见 [MSDA 说明](MSDA_zh.md) |
 | 官方 NAVSIM | v1.1，`3e8291bfa89ff247231e0227778840cd0a036896` |
 | 实测镜像 | `local/worldengine:26.1.0-a3-clean-20261013` |
 | 实测镜像 ID | `sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f` |
-| 机器可读验收结果 | [full-algengine-20261013.json](evidence/full-algengine-20261013.json) |
+| 历史机器可读验收结果 | [full-algengine-20261013.json](evidence/full-algengine-20261013.json) |
 | 原始 44 个配置的契约 | [original-configs-20261013.json](evidence/original-configs-20261013.json) |
 
-实测设备为 Atlas 800I A3 推理系列、Ascend910_9362，8 张物理卡、16 个逻辑芯片，每个逻辑芯片 64 GiB HBM。实验中完成反向传播，不代表厂商已经正式支持该推理 SKU 的训练。厂商支持、模型质量和代码功能分别验收。
+实测设备为 Atlas 800I A3 推理系列、Ascend910_9362，8 张物理卡、16 个逻辑芯片，每个逻辑芯片 64 GiB HBM。实验已完成反向传播，厂商对该推理 SKU 的正式训练支持仍待确认。厂商支持、模型质量和代码功能分别验收。
 
 ## 2. 已经跑到什么程度
 
-保留原模型结构：200×200 BEV、900 个 tracking queries、8 相机；规划训练使用 4 帧时序。感知训练原配置使用 3 帧队列，评价补充历史后处理 37 帧。使用真实 JPEG、原标注与 PDM，训练 42 个锚点来自两段日志，独立评价 22 个锚点来自第三段日志，整段日志没有重叠。真实小数据覆盖功能，不能代表完整 NAVTRAIN 分布。
+测试保留原模型结构，包括 200×200 BEV、900 个 tracking queries 和 8 相机。规划训练使用 4 帧时序；感知训练原配置使用 3 帧队列，评价补充历史后处理 37 帧。训练使用真实 JPEG、原标注与 PDM，42 个训练锚点来自两段日志，22 个独立评价锚点来自第三段日志，日志互不重叠。该小数据集用于功能验证，未覆盖完整 NAVTRAIN 分布。
 
-| 验证项 | 实际结果 | 结论边界 |
+下表记录历史 `96a7bef…` 版本的测试。当前 MSDA 修复后的结果见 [MSDA 说明](MSDA_zh.md)，当前八 rank 重放失败见本文开头及[对应 JSON](evidence/eight-rank-resume-20261013-evening.json)。
+
+| 验证项 | 实际结果 | 适用范围与未验收项目 |
 |---|---|---|
 | 44 个公开配置 | 全部在固定环境解析；36 个真实数据配置各完成 3 次原模型优化器更新，使用各自原始初始化权重 | 覆盖 VADv2、HydraMDP、DiffusionDrive、两种 UniAD 感知配置；B1/workers0、小数据过滤及短 LR 是明确覆盖项，原数据比例与收敛未验收 |
 | 8 个合成数据配置 | 缺真正导出数据，未执行训练 | 没有用真实 mini 冒充合成数据通过 |
@@ -35,7 +104,7 @@ WorldEngine 有两个模块：**SimEngine** 负责仿真与场景生成，继续
 | 控制变量数值续训 | 从同一连续训练的断点恢复，VAD reward/LoRA 的 model 最大差 7.45e-9、model/optimizer 最大差 2.98e-8、loss 差 0 | 通过既有 atol=1e-6、rtol=1e-5、loss=1e-4 门禁；历史 base/Hydra 的失败仍保留 |
 | DiffusionDrive 8 rank | 每 rank 3 次更新；22/22 有限的 40×3 轨迹，官方 PDMS 0.377859，ADE/FDE 10.96562/19.69085 | 规划 head 仅短训练，不能作为成熟模型质量 |
 | 感知 8 rank 持续训练 | 每 rank 428 次更新，最短 3610.270 秒，全部正常退出且没有 OOM | 重复 42 个训练锚点的一小时实测，不是完整数据吞吐、24 小时或内存泄漏排除 |
-| 一小时资源 | 每芯片峰值 allocated/reserved 43.68/47.73 GiB；观察到 CPU cgroup 高水位 63.23 GiB，容器上限 128 GiB | cgroup 含被计费缓存；完整 NAVTRAIN CPU 内存尚未测量 |
+| 一小时资源 | 每芯片峰值 allocated/reserved 43.68/47.73 GiB；观察到 CPU cgroup 高水位 63.23 GiB，容器上限 128 GiB | cgroup 含被计费缓存；当时未测完整NAVTRAIN。后续原构造器容量另列，仍未测完整训练内存 |
 | 多卡参数同步 | 8 rank、3 次原生更新后，1233 个参数 Tensor、79,777,383 个元素逐位相同 | 只声明参数一致，不声明 rank 本地非参数 buffer 一致 |
 | 实际 8 rank 断点续训 | 从一小时训练的 iter_100 完整断点恢复，100→103；所有 rank 恢复 model/optimizer 和 8 份 RNG | Adam 条件参数合法计数为 [91,99,100]，不是每个参数都等于全局更新数；没有宣称全部步骤严格数值重放 |
 | checkpoint 独立检查 | 40 个功能断点及 5 个一小时断点通过 CPU 序列化、有限性、计数/RNG 检查 | 不替代后续完整数据收敛验收 |
@@ -79,13 +148,13 @@ docker image inspect --format '{{.Id}}' local/worldengine:rebuild
 
 recipe 固定基镜像 manifest 和主要依赖，但重新解析软件包渠道不保证新 image ID 与离线包逐位相同。新镜像应记录实际 ID、检查包版本并重新跑功能门禁；使用 `--image` 和 `--expected-image-id` 指定它，不能直接把旧镜像的验收结论改写成新镜像已验收。
 
-实测栈：驱动 26.1.1、CANN 9.1.0、PyTorch 2.7.1+cpu、torch_npu 2.7.1.post6、mx_driving 26.1.0.post2、MMCV full 1.7.2、MMDet 2.24.0、MMDet3D 1.0.0rc4、NumPy 1.23.5。`+cpu` 是此 NPU 发行栈的版本标识，不表示训练跑在 CPU。训练 Python 为 3.10.21，单独 geospatial prefix 为 3.10.22；版本快照见 [docker/versions-20261013.json](docker/versions-20261013.json)。模型 Tensor 使用 FP32，matmul HF32 禁用，convolution HF32 允许；没有把它宣称为 GPU FP32 等价或 AMP/BF16 验收。
+实测栈：驱动 26.1.1、CANN 9.1.0、PyTorch 2.7.1+cpu、torch_npu 2.7.1.post6、mx_driving 26.1.0.post2、MMCV full 1.7.2、MMDet 2.24.0、MMDet3D 1.0.0rc4、NumPy 1.23.5。`+cpu` 是此 NPU 发行栈的版本标识，不表示训练跑在 CPU。训练 Python 为 3.10.21，单独 geospatial prefix 为 3.10.22；版本快照见 [docker/versions-20261013.json](docker/versions-20261013.json)。这份旧post6/source858快照使用FP32 Tensor、matmul HF32禁用、convolution HF32允许。当前cc91的FP32入口显式禁用两项HF32，并保存每rank实际前后回读。不同source/精度/backend合同的旧断点不能绕过恢复门禁；没有GPU数值等价或AMP/BF16验收结论。
 
-启动器将源码、数据、地图和初始权重只读挂载，将日志、checkpoint、CANN 编译和缓存写入独立 output。它不修改宿主共享包、不更改共享服务、不自动挂载 NAS。每次运行必须使用不存在的新 output，便于保留失败和对照。
+启动器只读挂载源码、数据、地图和初始权重，将日志、checkpoint、CANN 编译文件及缓存写入独立 output。宿主共享包、共享服务和 NAS 挂载由运维管理，启动器不改动这些内容。每次运行使用不存在的新 output，保留原失败记录和对照结果。
 
 ## 4. 准备哪些数据、权重与存储
 
-只运行小数据功能验证时，使用已经交付的 `mini_real_data.tar.gz`、原权重、8192 词表、地图及 22 个官方 scenario cache。mini 约 242.3 MB 压缩，包含 1120 张原始引用 JPEG；它不是完整训练集。移动数据时保留标注的相对相机路径；重新打包改变标注哈希后，应开始新训练。
+小数据功能验证使用已交付的 `mini_real_data.tar.gz`、原权重、8192 词表、地图及 22 个官方 scenario cache。压缩包约 242.3 MB，包含标注引用的 1120 张原始 JPEG，来自 NAVTEST 按驾驶日志提取的子集，与官方 OpenScene mini 数据集不同。移动数据时保留标注中的相对相机路径；重新打包若改变标注哈希，应开始新训练。
 
 完整数据目录约定如下：
 
@@ -119,9 +188,9 @@ recipe 固定基镜像 manifest 和主要依赖，但重新解析软件包渠道
 | NAVTEST 图像、真实 metadata、地图 | 必须补齐独立评价和历史引用；图像包文件名存在不代表标注引用完整 |
 | 合成/SimScale 消费配置 | 还要真正导出图像、转换后的 metadata、plan_idx、匹配的 rewards；见第 9 节 |
 
-固定文件大小与 SHA256 见 [assets.lock.json](assets.lock.json)。VADv2/HydraMDP 选择式训练需要所选 token 的六组真实 8192 维 PDM 指标。感知和 DiffusionDrive 训练不需要选择式 PDM targets，但规划质量仍需要**官方 scenario metric cache**。这两个 cache 是不同输入，不能互相替代。
+固定文件大小与 SHA256 见 [assets.lock.json](assets.lock.json)。VADv2/HydraMDP 选择式训练需要所选 token 的六组真实 8192 维 PDM 指标。感知和 DiffusionDrive 训练不需要这些选择式 PDM targets。独立规划评分另需官方 scenario metric cache，两类 cache 用途不同，不能互换。
 
-相机 pipeline 不读取原始 LiDAR。可以按标注、时序和 8 相机引用定向拷贝，而不必立即下载整个 5 TB 发布包。磁盘预算必须同时包含压缩包、解压图像、NAVTEST、标注、cache、权重和 checkpoint；不能只给 449 GB 的压缩包空间。
+相机 pipeline 不读取原始 LiDAR，所需文件可按标注、时序和 8 相机引用定向拷贝，无需立即下载整个 5 TB 发布包。磁盘预算应包含压缩包、解压图像、NAVTEST、标注、cache、权重和 checkpoint，449 GB 的压缩包空间不足以覆盖这些文件。
 
 ### 国内来源与仅在服务器下载
 
@@ -146,7 +215,7 @@ http_proxy="$PROXY_URL" https_proxy="$PROXY_URL" \
 
 ## 5. 先做 CPU 输入门禁与内存检查
 
-完整 NAVTRAIN 尚未交付，以下是数据到位后的操作模板，**不是已执行的完整数据验收结果**。首先在单个 CPU 容器同时保留 train/eval 反序列化数据，确认真实 RSS，再决定 8 rank 的训练内存预算。
+完整 NAVTRAIN 尚未交付，以下命令供数据到位后执行。先在单个 CPU 容器中同时保留反序列化后的 train/eval 数据，测量 RSS，再制定 8 rank 的训练内存预算。本文没有完整数据验收结果。
 
 ```bash
 DATA=/datasets/worldengine/data
@@ -171,7 +240,7 @@ docker run --rm --memory "$PREFLIGHT_MEMORY_LIMIT" --cpus 8 --entrypoint bash \
 
 检查 `result=pass_complete_inputs` 和退出码 0；缺文件、token、history、8 相机、PDM 维度/有限性、train/eval 日志重叠或官方 cache 覆盖时，报告具体原因并返回失败。`--hash-assets` 用于未改变的完整发布 PKL/词表，不用于重新打包的 mini。
 
-`rss_bytes` 和 `peak_rss_bytes` 是实际观察；`cpu_data_resident_rank_projection_bytes` 只是该检查进程 RSS×rank 数，不能当作训练实测内存。还须加入模型/optimizer、评价、进程/runtime、worker 和实际余量。图像检查确认引用文件与大小，**没有逐图像内容哈希或完整解码验收**；地图检查也不能代替每个地区完整评价。真正合成内容需要另做 dataset build，第 9 节有具体条件。
+`rss_bytes` 和 `peak_rss_bytes` 是实测值；`cpu_data_resident_rank_projection_bytes` 按检查进程 RSS×rank 数估算，尚未测量训练内存。训练预算还需计入模型/optimizer、评价、进程/runtime、worker 和余量。图像检查仅核对引用文件及大小，没有逐图像内容哈希或完整解码检查；地图也需在各地区评价中继续验证。合成数据另需构建 dataset，条件见第 9 节。
 
 ## 6. 小数据训练、微调与一小时复跑
 
@@ -255,11 +324,11 @@ python3 ascend/run_container.py --devices 0,2 \
 
 iter 训练同理：保持 `--steps 10000`，从一小时断点 `iter_100.pth` 恢复，测试可加 `--stop-after 103`，不保留 `--duration-seconds`。训练参数与原 run 相同。实际 8 rank 已完成该恢复及 3 次后续更新。
 
-载入后的全部 model/optimizer Tensor 检查应为 exact；条件分支参数的 Adam 计数允许各不相同，但必须合法且不大于全局更新数。完整状态恢复通过，和后续每一步数值严格重放通过，是两个独立结论。
+断点载入后的全部 model/optimizer Tensor 应与保存值精确一致。条件分支参数的 Adam 计数可以不同，但必须合法且不大于全局更新数。载入检查通过后，还需单独比较后续训练的数值结果；本轮八 rank 正是在该比较中失败。
 
-做严格数值对照时，先完成一个连续 run 并在中间保存 checkpoint，再从**该连续 run 自己的 checkpoint**起点续训到相同终点，使用 [compare_resume.py](compare_resume.py) 对比 model/optimizer、loss、tokens、LR、final RNG；具体 CPU 容器命令见 [英文复跑说明](README.md#run-save-and-resume)。不能用两次独立初始化前缀的差异证明断点实现有误。
+严格数值对照以同一次连续 run 为基准：训练中途保存 checkpoint，再从这个 checkpoint 续训到同一终点，用 [compare_resume.py](compare_resume.py) 比较 model/optimizer、loss、tokens、LR 和 final RNG。CPU 容器命令见 [英文复跑说明](README.md#run-save-and-resume)。两次独立初始化可能在保存前就出现差异，不能据此判断恢复实现。
 
-迁移工具同时核对原配置文件的原始字节哈希。恢复本次旧断点应使用交付的精确源码 tar 或实际训练源码目录；从 Git 在不同系统重新 checkout 可能改变配置换行，虽然规范化 Python 指纹相同，也可能被 resume 契约拒绝。不要删掉该检查来绕过数据/源码漂移。新 clone 可开始新训练。
+迁移工具还核对原配置文件的原始字节哈希。恢复旧断点时，使用交付的精确源码 tar 或实际训练源码目录。跨系统 Git checkout 可能改变配置换行；即使规范化 Python 指纹相同，resume 检查也可能拒绝载入。保留该检查，并查明源码或数据差异。新 clone 可用于开始新训练。
 
 ## 8. 推理和官方独立评分
 
@@ -306,14 +375,14 @@ docker run --rm --memory 24g --cpus 8 --entrypoint bash \
 
 ## 9. 真正合成数据与完整 NAVTRAIN 如何继续
 
-8 个真实合成/SimScale 消费配置的现状是**输入不足、训练未实测**。需要 `--synthetic-root`，WorldEngine rollouts 包含 `sensor_blobs/`、`pdms_pkl/`、`meta_datas/`、`plan_idx.csv`；SimScale 使用 `meta_datas_navformer/`、per-folder reward PKL 与 split YAML。保留原配置的 folder_name 和过滤条件；缺根目录会提前失败。
+当前两项SimScale配置已在一个真实场景、原WE四秒8192派生协议及每配置一个normal锚点上完成CPU、单rank和双rank实测。其余六个rollout/replay/BWM配置的真实输入仍未齐备；不把2/8写成全部配置已通过。需要 `--synthetic-root`，WorldEngine rollouts 包含 `sensor_blobs/`、`pdms_pkl/`、`meta_datas/`、`plan_idx.csv`；SimScale 使用 `meta_datas_navformer/`、per-folder reward PKL 与 split YAML。保留原配置的 folder_name 和过滤条件；缺根目录会提前失败。
 
-额外前置问题也必须解决：Hydra BWM 原配置包含 `/path/to/synthetic/rollouts/...` 占位项，应按实际导出目录做可审查映射；SimScale fine-tune 的 `e2e_vadv2_ep8.pth` 原始文件/别名未确认，不能悄悄替换为 50% planner；公开 reward 文件名提示 16384 轨迹，而配置使用 8192 词表，须验证实际维度、候选顺序和转换。把 reward 改名不会让它自动兼容。详细配置列表在 [原配置契约](evidence/original-configs-20261013.json) 和 [结果 JSON](evidence/full-algengine-20261013.json) 中。
+Hydra BWM 原配置中的 `/path/to/synthetic/rollouts/...` 是占位路径，需要映射到真实导出目录。SimScale fine-tune原 `e2e_vadv2_ep8.pth` 尚未找到。本次明确使用官方 `e2e_vadv2_100pct_ep8.pth` override，按固定revision/434,885,463字节/fe86c0bf… SHA核验，没有改名冒充原基座。公开19.3 GB奖励实际为16384候选，字段与原六指标不同，原loader丢一项后为16383；8192词表完整轨迹行与16384词表精确匹配为0/8192，不能直接裁剪或假定映射。本次另按原WE四秒评分重新计算8192奖励，不宣称等价于SimScale v2。详细配置见 [原配置契约](evidence/original-configs-20261013.json) 和 [结果 JSON](evidence/full-algengine-20261013.json)。
 
 完整 NAVTRAIN 收敛不依赖下载 SimEngine 的全部 5 TB，但确实依赖完整所选图像、标注、PDM、独立 NAVTEST 与官方评分 cache。数据到位后的顺序是：
 
 1. 拷贝/下载到服务器，核对 lock、history、8 相机与独立日志划分；CPU preflight 不通过先修输入。
-2. 实测完整 PKL 反序列化 RSS，再运行代表性完整数据训练，记录 rank RSS、容器 cgroup、HBM、I/O；由这些实际值设置训练内存上限。
+2. 复核已完成的1/8/16原dataset完整PKL构造与驻留容量，再实测完整图像/模型训练，记录rank RSS、cgroup、HBM及I/O。依据实际训练值设置上限，不能直接使用构造RSS或QC峰值。
 3. 按各原配置完成全部 horizon。规划通常 8 epochs，感知 20/40，DiffusionDrive 100；每轮保留 checkpoint 与独立指标，验证中断恢复。
 4. 核对 common/rare 覆盖与独立完整 NAVTEST 指标，不以训练 loss 下降代替质量。质量阈值与最终目标配置确定后才作正式通过判断。
 5. 在目标 batch、worker、芯片布局与完整数据上持续训练，确认要求的运行时长、吞吐、内存和失败恢复；小数据一小时不能自动覆盖这些条件。
@@ -347,22 +416,27 @@ ls "$RUNS/perception_hour"/runtime_rank*.json
 npu-smi info
 ```
 
-`launch.json` 固定镜像、设备与命令；`runtime_rank*.json/jsonl` 提供真实更新数、原始 loss、梯度检查、tokens/LR、RSS/HBM、恢复结果。验证还看 `validation/epoch_*/evaluation.json`、官方评分目录与 `inference_validation.json`。单看 Docker Up、loss 日志一行或退出码 0 不能证明全部验收通过。检测到 NaN/Inf 会记录失败，不用原模型 nan_to_num 掩盖原始 loss 问题。
+`launch.json` 记录镜像、设备与命令；`runtime_rank*.json/jsonl` 记录更新数、原始 loss、梯度检查、tokens/LR、RSS/HBM 和恢复结果。核对这些记录后，再检查 `validation/epoch_*/evaluation.json`、官方评分目录与 `inference_validation.json`。Docker Up、单条 loss 或退出码 0 只说明其中一个环节的状态。NaN/Inf 会被记录为失败，原始 loss 检查不会用模型中的 nan_to_num 掩盖问题。
 
 | 目的 | 当前有证据的设备/资源 | 尚待测量 |
 |---|---|---|
 | 小数据单模型功能、B1 感知 | 1 个 64 GiB 逻辑芯片即可运行完整结构；峰值约 43.61 GiB allocated | 更大 batch、AMP、其他芯片容量 |
-| 原始 8 rank global batch 布局及一小时 | 1 台含 8 个合适逻辑芯片的服务器，本次每物理卡取一个芯片 | 16 芯片、不同卡内布局或多机扩展 |
-| 完整 NAVTRAIN | 当前只确定模型/小数据可在一台运行 | 全数据 CPU object 膨胀、数据 I/O、完整训练耗时/收敛和截止时间内所需机器数 |
+| 历史8 rank感知稳定性 | 1台服务器，8张物理卡各取一个芯片，B1/global8；旧源一小时及八小时结果分别保留 | 新source/post8持续训练、4张卡双芯B2及多机扩展 |
+| 原规划global16样本量 | 原8GPU/B2=16；本次16NPU/B1=16，功能/精确载入门禁通过；同步候选每模型各一对通过原数值门槛 | 默认post8仅1/4通过；同步候选重复验收、4张物理卡/8芯片B2容量仍待完成 |
+| 完整NAVTRAIN | 完整PKL原构造1/8/16驻留已实测，16份RSS约834.13 GB；完整原split/PDM六指标QC通过 | 完整图像/模型/worker训练内存、I/O、耗时/收敛及所需机器数 |
 
-8 rank 不等于 8 台服务器。现有一台服务器能够运行已实测的 1/2/8 rank 情形；不能据此保证一台就满足完整数据训练的内存和交付时间。DDP 每 rank 仍有模型副本与自己的数据对象；39.86 GB 的两个训练 PKL 不是完整训练峰值 RAM。若 CPU/I/O 成为瓶颈，多买 NPU 也不会自动解决。
+各项1/2/8/16 rank小数据测试均为单机任务；8 rank旧长训每张物理卡用一个芯片，真实双rank对照为两张卡各一个芯片。16 rank任务使用单机8张双芯卡，默认执行仍有数值失败；同步候选已有两个单次正例，重复可靠性待验。完整数据所需机器数还取决于内存和交付时间。DDP 每 rank 保存模型副本并持有自己的数据对象，两个训练 PKL 的 39.86 GB 文件大小不能直接用作峰值 RAM。如果瓶颈在 CPU 内存或 I/O，增加 NPU 仍需同步解决数据加载问题。
 
 ## 11. 运行优势、代价与尚未通过项
 
-这次适配提供统一的原配置入口、HCCL 多卡、完整状态恢复、原始评价与独立官方 CPU 打分，可以在没有 GPU 对照机时先确认 NPU 功能与官方指标。真实小数据路线避免等待 5 TB 完整下载；保存镜像、数据和源码哈希后能区分版本漂移与算子/数据错误。CPU 打分与 NPU 训练分开执行，保留上游评分语义。
+迁移入口支持原配置、HCCL 多卡、完整状态恢复、原评价器和独立官方 CPU 打分。在没有 GPU 对照机的条件下，这些检查可以确认 NPU 功能和官方指标。真实小数据验证可以先行开展，镜像、数据和源码哈希用于核对版本；CPU 打分与 NPU 训练分开执行，保留上游评分语义。
 
-代价是旧 OpenMMLab/CUDA 依赖要固定到已验证的 NPU 软件栈；unfrozen backbone 的 fused MaxPool 无 backward，需要 PyTorch NPU 路径。当前 FP32 MSDA 使用原生 NPU grid_sample 前后向、query 分块及后向重算，完整模型仍有矩阵求逆的 CPU fallback。新实现的带监测一小时吞吐为 0.35381 锚点曝光/秒，性能优化与完整数据容量仍需实测。容器输出必须可写用于 CANN 编译/cache，源代码只读不能直接存这些文件。CPU 大 PKL、地图和 I/O 仍需单独容量设计。
+旧 OpenMMLab/CUDA 依赖需要固定到已验证的 NPU 软件栈。解冻 backbone 时，fused MaxPool 缺少 backward，须使用 PyTorch NPU 路径。当前 FP32 MSDA 使用原生 NPU grid_sample 前后向、query 分块和后向重算，完整模型还保留矩阵求逆的 CPU fallback。新实现带监测的一小时速率为 0.35381 锚点曝光/秒。性能专项优化已延期，完整数据容量仍需实测。CANN 编译文件和 cache 写入可写 output；源码为只读挂载。CPU 大 PKL、地图和 I/O 的容量应单独计算。
 
-**当前严格 MSDA 门禁已通过：**`858f9d…` FP32 路径在原 CPU32 参考、原容差下通过正常、特殊布局及完整 Q40000 几何的前向与三梯度检查，原 seed29 超差元素已由 35/19200 变为 0。两组单 rank VADv2/Hydra 受控严格续训也已通过。历史 `96a7bef…` fused 路径曾有 35/19200 元素失败、最大差 0.0309448、relative L2 2.73677e-6，原 atomic accumulation 观察和历史多卡续训失败保留为旧源码证据，不再列作当前位置梯度缺项。八 rank 全状态恢复已通过，目标多卡严格数值重放仍需独立验证。详细条件见 [MSDA 修复实测](MSDA_zh.md)。
+`858f9d…` FP32 路径已按原 CPU32 参考和原容差，通过普通、特殊布局及完整 Q40000 几何的前向与三种梯度检查，seed29 超差元素由 35/19200 减至 0。两项单 rank VADv2/Hydra 受控续训也通过严格比较。历史 `96a7bef…` fused 路径的 35/19200 元素失败、最大差 0.0309448、relative L2 2.73677e-6，以及 atomic accumulation 观察和旧多卡续训失败，均保留为旧源码记录。
 
-完整 NAVTRAIN 收敛、完整独立 NAVTEST common/rare 质量、真正合成 8 配置、目标多卡/长训练严格数值重放、完整数据 CPU RAM/I/O/工期、目标 batch/workers 的性能和持续稳定性仍需验收。GPU 模型对照和具体机型的厂商正式训练支持需要外部条件；AMP/BF16、二阶梯度、16 芯片/多机是扩展能力，不能列为已测 FP32 单机路径的运行失败。当前发布物包含可执行的迁移代码、操作方法和有边界的实测证据，完整数据正式验收尚未完成。
+较早八rank全状态载入通过，后续严格数值重放失败：VADv2有12个模型、21个优化器张量超容差，HydraMDP为2个模型、2个优化器张量。根因尚未隔离，历史atomic accumulation观察不能直接解释新版本的失败。详见[八rank夜间实测](evidence/eight-rank-resume-20261013-evening.json)及[MSDA修复实测](MSDA_zh.md)。此处保留原配置结果，当前16rank默认与同步候选分别记录在本文开头。
+
+正式验收还需完整NAVTRAIN图像训练及收敛、独立完整NAVTEST质量、其余六个真实合成导出配置、实际训练CPU/I/O/工期和目标源码持续稳定性。完整PKL构造及六PDM元数据QC已完成，不再写成尚未下载或尚未测量。旧858/post6八小时已通过，不能替代cc91/post8长训；默认post8 16rank数值为1/4通过，同步候选VAD/Hydra各一次通过，仍须完成重复回归并定位默认执行的分叉。性能专项优化后续单独开展。
+
+GPU模型对照及具体机型的厂商正式训练支持需要外部条件。AMP/BF16、二阶梯度、多机及新源码多卡重复数值验收仍未完成；16芯片功能运行、精确恢复和两个同步单次正例均已实测。代码、操作方法和实测证据可供复跑，完整数据正式验收仍未完成。

@@ -19,6 +19,14 @@
 
 **FP32 MSDA repair:** [English](ascend/MSDA.md), [中文](ascend/MSDA_zh.md), and [versioned strict-gradient/model results](ascend/evidence/msda-precision-20261013.json). Earlier fused-path performance remains historical evidence for its original fingerprint.
 
+**2026-10-14 measured status:** [post8 production replay](ascend/results/strict-replay-post8-20261014.json) completed four fresh 16-chip pairs with one pass and three failures at the unchanged numerical thresholds. [Full-rank state diagnosis](ascend/results/full-rank-state-diagnostic-20261014.json) verified restored model/optimizer bytes and recorded live layouts before update 5, while both final numerical comparisons still failed. The migration is partially validated; neither successful loading nor a backend upgrade establishes strict replay correctness.
+
+**Synchronous execution candidate:** with `TASK_QUEUE_ENABLE=0` and `ASCEND_LAUNCH_BLOCKING=1` set before Torch starts, one fresh 16-chip pair each passed for [VAD](ascend/results/sync-vad-16chip-20261014.json) and [Hydra](ascend/results/sync-hydra-16chip-20261014.json). VAD was fully bitwise equal; Hydra's maximum tensor difference was `2.9802322387695312e-8`, within the original thresholds. These single repetitions do not establish a universal fix, repeated stability or convergence.
+
+Synchronous candidate reproduction: [English commands](ascend/execution/README.md), [中文操作步骤](ascend/execution/README_zh.md). The public launch adapter has passed local command checks; its own NPU execution remains unverified.
+
+[Eight-hour perception training and postchecks](ascend/results/eight-hour-perception-stability-20261014.json) passed on their recorded **earlier source/post6 environment**, including own-checkpoint continuation and independent evaluation. [Full NAVTRAIN metadata/PDM checks](ascend/results/full-navtrain-metadata-qc-20261014.json) and [portable genuine SimScale data reproduction](ascend/data_tools/README.md) provide additional bounded evidence. Full NAVTRAIN image coverage and convergence, six other synthetic exports, GPU comparison and long-run validation of the final environment remain open. [The October 13 evening replay artifact](ascend/evidence/eight-rank-resume-20261013-evening.json) remains historical evidence for its original configuration.
+
 <div id="top" align="center">
 <p align="center">
 <img src="https://raw.githubusercontent.com/OpenDriveLab/opendrivelab.github.io/refs/heads/master/WorldEngine/imgs/README_overall.jpg" width="800px" >
@@ -146,8 +154,8 @@ WorldEngine consists of two tightly coupled subsystems:
 
 | Module | Function | Core Technology |
 |--------|----------|----------------|
-| **[SimEngine](docs/WE_simulation.md)** | Closed-loop simulation with ego & agents | Hydra, Ray, rendering |
-| **[AlgEngine](docs/AlgEngine.md)** | End-to-end model training & evaluation | MMDetection3D, UniAD/VADv2/HydraMDP |
+| **[SimEngine](docs/simengine_usage.md)** | Closed-loop simulation with ego & agents | Hydra, Ray, rendering |
+| **[AlgEngine](docs/algengine_usage.md)** | End-to-end model training & evaluation | MMDetection3D, UniAD/VADv2/HydraMDP |
 
 
 ## Roadmap

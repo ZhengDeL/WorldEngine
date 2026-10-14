@@ -1,0 +1,57 @@
+{
+  "result": "private_portable_data_chain_CPU_getitem_one_and_two_rank_NPU_passed_with_stated_scope",
+  "runtime_code_modified": false,
+  "runtime_fingerprint_scope": "projects/AlgEngine/**/*.py plus ascend/*.py; nested preparation tools have independent SHA manifest",
+  "files": [
+    {
+      "path": "ascend/data_tools/export_simscale_minimum.py",
+      "bytes": 21364,
+      "sha256": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708"
+    },
+    {
+      "path": "ascend/data_tools/simscale_convert.py",
+      "bytes": 17217,
+      "sha256": "3db9779124634a102f6ccedc7432704c425b9f1d80bcfa9859275156fe007ce6"
+    },
+    {
+      "path": "ascend/data_tools/worldengine_8192_logged_reward.py",
+      "bytes": 23612,
+      "sha256": "82528bae108918c74ef6a896d12cf652f14bd751353479cfc63924e8d0a6223c"
+    }
+  ],
+  "mathematical_function_AST_preserved": true,
+  "original_converter_sha256_LF": "e924459ca95c67ca51cc36fb24e4b03e91738ff100a72e6ad3a7b3b13a1f74e5",
+  "validated_reference_helpers": {
+    "simscale_minimum_convert.py": "5cf84e711743b4ae84fd4c1f5933060a52552dfea7e79fb09021cc158f96219b",
+    "worldengine_cpu_8192_reward_pilot.py": "8546e87411087631df0a2b566be7388b8681396193ff582887facd6d3775d549",
+    "simscale_original_subset_exporter_v2.py": "de2313e8c1346803268fc846438148d1043214334bf6c4c0ef51bd60ab020ee9"
+  },
+  "subset_exporter_portable_CLI_implemented": true,
+  "publication_accepted": false,
+  "server_CPU_reproduction_accepted": true,
+  "local_checks": [
+    "LOCAL_CHECK.json",
+    "EXPORT_LOCAL_CHECK.json"
+  ],
+  "CPU_reproduction_receipt": "CPU_REPRODUCTION_VERIFIED.json",
+  "new_export_original_getitem_accepted": true,
+  "new_export_NPU_training_accepted": true,
+  "original_getitem_receipt": "GETITEM_CPU_VERIFIED.json",
+  "new_export_NPU_training_world_size": 1,
+  "new_export_two_rank_accepted": true,
+  "NPU_single_rank_receipt": "NPU_SINGLE_RANK_VERIFIED.json",
+  "NPU_two_rank_receipt": "NPU_TWO_RANK_VERIFIED.json",
+  "path_base": "repository_root",
+  "manifest_scope": "Raw-byte SHA256 of exactly the three listed preparation CLIs; documentation/evidence has a separate public-copy whitelist.",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

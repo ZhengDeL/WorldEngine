@@ -1,0 +1,148 @@
+{
+  "status": "PRIVATE_PORTABLE_DATA_CHAIN_CPU_GETITEM_ONE_AND_TWO_RANK_NPU_PASSED_WITH_STATED_SCOPE",
+  "implemented": [
+    "simscale_convert.py:convert/history",
+    "worldengine_8192_logged_reward.py:dryrun/execute",
+    "export_simscale_minimum.py:direct original predecessor queue/PDM/tar/current preparation chain export"
+  ],
+  "not_implemented": [],
+  "runtime_code_mutated": false,
+  "planned_location": "ascend/data_tools",
+  "identity_policy": {
+    "runtime_scope": "projects/AlgEngine/**/*.py and ascend/*.py",
+    "preparation_tools_scope": "Exactly the three CLI files listed in TOOLS_MANIFEST.json; documentation/evidence is independently listed by the public-copy whitelist.",
+    "existing_runtime_contract_input_digests_preserved": [
+      "annotation",
+      "filter",
+      "pdm",
+      "vocab"
+    ],
+    "no_runtime_fingerprint_or_historical_result_relabeling": true
+  },
+  "sample": {
+    "folder_name": "synthetic_reaction_pdm_v1.0-0",
+    "scene_id": "fff002cb15c15a7a-000",
+    "actual_synthetic_anchor_token": "ab75b7addff3512d-000",
+    "original_log": "2021.06.09.17.23.18_veh-38_00773_01140",
+    "finetune_normal_anchor": "4b96572a4b9d5ea7",
+    "cotrain_normal_anchor": "fff002cb15c15a7a",
+    "no_physical_state_equivalence_assumed": true
+  },
+  "subset_CLI_required_arguments": [
+    "source",
+    "expected-runtime-sha256",
+    "annotation",
+    "pdm",
+    "camera-archive",
+    "conversion-root",
+    "reward-root",
+    "output",
+    "deadline"
+  ],
+  "subset_CLI_optional_arguments": {
+    "execute": "false by default",
+    "max-seconds": "bounded1..3600",
+    "reserve-gib": "host shared reserve192GiB default; not arbitrary unlimited execution",
+    "scene-id": "literal genuine scene default documented sample",
+    "original-log": "original same-log identity",
+    "folder-name": "only supported synthetic_reaction_pdm_v1.0-0",
+    "expected-anchor-token": "literal converted frame3 token",
+    "finetune-normal-token": "explicit narrowed normal anchor",
+    "cotrain-normal-token": "explicit narrowed normal anchor"
+  },
+  "subset_input_gates": [
+    "Whole published annotation/PDM/camera bytes and SHA before/after",
+    "Selected runtime source fingerprint before/after; exact math/file locks and tool manifest",
+    "Passed conversion/history/reward JSONs bind input SHA, source, real scene/raw/anchor and current output SHA; no private old receipt/helper/image/source hard lock as prerequisite",
+    "Each requested normal token unique in original full246165 frames, same source log, original predecessor indices index-3..index, monotonic jittered timestamps, original8 cameras per frame",
+    "Original normal PDM one entry per anchor: six finite8192 vectors; no slicing/reward renaming",
+    "Synthetic converted frame3 and its four genuine history images bind same conversion manifest; computed reward has exact same anchor and8192 original vocabulary order",
+    "Whole camera tar safe preaudit; select64 actual normalJPEG references, original bytes and fulldecode; no extractall/reencoding",
+    "No NPU device/method execution in raw subset export; finite128GiBCPU container plus host reserve; freshoutput/no overwrite/failures retained"
+  ],
+  "subset_outputs": {
+    "per_configuration_data_root": {
+      "alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl": "list of4 unchanged original real records",
+      "alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl": "one unchanged original PDMentry keyed by selected normalanchor",
+      "raw/openscene-v1.1/sensor_blobs/trainval/<original_log>/<camera>/<token>.jpg": "32 unchanged originalJPEGs",
+      "../filters/navtrain_actual_normal_anchor.yaml": "one-token normalanchor whitelist; explicit narrowed pool"
+    },
+    "shared_synthetic": {
+      "meta_datas_navformer/<original_folder>/<original_raw_basename>.pkl": "one original converter output/12 frames, unchangedSHA",
+      "sensor_blobs/<original_folder>/<scene>/<camera>/<token>.jpg": "32 original historyJPEGs",
+      "pdms_pkl/<original_folder>.pkl": "one anchor of computed WE4s loggedtraffic8192 reward, unchangedoutputSHA"
+    },
+    "manifest": {
+      "payload_files": 104,
+      "counts": {
+        "each_normal_configuration": 35,
+        "shared_synthetic": 34,
+        "normalJPEGS": 64,
+        "syntheticJPEGS": 32,
+        "raw_normal_records": 8,
+        "normal_PDM_entries": 2
+      },
+      "include": [
+        "input locks/revision",
+        "source/math/tool hashes",
+        "explicit normalselection scope",
+        "original record/PDMentry serializationSHA",
+        "all perfile outputsha256/bytes/relative paths",
+        "epoch/data/quality/train acceptance=false",
+        "actualexit/OOM from independent container receipt"
+      ],
+      "no_NAVTEST_directory_creation": true
+    }
+  },
+  "differences_from_private_exporter_v2": [
+    "Replace fixed858f SOURCE_FP with explicit actual runtimeSHA, retaining before/after source checks",
+    "Remove dependency on historical f7 getitem-stage/image-stage/private execution receipt; derive public proof from locked publisher archives and current conversion/history/reward manifests",
+    "Expose originalscene/log/anchor/two normaltokens as CLI; keep sample recipe defaults and identity/queue checks",
+    "Extract actual normalJPEG references directly from locked mini12archive rather than require a privately preparedreal_images directory",
+    "Use standalone reward-root current producer outputSHA; do not require old54d19… historicalreward hash as universalresult",
+    "Relative payload paths and independent toolmanifest replace private absolute copieddestination receipts",
+    "Dynamic future deadline/boundedduration replace fixed2026overnight deadline",
+    "Defaultdryrun/freshoutput/resourceguard preserved; no originalPDM, converter, scorer, retrieval, folder orhead math changed"
+  ],
+  "original_math_locks": {
+    "converter_LF": "e924459ca95c67ca51cc36fb24e4b03e91738ff100a72e6ad3a7b3b13a1f74e5",
+    "dense_reward_manager_LF": "193b88b91fa1c35c2b93bd809993c8ad7a9393eba6565cb9486a65342efeb537",
+    "WE2pdm_utils_LF": "802612b3e4be06ffad2a97955d0cb9202935949a3e57ad2855812edced6b3524",
+    "pdm_scorer_LF": "55b696a6b0e5efeabf11f32a8de0064d50b7869e2d63eae37983158c9d7cb025",
+    "pdm_simulator_LF": "377e21fe2b0adf83e1bcf5617e1df9c71137e1f42c216f2b486ebdc8ba8f5536"
+  },
+  "CPU_replay_before_publication": [
+    "Same pinnedinput sample, source/image/maps, actual new CLIsha and complete commands",
+    "Conversion26/312frames with unmodified original parse_log",
+    "Full832 historyJPEG identity/decode",
+    "Eight8192finite computedmetrics, originalcandidateorder and declaredadapter protocol; retain actual numerical outputSHA",
+    "Portable subset104 payloads with original normalrecords/PDM/images, noNAVTEST",
+    "Both original dataset constructors and allfour originalgetitem branches: noNone/fallback and4x8x3x544x960 images/six8192 finite metrics",
+    "Independent actualexit0/noOOM/readonly sources and inputSHA after; do not infer from AST/dryrun"
+  ],
+  "acceptance": {
+    "simscale_v2_equivalence": false,
+    "full_SimEngine_execution": false,
+    "full_NAVTRAIN_convergence": false,
+    "other_six_genuine_exports": false,
+    "GPU_parity": false,
+    "new_portable_CLI_server_replay": true,
+    "prior_private_one_rank_bitwise_controls_do_not_transfer_automatically": true,
+    "new_export_original_getitem": true,
+    "new_export_NPU_training": true,
+    "new_export_NPU_training_world_size": 1,
+    "new_export_two_rank": true,
+    "sixteen_rank_strict_numerical_gate": false
+  },
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

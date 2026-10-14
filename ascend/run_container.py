@@ -21,6 +21,7 @@ def main():
     p.add_argument('--vocab',type=Path,required=True)
     p.add_argument('--mini-prepared',type=Path)
     p.add_argument('--data-root',type=Path)
+    p.add_argument('--train-filter',type=Path,help='Explicit NAVTRAIN anchor filter for --data-root; preserved by content hash for resume')
     p.add_argument('--rare-split',type=Path)
     p.add_argument('--synthetic-root',type=Path)
     p.add_argument('--maps',type=Path)
@@ -32,6 +33,7 @@ def main():
     p.add_argument('--lr',type=float)
     p.add_argument('--memory',help='CPU RAM limit; defaults to 64g for mini, required explicitly for full PKL assets')
     p.add_argument('--cpus',type=int,default=16)
+    p.add_argument('--pids-limit',type=int,help='Container tasks, including host threads; default max(2048, 512 per NPU process)')
     p.add_argument('--shm-size',default='8g')
     p.add_argument('--image',default=IMAGE)
     p.add_argument('--expected-image-id',default=IMAGE_ID)
@@ -47,11 +49,18 @@ def main():
     p.add_argument('--check-interval',type=int)
     p.add_argument('--upstream-schedule',action='store_true')
     p.add_argument('--deterministic',action='store_true')
+    p.add_argument('--precision',choices=('fp32','fp32-hf32-conv'),default='fp32',
+                   help='Training/inference precision; fp32 disables Matmul/Conv HF32, fp32-hf32-conv reproduces legacy Conv HF32')
     p.add_argument('--debug-anomaly',action='store_true')
     args=p.parse_args()
+    if args.train_filter and (args.task!='train' or not args.data_root or args.mini_prepared):
+        p.error('--train-filter requires train with --data-root and without --mini-prepared')
     devices=args.devices.split(',')
     if not devices or len(set(devices))!=len(devices) or not all(v.isdigit() for v in devices):
         p.error('Distinct numeric host device IDs required')
+    if args.pids_limit is not None and args.pids_limit<1:
+        p.error('--pids-limit must be positive')
+    pids_limit=args.pids_limit if args.pids_limit is not None else max(2048,512*len(devices))
     if bool(args.mini_prepared)==bool(args.data_root):
         p.error('Select exactly one of --mini-prepared and --data-root')
     if args.task=='train' and args.mini_prepared and not (args.steps or args.epochs):
@@ -70,15 +79,15 @@ def main():
         raise RuntimeError('Output already exists; select a new directory')
     output.mkdir(parents=True)
     name='worldengine-npu-'+output.name
-    cmd=['docker','run','--name',name,'--network','host','--memory',args.memory or '64g','--cpus',str(args.cpus),'--pids-limit','2048','--shm-size',args.shm_size,
+    cmd=['docker','run','--name',name,'--network','host','--memory',args.memory or '64g','--cpus',str(args.cpus),'--pids-limit',str(pids_limit),'--shm-size',args.shm_size,
          '-v',f'{ROOT}:/workspace/WorldEngine:ro','-v',f'{output}:/output:rw',
          '-v','/usr/local/Ascend/driver:/usr/local/Ascend/driver:ro',
          '-v','/usr/local/Ascend/firmware:/usr/local/Ascend/firmware:ro','-w','/workspace/WorldEngine']
     if args.detach:cmd+=['-d']
-    cmd+=['-e','WORLDENGINE_IMAGE_ID='+image_id]
+    cmd+=['-e','WORLDENGINE_IMAGE_ID='+image_id,'-e','WORLDENGINE_HOST_DEVICE_IDS='+','.join(devices)]
     cmd+=['-e','ASCEND_WORK_PATH=/output/ascend_work','-e','ASCEND_CACHE_PATH=/output/ascend_cache']
     if args.deterministic:
-        cmd+=['-e','HCCL_DETERMINISTIC=true']
+        cmd+=['-e','HCCL_DETERMINISTIC=true','-e','CLOSE_MATMUL_K_SHIFT=1']
     if args.debug_anomaly:
         cmd+=['-e','WORLDENGINE_DEBUG_AUTOGRAD=1','-e','ASCEND_SLOG_PRINT_TO_STDOUT=1','-e','ASCEND_GLOBAL_LOG_LEVEL=3']
     for node in ['davinci'+d for d in devices]+['davinci_manager','devmm_svm','hisi_hdc']:
@@ -89,7 +98,7 @@ def main():
                       'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}.items():
         cmd+=['-e',key+'='+value]
     train=['ascend/train.py','--profile',args.profile,'--output','/output','--checkpoint','/weights/initial.pth',
-           '--vocab','/weights/vocab.npy']
+           '--vocab','/weights/vocab.npy','--precision',args.precision]
     for key in ('batch_size','workers','lr','epochs','stop_after','stop_after_epochs','duration_seconds','checkpoint_interval','check_interval'):
         value=getattr(args,key)
         if value is not None:train+=['--'+key.replace('_','-'),str(value)]
@@ -129,6 +138,12 @@ def main():
         path=args.rare_split.resolve(strict=True)
         cmd+=['-v',f'{path}:/data/rare.yaml:ro']
         train+=['--rare-split','/data/rare.yaml']
+    if args.train_filter:
+        path=args.train_filter.resolve(strict=True)
+        if not path.is_file():raise RuntimeError('--train-filter must be a file')
+        # The original dataset selects the NAVTRAIN PDM cache by basename.
+        cmd+=['-v',f'{path}:/data/navtrain_selected_filter.yaml:ro']
+        train+=['--train-filter','/data/navtrain_selected_filter.yaml']
     if args.synthetic_root:
         root=args.synthetic_root.resolve(strict=True)
         cmd+=['-v',f'{root}:/data/synthetic:ro']
@@ -144,7 +159,8 @@ def main():
     if args.task=='inference':
         config=args.config.resolve(strict=True)
         cmd+=['-v',f'{config}:/config/inference.py:ro']
-        train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output']
+        train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output','--precision',args.precision]
+        if args.deterministic:train+=['--deterministic']
     import shlex
     inner='set +u\nsource /usr/local/Ascend/ascend-toolkit/set_env.sh\nexport PATH=/opt/conda/envs/bevformer/bin:/opt/conda/bin:$PATH\n'
     inner+='mkdir -p /output/ascend_work /output/ascend_cache\n'
@@ -155,11 +171,12 @@ def main():
     if args.inference_after:
         profile=args.config.stem if args.config else args.profile
         inference=['ascend/inference.py','--config',f'/output/{profile}_rank0.py',
-                   '--checkpoint',f'/output/iter_{args.steps}.pth','--output','/output/inference']
+                   '--checkpoint',f'/output/iter_{args.steps}.pth','--output','/output/inference','--precision',args.precision]
+        if args.deterministic:inference+=['--deterministic']
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'
     cmd += [args.image,'bash','-lc',inner]
-    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile},indent=2))
+    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic},indent=2))
     result=subprocess.run(cmd,check=False)
     raise SystemExit(result.returncode)
 

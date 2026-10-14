@@ -1,0 +1,786 @@
+{
+  "schema_version": 1,
+  "result": "completed_full_rank_identity_diagnosis_both_original_numeric_gates_fail",
+  "raw_summary_sha256": "9eee68efac2eaec0e72794416403ad7902b04a5c84da485852e859df1063b62e",
+  "raw_watchdog_sha256": "c3fb6bfabdc13c43ca6a5ed7943ac3406d9590ade4148bb1843eaf075c7b2af8",
+  "source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "source_python_files": 243,
+  "image_id": "sha256:3fef77b906c6b1e5cdf68c08d43135dc7b0509fb938a4665bb0d478bd8b64e45",
+  "private_controller_parent_sha256": "39908172642282f5225f80af85f3bf1fecfdbef8cf0396cab6adb995d04ecbd4",
+  "frozen_diagnostic_tool_hashes": {
+    "observe_full_rank_state_cc91_v1.py": "50e716a4298eb4be6fbb874e9eb90f8db8b025a81ef43c051094d8cb027eb4c2",
+    "compare_full_rank_state_cc91_v1.py": "ed15e42ca2a9989d5a881fa37c470bd1b81c2545bc9d0b2f3d3d92fcaf9c9a63",
+    "audit_full_rank_checkpoint_cc91_v1.py": "0087a7c9199e7c31b897c8b6ab6430a40cb1cd20b579bee48e69a10c6df8d56d",
+    "probe_full_rank_state_cpu_cc91_v1.py": "8e886d3d935ba9f262b776fea28b587f78d5d09f6b61f106026bae08d1ca8daa"
+  },
+  "physical_cards": 8,
+  "logical_chips": 16,
+  "world_size": 16,
+  "per_rank_batch": 1,
+  "global_batch": 16,
+  "data_scope": "42 training anchors and22 held-out anchors derived from NAVTEST; not complete NAVTRAIN.",
+  "observer_scope": "Full registered model/optimizer state_dict logical bytes copied NPU-to-CPU. Copies/get_npu_format can synchronize and change timing. No extra collective, RNG draw, model/optimizer write or precision setter. Observed results do not prove unobserved determinism or a fix.",
+  "original_numerical_gate_changed": false,
+  "cases": [
+    {
+      "profile": "vad",
+      "original_config_sha256": "b1ed3b5d0ae465506442f74100803d111c793f31112705d74db68c46c5c30480",
+      "official_initializer_sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+      "runs": {
+        "continuous": {
+          "actual_wrapper_exit": 0,
+          "actual_container_exit": 0,
+          "OOMKilled": false,
+          "original_runtime_gate_passed": true,
+          "rank_reports": 16,
+          "rank_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "actual_precision_snapshots": 32,
+          "all_actual_public_HF32_false": true,
+          "all_actual_Torch_deterministic_true": true,
+          "all_actual_environments_equal": true,
+          "actual_environment": {
+            "CLOSE_MATMUL_K_SHIFT": "1",
+            "HCCL_DETERMINISTIC": "true",
+            "TASK_QUEUE_ENABLE": null,
+            "ASCEND_LAUNCH_BLOCKING": null
+          },
+          "actual_backend_versions": [
+            "2.7.1.post8"
+          ],
+          "actual_backend_git_versions": [
+            "a783f11e456f27d7451a1ea745f1556823357c95"
+          ],
+          "restored_model_tensor_counts": null,
+          "restored_optimizer_tensor_counts": null
+        },
+        "resumed": {
+          "actual_wrapper_exit": 0,
+          "actual_container_exit": 0,
+          "OOMKilled": false,
+          "original_runtime_gate_passed": true,
+          "rank_reports": 16,
+          "rank_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "actual_precision_snapshots": 32,
+          "all_actual_public_HF32_false": true,
+          "all_actual_Torch_deterministic_true": true,
+          "all_actual_environments_equal": true,
+          "actual_environment": {
+            "CLOSE_MATMUL_K_SHIFT": "1",
+            "HCCL_DETERMINISTIC": "true",
+            "TASK_QUEUE_ENABLE": null,
+            "ASCEND_LAUNCH_BLOCKING": null
+          },
+          "actual_backend_versions": [
+            "2.7.1.post8"
+          ],
+          "actual_backend_git_versions": [
+            "a783f11e456f27d7451a1ea745f1556823357c95"
+          ],
+          "restored_model_tensor_counts": [
+            889
+          ],
+          "restored_optimizer_tensor_counts": [
+            777
+          ]
+        }
+      },
+      "complete_identity_joins": {
+        "actual_exit": 1,
+        "expected": 144,
+        "completed": 144,
+        "blocked": 0,
+        "tensor_differing_joins": 16,
+        "all_tree_differing_joins": 48,
+        "by_type": {
+          "cold4post_each_rank_vs_actual_rank0_saved4": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Live NPU vs CPU checkpoint representation; CPU has no NPU format, not evidence of differing live restore layout.",
+            "observed_layout_metadata_difference_counts": [
+              1407
+            ]
+          },
+          "cold4post_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold4post_vs_cold5pre_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              730
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              730
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold8post_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold_initial_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume5pre_vs_cold4post_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              730
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              730
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume5pre_vs_cold5pre_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume8post_vs_cold8post_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              767
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume_initial4_vs_actual_rank0_saved4": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Live NPU vs CPU checkpoint representation; CPU has no NPU format, not evidence of differing live restore layout.",
+            "observed_layout_metadata_difference_counts": [
+              1407
+            ]
+          }
+        }
+      },
+      "resumed_initial4_vs_own_continuous4_live_layout_difference_counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "final8_full_bit_differences_per_rank": {
+        "total": 767,
+        "model": 249,
+        "optimizer": 518,
+        "BN_persistent_buffers": {
+          "running_mean": 0,
+          "running_var": 0,
+          "num_batches_tracked": 0
+        },
+        "Adam_states": {
+          "exp_avg": 259,
+          "exp_avg_sq": 259,
+          "step": 0
+        },
+        "same_complete_left_right_difference_lists_across_all16_ranks": true,
+        "recorded_live_layout_difference_counts": [
+          0
+        ],
+        "gate_scope": "Exact logical-byte hashes, separate from the original atol/rtol numerical gate. No max_abs inferred from SHA."
+      },
+      "actual_rank0_checkpoint_audit": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "complete": true,
+        "checkpoint_sha256": "08beb041cea46aa61218060d2541234ef0b3c6c4741f35b577d64975259058ff",
+        "checkpoint_sha256_after": "08beb041cea46aa61218060d2541234ef0b3c6c4741f35b577d64975259058ff",
+        "checkpoint_bytes": 435106037,
+        "tensor_counts": {
+          "model": 889,
+          "optimizer": 777
+        },
+        "official_loader_identity": true,
+        "RE_MAP_CPU": true,
+        "npu_initialized": false,
+        "serializer_sha256": "50e716a4298eb4be6fbb874e9eb90f8db8b025a81ef43c051094d8cb027eb4c2",
+        "official_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474"
+      },
+      "original_numeric_gate": {
+        "result": "fail",
+        "actual_wrapper_exit": 1,
+        "actual_container_exit": 1,
+        "OOMKilled": false,
+        "valid_actual_numerical_result": true,
+        "model": {
+          "tensors": 889,
+          "bitwise_equal_tensors": 640,
+          "max_absolute_difference": 1.1574476957321167e-05,
+          "failed_paths": [
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.4.ffns.0.layers.0.0.weight",
+            "model/pts_bbox_head.bev_embedding.weight",
+            "model/planning_head.heads.imi.4.bias"
+          ],
+          "failed_path_count": 5
+        },
+        "optimizer": {
+          "failed_paths": [
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/7/exp_avg",
+            "optimizer/state/13/exp_avg",
+            "optimizer/state/295/exp_avg",
+            "optimizer/state/299/exp_avg"
+          ],
+          "failed_path_count": 5,
+          "max_absolute_difference": null,
+          "maximum_scope": "Optimizer-only maximum is not separately reported; no fabricated value.",
+          "max_absolute_difference_upper_bound": 1.1574476957321167e-05
+        },
+        "combined_model_optimizer_and_rank_rng": {
+          "tensors": 1698,
+          "bitwise_equal_tensors": 931,
+          "max_absolute_difference": 1.1574476957321167e-05,
+          "count_scope": "Includes two RNG tensors per rank; not all model+optimizer tensors."
+        },
+        "max_loss_difference": 1.9073486328125e-06,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "world_size": 16,
+        "completed_updates": 8,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_comparator_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "official_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "official_CPU_loader_identity": true,
+        "no_NPU_initialization": true,
+        "RE_MAP_CPU_after_runpy": true,
+        "original_target_source_unchanged": true,
+        "failure_list_display_scope": "Original shared failure-list display retained in raw artifact; public counts filter actual model/optimizer path prefixes. Gates and tensors unchanged."
+      }
+    },
+    {
+      "profile": "hydra",
+      "original_config_sha256": "a9555793a3df5efa66b7764bf3a362cba69f27b956e6f10492c5e95bedc25d60",
+      "official_initializer_sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+      "runs": {
+        "continuous": {
+          "actual_wrapper_exit": 0,
+          "actual_container_exit": 0,
+          "OOMKilled": false,
+          "original_runtime_gate_passed": true,
+          "rank_reports": 16,
+          "rank_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "actual_precision_snapshots": 32,
+          "all_actual_public_HF32_false": true,
+          "all_actual_Torch_deterministic_true": true,
+          "all_actual_environments_equal": true,
+          "actual_environment": {
+            "CLOSE_MATMUL_K_SHIFT": "1",
+            "HCCL_DETERMINISTIC": "true",
+            "TASK_QUEUE_ENABLE": null,
+            "ASCEND_LAUNCH_BLOCKING": null
+          },
+          "actual_backend_versions": [
+            "2.7.1.post8"
+          ],
+          "actual_backend_git_versions": [
+            "a783f11e456f27d7451a1ea745f1556823357c95"
+          ],
+          "restored_model_tensor_counts": null,
+          "restored_optimizer_tensor_counts": null
+        },
+        "resumed": {
+          "actual_wrapper_exit": 0,
+          "actual_container_exit": 0,
+          "OOMKilled": false,
+          "original_runtime_gate_passed": true,
+          "rank_reports": 16,
+          "rank_ids": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "actual_precision_snapshots": 32,
+          "all_actual_public_HF32_false": true,
+          "all_actual_Torch_deterministic_true": true,
+          "all_actual_environments_equal": true,
+          "actual_environment": {
+            "CLOSE_MATMUL_K_SHIFT": "1",
+            "HCCL_DETERMINISTIC": "true",
+            "TASK_QUEUE_ENABLE": null,
+            "ASCEND_LAUNCH_BLOCKING": null
+          },
+          "actual_backend_versions": [
+            "2.7.1.post8"
+          ],
+          "actual_backend_git_versions": [
+            "a783f11e456f27d7451a1ea745f1556823357c95"
+          ],
+          "restored_model_tensor_counts": [
+            909
+          ],
+          "restored_optimizer_tensor_counts": [
+            837
+          ]
+        }
+      },
+      "complete_identity_joins": {
+        "actual_exit": 1,
+        "expected": 144,
+        "completed": 144,
+        "blocked": 0,
+        "tensor_differing_joins": 16,
+        "all_tree_differing_joins": 48,
+        "by_type": {
+          "cold4post_each_rank_vs_actual_rank0_saved4": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Live NPU vs CPU checkpoint representation; CPU has no NPU format, not evidence of differing live restore layout.",
+            "observed_layout_metadata_difference_counts": [
+              1467
+            ]
+          },
+          "cold4post_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold4post_vs_cold5pre_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              750
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              750
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold8post_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "cold_initial_each_rank_vs_rank0": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume5pre_vs_cold4post_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              750
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              750
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume5pre_vs_cold5pre_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume8post_vs_cold8post_same_rank": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              811
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Both live NPU states; device-rank provenance excluded.",
+            "observed_layout_metadata_difference_counts": [
+              0
+            ]
+          },
+          "resume_initial4_vs_actual_rank0_saved4": {
+            "rank_comparisons": 16,
+            "tensor_difference_counts": [
+              0
+            ],
+            "tree_or_scalar_difference_counts": [
+              0
+            ],
+            "scheduled_LR_scalar_difference_counts": [
+              0
+            ],
+            "layout_comparison_scope": "Live NPU vs CPU checkpoint representation; CPU has no NPU format, not evidence of differing live restore layout.",
+            "observed_layout_metadata_difference_counts": [
+              1467
+            ]
+          }
+        }
+      },
+      "resumed_initial4_vs_own_continuous4_live_layout_difference_counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "final8_full_bit_differences_per_rank": {
+        "total": 811,
+        "model": 262,
+        "optimizer": 549,
+        "BN_persistent_buffers": {
+          "running_mean": 0,
+          "running_var": 0,
+          "num_batches_tracked": 0
+        },
+        "Adam_states": {
+          "exp_avg": 274,
+          "exp_avg_sq": 275,
+          "step": 0
+        },
+        "same_complete_left_right_difference_lists_across_all16_ranks": true,
+        "recorded_live_layout_difference_counts": [
+          0
+        ],
+        "gate_scope": "Exact logical-byte hashes, separate from the original atol/rtol numerical gate. No max_abs inferred from SHA."
+      },
+      "actual_rank0_checkpoint_audit": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "complete": true,
+        "checkpoint_sha256": "f5e84eb0f0ff69f6720d8a4e8d7cdcf07cc7e22b37efa9cf5dbd232da32ece2e",
+        "checkpoint_sha256_after": "f5e84eb0f0ff69f6720d8a4e8d7cdcf07cc7e22b37efa9cf5dbd232da32ece2e",
+        "checkpoint_bytes": 450984229,
+        "tensor_counts": {
+          "model": 909,
+          "optimizer": 837
+        },
+        "official_loader_identity": true,
+        "RE_MAP_CPU": true,
+        "npu_initialized": false,
+        "serializer_sha256": "50e716a4298eb4be6fbb874e9eb90f8db8b025a81ef43c051094d8cb027eb4c2",
+        "official_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474"
+      },
+      "original_numeric_gate": {
+        "result": "fail",
+        "actual_wrapper_exit": 1,
+        "actual_container_exit": 1,
+        "OOMKilled": false,
+        "valid_actual_numerical_result": true,
+        "model": {
+          "tensors": 909,
+          "bitwise_equal_tensors": 647,
+          "max_absolute_difference": 3.4570693969726562e-06,
+          "failed_paths": [
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.output_proj.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.attention_weights.weight",
+            "model/pts_bbox_head.bev_embedding.weight",
+            "model/planning_head.heads.imi.4.bias"
+          ],
+          "failed_path_count": 5
+        },
+        "optimizer": {
+          "failed_paths": [
+            "optimizer/state/1/exp_avg",
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/6/exp_avg",
+            "optimizer/state/7/exp_avg",
+            "optimizer/state/9/exp_avg",
+            "optimizer/state/13/exp_avg",
+            "optimizer/state/14/exp_avg",
+            "optimizer/state/25/exp_avg",
+            "optimizer/state/295/exp_avg",
+            "optimizer/state/299/exp_avg",
+            "optimizer/state/300/exp_avg",
+            "optimizer/state/433/exp_avg"
+          ],
+          "failed_path_count": 12,
+          "max_absolute_difference": 1.5007128240540624e-05,
+          "maximum_scope": "Derived from combined maximum exceeding model maximum and identical RNG; original comparator does not separately report optimizer maximum.",
+          "max_absolute_difference_upper_bound": 1.5007128240540624e-05
+        },
+        "combined_model_optimizer_and_rank_rng": {
+          "tensors": 1778,
+          "bitwise_equal_tensors": 967,
+          "max_absolute_difference": 1.5007128240540624e-05,
+          "count_scope": "Includes two RNG tensors per rank; not all model+optimizer tensors."
+        },
+        "max_loss_difference": 1.9073486328125e-06,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "world_size": 16,
+        "completed_updates": 8,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_comparator_sha256_after": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "official_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "official_CPU_loader_identity": true,
+        "no_NPU_initialization": true,
+        "RE_MAP_CPU_after_runpy": true,
+        "original_target_source_unchanged": true,
+        "failure_list_display_scope": "Original shared failure-list display retained in raw artifact; public counts filter actual model/optimizer path prefixes. Gates and tensors unchanged."
+      }
+    }
+  ],
+  "cleanup": {
+    "remaining_own_running_count": 0,
+    "ownership_errors": 0,
+    "cleanup_error_present": false,
+    "source_fingerprint_after": {
+      "sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+      "python_files": 243
+    },
+    "watchdog_result": "completed_no_registered_owned_running",
+    "watchdog_forced_stops": 0,
+    "scope": "This diagnostic registered jobs only; does not assert all shared jobs or the whole board idle."
+  },
+  "excluded_within_this_observed_run": [
+    "Registered model/optimizer logical-state loss from rank0-only restoration: cold ranks equal rank0 and own-file; each restored initial equals own saved state.",
+    "A differing recorded live npu_format/stride/storage_offset/layout at restored initial or pre-update5.",
+    "Persistent BN buffer loss/change and Adam step difference as the observed final difference: final changed BN buffers and steps are zero."
+  ],
+  "not_excluded": [
+    "Full CPU batch contents; token equality is insufficient.",
+    "Nonpersistent buffers and arbitrary Python caches/attributes.",
+    "Transient activations and gradients; storage aliases, addresses and version counters; compiler, workspace, kernel and communication state; queue-worker context.",
+    "Backend or operation ordering instability during updates5-8; no first differing operation is identified."
+  ],
+  "root_cause_identified": false,
+  "production_fix_accepted": false
+}

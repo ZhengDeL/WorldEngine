@@ -1,0 +1,113 @@
+{
+  "result": "pass_fresh_three_portable_CPU_tools_four_phases_not_NPU_training",
+  "completed_at_utc": "2026-10-13T20:22:57.428093+00:00",
+  "runtime_source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "tool_sha256": {
+    "simscale_convert.py": "3db9779124634a102f6ccedc7432704c425b9f1d80bcfa9859275156fe007ce6",
+    "worldengine_8192_logged_reward.py": "82528bae108918c74ef6a896d12cf652f14bd751353479cfc63924e8d0a6223c",
+    "export_simscale_minimum.py": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708"
+  },
+  "tasks": [
+    {
+      "phase": "convert",
+      "result": "pass_original_converter_26_real_clips",
+      "actual_exit": 0,
+      "receipt_sha256": "0ff914237bba374e818d24faff15147db8ead64644456078ffe0bcf3229ab796",
+      "started_at_utc": "2026-10-13T20:18:21.803473481Z",
+      "finished_at_utc": "2026-10-13T20:19:36.080028361Z",
+      "docker_exit": 0,
+      "OOMKilled": false
+    },
+    {
+      "phase": "history",
+      "result": "pass_all_real_history_camera_references",
+      "actual_exit": 0,
+      "receipt_sha256": "2b39d0dd10b72b6326c37d6911125c33e5d34104f370588d5716c94c8638a786",
+      "started_at_utc": "2026-10-13T20:19:36.318077371Z",
+      "finished_at_utc": "2026-10-13T20:19:45.029939031Z",
+      "docker_exit": 0,
+      "OOMKilled": false
+    },
+    {
+      "phase": "reward",
+      "result": "pass_original_WE_scoring_derived_protocol_not_SimScale_v2_equivalence",
+      "actual_exit": 0,
+      "receipt_sha256": "92e1e7dc0edd4d2138b22770f611c1b976f5a69aaf6454755cef323959350184",
+      "started_at_utc": "2026-10-13T20:19:45.237991331Z",
+      "finished_at_utc": "2026-10-13T20:20:22.236143441Z",
+      "docker_exit": 0,
+      "OOMKilled": false
+    },
+    {
+      "phase": "export",
+      "result": "pass_two_genuine_filtered_subset_exports_not_training",
+      "actual_exit": 0,
+      "receipt_sha256": "99d0ec1a979d897bb8e019bee1bfe750bb65f9a3e14f630b2d09f3da5f9dc7d6",
+      "started_at_utc": "2026-10-13T20:20:22.477187791Z",
+      "finished_at_utc": "2026-10-13T20:22:57.243296021Z",
+      "docker_exit": 0,
+      "OOMKilled": false
+    }
+  ],
+  "scope": {
+    "converted_clips": 26,
+    "history_JPEGs": 832,
+    "derived_reward_candidates": 8192,
+    "export_payloads": 104,
+    "normal_JPEGs": 64,
+    "synthetic_JPEGs": 32,
+    "synthetic_original_frames": 12,
+    "normal_candidate_pool_changed": true,
+    "full_data_sampling_equivalent": false,
+    "SimScale_v2_equivalent": false,
+    "new_export_original_getitem_accepted": true,
+    "new_export_NPU_training_accepted": true,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "new_export_NPU_training_world_size": 1,
+    "new_export_two_rank_accepted": true
+  },
+  "input_locks_before": {
+    "annotation": {
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b"
+    },
+    "pdm": {
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca"
+    },
+    "camera_archive": {
+      "bytes": 2781004086,
+      "sha256": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e"
+    }
+  },
+  "input_sha256_after": {
+    "annotation": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b",
+    "pdm": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca",
+    "camera_archive": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e"
+  },
+  "reward_sha256": "54d19d93e1b2758632e46ffdb5b1b1fb464909fd7b694201bc549ca875454675",
+  "reward_generated_fresh": true,
+  "export_max_RSS_bytes": 28364746752,
+  "export_accelerator_modules_imported": false,
+  "original_math_source_locks": {
+    "manager/dense_reward_manager.py": "193b88b91fa1c35c2b93bd809993c8ad7a9393eba6565cb9486a65342efeb537",
+    "components/agents/policy/pdm_planner/utils/WE2pdm_utils.py": "802612b3e4be06ffad2a97955d0cb9202935949a3e57ad2855812edced6b3524",
+    "components/agents/policy/pdm_planner/scoring/pdm_scorer.py": "55b696a6b0e5efeabf11f32a8de0064d50b7869e2d63eae37983158c9d7cb025",
+    "components/agents/policy/pdm_planner/simulation/pdm_simulator.py": "377e21fe2b0adf83e1bcf5617e1df9c71137e1f42c216f2b486ebdc8ba8f5536"
+  },
+  "private_collection_receipt_sha256": "56929ebca52f5fe6810ed5bd2b380bae1ed8e0e9435134223851a2e1af6f796f",
+  "original_getitem_receipt": "GETITEM_CPU_VERIFIED.json",
+  "NPU_single_rank_receipt": "NPU_SINGLE_RANK_VERIFIED.json",
+  "NPU_two_rank_receipt": "NPU_TWO_RANK_VERIFIED.json",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}

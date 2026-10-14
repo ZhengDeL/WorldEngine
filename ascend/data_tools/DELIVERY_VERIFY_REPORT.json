@@ -1,0 +1,218 @@
+{
+  "result": "PASS_LOCAL_PUBLIC_PREPARATION_DELIVERY_VERIFICATION_NOT_NEW_REMOTE_ACCEPTANCE",
+  "publication_accepted": false,
+  "network_or_hardware_operations": false,
+  "frozen_three_preparation_CLIs_unchanged": true,
+  "runtime_source_edited_by_this_verification": false,
+  "checks": [
+    "three_original_preparation_CLI_SHA_bytes_and_AST39_pass",
+    "all_ten_input_URLs_pinned_total47_50GB_and_five_WE_assets_match_publisher_inventory",
+    "literal_scene_anchor_log_normal_tokens_and_configuration_export_relative_paths_pass",
+    "all_EN_ZH_Bash_examples_parse_and_documented_CLI_launcher_flags_paths_and_CPUguide_match",
+    "actual_CPU_getitem_and_one_two_rank_post8_proofs_kept_with_explicit_remaining_scope",
+    "whitelisted_text_has_no_private_IP_host_absolute_path_or_credential_pattern"
+  ],
+  "bash_syntax_checks": [
+    {
+      "document": "README.md",
+      "block": 1,
+      "sha256": "9cd288d178643bd7c647f5a4089a01b4759dc551d076d231015bfa58478cae03",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README.md",
+      "block": 2,
+      "sha256": "03eb5ac8587c8f10b25e83f50c769643443f827c9dbc1547490d9ef625965da9",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README.md",
+      "block": 3,
+      "sha256": "a76df72b621e834bf57906e90242aecb9cae2bcc9d8c51e14131ee7151b23975",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 1,
+      "sha256": "9cd288d178643bd7c647f5a4089a01b4759dc551d076d231015bfa58478cae03",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 2,
+      "sha256": "66605dda42791608a9f74983b911da7ff418cd7637b9c57a9b9edb0201f9072b",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 3,
+      "sha256": "ec8b6105343f575471a8c37aa018ae3a120dfbc7ee41554311183b1d4cbc88d2",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 4,
+      "sha256": "b0f67c6db2a80a663d50c043022ffd37eadc9eacd1786f2a05a61011ff2ce129",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 5,
+      "sha256": "4b8315e9661f571963c7051a47abcbde14403207a95e416a434f8af657bab7a1",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 6,
+      "sha256": "6b1e1ec37799b19991d60fbb29d451d58f2bc025c854f563162d062217c6e59a",
+      "bash_n_exit": 0
+    },
+    {
+      "document": "README_zh.md",
+      "block": 7,
+      "sha256": "a76df72b621e834bf57906e90242aecb9cae2bcc9d8c51e14131ee7151b23975",
+      "bash_n_exit": 0
+    }
+  ],
+  "initializer_locks": {
+    "finetune_initializer_explicit_override": {
+      "role": "finetune_initializer_explicit_override",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "bytes": 434885463,
+      "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth"
+    },
+    "cotrain_initializer": {
+      "role": "cotrain_initializer",
+      "repo": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "bytes": 319958048,
+      "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a",
+      "official_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+      "mirror_url": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_100pct_bs1x8.pth"
+    }
+  },
+  "configuration_aliases": {
+    "finetune": "e2e_vadv2_simscale_finetune_pdm_1round_8epoch",
+    "cotrain": "e2e_vadv2_simscale_co_train_pdm_1round_8epoch"
+  },
+  "sample": {
+    "folder_name": "synthetic_reaction_pdm_v1.0-0",
+    "scene_id": "fff002cb15c15a7a-000",
+    "actual_synthetic_anchor_token": "ab75b7addff3512d-000",
+    "original_log": "2021.06.09.17.23.18_veh-38_00773_01140",
+    "finetune_normal_anchor": "4b96572a4b9d5ea7",
+    "cotrain_normal_anchor": "fff002cb15c15a7a",
+    "no_physical_state_equivalence_assumed": true
+  },
+  "runtime_source_sha256_of_actual_controls": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88",
+  "CPU_image_id_of_actual_getitem": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "post8_image_id_of_actual_NPU_controls": "sha256:ba17931d5af64c6070417bc2059887096abf42d76b44484a9bd45262e3918707",
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  },
+  "preparation_source_identity_scope": "Raw-byte SHA256 of exactly the three listed preparation CLIs; documentation/evidence has a separate public-copy whitelist.",
+  "whitelisted_payload_files": [
+    {
+      "source_relative_to_private_staging": "README.md",
+      "destination_relative_to_repository_root": "ascend/data_tools/README.md",
+      "bytes": 16634,
+      "sha256": "a6f4b725da9c379936012b1c33f19a223ac132c0e24776efc8c80d704b74f959"
+    },
+    {
+      "source_relative_to_private_staging": "README_zh.md",
+      "destination_relative_to_repository_root": "ascend/data_tools/README_zh.md",
+      "bytes": 17459,
+      "sha256": "ffeb7aa62e280d8f454d6f1c608e2f52f8d2c6253d3634b9cc3e44fe717c4b50"
+    },
+    {
+      "source_relative_to_private_staging": "TOOLS_MANIFEST.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/TOOLS_MANIFEST.json",
+      "bytes": 2919,
+      "sha256": "978f73a2c89116a5991fdb612a8f828b1ddc89d346992b1bd339a6821f7ff07a"
+    },
+    {
+      "source_relative_to_private_staging": "INPUT_LOCKS.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/INPUT_LOCKS.json",
+      "bytes": 8088,
+      "sha256": "48b003fea137809b88f5f92c9ebc65e102ec9df504806f5eebc7ba10840cbfb3"
+    },
+    {
+      "source_relative_to_private_staging": "IMPLEMENTATION_CONTRACT.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/IMPLEMENTATION_CONTRACT.json",
+      "bytes": 8446,
+      "sha256": "c4c9b6e6dc2ded8a3c8a522223d7513566c34cdc235a386003bc6ea033fa0a5c"
+    },
+    {
+      "source_relative_to_private_staging": "LOCAL_CHECK.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/LOCAL_CHECK.json",
+      "bytes": 1306,
+      "sha256": "533994ceb0caca89f33ed2e992a1c9ea1112a0e3d4f2d04ce29f10159e88adfc"
+    },
+    {
+      "source_relative_to_private_staging": "EXPORT_LOCAL_CHECK.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/EXPORT_LOCAL_CHECK.json",
+      "bytes": 2593,
+      "sha256": "3b419f43fc9b7a156c131430131be5e1d93490fceedf3bf7ae517b894b9c6095"
+    },
+    {
+      "source_relative_to_private_staging": "CPU_REPRODUCTION_VERIFIED.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/CPU_REPRODUCTION_VERIFIED.json",
+      "bytes": 5317,
+      "sha256": "e6ac2354540ff98cb557d7628dbfc520adcab77d4721022c1ff8b7a799375472"
+    },
+    {
+      "source_relative_to_private_staging": "GETITEM_CPU_VERIFIED.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/GETITEM_CPU_VERIFIED.json",
+      "bytes": 10484,
+      "sha256": "349dc2b222fe3b097ee9c38496d34d3a6db89fc633551928758a3f83f5fd0a4c"
+    },
+    {
+      "source_relative_to_private_staging": "NPU_SINGLE_RANK_VERIFIED.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/NPU_SINGLE_RANK_VERIFIED.json",
+      "bytes": 4250,
+      "sha256": "5fbf69a470d47b46cf784d6309d8aa3baaa76949f5afddef2536254114bbfa40"
+    },
+    {
+      "source_relative_to_private_staging": "NPU_TWO_RANK_VERIFIED.json",
+      "destination_relative_to_repository_root": "ascend/data_tools/NPU_TWO_RANK_VERIFIED.json",
+      "bytes": 9746,
+      "sha256": "e9aa90ce10abf4e98657b6f51996b7b7068f2095f9ff56ac28ba778977a2276c"
+    },
+    {
+      "source_relative_to_private_staging": "ascend/data_tools/simscale_convert.py",
+      "destination_relative_to_repository_root": "ascend/data_tools/simscale_convert.py",
+      "bytes": 17217,
+      "sha256": "3db9779124634a102f6ccedc7432704c425b9f1d80bcfa9859275156fe007ce6"
+    },
+    {
+      "source_relative_to_private_staging": "ascend/data_tools/worldengine_8192_logged_reward.py",
+      "destination_relative_to_repository_root": "ascend/data_tools/worldengine_8192_logged_reward.py",
+      "bytes": 23612,
+      "sha256": "82528bae108918c74ef6a896d12cf652f14bd751353479cfc63924e8d0a6223c"
+    },
+    {
+      "source_relative_to_private_staging": "ascend/data_tools/export_simscale_minimum.py",
+      "destination_relative_to_repository_root": "ascend/data_tools/export_simscale_minimum.py",
+      "bytes": 21364,
+      "sha256": "23254336e52c8ea1ab6d4a1eba283c7f43aefcfec6b6ec5ca5c1e816ffe3c708"
+    }
+  ],
+  "excluded_local_cache_files": [
+    "ascend/data_tools/__pycache__/export_simscale_minimum.cpython-312.pyc"
+  ],
+  "copy_policy": "Copy only the accompanying explicit whitelist mappings into ascend/data_tools. Never copy the staging root README over repository README or recursively copy __pycache__, private scripts, raw receipts or inputs.",
+  "full_training_data_and_weights_downloaded_by_this_verification": false
+}

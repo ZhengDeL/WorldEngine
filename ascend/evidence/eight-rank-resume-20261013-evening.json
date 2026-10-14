@@ -1,0 +1,884 @@
+{
+  "schema_version": 1,
+  "evidence_type": "interim_eight_rank_correctness_and_running_stability_snapshot",
+  "recorded_at_utc": "2026-10-13T14:44:08.838031+00:00",
+  "recorded_at_cst": "2026-10-13T22:44:08.838031+08:00",
+  "acceptance_status": "strict_eight_rank_numerical_replay_failed; long_stability_running_not_accepted",
+  "source": {
+    "tested_commit": "2bed8f4d7c7853e8ce9f717cabab6af986328504",
+    "algengine_ascend_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+    "python_files": 242,
+    "source_fingerprint_after_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d"
+  },
+  "image": {
+    "tag": "local/worldengine:26.1.0-a3-clean-20261013",
+    "id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f"
+  },
+  "input_evidence_sha256": {
+    "strict8p_summary.json": "0633e22e63c370fa1f9f4c62ec4b9da424590628e09d89f79e7361af2bd362dc",
+    "running_actual_running_gate_snapshot_20261013.json": "5ca4093446112303380eb515eae52aa9746e45b756832dd9baa26a0e128dea46"
+  },
+  "data": {
+    "origin": "NAVTEST-derived real mini, isolated by complete driving logs; not full NAVTRAIN",
+    "training_anchors": 42,
+    "independent_evaluation_anchors": 22,
+    "train_eval_token_overlap": 0,
+    "camera_files": 1120,
+    "hashed_files": 1126,
+    "manifest_sha256": "aeae155493e0c2e09e70b2f81e339d431382e945ab3945bea83fa924ed9e27c6",
+    "all_manifest_file_hashes_verified_in_evening_controller_preflight": true,
+    "trajectory_labels_changed": false,
+    "vocab_sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+  },
+  "workload": {
+    "world_size": 8,
+    "physical_cards": 8,
+    "host_logical_devices": [
+      "0",
+      "2",
+      "4",
+      "6",
+      "8",
+      "10",
+      "12",
+      "14"
+    ],
+    "dtype": "FP32",
+    "batch_per_rank": 1,
+    "workers_per_rank": 0,
+    "deterministic": true,
+    "same_original_configuration": true,
+    "continuous_final_update": 8,
+    "saved_and_resumed_update": 4,
+    "resumed_final_update": 8,
+    "same_horizon": true,
+    "same_source_image_data_batch_workers_seed": true
+  },
+  "unchanged_comparator": {
+    "path": "ascend/compare_resume.py",
+    "sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+    "tensor_atol": 1e-06,
+    "tensor_rtol": 1e-05,
+    "loss_absolute_difference_less_than": 0.0001,
+    "tolerances_changed": false,
+    "cpu_comparison_uses_official_torch_npu_serialization_registration": true
+  },
+  "execution_summary": {
+    "npu_training_and_resume_jobs": 4,
+    "actual_exit_zero_jobs": 4,
+    "passed_rank_runtime_reports": 32,
+    "exact_saved_state_restoration_passed_all_resumed_ranks": true,
+    "strict_final_numerical_comparisons_passed": 0,
+    "strict_final_numerical_comparisons_failed": 2
+  },
+  "reporting_limitations": [
+    "The original model.failures and model_and_optimizer.failures share a shallow-copied list: optimizer paths also appear in model.failures. Component counts below filter unchanged original failure paths by model/ and optimizer/ prefixes; the original output is retained verbatim.",
+    "The original model_and_optimizer tensor counters are written after final rank-RNG comparisons. The 1682 VAD and 1762 Hydra totals include 16 RNG tensors (two per rank), alongside 889+777 and 909+837 model/optimizer tensors. Do not treat these totals as model/optimizer-only counts.",
+    "Allclose-failing tensor counts differ from non-bitwise-equal tensor counts. No gate or comparator source was changed.",
+    "The CPU comparison wrapper exited 1 because the unchanged target reported a numerical failure; official loader identity, CPU remapping, no NPU initialization and unchanged source were verified. This is not a checkpoint loading failure.",
+    "The cause of the new eight-rank numerical differences has not been isolated; earlier fused-path atomic accumulation observations do not establish the cause on this source."
+  ],
+  "cases": [
+    {
+      "profile": "vad",
+      "configuration": "projects/AlgEngine/configs/navformer/e2e_vadv2.py",
+      "original_configuration_sha256": "b1ed3b5d0ae465506442f74100803d111c793f31112705d74db68c46c5c30480",
+      "official_initializer": {
+        "filename": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+        "bytes": 319958048,
+        "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a"
+      },
+      "strict_numerical_gate_passed": false,
+      "original_comparison_result": {
+        "result": "fail",
+        "model": {
+          "tensors": 889,
+          "bitwise_equal_tensors": 638,
+          "max_absolute_difference": 4.546716809272766e-06,
+          "failures": [
+            "model/pts_bbox_head.positional_encoding.row_embed.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.value_proj.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.3.ffns.0.layers.0.0.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.5.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.bev_embedding.weight",
+            "model/planning_head.heads.imi.4.bias",
+            "optimizer/state/1/exp_avg",
+            "optimizer/state/2/exp_avg",
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/6/exp_avg",
+            "optimizer/state/7/exp_avg",
+            "optimizer/state/9/exp_avg",
+            "optimizer/state/13/exp_avg",
+            "optimizer/state/14/exp_avg",
+            "optimizer/state/25/exp_avg",
+            "optimizer/state/91/exp_avg",
+            "optimizer/state/117/exp_avg",
+            "optimizer/state/125/exp_avg",
+            "optimizer/state/143/exp_avg",
+            "optimizer/state/144/exp_avg",
+            "optimizer/state/155/exp_avg",
+            "optimizer/state/295/exp_avg",
+            "optimizer/state/297/exp_avg",
+            "optimizer/state/298/exp_avg",
+            "optimizer/state/299/exp_avg",
+            "optimizer/state/300/exp_avg",
+            "optimizer/state/433/exp_avg"
+          ]
+        },
+        "model_and_optimizer": {
+          "tensors": 1682,
+          "bitwise_equal_tensors": 913,
+          "max_absolute_difference": 2.5303452275693417e-05,
+          "failures": [
+            "model/pts_bbox_head.positional_encoding.row_embed.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.value_proj.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.sampling_offsets.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.attention_weights.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.3.ffns.0.layers.0.0.weight",
+            "model/pts_bbox_head.transformer.encoder.layers.5.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/pts_bbox_head.bev_embedding.weight",
+            "model/planning_head.heads.imi.4.bias",
+            "optimizer/state/1/exp_avg",
+            "optimizer/state/2/exp_avg",
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/6/exp_avg",
+            "optimizer/state/7/exp_avg",
+            "optimizer/state/9/exp_avg",
+            "optimizer/state/13/exp_avg",
+            "optimizer/state/14/exp_avg",
+            "optimizer/state/25/exp_avg",
+            "optimizer/state/91/exp_avg",
+            "optimizer/state/117/exp_avg",
+            "optimizer/state/125/exp_avg",
+            "optimizer/state/143/exp_avg",
+            "optimizer/state/144/exp_avg",
+            "optimizer/state/155/exp_avg",
+            "optimizer/state/295/exp_avg",
+            "optimizer/state/297/exp_avg",
+            "optimizer/state/298/exp_avg",
+            "optimizer/state/299/exp_avg",
+            "optimizer/state/300/exp_avg",
+            "optimizer/state/433/exp_avg"
+          ]
+        },
+        "max_loss_difference": 1.9073486328125e-06,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "completed_updates": 8,
+        "world_size": 8,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001
+      },
+      "original_comparison_json_sha256": "1e2e0f6a07815da3ce584b9efd8e5bba5b64cbd1e94ca6cb1ac60286650d9c16",
+      "failed_paths_by_component": {
+        "model": [
+          "model/pts_bbox_head.positional_encoding.row_embed.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.attention_weights.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.0.value_proj.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.attention_weights.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.sampling_offsets.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.1.attentions.0.attention_weights.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.3.ffns.0.layers.0.0.weight",
+          "model/pts_bbox_head.transformer.encoder.layers.5.attentions.1.deformable_attention.sampling_offsets.weight",
+          "model/pts_bbox_head.bev_embedding.weight",
+          "model/planning_head.heads.imi.4.bias"
+        ],
+        "optimizer": [
+          "optimizer/state/1/exp_avg",
+          "optimizer/state/2/exp_avg",
+          "optimizer/state/5/exp_avg",
+          "optimizer/state/6/exp_avg",
+          "optimizer/state/7/exp_avg",
+          "optimizer/state/9/exp_avg",
+          "optimizer/state/13/exp_avg",
+          "optimizer/state/14/exp_avg",
+          "optimizer/state/25/exp_avg",
+          "optimizer/state/91/exp_avg",
+          "optimizer/state/117/exp_avg",
+          "optimizer/state/125/exp_avg",
+          "optimizer/state/143/exp_avg",
+          "optimizer/state/144/exp_avg",
+          "optimizer/state/155/exp_avg",
+          "optimizer/state/295/exp_avg",
+          "optimizer/state/297/exp_avg",
+          "optimizer/state/298/exp_avg",
+          "optimizer/state/299/exp_avg",
+          "optimizer/state/300/exp_avg",
+          "optimizer/state/433/exp_avg"
+        ]
+      },
+      "failed_tensor_counts_by_component": {
+        "model": 12,
+        "optimizer": 21
+      },
+      "phases": {
+        "continuous": {
+          "actual_exit": 0,
+          "container_state": {
+            "Status": "exited",
+            "Running": false,
+            "OOMKilled": false,
+            "ExitCode": 0
+          },
+          "runtime_gate_passed": true,
+          "rank_count": 8,
+          "rank_reports": [
+            {
+              "rank": 0,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 1,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 2,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 3,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 4,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 5,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 6,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 7,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            }
+          ]
+        },
+        "resumed": {
+          "actual_exit": 0,
+          "container_state": {
+            "Status": "exited",
+            "Running": false,
+            "OOMKilled": false,
+            "ExitCode": 0
+          },
+          "runtime_gate_passed": true,
+          "rank_count": 8,
+          "rank_reports": [
+            {
+              "rank": 0,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 1,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 2,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 3,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 4,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 5,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 6,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            },
+            {
+              "rank": 7,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 889,
+                "optimizer_tensors": 777
+              }
+            }
+          ]
+        }
+      },
+      "cpu_comparison": {
+        "actual_exit": 1,
+        "container_state": {
+          "Status": "exited",
+          "Running": false,
+          "OOMKilled": false,
+          "ExitCode": 1
+        },
+        "official_loader_identity": true,
+        "cpu_remap_after_runpy": true,
+        "no_npu_initialization": true,
+        "target_source_unchanged": true,
+        "wrapper_actual_exit": 1
+      }
+    },
+    {
+      "profile": "hydra",
+      "configuration": "projects/AlgEngine/configs/navformer/e2e_hydramdp.py",
+      "original_configuration_sha256": "a9555793a3df5efa66b7764bf3a362cba69f27b956e6f10492c5e95bedc25d60",
+      "official_initializer": {
+        "filename": "track_map_nuplan_r50_navtrain_100pct_bs1x8.pth",
+        "bytes": 319958048,
+        "sha256": "9849e940c49126602440e010e9ccae48fb6a1343212ded0897c51da8a79edc5a"
+      },
+      "strict_numerical_gate_passed": false,
+      "original_comparison_result": {
+        "result": "fail",
+        "model": {
+          "tensors": 909,
+          "bitwise_equal_tensors": 656,
+          "max_absolute_difference": 2.862885594367981e-06,
+          "failures": [
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/planning_head.heads.imi.4.bias",
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/299/exp_avg"
+          ]
+        },
+        "model_and_optimizer": {
+          "tensors": 1762,
+          "bitwise_equal_tensors": 959,
+          "max_absolute_difference": 2.862885594367981e-06,
+          "failures": [
+            "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+            "model/planning_head.heads.imi.4.bias",
+            "optimizer/state/5/exp_avg",
+            "optimizer/state/299/exp_avg"
+          ]
+        },
+        "max_loss_difference": 9.5367431640625e-07,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "completed_updates": 8,
+        "world_size": 8,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001
+      },
+      "original_comparison_json_sha256": "373c1fcb07972d1f52d475ccd5e68805f4e7066ed559322fb035da9e9f3c3c60",
+      "failed_paths_by_component": {
+        "model": [
+          "model/pts_bbox_head.transformer.encoder.layers.0.attentions.1.deformable_attention.sampling_offsets.weight",
+          "model/planning_head.heads.imi.4.bias"
+        ],
+        "optimizer": [
+          "optimizer/state/5/exp_avg",
+          "optimizer/state/299/exp_avg"
+        ]
+      },
+      "failed_tensor_counts_by_component": {
+        "model": 2,
+        "optimizer": 2
+      },
+      "phases": {
+        "continuous": {
+          "actual_exit": 0,
+          "container_state": {
+            "Status": "exited",
+            "Running": false,
+            "OOMKilled": false,
+            "ExitCode": 0
+          },
+          "runtime_gate_passed": true,
+          "rank_count": 8,
+          "rank_reports": [
+            {
+              "rank": 0,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 1,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 2,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 3,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 4,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 5,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 6,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            },
+            {
+              "rank": 7,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 0,
+              "final_iter": 8,
+              "updates_this_run": 8,
+              "parameter_updated": true,
+              "watched_parameter_sync": true
+            }
+          ]
+        },
+        "resumed": {
+          "actual_exit": 0,
+          "container_state": {
+            "Status": "exited",
+            "Running": false,
+            "OOMKilled": false,
+            "ExitCode": 0
+          },
+          "runtime_gate_passed": true,
+          "rank_count": 8,
+          "rank_reports": [
+            {
+              "rank": 0,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 1,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 2,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 3,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 4,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 5,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 6,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            },
+            {
+              "rank": 7,
+              "result": "pass",
+              "world_size": 8,
+              "initial_iter": 4,
+              "final_iter": 8,
+              "updates_this_run": 4,
+              "parameter_updated": true,
+              "watched_parameter_sync": true,
+              "restoration": {
+                "result": "pass_exact_saved_state_restore",
+                "model_tensors": 909,
+                "optimizer_tensors": 837
+              }
+            }
+          ]
+        }
+      },
+      "cpu_comparison": {
+        "actual_exit": 1,
+        "container_state": {
+          "Status": "exited",
+          "Running": false,
+          "OOMKilled": false,
+          "ExitCode": 1
+        },
+        "official_loader_identity": true,
+        "cpu_remap_after_runpy": true,
+        "no_npu_initialization": true,
+        "target_source_unchanged": true,
+        "wrapper_actual_exit": 1
+      }
+    }
+  ],
+  "long_perception_stability_snapshot": {
+    "at_utc": "2026-10-13T14:44:08.838031+00:00",
+    "at_cst": "2026-10-13T22:44:08.838031+08:00",
+    "result": "running_long_perception",
+    "accepted": false,
+    "final_result_available": false,
+    "configuration": "projects/AlgEngine/configs/navformer/track_map_nuplan_r50_navtrain.py",
+    "planned_duration_seconds": 28800.0,
+    "actual_completed_eight_hours": false,
+    "container_state": {
+      "Status": "running",
+      "Running": true,
+      "OOMKilled": false,
+      "ExitCode": 0
+    },
+    "container_exit_code_is_final": false,
+    "ranks": [
+      {
+        "rank": 0,
+        "records": 16,
+        "iter": 16,
+        "loss": 122.4032974243164,
+        "loss_finite": true,
+        "elapsed_seconds": 401.12439329200424
+      },
+      {
+        "rank": 1,
+        "records": 16,
+        "iter": 16,
+        "loss": 143.12265014648438,
+        "loss_finite": true,
+        "elapsed_seconds": 401.3845044480404
+      },
+      {
+        "rank": 2,
+        "records": 16,
+        "iter": 16,
+        "loss": 93.65240478515625,
+        "loss_finite": true,
+        "elapsed_seconds": 401.32523132197093
+      },
+      {
+        "rank": 3,
+        "records": 16,
+        "iter": 16,
+        "loss": 115.15452575683594,
+        "loss_finite": true,
+        "elapsed_seconds": 400.822533219005
+      },
+      {
+        "rank": 4,
+        "records": 16,
+        "iter": 16,
+        "loss": 105.76028442382812,
+        "loss_finite": true,
+        "elapsed_seconds": 401.2810223320266
+      },
+      {
+        "rank": 5,
+        "records": 16,
+        "iter": 16,
+        "loss": 71.37103271484375,
+        "loss_finite": true,
+        "elapsed_seconds": 401.5620030290447
+      },
+      {
+        "rank": 6,
+        "records": 16,
+        "iter": 16,
+        "loss": 157.8110809326172,
+        "loss_finite": true,
+        "elapsed_seconds": 401.3635967799928
+      },
+      {
+        "rank": 7,
+        "records": 16,
+        "iter": 16,
+        "loss": 72.30140686035156,
+        "loss_finite": true,
+        "elapsed_seconds": 401.393145274953
+      }
+    ],
+    "npu_health_all_ok": true,
+    "independent_watchdog": {
+      "result": "monitoring",
+      "device_use_deadline_utc": "2026-10-14T01:00:00+00:00",
+      "device_use_deadline_cst": "2026-10-14T09:00:00+08:00",
+      "stop_margin_seconds": 120
+    },
+    "prior_strict_execution_passed": true,
+    "prior_strict_numeric_passed": false,
+    "scope": "Repeated real NAVTEST mini technical stability; not full NAVTRAIN convergence or formal quality acceptance. Running-state ExitCode=0 is not an actual completed training exit."
+  },
+  "acceptance_boundaries": {
+    "performance_optimization": "Explicitly deferred by user, outside the current five correctness acceptance items. No formal performance pass is claimed.",
+    "capacity": "Full-data CPU RAM, I/O, target batch/workers and equipment capacity remain required.",
+    "strict_numerical_replay": "Actual eight-rank failure must be fixed and revalidated with the original gate. Single-rank replay and strict MSDA operator passes do not imply eight-rank whole-model equivalence.",
+    "uncovered": [
+      "full NAVTRAIN data and original-horizon convergence",
+      "all eight genuine synthetic/SimScale configurations",
+      "full independent NAVTEST common/rare quality",
+      "GPU numerical/trajectory comparison",
+      "formal vendor support for training on this inference-series SKU",
+      "completed overnight stability, final full-state resume and independent inference checks"
+    ]
+  }
+}

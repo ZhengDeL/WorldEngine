@@ -17,6 +17,7 @@ import torch
 import torch.distributed as dist
 from mmcv.runner import HOOKS, RUNNERS, Hook, IterBasedRunner, EpochBasedRunner
 from mmcv.runner.checkpoint import save_checkpoint
+from ascend.precision import precision_state
 
 
 def rng_state():
@@ -61,7 +62,7 @@ class ResumeMixin:
         if state is None or 'optimizer' not in saved:
             raise RuntimeError('Resume requires a complete Ascend runtime checkpoint')
         if state['contract'] != self.resume_contract:
-            raise RuntimeError('Resume contract changed: data, topology, optimizer or schedule differs')
+            raise RuntimeError('Resume contract changed: source/version, precision/execution settings, data, world size, optimizer or schedule differs')
         if len(state['rng_by_rank']) != dist.get_world_size():
             raise RuntimeError('Resume world size mismatch')
         # This file is produced by our runtime. Read it once with the explicit
@@ -136,7 +137,7 @@ class AscendEpochRunner(ResumeMixin, EpochBasedRunner):
 @HOOKS.register_module()
 class AscendRuntimeHook(Hook):
     def __init__(self,out_dir,profile,checkpoint_interval=100,stop_after=None,
-                 stop_after_epochs=None,duration_seconds=None,check_interval=10,initialization_checkpoint=None):
+                 stop_after_epochs=None,duration_seconds=None,check_interval=10,initialization_checkpoint=None,device_provenance=None):
         self.out_dir=Path(out_dir)
         self.profile=profile
         self.interval=checkpoint_interval
@@ -145,6 +146,7 @@ class AscendRuntimeHook(Hook):
         self.duration=duration_seconds
         self.check_interval=check_interval
         self.initialization_checkpoint=initialization_checkpoint
+        self.device_provenance=dict(device_provenance or {})
         self.records=[]
         self.steps=0
         self.start=None
@@ -302,7 +304,18 @@ class AscendRuntimeHook(Hook):
         dist.all_gather(gathered,self.watch.detach().contiguous())
         if not all(torch.allclose(x,self.watch,atol=1e-6,rtol=1e-5) for x in gathered):
             raise RuntimeError('DDP watched parameter mismatch')
+        before_precision=runner.resume_contract['precision']
+        after_precision=precision_state(before_precision['mode'],stage='after_original_training')
+        if any(after_precision[key]!=before_precision[key] for key in
+               ('mode','public','torch_deterministic','environment')):
+            raise RuntimeError('Actual NPU precision/execution settings changed during original training')
+        for key in ('ALLOW_MATMUL_HF32','ALLOW_CONV_HF32'):
+            before=before_precision['raw_options'][key];after=after_precision['raw_options'][key]
+            if before is not None and after is not None and before!=after:
+                raise RuntimeError('Actual raw NPU HF32 setting changed during original training')
         report=dict(result='pass',rank=self.rank,world_size=dist.get_world_size(),profile=self.profile,
+                    precision=dict(before_model=before_precision,after_original_training=after_precision),
+                    device_provenance=self.device_provenance,
                     initial_iter=self.initial_iter,final_iter=runner.iter,updates_this_run=self.steps,
                     initial_epoch=self.initial_epoch,final_epoch=runner.epoch,
                     train_seconds=time.monotonic()-self.start,total_seconds=time.monotonic()-self.run_started,

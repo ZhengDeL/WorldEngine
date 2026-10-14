@@ -1,0 +1,36 @@
+{
+  "result": "PASS_LOCAL_DRYRUN_ONLY_NOT_CPU_REPLAY",
+  "checks": [
+    {
+      "CLI": "simscale_convert.py",
+      "exit": 0,
+      "result": "dry_run_not_executed",
+      "passed": true
+    },
+    {
+      "CLI": "simscale_convert.py",
+      "exit": 0,
+      "result": "dry_run_not_executed",
+      "passed": true
+    },
+    {
+      "CLI": "worldengine_8192_logged_reward.py",
+      "exit": 0,
+      "result": "dry_run_not_executed",
+      "passed": true
+    }
+  ],
+  "no_Torch_required_for_dryrun": true,
+  "no_dataset_or_hardware_or_remote_calls": true,
+  "remaining_acceptance": {
+    "genuine_synthetic_configurations_exercised": 2,
+    "other_six_genuine_synthetic_configuration_inputs_ready": false,
+    "all_eight_genuine_synthetic_configuration_acceptance": false,
+    "full_NAVTRAIN_convergence_accepted": false,
+    "GPU_parity_accepted": false,
+    "sixteen_rank_strict_numerical_gate_accepted": false,
+    "published_SimScale_v2_16384_reward_equivalence_accepted": false,
+    "full_SimEngine_execution_accepted": false,
+    "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  }
+}
