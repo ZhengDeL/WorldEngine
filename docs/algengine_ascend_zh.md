@@ -287,7 +287,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
 
 不传 `--steps`、`--epochs`，保留原配置八个 epoch、optimizer 和 LR horizon。迁移入口的 `--validate` 每个 epoch 执行评价。100% 训练将配置改为 `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`，初始化使用 `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`，并换新输出目录。原 50% filter 为 50,000 个锚点，完整 split 为 103,288；完整图像训练及收敛尚未完成。
 
-单独的[同步候选步骤](../ascend/execution/README_zh.md)只允许两个已测规划配置和八次更新，不用于完整 epoch 训练。该候选每模型各通过一次严格连续／恢复对照，重复可靠性仍需检查。
+单独的[同步候选步骤](../ascend/execution/README_zh.md)只允许两个已测规划配置和八次更新，不用于完整 epoch 训练。后续四组独立重复已完成，其中两组通过原容差，两组超出原容差；同步设置尚不能作为通用修复。
 
 ## 5. 保存和恢复完整训练状态
 
@@ -580,4 +580,6 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | NaN／Inf 或最终 Tensor 超容差 | 保留运行目录，检查原始 loss、gradient 和状态记录，按原数值门槛判定。 |
 | 官方评分找不到 cache payload | 核对 token 覆盖及 `metadata/*.csv` 路径，搬迁后重建索引或 cache。 |
 
-小数据训练、恢复和评分的实测条件、版本及结果见[验证报告](../ascend/VALIDATION_zh.md)。完整 NAVTRAIN 收敛、完整独立 NAVTEST、其余六个真实合成配置，以及目标同步环境的独立重复和持续训练尚未验证。
+小数据训练、恢复和评分的实测条件、版本及结果见[验证报告](../ascend/VALIDATION_zh.md)。公开配方重建、两类微调的 16 芯片训练与续训、独立日志推理及官方评分已有实测。公开同步入口四组基座训练重复均完成，其中两组超容差，数值问题仍待解决；完整 NAVTRAIN 收敛、完整独立 NAVTEST、其余六个真实合成配置和目标环境持续训练尚未验收。
+
+公开提交 `ec153c1` 的实际复现覆盖 37 个训练候选、22 个独立评价锚点；新镜像两类 LoRA 微调的最终比较全部逐位相同。[复现证据](../ascend/results/actual-public-reproduction-16chip-20261014.json)记录配置、镜像、输入和边界。使用原始相机目录层级，不能将平铺 JPEG 目录直接作为原 NAVTEST 标注的相机根目录。

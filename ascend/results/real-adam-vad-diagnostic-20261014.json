@@ -1,0 +1,651 @@
+{
+  "schema_version": 1,
+  "result": "completed_bounded_real_Adam_diagnostic_not_training_fix",
+  "source_fingerprint": "72c288c8526cc6cfcdc68001620550ecd67796bb031bf9aeca239211333312c9",
+  "source_python_files": 243,
+  "image_id": "sha256:3fef77b906c6b1e5cdf68c08d43135dc7b0509fb938a4665bb0d478bd8b64e45",
+  "torch_npu_version": "2.7.1.post8",
+  "torch_npu_git_version": "a783f11e456f27d7451a1ea745f1556823357c95",
+  "precision": "fp32",
+  "environment": {
+    "TASK_QUEUE_ENABLE": "0",
+    "ASCEND_LAUNCH_BLOCKING": "1",
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "HCCL_DETERMINISTIC": "true"
+  },
+  "scope": {
+    "profile": "VADv2",
+    "physical_cards": 8,
+    "logical_chips": 16,
+    "world_size": 16,
+    "per_rank_batch": 1,
+    "global_batch": 16,
+    "observed_rank": 4,
+    "observed_updates": [
+      5,
+      8
+    ],
+    "optimizer_ids": [
+      5,
+      125,
+      151
+    ],
+    "data": "NAVTEST-derived mini:42training anchors and22held-out; not full NAVTRAIN"
+  },
+  "captured_training": {
+    "result": "pass",
+    "model": {
+      "tensors": 889,
+      "bitwise_equal_tensors": 886,
+      "max_absolute_difference": 1.862645149230957e-09,
+      "failures": []
+    },
+    "model_and_optimizer_and_rank_RNG": {
+      "tensors": 1698,
+      "bitwise_equal_tensors": 1595,
+      "max_absolute_difference": 1.862645149230957e-09,
+      "failures": []
+    },
+    "count_note": "1698 combined tensor count includes889 model,777 optimizer and32 rank RNG tensors",
+    "max_loss_difference": 0.0,
+    "identical_batch_tokens": true,
+    "identical_learning_rates": true,
+    "identical_final_rng_states": true,
+    "runtime_gates_passed": 32,
+    "raw_summary_sha256": "8678f714e52902a04d4daf96c21bac5560fbd364898d00614cf33623e7c614a0",
+    "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+    "original_tolerances": {
+      "atol": 1e-06,
+      "rtol": 1e-05
+    },
+    "loss_absolute_tolerance": 0.0001,
+    "observer_NPU_to_CPU_timing_effect": true
+  },
+  "CPU_stage_comparisons": [
+    {
+      "update": 5,
+      "raw_sha256": "4cf1ff29d840de2ed936705775e567fb2b6f8bcf172bb92f9cedcb15dd8dab21",
+      "stage_summary": {
+        "before": {
+          "tensors": 15,
+          "different_bits": 0,
+          "outside_original_tolerance": 0,
+          "different_scalar_groups": 0,
+          "different_layouts": 0
+        },
+        "after": {
+          "tensors": 15,
+          "different_bits": 0,
+          "outside_original_tolerance": 0,
+          "different_scalar_groups": 0,
+          "different_layouts": 0
+        }
+      },
+      "different_tensors": [],
+      "all_complete_full_selected_tree": true
+    },
+    {
+      "update": 8,
+      "raw_sha256": "40a928d18a6a19ae5102ed6876bf62bcc78a7a290e9b36f0ef27afae97b4ad23",
+      "stage_summary": {
+        "before": {
+          "tensors": 15,
+          "different_bits": 1,
+          "outside_original_tolerance": 0,
+          "different_scalar_groups": 0,
+          "different_layouts": 0
+        },
+        "after": {
+          "tensors": 15,
+          "different_bits": 2,
+          "outside_original_tolerance": 0,
+          "different_scalar_groups": 0,
+          "different_layouts": 0
+        }
+      },
+      "different_tensors": [
+        {
+          "stage": "before",
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "leaf": "grad",
+          "shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "bitwise_equal": false,
+          "finite": true,
+          "max_abs": 4.547473508864641e-13,
+          "within_original_tolerance": true,
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        {
+          "stage": "after",
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "leaf": "grad",
+          "shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "bitwise_equal": false,
+          "finite": true,
+          "max_abs": 4.547473508864641e-13,
+          "within_original_tolerance": true,
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        {
+          "stage": "after",
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "leaf": "exp_avg",
+          "shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "bitwise_equal": false,
+          "finite": true,
+          "max_abs": 5.684341886080802e-14,
+          "within_original_tolerance": true,
+          "atol": 1e-06,
+          "rtol": 1e-05
+        }
+      ],
+      "all_complete_full_selected_tree": true
+    }
+  ],
+  "replays": [
+    {
+      "evidence_name": "replay_continuous_update5.json",
+      "raw_sha256": "c4511c12fad1e6b0c4717005692d929dc21dadca421f8c0321c488054464135c",
+      "capture_update": 5,
+      "capture_sha256": "34c41431b2cb3b0c5255649328715e9861f47116ce044312851858dd4bb14b13",
+      "all_original_CPU32_gates_passed": true,
+      "all_repeats_bitwise": true,
+      "parameters": [
+        {
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "full_parameter_shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 7.450580596923828e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              512,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 125,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.4.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 3.725290298461914e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 151,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.5.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 2.9802322387695312e-08,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        }
+      ]
+    },
+    {
+      "evidence_name": "replay_continuous_update8.json",
+      "raw_sha256": "6d79a73198ef84c6f1be8be4a40fa21031e8b814206867b7a0eb478184f2dd6e",
+      "capture_update": 8,
+      "capture_sha256": "2b903cb7d360ad537f39741a95c84d3b5a290a262b9a6246b17742a46a5a1a66",
+      "all_original_CPU32_gates_passed": true,
+      "all_repeats_bitwise": true,
+      "parameters": [
+        {
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "full_parameter_shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 3.725290298461914e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              512,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 125,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.4.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 7.450580596923828e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 151,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.5.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 1.4901161193847656e-08,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        }
+      ]
+    },
+    {
+      "evidence_name": "replay_resumed_update5.json",
+      "raw_sha256": "c05d5833b4bdb9c77625a4ce82a8e7091251d07dd07c94b4ab9805aef189bd82",
+      "capture_update": 5,
+      "capture_sha256": "34c41431b2cb3b0c5255649328715e9861f47116ce044312851858dd4bb14b13",
+      "all_original_CPU32_gates_passed": true,
+      "all_repeats_bitwise": true,
+      "parameters": [
+        {
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "full_parameter_shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 7.450580596923828e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              512,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 125,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.4.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 3.725290298461914e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 151,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.5.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 2.9802322387695312e-08,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        }
+      ]
+    },
+    {
+      "evidence_name": "replay_resumed_update8.json",
+      "raw_sha256": "9f72140372ce75da72b3952e7fb5d2f63a52b7e14b53babda148dac6f4af42db",
+      "capture_update": 8,
+      "capture_sha256": "e1871fe238af1dfbdb7f40158ab4740c58be40b8102d3ddcf31e34e355a808d4",
+      "all_original_CPU32_gates_passed": true,
+      "all_repeats_bitwise": true,
+      "parameters": [
+        {
+          "optimizer_id": 5,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.0.attentions.0.sampling_offsets.weight",
+          "full_parameter_shape": [
+            128,
+            512
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 3.725290298461914e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              512,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 125,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.4.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 7.450580596923828e-09,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        },
+        {
+          "optimizer_id": 151,
+          "parameter_name": "pts_bbox_head.transformer.encoder.layers.5.ffns.0.layers.0.0.weight",
+          "full_parameter_shape": [
+            512,
+            256
+          ],
+          "dtype": "torch.float32",
+          "repetitions": 4,
+          "output_leaves": [
+            "param",
+            "step",
+            "exp_avg",
+            "exp_avg_sq"
+          ],
+          "CPU32_checks": 16,
+          "CPU32_passed": true,
+          "CPU32_max_abs": 1.4901161193847656e-08,
+          "captured_original_checks": 16,
+          "captured_original_bitwise": true,
+          "captured_original_max_abs": 0.0,
+          "repeat_checks": 12,
+          "repeat_bitwise": true,
+          "observed_parameter_layout": {
+            "stride": [
+              256,
+              1
+            ],
+            "storage_offset": 0,
+            "npu_format": 2
+          }
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "CPU32_tensor_checks": 192,
+    "CPU32_all_passed": true,
+    "CPU32_max_abs": 2.9802322387695312e-08,
+    "captured_original_tensor_checks": 192,
+    "captured_original_all_bitwise": true,
+    "repeat_tensor_checks": 144,
+    "repeat_all_bitwise": true,
+    "atol": 1e-06,
+    "rtol": 1e-05,
+    "full_actual_tensors_used": true,
+    "random_or_shrunk_inputs_used": false,
+    "isolated_single_parameter_AdamW_steps": 48
+  },
+  "official_CPU_loader": {
+    "wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+    "official_loader_identity": true,
+    "no_npu_initialization": true,
+    "npu_initialized_before": false,
+    "npu_initialized_after": false,
+    "RE_MAP_CPU_after": true,
+    "actual_exit": 0,
+    "raw_receipt_sha256": "eabe6a9572b9d1c13797d7cf3bfdb30b0e5ffaba4f6afe00705f920f41ab2a3a"
+  },
+  "execution": {
+    "runs": [
+      {
+        "kind": "cpu",
+        "actual_exit": 0,
+        "docker_status": "exited",
+        "docker_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-14T10:42:44.637842837Z",
+        "finished_at": "2026-10-14T10:42:50.609302348Z"
+      },
+      {
+        "kind": "npu",
+        "actual_exit": 0,
+        "docker_status": "exited",
+        "docker_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-14T10:42:51.96248765Z",
+        "finished_at": "2026-10-14T10:43:02.300559635Z"
+      }
+    ],
+    "owned_cleanup_errors": [],
+    "watchdog_exit": 0,
+    "postjob_raw_plan_sha256": "8a2870bcef5d5c1418f7e54511d8d195d744302539c849c20030a54e43f07982",
+    "hard_job_cutoff_utc": "2026-10-14T10:44:00+00:00"
+  },
+  "preserved_failed_attempt": {
+    "result": "CPU_startup_resource_failure_no_numerical_result",
+    "error": "libgomp: Thread creation failed: Resource temporarily unavailable",
+    "remediation": "New executorv2 uses four thread-count environment values1 and diagnostic CPU process/thread limit2048; original capture/comparison/replay mathematics and inputs unchanged",
+    "raw_receipt_sha256": "fc50cb6ed53dad63e1f2b14ceab7c05c29476c90a073598de50f823f3b37f4e5"
+  },
+  "limitations": [
+    "Observed training pass is not a repair for previously failing untraced16-rank training.",
+    "At observed update8, selected ID5 after-clip gradient already differs before Adam; the tiny resulting exp_avg difference is consistent with upstream variation in this observed run, not a localization of the historical out-of-tolerance failures.",
+    "The tested single-tensor AdamW inputs produce repeatable outputs matching captured results and the CPU FP32 reference within unchanged tolerances; this does not prove all shapes, all operators or all distributed execution deterministic.",
+    "Replay reports parameter format/stride/offset only; complete optimizer-state internal formats and original physical addresses were not certified equal.",
+    "No GPU parity, formal NAVTRAIN convergence, full-data stability or performance optimization acceptance is established."
+  ]
+}

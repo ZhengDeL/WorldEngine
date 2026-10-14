@@ -12,16 +12,37 @@ SimEngine deployment on NPU is outside the assessed scope.
 
 Training, fine-tuning, inference, official CPU scoring and complete-checkpoint
 restoration have run on Ascend 910C within the configurations recorded below.
-The current sixteen-rank synchronous controls completed one VAD pair and one
-Hydra pair within the unchanged numerical tolerance. Default execution completed
-four pairs, with three final tensor comparisons outside that tolerance.
+A newly rebuilt public image completed the complete small-data CLI chain on a
+second server: both rare-log LoRA fine-tuning configurations passed strict
+checkpoint replay, independent inference and official cached scoring. Repeated
+base-planner controls on the earlier post8 image completed four synchronous
+pairs, with two final comparisons within tolerance and two outside it. The
+intermittent base-training numerical issue remains unresolved.
 Complete AlgEngine acceptance remains open: the evidence does not establish
 full NAVTRAIN convergence, complete independent quality, all genuine synthetic
 inputs, GPU equivalence or sustained operation of the final environment.
 
+## Public recipe and CLI reproduction
+
+The published parent/child Docker recipes and AlgEngine entry points completed an actual reproduction from public commit `ec153c1`, runtime fingerprint `cc91deb8` (243 Python files). The SDK base was a verified cached official image; both recipes were rebuilt with `--no-cache`, using host networking for the parent build. The new training image was `sha256:1541450982f8c2938f3c387b929ad0ba8a90024d73712b3eabe49631812d12ce`. CPU data preparation used the separately identified `ba17931d` image. The published runtime and recipes were unchanged. `pip check` returned 1 with dependency warnings, including the MMCV protobuf constraint; the executed AlgEngine commands passed, but package metadata consistency is not claimed.
+
+The public downloader verified official NAVTEST annotations/PDM/vocabulary by whole-file hashes. Existing genuine mini JPEGs were copied into the exact original camera-directory layout after frame-token/camera-key, calibration and image-hash checks. The unchanged preparation/split tools produced 59 anchors, 94 frames and 752 JPEGs: 37 training candidate anchors and 22 held-out anchors in disjoint driving logs. The selected rare pool contained one anchor with 21 valid same-log normal candidates. This differs from the historical 42/22 subset.
+
+Both original 50% rare-log LoRA fine-tune configurations completed continuous updates 0–8 and fresh-process restoration of their own update 4 checkpoint to update 8 on 16 logical NPUs/eight physical cards, FP32, batch 1 per rank and workers 0. All 64 rank runtime reports and 32 exact restoration reports passed. TASK_QUEUE_ENABLE and ASCEND_LAUNCH_BLOCKING were unset; CLOSE_MATMUL_K_SHIFT=1, HCCL_DETERMINISTIC=true and both HF32 flags were false before/after training. VAD retained its configured zero PG term; Hydra's configured PG term was nonzero.
+
+| Configuration | Model bitwise equality | Model/optimizer/RNG bitwise equality | Maximum tensor/loss difference | Official NAVSIM score / 22 valid tokens |
+|---|---:|---:|---:|---:|
+| VADv2 rare-log LoRA FT |989/989|1321/1321|0/0|0.8850917719220494|
+| HydraMDP rare-log LoRA FT |989/989|1261/1261|0/0|0.9340064182046998|
+
+The original comparator retained tensor atol 1e-6 / rtol 1e-5 and loss tolerance 1e-4. Both models completed 22 held-out trajectory predictions and separate official NAVSIM rescoring. All 14 stages exited 0 without OOM, source hashes remained unchanged, and owned jobs exited. These are one pair per fine-tune configuration; they do not resolve the intermittent full-parameter base-training replay issue or establish quality improvement, full NAVTRAIN convergence, the remaining six synthetic configurations, GPU parity or sustained operation of the new image.
+
+
+[Versioned reproduction evidence](results/actual-public-reproduction-16chip-20261014.json).
+
 ## Tested runtime and version boundaries
 
-### Current planning controls
+### Earlier base-planner control environment
 
 | Item | Recorded configuration |
 | --- | --- |
@@ -51,6 +72,7 @@ rebuilt image requires its own identity and actual run evidence.
 | Native MSDA path, 858f9d… / a182… / post6 | Expanded CPU32 MSDA gates, 36 real-config regression, single-rank controlled replay, independent planning scoring, original dataset construction and eight-hour perception stability |
 | Current runtime, cc91deb… / 3fef77b… / post8 | Default and synchronous sixteen-rank VAD/Hydra controls and full-rank state diagnosis |
 | Current runtime, cc91deb… / ba17931… / post8 | Genuine SimScale subset: original dataset access and one/two-rank controls for two configurations |
+| Public recipe rebuild, cc91deb… / 15414509… / post8 | Two original LoRA fine-tuning configurations: 16-rank train/own-checkpoint replay, independent inference and official scoring; CPU preparation used ba17931 separately |
 
 The genuine SimScale image ID is
 sha256:ba17931d5af64c6070417bc2059887096abf42d76b44484a9bd45262e3918707.
@@ -60,7 +82,7 @@ current sixteen-rank environment.
 
 ## Numerical correctness
 
-### Synchronous sixteen-rank controls
+### Initial synchronous sixteen-rank controls
 
 Each model completed one independent continuous/resumed pair. Both training
 containers exited 0, all 32 rank reports passed, and all 64 before/after precision
@@ -77,10 +99,59 @@ loss absolute-difference tolerance 1e-4.
 
 Combined counts include model, optimizer and two RNG tensors per rank. Batch
 tokens, learning rates and final rank RNG states matched. No model or optimizer
-tensor exceeded tolerance. These are one positive pair per model, without
-independent repeated or long-run acceptance of this candidate.
+tensor exceeded tolerance. These initial results are one positive pair per model. The independent repeats
+below supersede the earlier absence of repeat evidence; sustained-operation
+acceptance remains open.
 [VAD evidence](results/sync-vad-16chip-20261014.json),
 [Hydra evidence](results/sync-hydra-16chip-20261014.json).
+
+### Repeated public synchronous controls
+
+The published synchronous adapter was executed for four further base-planner
+pairs on the recorded cc91/243 source, post8/3fef image and historical 42/22
+real-data split. All eight training jobs completed updates 0→8 or own checkpoint
+4→8; 128 rank reports passed, and all 64 restored rank states matched the saved
+checkpoint. The four original CPU comparisons completed with unchanged gates.
+
+| Pair | Training/resume | Model maximum difference | Combined maximum difference | Model/optimizer tensors outside tolerance | Numerical result |
+| --- | --- | ---: | ---: | ---: | --- |
+| VAD / 1 | Completed 0→8 / 4→8 | 1.2110918760299683e-5 | 1.2110918760299683e-5 | 5 / 3 | Outside original tolerance |
+| Hydra / 1 | Completed 0→8 / 4→8 | 9.164214134216309e-7 | 6.0823484091088176e-5 | 0 / 20 | Outside original tolerance |
+| VAD / 2 | Completed 0→8 / 4→8 | 0 | 0 | 0 / 0 | Within original tolerance; all bitwise equal |
+| Hydra / 2 | Completed 0→8 / 4→8 | 1.4901161193847656e-8 | 1.4901161193847656e-8 | 0 / 0 | Within original tolerance |
+
+Batch tokens, learning rates and final rank RNG states matched in all four
+pairs. These results do not support treating synchronous execution as a general
+repair. [Repeated public-adapter evidence](results/public-sync-repeated-16chip-20261014.json).
+
+### CPU input and optimizer diagnosis
+
+A separate default-execution Hydra pair compared complete CPU inputs at all
+16 ranks and updates 5–8. All 64 value-tree and exact metadata joins matched;
+the original final comparison still contained 14 model and 21 optimizer paths
+outside tolerance. Model and combined maximum differences were
+1.3105571269989014e-5 and 7.020923658274114e-5. CPU hashing changes launch timing;
+it does not establish equality of NPU intermediates or backend state.
+[Full CPU-input evidence](results/default-cpu-full-input-hydra-16chip-20261014.json).
+
+A private `grad_clip.foreach=False` candidate was tested separately. Hydra passed
+one pair bitwise; VAD retained three optimizer tensors outside tolerance. All
+observed gradient norms were below the configured limit 35, so these results do
+not demonstrate a rounding error in an applied clipping coefficient. The
+candidate was not promoted to the public training code.
+
+A further diagnostic used the private 72c288c8 source variant and the 3fef
+image. It captured complete real Adam inputs and outputs for three
+selected VAD parameter tensors at updates 5 and 8. Four captured input states
+were each replayed four times: 48 single-parameter updates, 192 CPU FP32 output
+checks and 144 repeat-output checks passed the original tensor tolerance.
+Maximum CPU difference was 2.9802322387695312e-8; all outputs matched their
+corresponding captured NPU output bitwise. In this observed run, the update-8
+gradient already differed before Adam; its maximum difference was
+4.547473508864641e-13. This narrows that observed difference to an upstream input
+and does not identify the cause of the earlier unobserved, above-tolerance
+comparisons. NPU-to-CPU observation changes execution timing.
+[Real Adam diagnostic](results/real-adam-vad-diagnostic-20261014.json).
 
 ### Default sixteen-rank controls
 
@@ -117,7 +188,9 @@ cover all unregistered caches or backend state.
 | Separate limited VAD control | Continuous run completed 8; own-checkpoint resume completed 4→6, exited 137 without OOM | Incomplete; target 8 was not reached and the final comparator was not executed |
 | Cold start on another host | Driver device initialization blocked with EL0020 /507899; zero updates | Training not started; no final numerical comparison |
 
-These tests are distinct from the six completed planning pairs above.
+These tests are distinct from the completed planning controls above. The second
+host subsequently passed initialization and the public-rebuilt fine-tuning
+workflow; the earlier initialization-blocked record remains historical.
 
 ### MSDA and other compatibility mechanisms
 
@@ -277,13 +350,13 @@ observations and do not establish paired GPU/NPU throughput or cost advantages.
 | Area | Remaining requirement |
 | --- | --- |
 | Default distributed numerics | Identify the cause of completed default comparisons outside tolerance and repeat unchanged-gate controls |
-| Synchronous candidate | Multiple independent controlled pairs for both models and sustained operation of the same cc91/post8 environment |
+| Synchronous candidate | Four independent pairs completed; two remain outside tolerance. Resolve the divergence and validate sustained operation of the same source/image |
 | Complete training | Original 50%/100% NAVTRAIN horizons, convergence and target batch/worker settings |
 | Independent quality | Complete NAVTEST common/rare evaluation, adequate rare coverage and agreed quality thresholds |
 | Data and capacity | Full current/history JPEG coverage, image decode/pipeline quality, full training/evaluation RAM, HBM and I/O |
 | Synthetic scope | Genuine producer exports and original training/evaluation coverage for the other six configurations |
 | Platform extensions | GPU trajectory/model comparison, multi-node training, AMP/BF16 and second-order gradients |
-| Clean-server reproduction | Public image-build and entry-point commands have local checks; a complete cold build followed by NPU training, own-checkpoint replay and scoring on a clean server remains unverified |
+| Public environment reproduction | Public recipes rebuilt without application-layer cache from a verified official SDK base; two 16-rank LoRA FT workflows completed on a second server. Dependency metadata findings and sustained operation remain open |
 | Sustained operation | 24-hour/target-duration testing with the same final source, image and execution settings |
 
 AMP/BF16 and performance tuning are extensions to the assessed FP32 route;

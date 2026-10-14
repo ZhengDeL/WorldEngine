@@ -285,7 +285,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
 
 Omitting `--steps` and `--epochs` keeps the original eight-epoch horizon, optimizer and LR schedule. The migration's `--validate` runs evaluation each epoch. For 100%, change the config to `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`, initialize with `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`, and select a fresh output. The 50% filter has 50,000 anchors; the full official split has 103,288. Full-image training and convergence have not yet completed in this migration.
 
-Do not apply the separate synchronous eight-update wrapper to a full epoch run. Its [documented protocol](../ascend/execution/README.md) is deliberately limited to the two measured planning configs and eight updates. Each model passed one strict continuation pair; repeated reliability is still being checked.
+Do not apply the separate synchronous eight-update wrapper to a full epoch run. Its [documented protocol](../ascend/execution/README.md) is deliberately limited to the two measured planning configs and eight updates. Four independent repeated pairs completed; two were within the original tolerance and two were outside it. These settings are not an accepted general repair.
 
 ## 5. Save and resume complete training state
 
@@ -578,4 +578,6 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | NaN/Inf or failed numerical comparison | Retain the run and inspect the recorded raw loss/gradient/state evidence. Do not increase tolerances to turn a failure into a pass. |
 | Official scoring cannot find cache payloads | Check token coverage and paths in `metadata/*.csv`; regenerate the relocated index/cache. |
 
-The [validation report](../ascend/FULL_ALGENGINE.md) records the measured conditions, versions and results for small-data training, restoration and scoring. Full NAVTRAIN convergence, complete independent NAVTEST results, the other six genuine synthetic configurations, and independent repeats and sustained training in the target synchronous environment remain unvalidated.
+The [validation report](../ascend/FULL_ALGENGINE.md) records the measured conditions, versions and results for small-data training, restoration and scoring. The public rebuild and two 16-rank LoRA fine-tuning workflows have actual small-data evidence. Four independent synchronous base-planner controls completed, with two comparisons outside the original tolerance. Full NAVTRAIN convergence, complete independent NAVTEST results, the other six genuine synthetic configurations and sustained operation in the target environment remain unvalidated.
+
+The measured public-source reproduction used 37 training candidate anchors and 22 log-disjoint evaluation anchors. Both LoRA fine-tuning comparisons were bitwise equal on the newly built image. [Versioned evidence](../ascend/results/actual-public-reproduction-16chip-20261014.json) records its configurations, inputs and boundaries. Preserve the original camera directory layout when passing the camera root for the original NAVTEST annotation.

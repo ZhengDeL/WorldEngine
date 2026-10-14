@@ -13,17 +13,24 @@ launcher and adds only `TASK_QUEUE_ENABLE=0` and `ASCEND_LAUNCH_BLOCKING=1` to
 the initial Docker command. The original `launch.json` remains unchanged;
 `effective_launch.json` records the effective command and actual Docker exit.
 
-The public adapter passed local command-construction checks using the real
-original launcher and test-only image/device stubs. **This public adapter has
-not itself been executed on the NPU.** Versioned device tests ran the
-same original training entry point with these two initial environment settings:
-one VAD and one Hydra own-checkpoint comparison passed the original numerical
-gate. VAD was fully bitwise equal; Hydra passed with maximum difference
-`2.9802322387695312e-8` and was not fully bitwise equal. Each result is one
-repetition; it does not establish a general determinism repair.
+The public adapter passed local command-construction checks and was then
+executed on the NPU with its exact published SHA256. The repeated device control
+ran two VAD and two Hydra continuous8/own4/resume8 pairs. All four pairs completed;
+two passed and two exceeded the unchanged original numerical tolerance. The
+adapter is therefore device-executed, but synchronous settings do not establish
+a general determinism repair.
 
-The examples describe the public adapter workflow, whose NPU execution remains
-unverified. Replace the paths with existing server assets.
+[Repeated public-adapter results](../results/public-sync-repeated-16chip-20261014.json)
+retain all four completed comparisons.
+
+Earlier independent single pairs remain valid historical results: VAD was fully
+bitwise equal, while Hydra passed with maximum difference
+`2.9802322387695312e-8` and was not fully bitwise equal. Those single positives
+must be read alongside the mixed repeated control.
+
+The examples describe the device-executed public adapter protocol. Replace the
+paths with existing server assets and retain both passing and failing comparison
+results; the original tolerances remain unchanged.
 `MINI` is the prepared genuine 42-training/22-held-out-anchor NAVTEST-derived
 subset used by the planning controls, not the one-scene synthetic export.
 Use the official track/map 100pct initializer and original 8192 vocabulary.

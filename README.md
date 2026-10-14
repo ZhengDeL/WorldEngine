@@ -24,11 +24,17 @@ entry points for AlgEngine. SimEngine retains its upstream GPU workflow.
 - [NPU documentation](ascend/README.md), [container installation](ascend/docker/README.md)
 - [Validation report](ascend/FULL_ALGENGINE.md) / [中文验证报告](ascend/VALIDATION_zh.md)
 
-On a genuine NAVTEST-derived mini, one 16-rank own-checkpoint comparison per model
-passed with the recorded FP32/post8 synchronous settings: VAD was bitwise equal
-and Hydra's maximum tensor difference was `2.9802322387695312e-8`, within the
-unchanged original tolerances; repeated, full-data and GPU comparison acceptance
-remain open.
+The public Docker recipes were rebuilt from the verified official SDK base.
+On a second Ascend server, two original real-log LoRA fine-tuning configurations
+completed 16-rank training, own-checkpoint replay, independent inference and
+official CPU scoring on a genuine small dataset. Both replay comparisons were
+bitwise equal. [Versioned reproduction evidence](ascend/results/actual-public-reproduction-16chip-20261014.json).
+
+Four further base-planner controls executed the public synchronous adapter;
+two completed comparisons were within the original tolerance and two were
+outside it. That numerical issue remains unresolved. Full NAVTRAIN convergence,
+complete independent benchmark quality, remaining synthetic exports and GPU
+comparison are outside the completed acceptance scope.
 
 <div id="top" align="center">
 <p align="center">

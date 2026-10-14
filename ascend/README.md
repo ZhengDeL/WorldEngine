@@ -22,42 +22,36 @@ and environments recorded below; complete AlgEngine migration acceptance remains
 
 | Workflow | Measured coverage | Remaining validation |
 | --- | --- | --- |
-| Base-planner training and resume | VADv2 and HydraMDP each passed one 16-rank synchronous continuous/resumed comparison | Independent repeats, final-environment sustained training and full NAVTRAIN convergence |
-| Fine-tuning | Real-log fine-tuning and two genuine SimScale configurations; the latter passed one/two-rank controls on one scene with WE-derived 8192 rewards | Six other genuine synthetic exports, full-data sampling and published SimScale-v2 reward equivalence |
+| Base-planner training and resume | Four repeated 16-rank synchronous pairs completed; two passed the original tensor gate | Resolve intermittent numerical divergence; sustained training and full NAVTRAIN convergence |
+| Fine-tuning | Two real-log LoRA FT configs passed 16-rank replay, inference and scoring on a public-rebuilt image; two genuine SimScale configs passed narrower one/two-rank controls | Six other genuine synthetic exports, full-data sampling and published SimScale-v2 reward equivalence |
 | Inference and evaluation | Original planning/perception evaluation and independent official NAVSIM CPU rescoring on small datasets | Full independent NAVTEST quality and GPU/NPU output comparison |
 | MSDA | FP32 forward and gradient gates passed at the original tolerances for the recorded shapes/layouts | Other precision modes and higher-order derivatives |
 | Data and resources | Full NAVTRAIN metadata/PDM QC and 1/8/16 resident original dataset measurements | Full camera coverage and model/optimizer/worker training memory and I/O |
 | Operational stability | An eight-hour perception run, own-checkpoint continuation, inference and CPU audit passed on the earlier `858f9d…` / post6 environment | Sustained training on the final `cc91…` / post8 synchronous profile |
 
-## Synchronous replay results
+## Public-source reproduction
 
-The measured runtime fingerprint is
-`cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88`
-(243 runtime Python files), using the recorded image with `torch_npu 2.7.1.post8`.
-The controls used eight physical cards / sixteen logical chips, FP32 with Matmul
-and Conv HF32 disabled, batch 1 per rank, zero workers, and a genuine NAVTEST-derived
-mini containing 42 training and 22 held-out anchors. Initial settings were
-`TASK_QUEUE_ENABLE=0`, `ASCEND_LAUNCH_BLOCKING=1`, `HCCL_DETERMINISTIC=true` and
-`CLOSE_MATMUL_K_SHIFT=1`.
+The parent and post8 child Docker recipes were rebuilt without application-layer
+cache from a verified official SDK base. The new image completed two original
+rare-log LoRA fine-tuning workflows on a second Ascend server: 16 logical chips,
+FP32, B1 per rank, workers 0, eight updates and own checkpoint 4→8. All 64 rank
+reports and 32 restorations passed. Both original numerical comparisons were
+bitwise equal, and each model completed inference and official CPU scoring on
+22 held-out anchors. The public preparation tools selected 37 training
+candidate anchors in separate logs. The image's dependency metadata still
+reports 16 `pip check` findings.
+[Reproduction evidence](results/actual-public-reproduction-16chip-20261014.json).
 
-Each model trained for eight updates, then restored its own update-4 checkpoint
-and continued to update 8. Tensor tolerances remained `atol=1e-6, rtol=1e-5`;
-the loss tolerance remained `1e-4`.
+## Base-planner replay status
 
-| Configuration | Original numerical gate | Maximum tensor difference | Maximum loss difference |
-| --- | --- | ---: | ---: |
-| [VADv2 base planner](../projects/AlgEngine/configs/navformer/e2e_vadv2.py) | [Pass; all compared tensors bitwise equal](results/sync-vad-16chip-20261014.json) | 0 | 0 |
-| [HydraMDP base planner](../projects/AlgEngine/configs/navformer/e2e_hydramdp.py) | [Pass within tolerance; not all tensors bitwise equal](results/sync-hydra-16chip-20261014.json) | 2.9802322387695312e-8 | 0 |
-
-Each result is one complete pair. With queue/blocking settings unset, four other
-completed controls produced one comparison within tolerance and three outside it;
-the cause of divergence remains unresolved. The synchronous results do not establish
-a repair of default execution or universal reproducibility. Detailed controls and
-sources are retained in the [validation report](FULL_ALGENGINE.md).
-
-The public synchronous launch adapter has local command-construction validation.
-Its own NPU execution remains unverified; the measured pairs used a separate
-controlled launch procedure with the same original trainer and initial settings.
+Four independent controls executed the published synchronous adapter on the
+recorded cc91/243 source and post8/3fef image, using the historical 42/22 mini.
+All training and restoration runs completed; two final comparisons were within
+the original tolerance and two were outside it. Default-execution controls
+also retain above-tolerance differences. The numerical cause remains unresolved;
+synchronous settings are not an accepted general repair.
+[Repeated controls](results/public-sync-repeated-16chip-20261014.json) and
+[full validation report](FULL_ALGENGINE.md).
 
 ## Source and runtime
 
