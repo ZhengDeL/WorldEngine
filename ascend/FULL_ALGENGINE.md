@@ -39,7 +39,7 @@ results came from the earlier controlled launch procedure.
 **Scope: each model has only one positive synchronous pair; independent repeated
 controls and sustained training in this environment remain untested. With queue
 and blocking settings unset, the default controls still have one pass and three
-failures, documented in the default-execution section below.** The synchronous
+completed comparisons outside tolerance, documented in the default-execution section below.** The synchronous
 results do not establish correctness under default settings, other configurations
 or complete NAVTRAIN convergence. MSDA's strict location-gradient issue passed
 at the original tolerances; the cause of default-execution divergence is unknown.
@@ -100,28 +100,39 @@ These four pairs preceded the synchronous candidates and used the same cc91/243
 runtime, post8 image and original tolerances, with `TASK_QUEUE_ENABLE` and
 `ASCEND_LAUNCH_BLOCKING` both unset. All eight training/restoration jobs completed
 successfully and passed runtime and exact saved-state loading checks. The final
-continuous-training/resumed-training tensor comparisons **passed one pair and
-failed three**.
+continuous-training/resumed-training tensor comparisons **passed one pair;
+three completed comparisons exceeded the original tolerance**.
 
-| Default-execution sixteen-rank pair | Numerical result | Model maximum absolute difference | Combined tensor maximum difference | Model / optimizer tensors above tolerance |
-| --- | --- | ---: | ---: | ---: |
-| VAD, repetition 1 | Fail | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
-| Hydra, repetition 1 | Fail | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
-| VAD, repetition 2 | Fail | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
-| Hydra, repetition 2 | Pass, bitwise equal | 0 | 0 | 0 / 0 |
+| Default sixteen-rank short control | Training/resume completion | Final numerical comparison | Model maximum absolute difference | Combined tensor maximum difference | Model / optimizer tensors above tolerance |
+| --- | --- | --- | ---: | ---: | ---: |
+| VAD, repetition 1 | Continuous 8; own update 4 resumed to 8 | Outside original tolerance | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
+| Hydra, repetition 1 | Continuous 8; own update 4 resumed to 8 | Outside original tolerance | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
+| VAD, repetition 2 | Continuous 8; own update 4 resumed to 8 | Outside original tolerance | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
+| Hydra, repetition 2 | Continuous 8; own update 4 resumed to 8 | Pass, bitwise equal | 0 | 0 | 0 / 0 |
 
-These failures mean the final tensor differences exceed the original tolerances;
-training and exact checkpoint loading completed successfully. A small maximum
-absolute difference does not replace the elementwise tolerance checks. All failed
-results remain in the [default strict replay artifact](results/strict-replay-post8-20261014.json).
+All four pairs reached the planned update-8 endpoint and ran the final comparator;
+training and exact checkpoint loading completed successfully. Three final tensor
+comparisons exceeded the original tolerances. Completion here means completion of
+this short control, not full NAVTRAIN training. Runs that did not reach the planned
+endpoint or did not run the comparator are reported separately as incomplete, with
+no final numerical conclusion. A small maximum absolute difference does not replace
+elementwise tolerance checks. Original results remain in the
+[default strict replay artifact](results/strict-replay-post8-20261014.json).
 The later synchronous candidates each passed once, but do not establish a repair
 of default execution or identify the cause of divergence.
 
 ### Additional short-window controls: results still bounded
 
+| Synchronous task | Actual progress | Completion and numerical status |
+| --- | --- | --- |
+| Earlier time-limited VAD task | Continuous to update 8; own update 4 resumed only to 6, short of target 8 | Incomplete; final comparator not run, no final numerical conclusion |
+| Later extended-window VAD task | Continuous to update 8; own update 4 resumed to 8; comparison executed | Short control complete; pass, all tensors bitwise equal |
+| Later extended-window Hydra task | Continuous to update 8; own update 4 resumed to 8; comparison executed | Short control complete; pass at original tolerance, not all bitwise equal |
+| Cold start on the other node | Device initialization blocked; zero updates | Training not started; no final numerical conclusion |
+
 A follow-up post8 sixteen-rank state-observation run completed all four
 VAD/Hydra training/restoration jobs and the CPU checkpoint identity audits.
-Both original numerical comparisons failed. Each model completed 144 state
+Both completed final tensor comparisons exceeded the original tolerance. Each model completed 144 state
 joins with zero blocked entries and 16 tensor-differing joins, all at final
 update 8; see [the full-state diagnosis](results/full-rank-state-diagnostic-20261014.json). Recorded registered model/optimizer state and layout before update 5
 matched, but later execution diverged. This does not establish equality of
@@ -131,7 +142,7 @@ observer reads NPU state onto CPU and can change timing; this diagnosis is
 separate from untraced production replay and is not evidence of a repair.
 
 The separate synchronous-execution candidate
-`TASK_QUEUE_ENABLE=0, ASCEND_LAUNCH_BLOCKING=1` failed initialization on the
+`TASK_QUEUE_ENABLE=0, ASCEND_LAUNCH_BLOCKING=1` was blocked at device initialization on the
 second node with `EL0020 / Device0 occupied by multiple containers / 507899`.
 It performed zero updates and produced no numerical comparison. No reset,
 sharing-mode change or shared-workload stop was used. Healthy npu-smi output
@@ -143,8 +154,8 @@ exited 0 and passed all sixteen original runtime gates. Resuming its own
 checkpoint at update 4 completed only two further updates to 6. The original
 helper's earlier 120-second cutoff stopped the owned resume job at 01:38:10 UTC;
 its exit was 137 without OOM. It did not reach update 8 and the original strict
-comparator did not run. This is neither a numerical pass nor a numerical fail,
-and provides no Hydra or two-repeat acceptance.
+comparator did not run. Its status is incomplete with no final numerical
+conclusion; it provides no Hydra or two-repeat acceptance.
 
 That first short device window ended. All owned jobs were released with no
 remaining owned work or cleanup errors. The independent watchdog completed
@@ -194,7 +205,7 @@ snapshot. They remain historical evidence and are not reassigned to the new sour
 **2026-10-13 evening update:** the historical `2bed8f4d7c78` / `858f9d…` FP32
 source completed four eight-rank continuous/resumed jobs, with all 32 runtime
 checks and exact saved-state restoration passing. The unchanged final numerical
-gate nevertheless **failed for both VADv2 and HydraMDP**: 12 model / 21 optimizer
+gate reported **final tensors outside tolerance for both VADv2 and HydraMDP**: 12 model / 21 optimizer
 and 2 model / 2 optimizer tensors exceeded tolerance, respectively. Batch tokens,
 LR and final RNG states matched. The [evening evidence](evidence/eight-rank-resume-20261013-evening.json)
 records original configuration/initializer hashes, tensor paths and reporting
@@ -574,10 +585,10 @@ saved-state restoration result and subsequent metrics. On the historical source8
 snapshot, the single-rank VADv2/Hydra controlled numerical comparisons passed.
 Eight-rank complete-state restoration/continuation also passed, but the new
 eight-rank continuous-eight-update versus same-run-iter-four-resume-to-eight
-comparison **failed the original final tensor gate for both models**. See the
+comparison completed with **final tensors outside the original tolerance for both models**. See the
 [actual eight-rank results](evidence/eight-rank-resume-20261013-evening.json).
 The cause has not been isolated in this run; the earlier fused SDK atomic
-accumulation observation cannot establish the cause of this new-source failure.
+accumulation observation cannot establish the cause of this new-source divergence.
 
 ## Genuine synthetic and SimScale inputs
 
@@ -624,8 +635,8 @@ independent complete NAVTEST common/rare quality.
 Old-source858/post6 eight-hour operational stability and final-checkpoint
 continuation passed. This does not accept target-sourcecc91/post8 sustained
 training or general replay correctness. The untraced default post8 sixteen-rank
-comparison passed1/4 pairs and failed3/4; retain those failures. State-observation
-controls also failed. The first synchronous attempt was partial, followed by
+comparison completed all four pairs: one met the original tolerance and three
+exceeded it. State-observation controls also completed with tensors outside tolerance. The first synchronous attempt was partial, followed by
 two fresh completed pairs in the extended window: VAD was bitwise equal and
 Hydra passed the original tolerances with maximum difference
 2.9802322387695312e-8. Each model has one positive repetition; candidate
