@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "result": "pass_original_NAVTRAIN_dataset_constructor_residency_only",
+  "measurement_date": "2026-10-14",
+  "publication_scope": "Sanitized publication of existing measured constructor receipts; no new experiment.",
+  "source_python_sha256": "858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d",
+  "source_python_files": 242,
+  "image_id": "sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f",
+  "torch_npu_version": "2.7.1.post6",
+  "original_dataset_and_Compose_constructor": true,
+  "original_filter": "NAVTRAIN 50pct",
+  "annotation_frames_per_dataset": 246165,
+  "filtered_anchors_per_dataset": 50000,
+  "PDM_tokens_per_dataset": 103288,
+  "assets": {
+    "nuplan_openscene_navtrain.pkl": {
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b"
+    },
+    "pdm_8192_gt_cache_navtrain.pkl": {
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca"
+    }
+  },
+  "SDK_import_time_device_metadata_bridge": true,
+  "bridge_scope": "Temporary device metadata queries during SDK import only; original query functions restored. No NPU initialization.",
+  "NPU_devices": [],
+  "images_read": 0,
+  "cohorts": [
+    {
+      "processes": 1,
+      "result": "pass_dataset_constructor_residency",
+      "actual_exits": [
+        0
+      ],
+      "peak_sum_rss_bytes": 52208001024,
+      "peak_sum_pss_bytes": 52136001536,
+      "elapsed_seconds": 159.004627901013,
+      "sample_interval_seconds": 0.5
+    },
+    {
+      "processes": 8,
+      "result": "pass_dataset_constructor_residency",
+      "actual_exits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "peak_sum_rss_bytes": 416754966528,
+      "peak_sum_pss_bytes": 413451488256,
+      "elapsed_seconds": 171.13353440002538,
+      "sample_interval_seconds": 0.5
+    },
+    {
+      "processes": 16,
+      "result": "pass_dataset_constructor_residency",
+      "actual_exits": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "peak_sum_rss_bytes": 834131996672,
+      "peak_sum_pss_bytes": 826988978176,
+      "elapsed_seconds": 202.2249823209131,
+      "sample_interval_seconds": 0.5
+    }
+  ],
+  "raw_receipt_identities": [
+    {
+      "role": "eight_process",
+      "raw_sha256": "c61cdc600f71de512a0305e5d108eb88b14fad837a918167a36af1a74bb6343b",
+      "raw_bytes": 40967
+    },
+    {
+      "role": "sixteen_process",
+      "raw_sha256": "827297e006c03ed552ef718559b26eafd22689ce95f1c6dd6bb36f3d35692203",
+      "raw_bytes": 43282
+    }
+  ],
+  "sanitized_postaudit_sha256": "e2fc5450c8e01356b4158a329738f2a064e69e7c62509185fe5582297bfda519",
+  "original_postaudit_sha256": "a2176069a9e5e3bd68fd52ebe2c90e438d91d6160e196fad4fa2372b3e14b50b",
+  "acceptance_boundaries": [
+    "Dataset/Compose construction and concurrent metadata/PDM residency only.",
+    "No image batches, model, optimizer, dataloader worker or evaluation memory included.",
+    "Not full training capacity, convergence, I/O throughput or machine-count acceptance.",
+    "The import-time bridge does not establish unmodified CPU-only SDK support.",
+    "Measured source858/post6; not target-sourcecc91/post8 training memory.",
+    "Summed sampled process RSS and PSS are distinct from cgroup charged memory."
+  ]
+}

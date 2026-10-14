@@ -48,8 +48,8 @@ using explicit `--image "$IMAGE" --expected-image-id "$IMAGE_ID"`. The build
 does not reproduce the previous Docker image ID: Conda/channel resolution and
 layer timestamps can differ. Start with the single-chip real-data check in the
 usage guide and inspect its actual package/precision reports before expanding.
-The new public child Dockerfile has been reviewed locally; this exact public
-build command has not been run on a server in this delivery.
+The public post8 child Dockerfile has local review. Its complete clean-server
+build and device validation remain unverified.
 
 For offline transfer, run `docker save -o worldengine_npu.tar "$IMAGE"`, record
 `sha256sum worldengine_npu.tar`, then `docker load -i worldengine_npu.tar` on the

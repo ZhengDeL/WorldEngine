@@ -578,4 +578,4 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | NaN/Inf or failed numerical comparison | Retain the run and inspect the recorded raw loss/gradient/state evidence. Do not increase tolerances to turn a failure into a pass. |
 | Official scoring cannot find cache payloads | Check token coverage and paths in `metadata/*.csv`; regenerate the relocated index/cache. |
 
-The measured small-data training, restoration and scoring paths can be reproduced with their recorded inputs. Full NAVTRAIN convergence, complete independent NAVTEST results, six genuine synthetic exports and sustained running of the final target configuration remain unfinished. Current configuration-specific evidence is linked from the [Ascend results and operation notes](../ascend/README.md).
+The [validation report](../ascend/FULL_ALGENGINE.md) records the measured conditions, versions and results for small-data training, restoration and scoring. Full NAVTRAIN convergence, complete independent NAVTEST results, the other six genuine synthetic configurations, and independent repeats and sustained training in the target synchronous environment remain unvalidated.

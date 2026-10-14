@@ -12,7 +12,7 @@ WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimE
 | 选择性下载官方数据和权重 | `ascend/tools/download_algengine_assets.py` |
 | 准备真实小数据 | `ascend/tools/prepare_real_mini.py`，再执行 `ascend/split_mini.py` |
 | 按原配置训练 | `ascend/run_container.py --config ...` |
-| 原仓风格的训练、评价前端 | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
+| NPU 训练与评价脚本 | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
 | 完整断点续训 | 原训练参数，加 `--resume ...` 和新输出目录 |
 | 推理 | `ascend/run_container.py --task inference --config <训练导出的配置>` |
 | 小数据独立评分 | CPU 执行 `ascend/official_score.py` |
@@ -75,9 +75,9 @@ Hugging Face及hf-mirror线路请求固定发布revision。魔搭线路请求其
 
 NAVTEST 标注和 PDM 合计约 **3.64 GB**，相机、词表、权重和地图另计。小样本最终只需实际引用的 JPEG，但这些真实图片需要已经从对应 OpenScene 数据或提供的小数据包中取得。仓库不承诺存在一个恰好包含所选 JPEG 的独立公开下载包。
 
-### 相机、原始日志和地图从哪里获取
+### 相机图像、场景日志与地图
 
-[原 NAVSIM 测试下载脚本](../ascend/third_party/navsim/download/download_test.sh)给出 OpenScene metadata 和 32 个相机分片的地址。按所需日志选择分片；下面 `SHARD=0` 仅示范下载，**不保证**包含制作 mini 所需的三个有效日志。小检查不要直接执行原整套脚本，它还会下载全部相机和 LiDAR。这里使用[输入锁](../ascend/data_tools/INPUT_LOCKS.json)记录的 OpenScene revision；本次文档更新没有实际执行这两个新的 test 包下载。
+[原 NAVSIM 测试下载脚本](../ascend/third_party/navsim/download/download_test.sh)提供 OpenScene metadata 和32个相机分片的地址。按所需日志选择分片；下面的 `SHARD=0` 是下载示例，其覆盖范围未确认包含制作 mini 所需的三个有效日志。原整套脚本还下载全部相机和 LiDAR，小样本验证应按引用选择分片。示例使用[输入锁](../ascend/data_tools/INPUT_LOCKS.json)记录的 OpenScene revision；这两个 test 包的下载命令尚未实际执行验证。
 
 ```bash
 DOWNLOADS="$WORK/downloads"
@@ -266,7 +266,7 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 64g -
   '
 ```
 
-使用原官方 split 和 cache generator。64g 是初始资源示例，本次未实测完整 cache 生成的预算。检查实际 payload 数、日志及 preflight token 覆盖；上游 cache 脚本可能记录失败 entry 后仍以 0 退出，不能只看进程退出码。
+使用原官方 split 和 cache generator。64g 为资源示例，完整 cache 生成的预算尚未实测。检查实际 payload 数、日志及 preflight token 覆盖；上游 cache 脚本在记录异常 entry 后仍可能以0退出，需要核对每个 token 的结果。
 
 preflight 检查图片文件存在性、大小、历史队列、token 覆盖和 PDM 数值，不逐张解码图片。检查报告无错误后，再确定完整训练内存。实测 16 份原 NAVTRAIN dataset 常驻对象的合计 RSS 约 **834 GB**，尚未计入完整图像、模型／optimizer、worker 和评价。`TRAIN_MEMORY` 要根据宿主可用 RAM 和训练实测预算设置，不能沿用 mini 的 64g。
 
@@ -349,7 +349,7 @@ python3 ascend/run_container.py --devices 0 --task inference \
 
 结果包括 `predictions.pkl`、`metrics.csv` 和 `inference_validation.json`。规划入口检查配置 token 是否各出现一次、真实 `40×3` 轨迹是否有限；选择式 head 还检查 8192 词表选取是否一致。感知配置执行原检测／地图评价器，其指标同时查看 `console.log`。
 
-对应的原仓风格 shell 评价命令：
+对应的 NPU shell 评价命令：
 
 ```bash
 export RUN_OUTPUT="$RUNS/vad_mini8_eval_shell" CPU_MEMORY=64g
@@ -513,7 +513,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
   --output "$RUNS/vad50_rare_ft"
 ```
 
-也可用已发布的 `VAD_BASE` 初始化。这份原 VAD 配置启用 LoRA 和奖励微调，但 `rl_finetuning=False`，不能写成启用了 policy gradient。Hydra 配置 `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py` 从 base 启用 policy gradient。使用 `HYDRA_BASE` 或对应训练 Hydra 权重、Hydra 自己筛选的 rare 数据和新输出。不同训练的微调需重新建立 optimizer／schedule，使用 `--checkpoint` 初始化，不使用 `--resume`。
+也可用已发布的 `VAD_BASE` 初始化。原 VAD 配置使用 LoRA 和奖励微调，`rl_finetuning=False`，policy gradient 未启用。Hydra 配置 `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_50pct_rlft_rare_log.py` 从 base 启用 policy gradient。使用 `HYDRA_BASE` 或对应训练 Hydra 权重、Hydra 自己筛选的 rare 数据和新输出。新的微调任务重新建立 optimizer／schedule，使用 `--checkpoint` 初始化；`--resume` 用于恢复原任务的完整状态。
 
 先做小数据功能检查时，分别执行下面两条命令。`ascend/train.py` 的 profile 映射选择各自原微调配置。切换到 Hydra 时不能保留 VAD 的 `--config`，因为显式配置优先于 profile。八步命令不带 `--validate`，逐 epoch 评价不能与 `--steps` 同时使用。
 
@@ -577,7 +577,7 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | `can't start new thread`／EAGAIN | 检查容器 PID／线程数。默认上限为 `max(2048, 512×rank数)`，16 rank 示例设置 8192。 |
 | `EL0020`、设备占用、`507899` | 暂停在该芯片启动新作业，核对具体设备／容器归属；不能仅凭空进程列表判断驱动可用。 |
 | resume contract 不匹配 | 核对源码、镜像、数据／filter、精度环境、world size 和 schedule，恢复一致输入。 |
-| NaN／Inf 或严格比较失败 | 保留运行目录，检查原始 loss、gradient 和状态记录，不放宽门槛强行通过。 |
+| NaN／Inf 或最终 Tensor 超容差 | 保留运行目录，检查原始 loss、gradient 和状态记录，按原数值门槛判定。 |
 | 官方评分找不到 cache payload | 核对 token 覆盖及 `metadata/*.csv` 路径，搬迁后重建索引或 cache。 |
 
-已测的小数据训练、恢复和评分可以按记录输入复跑。完整 NAVTRAIN 收敛、完整独立 NAVTEST、六项真实合成导出和最终目标配置持续运行仍未完成。各配置的当前实测范围与结果见 [Ascend 操作及结果说明](../ascend/README_zh.md)。
+小数据训练、恢复和评分的实测条件、版本及结果见[验证报告](../ascend/VALIDATION_zh.md)。完整 NAVTRAIN 收敛、完整独立 NAVTEST、其余六个真实合成配置，以及目标同步环境的独立重复和持续训练尚未验证。

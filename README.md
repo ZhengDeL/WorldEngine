@@ -15,19 +15,20 @@
 
 </div>
 
-**Ascend 910C / A3 AlgEngine migration:** [中文操作文档](ascend/README_zh.md), [English full-module guide](ascend/FULL_ALGENGINE.md), [reproduction commands](ascend/README.md), and [current bounded measured results](ascend/evidence/msda-precision-20261013.json). These cover pinned runtime, tested paths, equipment sizing and remaining acceptance. [Earlier fused-path results](ascend/evidence/full-algengine-20261013.json) retain their historical source fingerprint.
+## AlgEngine on Ascend 910C / A3
 
-**Start using AlgEngine on NPU:** [中文使用指南](docs/algengine_ascend_zh.md) / [English usage guide](docs/algengine_ascend.md), followed by [NPU environment installation](ascend/docker/README.md). These follow the original training, evaluation, rare-case and fine-tuning workflow, with explicit NPU commands and data preparation.
+The `ascend-910c-algengine` branch provides NPU training, fine-tuning and evaluation
+entry points for AlgEngine. SimEngine retains its upstream GPU workflow.
 
-**FP32 MSDA repair:** [English](ascend/MSDA.md), [中文](ascend/MSDA_zh.md), and [versioned strict-gradient/model results](ascend/evidence/msda-precision-20261013.json). Earlier fused-path performance remains historical evidence for its original fingerprint.
+- [English usage guide](docs/algengine_ascend.md) / [中文使用指南](docs/algengine_ascend_zh.md)
+- [NPU documentation](ascend/README.md), [container installation](ascend/docker/README.md)
+- [Validation report](ascend/FULL_ALGENGINE.md) / [中文验证报告](ascend/VALIDATION_zh.md)
 
-**2026-10-14 measured status:** one fresh 16-chip synchronous pair each passed for [VAD](ascend/results/sync-vad-16chip-20261014.json) and [Hydra](ascend/results/sync-hydra-16chip-20261014.json), using `TASK_QUEUE_ENABLE=0` and `ASCEND_LAUNCH_BLOCKING=1` before Torch starts. VAD was fully bitwise equal; Hydra's maximum tensor difference was `2.9802322387695312e-8`, within the unchanged original thresholds. The measured scope is eight physical cards / sixteen logical chips, FP32, batch 1 per rank, zero workers and a NAVTEST-derived mini. Each model has only one positive pair; repeated stability and full NAVTRAIN convergence remain unaccepted.
-
-**Default-execution issue remains open:** with queue/blocking settings unset, [four post8 strict replay pairs](ascend/results/strict-replay-post8-20261014.json) completed training and exact checkpoint loading, but all four final tensor comparisons were executed: one met the original tolerance and three exceeded it. [Full-rank state diagnosis](ascend/results/full-rank-state-diagnostic-20261014.json) also completed two final comparisons with tensors outside tolerance. The synchronous positives do not establish a repair of default execution; the cause of divergence remains unknown. Current results and default controls are described separately in the [English results document](ascend/README.md) and [中文验收记录](ascend/README_zh.md).
-
-Synchronous candidate reproduction: [English commands](ascend/execution/README.md), [中文操作步骤](ascend/execution/README_zh.md). The public launch adapter has passed local command checks; its own NPU execution remains unverified.
-
-[Eight-hour perception training and postchecks](ascend/results/eight-hour-perception-stability-20261014.json) passed on their recorded **earlier source/post6 environment**, including own-checkpoint continuation and independent evaluation. [Full NAVTRAIN metadata/PDM checks](ascend/results/full-navtrain-metadata-qc-20261014.json) and [portable genuine SimScale data reproduction](ascend/data_tools/README.md) provide additional bounded evidence. Full NAVTRAIN image coverage and convergence, six other synthetic exports, GPU comparison and long-run validation of the final environment remain open. [The October 13 evening replay artifact](ascend/evidence/eight-rank-resume-20261013-evening.json) remains historical evidence for its original configuration.
+On a genuine NAVTEST-derived mini, one 16-rank own-checkpoint comparison per model
+passed with the recorded FP32/post8 synchronous settings: VAD was bitwise equal
+and Hydra's maximum tensor difference was `2.9802322387695312e-8`, within the
+unchanged original tolerances; repeated, full-data and GPU comparison acceptance
+remain open.
 
 <div id="top" align="center">
 <p align="center">

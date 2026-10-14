@@ -1,4 +1,4 @@
-# Synchronous base-planner candidate
+# Synchronous planner replay candidate
 
 [中文](README_zh.md) · [AlgEngine operation guide](../README.md)
 
@@ -15,15 +15,15 @@ the initial Docker command. The original `launch.json` remains unchanged;
 
 The public adapter passed local command-construction checks using the real
 original launcher and test-only image/device stubs. **This public adapter has
-not itself been executed on the NPU.** The earlier private controllers ran the
+not itself been executed on the NPU.** Versioned device tests ran the
 same original training entry point with these two initial environment settings:
 one VAD and one Hydra own-checkpoint comparison passed the original numerical
 gate. VAD was fully bitwise equal; Hydra passed with maximum difference
 `2.9802322387695312e-8` and was not fully bitwise equal. Each result is one
 repetition; it does not establish a general determinism repair.
 
-The following commands are reproduction examples and were not executed as part
-of this documentation review. Replace the paths with existing server assets.
+The examples describe the public adapter workflow, whose NPU execution remains
+unverified. Replace the paths with existing server assets.
 `MINI` is the prepared genuine 42-training/22-held-out-anchor NAVTEST-derived
 subset used by the planning controls, not the one-scene synthetic export.
 Use the official track/map 100pct initializer and original 8192 vocabulary.
@@ -37,7 +37,7 @@ output directory, so a plan and an execution must use different fresh outputs.
 The examples below explicitly execute foreground training. For a plan, omit
 `--execute` and choose a separate output directory.
 
-Measured private-controller results: [VAD](../results/sync-vad-16chip-20261014.json), [Hydra](../results/sync-hydra-16chip-20261014.json).
+Versioned device results: [VAD](../results/sync-vad-16chip-20261014.json), [Hydra](../results/sync-hydra-16chip-20261014.json).
 
 ## Continuous training and own-checkpoint replay
 
@@ -96,12 +96,12 @@ Use a new CPU output directory, the same locked post8 image, no NPU device
 mounts and read-only source/run inputs. The target remains the original
 `ascend/compare_resume.py`, SHA
 `9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330`.
-The earlier actual tests used the separately pinned private official-loader
+The earlier actual tests used the separately pinned official-loader
 audit wrapper SHA
 `2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474`.
 The inline command below uses the same installed official `torch_npu`
 registration mechanism; it is a documentation example, not the byte-identical
-private audit wrapper or a new executed acceptance record.
+pinned audit wrapper or a separately executed acceptance record.
 
 ```bash
 CHECKS="$RUNS/cpu_compare"
@@ -136,7 +136,9 @@ finally:
 ```
 
 For Hydra replace all VAD run names. The continuous run itself is the prefix
-control. Preserve a nonzero exit and failed JSON rather than relaxing thresholds.
+control. Preserve the actual exit and comparison JSON. A complete comparison with tensors
+outside the original tolerance is a numerical failure; an invocation interrupted
+before comparison completion has no numerical verdict.
 Only an actual comparator `result="pass"` at `atol=1e-6, rtol=1e-5` and loss
 `1e-4`, together with actual sixteen-rank runtime/restoration reports, supports
 that run's bounded result. A launcher plan or Docker exit alone does not.

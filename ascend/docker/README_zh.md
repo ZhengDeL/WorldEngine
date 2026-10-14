@@ -43,8 +43,8 @@ printf 'IMAGE=%s\nIMAGE_ID=%s\n' "$IMAGE" "$IMAGE_ID"
 保存 `IMAGE` 和 `IMAGE_ID`，运行时显式传入
 `--image "$IMAGE" --expected-image-id "$IMAGE_ID"`。重建的ID可能与实测镜像不同，
 Conda依赖解析和镜像层时间会影响ID。先按使用指南运行单芯片真实数据检查，
-核对实际版本、精度和退出报告，再扩大设备规模。新增公开子镜像配方已做本地
-审阅；本次交付尚未在服务器执行这条完整公开构建命令。
+核对实际版本、精度和退出报告，再扩大设备规模。公开 post8 子镜像配方已完成
+本地审阅，完整干净服务器构建与实机验证尚未执行。
 
 离线转移时执行 `docker save -o worldengine_npu.tar "$IMAGE"`，保存
 `sha256sum worldengine_npu.tar`。目标机执行 `docker load -i worldengine_npu.tar`
