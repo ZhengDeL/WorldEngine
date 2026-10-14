@@ -5,34 +5,46 @@ Start with the [NPU usage guide](../docs/algengine_ascend.md) for installation, 
 ## Current acceptance snapshot: October 14, 2026
 
 AlgEngine can run the measured training, fine-tuning, inference and checkpoint
-restoration workflows on the NPU. Complete migration acceptance remains open.
-MSDA's strict location-gradient issue is resolved at the original tolerances;
-the remaining sixteen-rank numerical failure has not been attributed to MSDA.
+restoration workflows on the NPU. In the latest completed sixteen-chip
+synchronous-execution controls, **VAD and Hydra each passed one pair at the
+unchanged strict numerical thresholds**. These results apply to the explicit
+synchronous configuration below; complete AlgEngine acceptance remains open.
 
-The current runtime under evaluation is `cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88`
-(243 runtime Python files). On its post8 candidate image, the four fresh,
-untraced sixteen-rank VAD/Hydra continuous-eight/own-checkpoint-four/resume-eight
-pairs used the original unset queue/blocking environment and completed their
-original runtime and saved-state restoration gates. The
-unchanged final numerical comparator passed **one pair and failed three**.
-The tensor tolerances remain `atol=1e-6, rtol=1e-5`; loss tolerance remains `1e-4`.
-See the [untraced strict replay results](results/strict-replay-post8-20261014.json).
+The runtime fingerprint is `cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88`
+(243 runtime Python files), with image ID
+`sha256:3fef77b906c6b1e5cdf68c08d43135dc7b0509fb938a4665bb0d478bd8b64e45`
+and `torch_npu 2.7.1.post8`. The controls used eight physical cards / sixteen
+logical chips, FP32, batch 1 per rank and zero workers. Set
+`TASK_QUEUE_ENABLE=0` and `ASCEND_LAUNCH_BLOCKING=1` before Torch starts.
+The measured data is the NAVTEST-derived mini with 42 training anchors and
+22 held-out anchors, not complete NAVTRAIN.
 
-| Post8 sixteen-rank pair | Numerical result | Model maximum absolute difference | Complete comparison maximum difference | Model / optimizer tensors above tolerance |
+Each pair trained continuously for eight updates, then restored that run's own
+update-4 checkpoint and continued to update 8 for the final comparison. Tensor
+tolerances remain `atol=1e-6, rtol=1e-5`; loss tolerance remains `1e-4`.
+Neither pair has model or optimizer tensors above the original tolerance.
+
+| Synchronous sixteen-rank control (one pair each) | Strict numerical result | Model maximum absolute difference | Combined tensor maximum difference | Maximum loss difference |
 | --- | --- | ---: | ---: | ---: |
-| VAD, repetition 1 | Fail | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
-| Hydra, repetition 1 | Fail | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
-| VAD, repetition 2 | Fail | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
-| Hydra, repetition 2 | Pass, bitwise equal | 0 | 0 | 0 / 0 |
+| VAD | Pass, all tensors bitwise equal | 0 | 0 | 0 |
+| Hydra | Pass at original tolerance, not all bitwise equal | 2.9802322387695312e-8 | 2.9802322387695312e-8 | 0 |
 
-Complete comparisons include rank RNG tensors. A passing pair does not establish
-a general determinism repair, and loading a checkpoint exactly does not ensure
-that all subsequent computations reproduce a continuous run. Root cause remains
-unconfirmed. The additional state diagnosis completed with failures below.
-The first synchronous-execution control ended as a partial run; the later VAD
-and Hydra candidates below each passed once. These are different runs. Partial progress,
-timely device release or a single positive candidate does not establish a general
-determinism repair.
+Combined comparisons include model, optimizer and rank RNG tensors. VAD has
+1,698/1,698 bitwise-equal tensors; Hydra has 1,468/1,778, with its remaining
+differences within the original tolerance. Batch tokens, learning rates and
+final rank RNG states match in both pairs. See the [VAD measured result](results/sync-vad-16chip-20261014.json),
+[Hydra measured result](results/sync-hydra-16chip-20261014.json) and
+[synchronous reproduction steps](execution/README.md). The public launch adapter
+has passed local command checks but has not itself run on the NPU; the measured
+results came from the earlier controlled launch procedure.
+
+**Scope: each model has only one positive synchronous pair; independent repeated
+controls and sustained training in this environment remain untested. With queue
+and blocking settings unset, the default controls still have one pass and three
+failures, documented in the default-execution section below.** The synchronous
+results do not establish correctness under default settings, other configurations
+or complete NAVTRAIN convergence. MSDA's strict location-gradient issue passed
+at the original tolerances; the cause of default-execution divergence is unknown.
 
 | Acceptance area | Verified result | Work still required |
 | --- | --- | --- |
@@ -40,7 +52,7 @@ determinism repair.
 | Eight synthetic configurations | Portable preparation, original four-branch getitem, and one/two-rank own-checkpoint controls passed for **two configurations** using one genuine scene and WE-derived 8192 rewards. All tested tensors were bitwise equal. | The other **six rollout/replay/BWM configurations** lack complete genuine exports. The narrowed normal pool and four-second WE logged-traffic protocol do not establish published SimScale-v2 reward or full-data sampling equivalence. |
 | Full training and independent quality | Small-data training, original evaluators and earlier independent official CPU scoring work. | Full NAVTRAIN horizons/convergence, independent full NAVTEST common/rare quality and GPU output comparison are unaccepted. |
 | CPU/device capacity | Original full-PKL dataset/Compose construction passed with 1, 8 and 16 independent resident datasets under the original 50% filter: 246,165 frames, 50,000 anchors and 103,288 PDM entries per dataset. Sixteen-dataset summed RSS reached 834,131,996,672 bytes. | Actual full-image/model/optimizer/worker training memory and I/O capacity. The constructor used source858/post6 and an explicit SDK import-time metadata bridge; it is not an unshimmed CPU-only deployment or a training-memory result. |
-| Stability and restoration | The source858/post6 eight-rank perception run exceeded eight hours, completed 1,023 updates per rank, restored its own final checkpoint for three more updates, completed 37-frame perception inference/evaluation and audited both checkpoints on CPU. | Target-source/post8 sustained training and the unresolved sixteen-rank strict numerical gate. No 24-hour, full-data or universal replay acceptance. |
+| Stability and restoration | One cc91/post8 synchronous sixteen-rank strict pair passed for each of VAD and Hydra. The source858/post6 eight-rank perception run exceeded eight hours, completed 1,023 updates per rank, restored its own final checkpoint for three more updates, completed 37-frame perception inference/evaluation and audited both checkpoints on CPU. | Independent repeats and sustained training in the cc91/post8 synchronous environment, plus the default-execution sixteen-rank numerical issue. No 24-hour, full-data or universal replay acceptance. |
 
 The full metadata QC's 34,747,150,336-byte sequential process RSS is separate
 from original dataset construction. One constructor peaked around 52.208 GB;
@@ -83,6 +95,29 @@ Performance optimization remains deferred. The checks above concern correctness,
 function, capacity and bounded stability; historical speeds are not paired
 GPU/NPU benchmarks.
 
+
+### Default-execution sixteen-rank controls: issue remains open
+
+These four pairs preceded the synchronous candidates and used the same cc91/243
+runtime, post8 image and original tolerances, with `TASK_QUEUE_ENABLE` and
+`ASCEND_LAUNCH_BLOCKING` both unset. All eight training/restoration jobs completed
+successfully and passed runtime and exact saved-state loading checks. The final
+continuous-training/resumed-training tensor comparisons **passed one pair and
+failed three**.
+
+| Default-execution sixteen-rank pair | Numerical result | Model maximum absolute difference | Combined tensor maximum difference | Model / optimizer tensors above tolerance |
+| --- | --- | ---: | ---: | ---: |
+| VAD, repetition 1 | Fail | 4.231929779e-6 | 5.522248102e-6 | 6 / 7 |
+| Hydra, repetition 1 | Fail | 6.511807442e-6 | 1.536439959e-5 | 7 / 14 |
+| VAD, repetition 2 | Fail | 2.504140139e-5 | 4.742613237e-5 | 12 / 25 |
+| Hydra, repetition 2 | Pass, bitwise equal | 0 | 0 | 0 / 0 |
+
+These failures mean the final tensor differences exceed the original tolerances;
+training and exact checkpoint loading completed successfully. A small maximum
+absolute difference does not replace the elementwise tolerance checks. All failed
+results remain in the [default strict replay artifact](results/strict-replay-post8-20261014.json).
+The later synchronous candidates each passed once, but do not establish a repair
+of default execution or identify the cause of divergence.
 
 ### Additional short-window controls: results still bounded
 
