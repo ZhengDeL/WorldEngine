@@ -1,6 +1,6 @@
 # AlgEngine Ascend 910C Validation Report
 
-Assessment date: October 14, 2026.
+Assessment updated: October 16, 2026. Earlier results retain their recorded source and image.
 
 [Chinese validation report](VALIDATION_zh.md) · [Installation and operation guide](../docs/algengine_ascend.md) · [Versioned evidence](results/)
 
@@ -12,17 +12,252 @@ SimEngine deployment on NPU is outside the assessed scope.
 
 Training, fine-tuning, inference, official CPU scoring and complete-checkpoint
 restoration have run on Ascend 910C within the configurations recorded below.
-A newly rebuilt public image completed the complete small-data CLI chain on a
-second server: both rare-log LoRA fine-tuning configurations passed strict
-checkpoint replay, independent inference and official cached scoring. Repeated
-base-planner controls on the earlier post8 image completed four synchronous
-pairs, with two final comparisons within tolerance and two outside it. The
-intermittent base-training numerical issue remains unresolved.
+The latest FP32 base-planner runs completed eight updates, their own
+checkpoint restoration, held-out inference and official scoring for both
+models. Both complete replay comparisons exceeded the original tolerances.
+FP32 remains the default. BF16 v7 also completed the short-run chain and
+verified restoration of the 138 missing gradient/Adam entries per model; the
+defective v6 record is retained separately. Both v7 replay comparisons exceeded
+the original tolerances. The strict-replay numerical issue remains unresolved.
 Complete AlgEngine acceptance remains open: the evidence does not establish
 full NAVTRAIN convergence, complete independent quality, all genuine synthetic
 inputs, GPU equivalence or sustained operation of the final environment.
 
-## Public recipe and CLI reproduction
+## FP32 short-run validation — October 16, 2026
+
+Both original 100% planning configurations completed the NAVTRAIN139/NAVTEST22
+chain on source `4ae8ed9f…`/244 Python files and image `3522f3ac…`: one-update
+smoke check, continuous updates 0–8, independent partial updates 0–4 under the
+same eight-update horizon, own checkpoint restoration 4–8, and official
+initializer/restored-checkpoint inference and CPU scoring on 22 held-out
+tokens. The original backbone-freeze configuration, 8192-candidate labels,
+16 logical NPUs/eight physical cards, B1/global batch16 and workers0 were retained.
+
+All eight training jobs, 128 rank runtime reports, 32 exact state-restoration
+reports, four inference jobs and four official CPU scoring jobs completed.
+Source, official initializers, data and metric-cache hashes remained unchanged;
+all owned jobs exited without OOM. Both unchanged-gate replay comparisons
+completed outside tolerance:
+
+| Original model | Model / optimizer leaves outside tolerance | Maximum model / combined tensor difference | Maximum loss difference |
+| --- | ---: | ---: | ---: |
+| VADv2 100% | 177 / 270 | 0.0002471804618835449 / 0.2677420377731323 | 0.002409696578979492 |
+| HydraMDP 100% | 252 / 314 | 0.00036209821701049805 / 0.22671931982040405 | 0.037529945373535156 |
+
+VAD compared 889 model/1698 combined tensors; Hydra compared 909/1778. The
+combined counts include optimizer state and32 rank RNG tensors. Original
+tensor `atol=1e-6, rtol=1e-5` and loss tolerance `1e-4` were retained. Tokens,
+learning rates and final rank RNG states matched in both pairs.
+
+| Model | Official initializer, FP32 inference | Restored update-8 checkpoint, FP32 inference |
+| --- | ---: | ---: |
+| VADv2 | 0.8696212394149101 | 0.9033869555660513 |
+| HydraMDP | 0.9493509518718398 | 0.9548414947194644 |
+
+These are22-token score measurements, without a quality acceptance threshold.
+Eight updates remain within 500 warmup updates; this is functional short-run
+evidence, not convergence or numerical replay acceptance. The original
+eight-epoch workflow remains documented but is not completed by this result.
+Evidence: [FP32 short-run record](results/fp32-navtrain139-short8-20261016.json).
+
+## BF16 v7 short-run validation — October 16, 2026
+
+The cache-disabled v7 implementation completed the same official100
+NAVTRAIN139/NAVTEST22 short-run chain for both models: a one-update cold start, continuous updates 0–8,
+independent partial updates 0–4, own restoration 4–8, and official-initializer/restored
+checkpoint inference and scoring on 22 held-out tokens. All eight training
+jobs, 128 rank runtime reports, 32 exact restoration reports, four inference jobs
+and four official CPU scoring jobs completed without OOM; input/source/cache
+hashes remained unchanged and owned jobs exited.
+
+The runtime source is `e14dd6b2…`/244 Python files with image `3522f3ac…`.
+It disables BF16 autocast weight caching and records complete named parameter,
+freeze, shape, optimizer-group, gradient-presence and Adam-state metadata.
+FP32 master parameters, gradients and Adam moments remain FP32. The original
+backbone-freeze configuration, 8192 candidates, 16 logical NPUs/eight physical
+cards, B1/global 16 and workers0 are unchanged. Two implementation files differ
+from the FP32 reference source; the other 242 canonical-LF files match, including
+14 individually pinned raw EOL conversions.
+
+| Model | FP32 / old BF16 v6 / current BF16 v7 IDs with Adam state | Previously missing entries restored on every rank |
+| --- | ---: | ---: |
+| VADv2 | 259 / 121 / 259 | 138 |
+| HydraMDP | 279 / 141 / 279 | 138 |
+
+Cold start 1 and continuous 8 each verified all 16 ranks. Read-only inspection of each
+actual saved rank0 checkpoint found all 138 Adam steps equal to 8, establishing
+eight optimizer visits with non-None gradients. The restored entries comprise
+120 BEV-encoder, 4 can-bus MLP and 14 image-neck/FPN parameters. This verifies the
+bounded coverage repair. It does not establish nonzero gradients, update
+magnitudes, use of every trainable parameter or numerical/quality equivalence.
+
+| Original model | Model / optimizer leaves outside tolerance | Maximum model / combined tensor difference | Maximum loss difference |
+| --- | ---: | ---: | ---: |
+| VADv2 100% | 252 / 285 | 0.0002559646964073181 / 0.023486733436584473 | 0.050566673278808594 |
+| HydraMDP 100% | 274 / 320 | 0.0004060305655002594 / 0.31602728366851807 | 0.04635047912597656 |
+
+Both complete original replay comparisons remain outside tolerance. VAD
+compared 889 model/1698 combined tensors; Hydra compared 909/1778. Combined counts
+include 32 rank RNG tensors. Original tensor `atol=1e-6, rtol=1e-5` and loss
+tolerance `1e-4` were retained; tokens,LR and final RNG matched. Coverage repair
+does not resolve the separate strict-replay discrepancy.
+
+| Model | Official initializer, BF16 inference | Restored update-8 checkpoint, BF16 inference |
+| --- | ---: | ---: |
+| VADv2 | 0.8704142103684525 | 0.9057495010259622 |
+| HydraMDP | 0.9502729247085159 | 0.9562358040305806 |
+
+These 22-token measurements have no quality acceptance threshold. Eight updates
+remain inside 500 warmup updates; they are not eight epochs or convergence.
+BF16 remains opt-in and experimental. The separate 37/22 real-log fine-tuning
+run is not included in this baseline result. Evidence: [complete BF16 v7
+short-run record](results/bf16-v7-navtrain139-short8-20261016.json) and
+[all-rank/saved-Adam coverage verification](results/bf16-v7-gradient-coverage-20261016.json).
+
+## Real-log fine-tuning: BF16 v7
+
+The original 50% rare-log configurations used the separate NAVTEST-derived
+37-train/22-evaluation subset, official 50% initializers and the `e14dd6b2…`
+source with the same repaired `3522f3ac…` image. Both ran on 16 logical NPUs
+with batch 1 per rank and workers 0. Original LoRA and frozen BatchNorm were
+preserved: VAD uses reward/LoRA with `rl_finetuning=False`; Hydra enables its
+original policy-gradient loss. These tests add no synthetic-data coverage.
+
+Each completed continuous updates 0–8 and a fresh-process restore of that
+run's own update-4 checkpoint through update 8. There was no separate partial
+training run or initializer-baseline inference. All four training jobs, 64
+rank reports and 32 exact-restoration reports passed. Both original strict
+comparisons were bitwise equal at the unchanged tensor/loss tolerances.
+
+| Configuration | Model / complete tensor comparison | Maximum tensor / loss difference | Independent evaluation |
+| --- | --- | --- | --- |
+| VADv2 rare-log LoRA/reward, BF16 v7 | 989/989; 1321/1321 bitwise equal | 0 / 0 | Complete 22-anchor inference and original NAVSIM scoring; PDMS 0.8631407605887709 |
+| HydraMDP rare-log LoRA+PG, BF16 v7 | 989/989; 1261/1261 bitwise equal | 0 / 0 | Incomplete: console progress 14/22, then exit 137 after the bounded auxiliary timeout; official scoring was not executed |
+
+The complete tensor counts include per-rank RNG tensors. The Hydra progress
+counter is not a saved prediction count; no complete 22-token prediction or
+score is accepted. Its separate OOM state was not retained. The watchdog
+reported no stop actions and had not reached its cutoff, so the interruption
+is not attributed to a watchdog kill. All nine registered containers were
+stopped, and source/data/weights/cache hashes were unchanged.
+The [terminal record](results/real-log-ft37-bf16-v7-short8-20261016.json)
+therefore contains one complete evaluation chain and two complete replay
+comparisons. It does not resolve the base-planner comparisons above, establish
+quality improvement or extend the eight-update schedule to convergence.
+
+## FP32 / BF16 trajectory measurements
+
+Four CPU comparisons measured the same 22 held-out anchors, 40 poses per anchor:
+880 pose comparisons per model/stage and 3520 in total. The official-weight
+stages use identical checkpoint bytes and isolate inference precision. The
+adapted stages compare each precision's own eight-update/restored checkpoint;
+they include training-run differences and are not isolated inference effects.
+FP32 used source `4ae8ed9f…`, BF16 v7 used `e14dd6b2…`, both with image
+`3522f3ac…`; the exact two-file/14-EOL source difference was checked.
+
+| Model / weights | Same selected candidate, out of 22 | Position distance mean / p95 / max, metres | Heading difference max, radians | Official PDMS FP32 / BF16 |
+| --- | ---: | ---: | ---: | ---: |
+| VADv2 /same official initializer | 20 | 0.0175644 /0.186362 /0.509340 | 0.0265967 | 0.869621 /0.870414 |
+| VADv2 /each own eight-update checkpoint | 16 | 0.0889670 /0.480473 /1.382480 | 0.0805511 | 0.903387 /0.905750 |
+| HydraMDP /same official initializer | 17 | 0.1438604 /0.589519 /6.578134 | 0.2058898 | 0.949351 /0.950273 |
+| HydraMDP /each own eight-update checkpoint | 15 | 0.1173387 /0.655239 /1.039315 | 0.0785244 | 0.954841 /0.956236 |
+
+Values are rounded here; the [complete measurement record](results/fp32-bf16-v7-matched8-planning-20261016.json)
+retains full precision, all 40-pose differences and all seven official metrics.
+Position is Euclidean distance in metres; heading differences are wrapped to
+the circular angular distance. The original official scorer uses eight poses
+selected from each 40-pose trajectory, while this table's trajectory statistics
+cover all 40. All four CPU jobs completed with unchanged inputs and owned
+resources released. No quality-equivalence threshold was specified. Similar
+aggregate scores do not establish trajectory equivalence, improvement or
+generalization; these are NPU FP32/BF16 measurements, not GPU comparisons.
+
+The [public CPU comparison tool](../tools/validation/README.md) recomputes these measurements from original prediction exports and official score CSVs; it also accepts GPU/NPU pairs.
+
+## BF16 v6 short-run record — superseded as training acceptance
+
+Both original 100% planning configurations ran on 16 logical NPUs/eight
+physical cards, batch 1 per rank, global batch 16 and workers 0. The inputs
+were the deterministically derived NAVTRAIN139/NAVTEST22 subset and official
+100% planning initializers. The original backbone-freeze configuration and
+8192-candidate labels/order were retained; this was not fully unfrozen training.
+
+The measured runtime fingerprint was
+`4ae8ed9f3d34c88c7122b8d08df9b4ab9f5817bab794c0d429da3f3125e5fa5e`
+(244 Python files), and the public dependency-repaired image was
+`sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48`.
+BF16 autocast used FP32 model/optimizer master parameters and the recorded
+FP32 geometry, loss and normalization paths. TASK_QUEUE_ENABLE and
+ASCEND_LAUNCH_BLOCKING were unset. HF32 was disabled, Torch deterministic
+algorithms were enabled, CLOSE_MATMUL_K_SHIFT=1 and HCCL_DETERMINISTIC=true.
+
+For each model, the completed chain comprised a one-update cold-start check,
+continuous updates 0–8, an independent interruption at update 4 under the same
+eight-update schedule, and restoration of that checkpoint to update 8. All
+eight training containers exited 0 without OOM; 128 rank runtime reports and
+32 exact restoration reports passed. Four inference jobs and four official
+CPU scoring jobs each covered the same 22 held-out tokens. Source, input,
+initializer and metric-cache hashes remained unchanged, and owned jobs exited.
+The recorded gradient-dtype checks covered only gradients that were present.
+Subsequent read-only checkpoint inspection confirmed an optimizer-state
+coverage defect relative to matched FP32 checkpoints:
+
+| Model | FP32 parameter IDs with Adam state | BF16 v6 parameter IDs with Adam state | FP32-only state IDs |
+| --- | ---: | ---: | ---: |
+| VADv2 | 259 | 121 | 138 |
+| HydraMDP | 279 | 141 | 138 |
+
+The groups, parameter-ID order, hyperparameters, source, config, inputs, seed
+and eight-update horizon matched; only the precision contract differed. Both
+models had the same 138 missing IDs. This is cumulative optimizer-state
+coverage evidence, not a live-gradient comparison or a parameter-name mapping
+inferred from `state_dict` order. Frozen or unused parameters can legitimately
+lack state; the test does not require state for every optimizer-group ID.
+
+A subsequent real CPU Torch 2.7.1 probe reproduced a relevant autocast-cache
+mechanism in both Linear and Conv2d toy models: history execution under
+`no_grad` cached shared weights without gradients; the current head still
+updated, while the shared layer had no gradient or Adam state. Disabling or
+clearing the cache restored coverage in those toy cases. This establishes the
+CPU mechanism, not its whole-model cause or an explanation of earlier FP32
+replay differences. The v6 runs below remain execution records, not accepted
+BF16 training correctness. They are superseded as BF16 training acceptance.
+The subsequent cache-disabled v7 coverage repair and complete short-run results
+are recorded above; they do not change these historical v6 outcomes.
+
+| Original configuration | Replay result | Maximum model / combined tensor difference | Maximum loss difference | Model / optimizer leaves outside tolerance |
+| --- | --- | ---: | ---: | ---: |
+| `worldengine/e2e_vadv2_100pct.py` | Completed, outside tolerance | 0.000337112694978714 / 0.012727420777082443 | 0.04748106002807617 | 119 / 140 |
+| `hydramdp/e2e_hydramdp_100pct.py` | Completed, outside tolerance | 0.00038817524909973145 / 0.09518872201442719 | 0.03777027130126953 | 136 / 153 |
+
+The unchanged comparator used tensor `atol=1e-6, rtol=1e-5` and loss tolerance
+`1e-4`. VAD compared 889 model tensors and 1284 combined tensors; Hydra compared
+909 and 1364. The combined count includes optimizer state and 32 rank RNG
+tensors. Tokens, learning rates and final rank RNG states matched in both
+comparisons. Successful checkpoint restoration does not imply replay within
+tolerance.
+
+| Model | Official initializer, BF16 inference | Restored update-8 checkpoint, BF16 inference |
+| --- | ---: | ---: |
+| VADv2 | 0.8704142103684525 | 0.9036690039512171 |
+| HydraMDP | 0.9502729247085159 | 0.9552234684337766 |
+
+These are measurements on 22 tokens, without a quality acceptance threshold.
+The eight updates remain inside the original 500-update warmup. They are not
+eight epochs, convergence evidence or evidence of a quality improvement.
+The matching FP32 short-run chain is recorded above; no valid FP32/BF16
+equivalence is accepted from the defective v6 run. H20 GPU hardware is available, but its original CUDA
+AlgEngine environment has not been established; GPU/NPU equivalence was not run.
+
+Evidence: [complete BF16 short-run record](results/bf16-navtrain139-short8-20261016.json),
+[actual CPU cache-mechanism probe](results/bf16-autocast-history-cache-cpu-20261016.json),
+[matched checkpoint coverage](results/bf16-v6-optimizer-coverage-20261016.json),
+[earlier one-update checks](results/bf16-official100-navtrain139-cold-20261016.json),
+[public environment checks](docker/dependency_repair/BUILD_VALIDATION.json),
+[data reproduction](data_tools/navtrain139/VALIDATION.json) and
+[official input origins](evidence/official-data-origins-20261016.json).
+
+## Historical public recipe and CLI reproduction — October 14, 2026
 
 The published parent/child Docker recipes and AlgEngine entry points completed an actual reproduction from public commit `ec153c1`, runtime fingerprint `cc91deb8` (243 Python files). The SDK base was a verified cached official image; both recipes were rebuilt with `--no-cache`, using host networking for the parent build. The new training image was `sha256:1541450982f8c2938f3c387b929ad0ba8a90024d73712b3eabe49631812d12ce`. CPU data preparation used the separately identified `ba17931d` image. The published runtime and recipes were unchanged. `pip check` returned 1 with dependency warnings, including the MMCV protobuf constraint; the executed AlgEngine commands passed, but package metadata consistency is not claimed.
 
@@ -35,7 +270,7 @@ Both original 50% rare-log LoRA fine-tune configurations completed continuous up
 | VADv2 rare-log LoRA FT |989/989|1321/1321|0/0|0.8850917719220494|
 | HydraMDP rare-log LoRA FT |989/989|1261/1261|0/0|0.9340064182046998|
 
-The original comparator retained tensor atol 1e-6 / rtol 1e-5 and loss tolerance 1e-4. Both models completed 22 held-out trajectory predictions and separate official NAVSIM rescoring. All 14 stages exited 0 without OOM, source hashes remained unchanged, and owned jobs exited. These are one pair per fine-tune configuration; they do not resolve the intermittent full-parameter base-training replay issue or establish quality improvement, full NAVTRAIN convergence, the remaining six synthetic configurations, GPU parity or sustained operation of the new image.
+The original comparator retained tensor atol 1e-6 / rtol 1e-5 and loss tolerance 1e-4. Both models completed 22 held-out trajectory predictions and separate official NAVSIM rescoring. All 14 stages exited 0 without OOM, source hashes remained unchanged, and owned jobs exited. These are one pair per real-log fine-tune configuration; they do not resolve the intermittent replay issue in base training with the original backbone-freeze configuration or establish quality improvement, full NAVTRAIN convergence, genuine synthetic-producer coverage, GPU parity or sustained operation of that image.
 
 
 [Versioned reproduction evidence](results/actual-public-reproduction-16chip-20261014.json).
@@ -70,9 +305,10 @@ rebuilt image requires its own identity and actual run evidence.
 | --- | --- |
 | Historical fused path, 96a7bef… / a182… / post6 | Original 44-config catalogue and 36 real-config short runs, native mini epochs and evaluators; large MSDA location-gradient gate remained outside tolerance |
 | Native MSDA path, 858f9d… / a182… / post6 | Expanded CPU32 MSDA gates, 36 real-config regression, single-rank controlled replay, independent planning scoring, original dataset construction and eight-hour perception stability |
-| Current runtime, cc91deb… / 3fef77b… / post8 | Default and synchronous sixteen-rank VAD/Hydra controls and full-rank state diagnosis |
-| Current runtime, cc91deb… / ba17931… / post8 | Genuine SimScale subset: original dataset access and one/two-rank controls for two configurations |
+| Earlier post8 runtime, cc91deb… / 3fef77b… / post8 | Default and synchronous sixteen-rank VAD/Hydra controls and full-rank state diagnosis |
+| Earlier post8 runtime, cc91deb… / ba17931… / post8 | Genuine SimScale subset: original dataset access and one/two-rank controls for two configurations |
 | Public recipe rebuild, cc91deb… / 15414509… / post8 | Two original LoRA fine-tuning configurations: 16-rank train/own-checkpoint replay, independent inference and official scoring; CPU preparation used ba17931 separately |
+| BF16 runtime, 4ae8ed9… / 3522f3ac… / post8 | Two original 100% planning configurations: one-update checks, eight-update train/restore, independent 22-token inference/scoring; both final replay comparisons outside original tolerance |
 
 The genuine SimScale image ID is
 sha256:ba17931d5af64c6070417bc2059887096abf42d76b44484a9bd45262e3918707.
@@ -228,13 +464,18 @@ with original B2, and two perception configurations with original B1.
 | Catalogue | 44 configurations resolved | Original catalogue; configuration resolution is not training acceptance |
 | Real-data configurations | 36/36 completed three optimizer updates each, preserving original geometry and publisher-verified initializers | Historical 96a and native 858/post6 matrices; B1/workers 0/real mini and short schedule, not all 44 current-post8 full training |
 | Base planning and real-log FT | Original training, LoRA/reward FT, Hydra policy-gradient, inference and checkpoint paths exercised | Config-specific small-data tests; VAD rare-log reward/LoRA has rl_finetuning=False, while Hydra's base enables policy gradients |
-| Genuine synthetic configurations | Two of eight: SimScale finetune and cotrain, original CPU dataset access, one- and two-rank continuous 8/own checkpoint 4→8 controls | cc91/post8 on the separate ba179 image; genuine one-scene subset and narrowed normal pool |
+| Configurations requiring synthetic inputs | Historical narrow tests of two SimScale entries: original CPU dataset access and one/two-rank continuous 8/own checkpoint 4→8 controls | cc91/post8 on ba179; one published synthetic scene, narrowed normal pool and explicitly derived WE rewards. The six WorldEngine rollout/replay/BWM entries remain unverified with genuine exports |
 | Independent planning scoring | Three representative planners processed 22 held-out anchors each and completed original official CPU scoring | Native 858/post6; small common-log evaluation, no complete rare benchmark or GPU comparison |
 
-The six other rollout/replay/BWM configurations still require their genuine
-producer exports. The two tested SimScale paths do not cover their distributions
-or full-data sampling. Their one/two-rank comparisons were bitwise equal at the
-original gate, with both real-normal and synthetic branches observed.
+The eight entries comprise two SimScale configurations and six WorldEngine
+rollout/replay/BWM configurations. The latter still require their genuine
+producer exports. The two historical SimScale tests used one published scene
+and the declared WE four-second, 8192-candidate derived-reward protocol; they
+do not establish complete published-protocol or full-data sampling acceptance.
+Their one/two-rank comparisons were bitwise equal at the original gate, with
+both real-normal and synthetic branches observed. The separate NAVTEST-derived
+37-train/22-eval rare-log LoRA/PG tests use real logs and do not add synthetic
+configuration coverage. SimEngine rendering was not executed.
 [Catalogue](evidence/original-configs-20261013.json),
 [real-config/native-path results](evidence/msda-precision-20261013.json),
 [CPU data access](data_tools/GETITEM_CPU_VERIFIED.json),
@@ -355,12 +596,12 @@ observations and do not establish paired GPU/NPU throughput or cost advantages.
 | Independent quality | Complete NAVTEST common/rare evaluation, adequate rare coverage and agreed quality thresholds |
 | Data and capacity | Full current/history JPEG coverage, image decode/pipeline quality, full training/evaluation RAM, HBM and I/O |
 | Synthetic scope | Genuine producer exports and original training/evaluation coverage for the other six configurations |
-| Platform extensions | GPU trajectory/model comparison, multi-node training, AMP/BF16 and second-order gradients |
-| Public environment reproduction | Public recipes rebuilt without application-layer cache from a verified official SDK base; two 16-rank LoRA FT workflows completed on a second server. Dependency metadata findings and sustained operation remain open |
+| Precision and platform extensions | Resolve the completed BF16 replay comparisons outside tolerance; extend the fixed-subset FP32/BF16 measurements and complete GPU comparison, multi-node training and second-order-gradient validation |
+| Public environment reproduction | The October 16 public repaired image passed application, selected SDK-tool and original-CANN-source CPU checks, including two unfiltered pip checks with exit 0. All optional SDK tools and sustained operation of the final environment remain outside that acceptance |
 | Sustained operation | 24-hour/target-duration testing with the same final source, image and execution settings |
 
-AMP/BF16 and performance tuning are extensions to the assessed FP32 route;
-they are not prerequisites for executing the recorded FP32 workflows.
+FP32 is the default. BF16 remains opt-in and experimental while strict replay
+is unresolved. Performance tuning is separate from these correctness checks.
 Installation, data preparation, training, resume and scoring procedures are
 maintained in the [AlgEngine operation guide](../docs/algengine_ascend.md).
 The [synchronous protocol](execution/README.md) and

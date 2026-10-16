@@ -8,14 +8,14 @@ WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimE
 
 | 操作 | 入口 |
 | --- | --- |
-| 构建、导入运行环境 | [容器安装说明](../ascend/docker/README_zh.md) |
+| 构建运行环境 | [公开父镜像](../ascend/docker/README_zh.md)，再构建[应用与编译工具依赖环境](../ascend/docker/dependency_repair/README_zh.md) |
 | 选择性下载官方数据和权重 | `ascend/tools/download_algengine_assets.py` |
-| 准备真实小数据 | `ascend/tools/prepare_real_mini.py`，再执行 `ascend/split_mini.py` |
+| 固定官方数据子集 | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README_zh.md)；原 NAVTEST-only mini 路径在第3节保留 |
 | 按原配置训练 | `ascend/run_container.py --config ...` |
 | NPU 训练与评价脚本 | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
 | 完整断点续训 | 原训练参数，加 `--resume ...` 和新输出目录 |
 | 推理 | `ascend/run_container.py --task inference --config <训练导出的配置>` |
-| 小数据独立评分 | CPU 执行 `ascend/official_score.py` |
+| 独立官方评分 | 已有真实 metric-cache 时执行 `ascend/tools/score_cached.py`；需先从日志/地图生成时用 `ascend/official_score.py` |
 | 稀有场景筛选 | 原 `projects/AlgEngine/scripts/rare_case_sampling_by_pdms.py` |
 | 真实 SimScale 数据准备 | [数据工具说明](../ascend/data_tools/README_zh.md) |
 | 复跑实测的 16 芯片同步候选 | [八次更新的专用步骤](../ascend/execution/README_zh.md) |
@@ -30,7 +30,7 @@ git rev-parse HEAD
 git submodule status
 ```
 
-先完成[容器安装](../ascend/docker/README_zh.md)。宿主需要可用的 Ascend 驱动、Docker、Python 3 和 NPU 字符设备；镜像提供 PyTorch/Torch-NPU、OpenMMLab、DrivingSDK 和地图处理依赖。不要在此镜像上覆盖安装原仓的 CUDA wheel。
+先构建[公开父镜像](../ascend/docker/README_zh.md)，再完成[依赖环境及三项 CPU 检查](../ascend/docker/dependency_repair/README_zh.md)。宿主需要可用的 Ascend 驱动、Docker、Python 3 和 NPU 字符设备；镜像提供 PyTorch/Torch-NPU、OpenMMLab、DrivingSDK 和地图处理依赖。不要在此镜像上覆盖安装原仓的 CUDA wheel。
 
 按安装说明取得镜像标签和**实际 image ID**。下文显式传递这两个值，不依赖 launcher 的历史默认镜像。开始新的训练可使用自行构建的镜像；恢复已有断点必须使用原训练的镜像与源码。
 
@@ -69,6 +69,13 @@ VOCAB="$DATA/alg_engine/test_8192_kmeans.npy"
 VAD_INIT="$WEIGHTS/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth"
 VAD_BASE="$WEIGHTS/vadv2/e2e_vadv2_50pct_ep8.pth"
 HYDRA_BASE="$WEIGHTS/hydramdp/e2e_hydramdp_50pct_ep8.pth"
+```
+
+内容锁也包含官方 100% 规划基座，两份权重已完成[整文件大小和 SHA-256 校验](../ascend/evidence/planning-checkpoints-20261016.json)。以这些基座开始新的微调任务时，通过 `--checkpoint` 指定对应文件；训练数据范围仍由配置和 filter 决定。
+
+```bash
+VAD_BASE_100="$WEIGHTS/vadv2/e2e_vadv2_100pct_ep8.pth"
+HYDRA_BASE_100="$WEIGHTS/hydramdp/e2e_hydramdp_100pct_ep8.pth"
 ```
 
 Hugging Face及hf-mirror线路请求固定发布revision。魔搭线路请求其 `master`，按同一内容锁的文件大小和SHA256校验，不宣称向魔搭请求了Hugging Face的commit。下载记录分别保存请求revision和内容参考revision。国内线路可选 `--source modelscope`，官方线路用 `--source huggingface`；有效旧文件会复用。工具不下载相机包、地图、原始日志或SimEngine资产，换线路时保留哈希校验。
@@ -162,7 +169,177 @@ DATA/
 
 地图除 `nuplan-maps-v1.0.json` 外，还需对应区域的真实 `.gpkg`。`LOGS` 应指向与选中 token 相符的 NAVSIM 原始日志目录，独立 CPU 评分时使用。
 
+## 推荐流程：NAVTRAIN139 / NAVTEST22
+
+固定小数据验证使用[公开准备工具](../ascend/data_tools/navtrain139/README_zh.md)：从原 NAVTRAIN 日志保留139个训练锚点，从另一条 NAVTEST 日志保留22个评价锚点，原标签和8192候选 PDM 保持。这是从官方数据确定性派生的验证子集，不是官方单独发布的标准 mini，也不代表完整基准。
+
+### 准备环境、原始输入和权重
+
+先构建公开 post8 父镜像，再按[应用与编译工具依赖环境](../ascend/docker/dependency_repair/README_zh.md)构建最终镜像，执行其中三条 CPU 验收命令。将 `IMAGE` 和 `IMAGE_ID` 设置为最终镜像。实测修复环境的两个原始 `pip check` 及重新加载 CANN 后的 API 检查已通过；CPU 环境检查不替代模型验收。
+
+按第2节下载标注、PDM和官方权重，包含 `--group navtrain`。准备器的[输入锁](../ascend/data_tools/navtrain139/INPUTS.lock.json)列出六个原文件的准确地址、revision、大小和完整哈希，已有文件经校验后直接复用。两个相机包必须是 **mini camera 12** 和 **test camera 30**。无缓存时，六个文件共47,913,227,335字节。[独立官方 API 核验](../ascend/evidence/official-data-origins-20261016.json)于2026-10-16逐项确认六文件的固定 revision、路径、大小和 LFS 哈希；该查询只取元信息，不下载文件内容。无需下载整套相机或 SimEngine 资产。
+
+执行数据工具文档中的[完整 CPU 准备命令](../ascend/data_tools/navtrain139/README_zh.md#在-linux-服务器执行)，设置 `OUTPUT_PARENT="$WORK/navtrain139"`，先创建父目录，保持其中 `prepared/` 不存在。工具直接读取两个原始相机包，无需先解压；最终只复制1832张实际引用的原 JPEG，并输出 launcher 可直接读取的训练/评价 split。此输出不再调用 `split_mini.py`。原文件哈希、CPU 重建、完整元信息比较与图像检查见[VALIDATION.json](../ascend/data_tools/navtrain139/VALIDATION.json)。
+
+第2节定义的 `VOCAB`、`VAD_BASE_100` 和 `HYDRA_BASE_100` 分别指向官方词表和100%训练的规划基座。下方 `--mini-prepared` 选择139/22验证数据；权重名称不改变训练数据范围。`MAPS` 需指向完整地图目录。
+
+### 短周期验证：八次更新
+
+有限设备时段优先使用此路径。为 VADv2/HydraMDP 和 FP32/BF16 四种组合分别执行，输出目录彼此独立。连续分支运行8次更新；另一独立分支仍设置 `--steps 8`，仅用 `--stop-after 4` 提前停止，再从自身第4次更新断点恢复至8。不能把中断分支改成 `--steps 4`，否则学习率调度合同不同。此流程使用 IterBasedRunner，不代表八个 epoch 或收敛。
+
+```bash
+PREPARED="$WORK/navtrain139/prepared"
+test -f "$PREPARED/manifest.json"
+test -f "$PREPARED/preparation.json"
+test -f "$MAPS/nuplan-maps-v1.0.json"
+MODEL=vad                 # vad or hydra
+PRECISION=fp32            # repeat separately with bf16
+DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+case "$MODEL" in
+  vad) CONFIG=worldengine/e2e_vadv2_100pct.py; INITIALIZER="$VAD_BASE_100" ;;
+  hydra) CONFIG=hydramdp/e2e_hydramdp_100pct.py; INITIALIZER="$HYDRA_BASE_100" ;;
+  *) printf 'Select MODEL=vad or MODEL=hydra\n' >&2; exit 2 ;;
+esac
+STEM=$(basename "$CONFIG" .py)
+PREFIX="$RUNS/${MODEL}_navtrain139_${PRECISION}_updates8"
+SHORT_COMMON=(--devices "$DEVICES" --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$SOURCE/projects/AlgEngine/configs/$CONFIG"
+  --mini-prepared "$PREPARED" --checkpoint "$INITIALIZER" --vocab "$VOCAB"
+  --maps "$MAPS" --runtime --steps 8 --batch-size 1 --workers 0
+  --precision "$PRECISION" --deterministic --upstream-schedule
+  --checkpoint-interval 4 --check-interval 1 --memory 256g --cpus 128
+  --pids-limit 8192)
+
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" --output "${PREFIX}_continuous"
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" --stop-after 4 \
+  --output "${PREFIX}_partial"
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" \
+  --resume "${PREFIX}_partial/iter_4.pth" --output "${PREFIX}_resumed"
+END_CHECKPOINT=iter_8.pth
+END_UPDATES=8
+```
+
+选定这一路径后，跳过下一节八个 epoch 命令，继续执行共用的 CPU 数值比较、独立22个 token 推理和官方评分。使用刚设置的 `PREFIX`、`END_CHECKPOINT` 和 `END_UPDATES`。
+
+### 原生 epoch 流程：八个 epoch
+
+需要原生 epoch 验证时，选择这一替代路径；不要把它与上面的八次更新断点混用。每次使用新输出目录；连续训练、中断训练和恢复训练均保留八个 epoch 的相同调度终点。
+
+```bash
+PREPARED="$WORK/navtrain139/prepared"
+test -f "$PREPARED/manifest.json"
+test -f "$PREPARED/preparation.json"
+test -f "$MAPS/nuplan-maps-v1.0.json"
+MODEL=vad                 # vad or hydra
+PRECISION=fp32            # bf16 is an experimental, separate run
+DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+case "$MODEL" in
+  vad) CONFIG=worldengine/e2e_vadv2_100pct.py; INITIALIZER="$VAD_BASE_100" ;;
+  hydra) CONFIG=hydramdp/e2e_hydramdp_100pct.py; INITIALIZER="$HYDRA_BASE_100" ;;
+  *) printf 'Select MODEL=vad or MODEL=hydra\n' >&2; exit 2 ;;
+esac
+STEM=$(basename "$CONFIG" .py)
+PREFIX="$RUNS/${MODEL}_navtrain139_${PRECISION}_epochs8"
+COMMON=(--devices "$DEVICES" --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$SOURCE/projects/AlgEngine/configs/$CONFIG"
+  --mini-prepared "$PREPARED" --checkpoint "$INITIALIZER" --vocab "$VOCAB"
+  --maps "$MAPS" --runtime --epochs 8 --batch-size 1 --workers 0
+  --precision "$PRECISION" --deterministic --upstream-schedule
+  --checkpoint-interval 4 --check-interval 1 --memory 256g --cpus 128
+  --pids-limit 8192)
+
+python3 ascend/run_container.py "${COMMON[@]}" --output "${PREFIX}_continuous"
+python3 ascend/run_container.py "${COMMON[@]}" --stop-after-epochs 4 \
+  --output "${PREFIX}_partial"
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --resume "${PREFIX}_partial/epoch_4.pth" --output "${PREFIX}_resumed"
+END_CHECKPOINT=epoch_8.pth
+END_UPDATES=72
+```
+
+139个锚点在16 rank、每 rank B1时，每 epoch 为9次更新。连续训练与恢复终点为72次更新，中断分支停在36次。这验证小子集上的原生 epoch 训练流程，不代表原103,288锚点训练集已收敛。256g是此子集的训练内存分配，不能用于推断全量训练容量。设备列表表示同一宿主上的16个逻辑芯片，运行前核对物理卡映射与空闲状态。
+
+默认 `fp32` 关闭公开 Matmul/Conv HF32 开关。`bf16` 使用原生NPU前向autocast并关闭历史/当前帧共享权重缓存，主参数、梯度、优化器状态、MSDA和规划损失保持FP32，不使用loss scaler。几何与原BatchNorm/SyncBatchNorm在FP32岛内计算，保留原模块、运行统计和collectives。源码`e14dd6b2…`/244个Python文件及实测`3522…`镜像下，两类官方100%规划配置均完成[16rank八次BF16更新、自身恢复及独立22token推理/评分](../ascend/results/bf16-v7-navtrain139-short8-20261016.json)。[全部rank和保存的Adam状态](../ascend/results/bf16-v7-gradient-coverage-20261016.json)验证此前每模型138个覆盖缺项恢复，但两组完整数值重放仍超未放宽的原容差。8次更新在500次warmup内，不证明收敛、质量提升或数值等价。测试此显式试验模式时设`PRECISION=bf16`，使用独立输出和自身断点；FP32断点不能按BF16合同继续恢复。
+
+v6 执行记录不再作为训练验收依据：[匹配检查点确认两个 BF16 模型相对 FP32 均缺少138个优化器状态ID](../ascend/results/bf16-v6-optimizer-coverage-20261016.json)。[真实 CPU 缓存实验](../ascend/results/bf16-autocast-history-cache-cpu-20261016.json)还复现了历史 `no_grad` 后共享层缺梯度，而 loss 仍有限、head 仍更新的现象。CPU机制和旧检查点覆盖缺陷均已确认；v7的覆盖修复另经真实NPU运行及保存状态验证，不能据此解释旧FP32严格重放差异或宣布通用数值修复。
+
+[已完成的FP32／BF16对照](../ascend/results/fp32-bf16-v7-matched8-planning-20261016.json)包含四个模型／阶段组合，同一22个独立锚点、每组全部40pose。相同官方权重的推理比较与各精度独立训练8次更新后的比较分开解释；量测未设质量等价阈值，也不是GPU对照。
+
+在无 NPU 的 CPU 容器内，对两个完整终点执行原比较器：
+
+```bash
+COMPARISON="${PREFIX}_comparison"
+mkdir -p "$COMPARISON"
+COMPARE_EXIT=0
+docker run --rm --runtime runc --network none --memory 24g --cpus 8 \
+  --pids-limit 2048 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
+  -e OMP_NUM_THREADS=4 -e OPENBLAS_NUM_THREADS=4 \
+  -v "$SOURCE:/source:ro" -v "$RUNS:$RUNS:ro" \
+  -v "$COMPARISON:/checks:rw" -w /source "$IMAGE_ID" \
+  /opt/conda/envs/bevformer/bin/python -c '
+import runpy, sys, torch, torch_npu
+from torch_npu.utils import serialization
+assert torch.load is serialization.load
+assert not torch.npu.is_initialized()
+sys.argv = ["ascend/compare_resume.py"] + sys.argv[1:]
+runpy.run_path("ascend/compare_resume.py", run_name="__main__")
+' --continuous "${PREFIX}_continuous/$END_CHECKPOINT" \
+  --resumed "${PREFIX}_resumed/$END_CHECKPOINT" \
+  --continuous-run "${PREFIX}_continuous" --partial-run "${PREFIX}_partial" \
+  --resumed-run "${PREFIX}_resumed" --output /checks/comparison.json \
+  || COMPARE_EXIT=$?
+python3 - "$COMPARE_EXIT" "$COMPARISON/comparison.json" "$END_UPDATES" <<'PY'
+import json, sys
+from pathlib import Path
+code = int(sys.argv[1])
+report = json.loads(Path(sys.argv[2]).read_text())
+expected = {0: "pass", 1: "fail"}
+assert code in expected and report["result"] == expected[code]
+assert report["tensor_tolerance"] == {"atol": 1e-6, "rtol": 1e-5}
+assert report["loss_absolute_tolerance"] == 1e-4
+assert report["world_size"] == 16 and report["completed_updates"] == int(sys.argv[3])
+print("Original numerical comparison:", report["result"])
+PY
+```
+
+比较覆盖模型/优化器张量、各 rank RNG、batch token、学习率和损失。原张量容差为 `atol=1e-6, rtol=1e-5`，最大损失差需小于 `1e-4`。对于已完成且超出原容差的对照，命令保留原 JSON 的 `result=fail` 和退出1，并检查报告完整性，让后续独立推理/评分继续；报告缺失或不一致仍会中止流程。即使载入与训练都正常退出，比较超限仍须保留为数值结果，不得绕过源码、数据、镜像或精度合同。
+
+### 独立推理和官方 CPU 评分
+
+使用所选短周期或 epoch 分支导出的配置与自身终点断点。`END_CHECKPOINT` 对应 `iter_8.pth` 或 `epoch_8.pth`。若评价连续分支，替换相应路径，并选择另一个输出目录。
+
+```bash
+INFERENCE="${PREFIX}_resumed_eval"
+python3 ascend/run_container.py --devices 0 --task inference \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "${PREFIX}_resumed/${STEM}_rank0.py" \
+  --checkpoint "${PREFIX}_resumed/$END_CHECKPOINT" --mini-prepared "$PREPARED" \
+  --vocab "$VOCAB" --maps "$MAPS" --precision "$PRECISION" --deterministic \
+  --memory 64g --cpus 16 --pids-limit 2048 --output "$INFERENCE"
+
+CACHE=/datasets/worldengine/official_metric_cache
+SCORE="${PREFIX}_resumed_score"
+mkdir -p "$SCORE"
+docker run --rm --runtime runc --network none --memory 24g --cpus 8 \
+  --pids-limit 2048 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
+  -e OMP_NUM_THREADS=1 -e OPENBLAS_NUM_THREADS=1 \
+  -v "$SOURCE:/source:ro" -v "$INFERENCE:/predictions:ro" \
+  -v "$CACHE:$CACHE:ro" -v "$SCORE:/output:rw" -w /source "$IMAGE_ID" \
+  /opt/conda/envs/bevformer/bin/python ascend/tools/score_cached.py \
+  --predictions /predictions/predictions.pkl --metric-cache "$CACHE" \
+  --output /output/score
+cat "$SCORE/score/official_score.json"
+```
+
+评分需要覆盖22个预测 token 的原官方 NAVSIM metric-cache。训练用 PDM 标签不能代替它。工具仅选取本次预测的 token，不改缓存内容和评分数学。若缓存使用软链，需在容器内保留目标可达；必要时将目标根目录按同一绝对路径只读挂载。没有官方缓存时，按第6节从真实日志与地图生成。
+
+分别检查 `inference_validation.json`、22个 token 的官方评分及原数值比较 JSON。完整 NAVTRAIN 收敛、完整 NAVTEST 质量、GPU 对照和通用16 rank数值复现仍需单独验收。当前模型结果见[验证报告](../ascend/VALIDATION_zh.md)，不能用环境或数据准备的 CPU 通过结果代替模型通过。
+
+可使用[公开CPU比较工具](../tools/validation/README.md)从原预测和官方CSV重算全部位姿及七项评分差分；同一接口可用于FP32／BF16或GPU／NPU输出，不设置质量等价阈值。
+
 ## 3. 准备真实小数据，完成单芯片八次更新
+
+这是另一条 NAVTEST-only smoke 数据路径。需要真实 NAVTRAIN 训练锚点和固定独立评价集时，使用上面的 NAVTRAIN139/NAVTEST22 推荐流程。
 
 此流程从真实 NAVTEST 标注、PDM 和可读取的相机图像中抽取小样本，保留原标签及 8192 项奖励向量。训练、评价按整段驾驶日志分开，用于适配验证；它不是完整官方 NAVTRAIN/NAVTEST 基准。
 
@@ -332,7 +509,7 @@ runpy.run_path("ascend/compare_resume.py", run_name="__main__")
 cat "$CHECK/comparison.json"
 ```
 
-比较器按原容差检查 model／optimizer Tensor、loss、tokens、LR 和最终 RNG。精确载入通过后，后续计算仍可能产生差异；默认 16 芯片严格对照目前有失败记录，需保留并查看[当前结果](../ascend/results/strict-replay-post8-20261014.json)，不能仅凭载入成功判断连续训练数值相同。
+比较器按原容差检查 model／optimizer Tensor、loss、tokens、LR 和最终 RNG。精确载入通过后，后续计算仍可能产生差异；已完成的默认16芯片严格对照仍有部分结果超出原容差，需保留并查看[当前结果](../ascend/results/strict-replay-post8-20261014.json)，不能仅凭载入成功判断连续训练数值相同。
 
 ## 6. 推理、原评价和独立官方评分
 
@@ -499,6 +676,8 @@ PY
 
 ## 8. 真实日志微调和合成数据配置
 
+当前[BF16 v7真实日志微调记录](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json)与NAVTRAIN139分开：两个原37/22配置均完成8次更新、自身第4次更新恢复及逐位一致的续训对照；VAD完成22锚点推理／评分，Hydra在日志进度14/22时因有界执行超时中止，未评分。这不增加producer合成数据覆盖，也不代表收敛。
+
 VAD 的 rare **真实日志**微调使用对应 planner 权重初始化，并传入上节 YAML；这一配置无需 SimEngine rollout：
 
 ```bash
@@ -577,7 +756,8 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | `can't start new thread`／EAGAIN | 检查容器 PID／线程数。默认上限为 `max(2048, 512×rank数)`，16 rank 示例设置 8192。 |
 | `EL0020`、设备占用、`507899` | 暂停在该芯片启动新作业，核对具体设备／容器归属；不能仅凭空进程列表判断驱动可用。 |
 | resume contract 不匹配 | 核对源码、镜像、数据／filter、精度环境、world size 和 schedule，恢复一致输入。 |
-| NaN／Inf 或最终 Tensor 超容差 | 保留运行目录，检查原始 loss、gradient 和状态记录，按原数值门槛判定。 |
+| NaN／Inf | 保留运行目录，排查原始 loss、gradient 和训练状态。 |
+| 已完成对照，结果超出原容差 | 保留原数值报告和断点，按原门槛判定；载入成功不代表后续数值重放相同。 |
 | 官方评分找不到 cache payload | 核对 token 覆盖及 `metadata/*.csv` 路径，搬迁后重建索引或 cache。 |
 
 小数据训练、恢复和评分的实测条件、版本及结果见[验证报告](../ascend/VALIDATION_zh.md)。公开配方重建、两类微调的 16 芯片训练与续训、独立日志推理及官方评分已有实测。公开同步入口四组基座训练重复均完成，其中两组超容差，数值问题仍待解决；完整 NAVTRAIN 收敛、完整独立 NAVTEST、其余六个真实合成配置和目标环境持续训练尚未验收。

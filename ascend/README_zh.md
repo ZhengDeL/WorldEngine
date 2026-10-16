@@ -1,72 +1,57 @@
 # WorldEngine AlgEngine · Ascend 910C
 
-[English](README.md) | [安装与使用](../docs/algengine_ascend_zh.md) | [验证报告](VALIDATION_zh.md)
+[English](README.md) · [安装与使用](../docs/algengine_ascend_zh.md) · [验证报告](VALIDATION_zh.md)
 
-`ascend-910c-algengine` 分支提供 AlgEngine 的 Ascend NPU 运行入口，覆盖数据准备、模型训练、断点续训、推理、评价和微调。适配范围为 AlgEngine；SimEngine 的仿真与渲染保留 GPU 路径，其真实导出数据可作为 AlgEngine 的训练输入。
+`ascend-910c-algengine` 分支提供 AlgEngine 的 NPU 训练、微调、断点恢复、推理和评价入口。SimEngine 保留原 GPU 仿真与渲染流程。
+
+## 开始使用
+
+在 Linux ARM64 昇腾服务器按以下顺序操作：
+
+1. 构建[公开 post8 父镜像](docker/README_zh.md)，再构建[应用与编译工具依赖环境](docker/dependency_repair/README_zh.md)，执行三项 CPU 检查并记录实际镜像 ID。
+2. 使用六个完整哈希锁定的官方原文件，准备[NAVTRAIN139 / NAVTEST22验证子集](data_tools/navtrain139/README_zh.md)。已有服务器缓存经校验后直接复用。
+3. 下载[官方规划基座与词表](../docs/algengine_ascend_zh.md#2-数据下载权重和目录)。
+4. 按[训练、续训、推理与评分步骤](../docs/algengine_ascend_zh.md#推荐流程navtrain139--navtest22)执行。默认精度为 FP32，BF16 仍在模型验证中。
+
+139/22是从官方 NAVTRAIN/NAVTEST 确定性派生的验证子集，不是单独发布的标准 mini。原标签、8192候选顺序和图像字节保持；无缓存时需要六个原文件，共47.91 GB，最终只使用1832张 JPEG。此流程无需下载完整5 TB资产。
 
 ## 文档导航
 
 | 文档 | 内容 |
 | --- | --- |
-| [安装与使用](../docs/algengine_ascend_zh.md) | 数据准备、原配置训练、续训、评价、稀有场景筛选和微调命令 |
-| [运行环境](docker/README_zh.md) | 基础镜像、post8 构建、版本检查和离线转移 |
-| [验证报告](VALIDATION_zh.md) | 实测配置、数值结果、资源需求、已知限制及证据索引 |
-| [16 芯片同步重放](execution/README_zh.md) | VAD/Hydra 八次更新的连续训练与自身断点对照 |
-| [真实 SimScale 数据准备](data_tools/README_zh.md) | 真实场景转换、8192 候选奖励及两个配置的小样本复现 |
-| [MSDA 实现与验证](MSDA_zh.md) | FP32 采样实现、前向与梯度检查、复现方法 |
+| [安装与使用](../docs/algengine_ascend_zh.md) / [English](../docs/algengine_ascend.md) | 完整命令、原配置、数据准备、训练、续训、推理、评分和微调 |
+| [依赖环境](docker/dependency_repair/README_zh.md) | 公开 Docker 配方、应用/工具解释器分离、wheel 锁和 CPU 验收 |
+| [父镜像配方](docker/README_zh.md) | 官方 SDK 基座、post8 父镜像构建及离线转移 |
+| [NAVTRAIN139 / NAVTEST22](data_tools/navtrain139/README_zh.md) | 六个官方原始输入、固定子集筛选与 CPU 重建实测 |
+| [验证报告](VALIDATION_zh.md) / [English](FULL_ALGENGINE.md) | 分版本模型结果、数值对照、资源需求与待验收项 |
+| [FP32 MSDA](MSDA_zh.md) | 实现、原前向/梯度门槛与复现方法 |
+| [同步重放对照](execution/README_zh.md) | 历史八次更新 VAD/Hydra 专用对照 |
+| [SimScale 数据工具](data_tools/README_zh.md) | 真实小样本转换和两个合成配置的数据流程 |
 
-## 功能与验证范围
+## 验证范围
 
-| 功能 | 已验证范围 | 适用边界 |
+| 项目 | 已有记录 | 尚未覆盖 |
 | --- | --- | --- |
-| 原配置训练与微调 | VADv2、HydraMDP、DiffusionDrive 及两类 UniAD 感知配置的小数据训练；36 个真实数据配置各完成三次更新 | 配置覆盖结果有独立版本记录，未验证全部配置的完整训练与收敛 |
-| 完整检查点恢复 | 模型、优化器、调度与各 rank RNG 恢复；原生 epoch 和短程迭代均有实测 | 精确载入与后续数值一致性分别判定 |
-| 16 芯片严格重放 | 公开同步入口四组基座训练对照均完成，两组通过原容差；新镜像两类 LoRA 微调各一组全部逐位相同 | 基座训练仍有间歇性超容差项，微调通过不能替代全参数训练验收 |
-| 推理与评价 | 原感知评价器、规划轨迹输出及官方 NAVSIM CPU 评分 | 小数据结果未覆盖完整独立 NAVTEST common/rare 基准或 GPU 对照 |
-| 真实合成数据配置 | 两个 SimScale 配置的 CPU 数据链及单、双 rank 训练与续训 | 共八个相关配置，其余六个真实导出尚未齐备 |
+| 依赖环境 | 公开组合镜像的应用、所选 SDK 工具、原 CANN 重加载三项 CPU 检查通过；两个未过滤的 `pip check` 均退出0 | CPU通过不代表冷缓存 NPU 业务或全部可选 SDK 工具已验收 |
+| NAVTRAIN139 / NAVTEST22 | 公开 CLI 从六个官方原文件重建；1832张 JPEG 完整 SHA/解码通过；六份派生元信息完整值、顺序及字节均与原子集一致 | 一个训练日志、一个评价日志；完整 NAVTRAIN 收敛和完整 NAVTEST 质量待验收 |
+| FP32训练与微调 | 两原100%规划配置均完成[8次更新、自身断点恢复及22token推理/评分](results/fp32-navtrain139-short8-20261016.json)；历史微调分版本记录 | 当前两组严格对照均完整完成且超原容差；恢复和分数测量不代表收敛或质量提升 |
+| BF16 v7 | 两类官方100%规划配置完成[8次更新、自身恢复及22token推理/评分](results/bf16-v7-navtrain139-short8-20261016.json)；[全部16rank及实际检查点验证每模型138个梯度/Adam缺项恢复](results/bf16-v7-gradient-coverage-20261016.json) | 两组完整严格对照仍超原容差；继续为显式试验模式，不代表收敛或质量等价。存在覆盖缺陷的v6另存历史 |
+| FP32／BF16输出对照 | 同一22个独立锚点完成[四组各880pose比较](results/fp32-bf16-v7-matched8-planning-20261016.json)，分别为相同官方权重与各自8次更新检查点 | 量测未设质量等价阈值；适配检查点包含训练运行差异，不是GPU／NPU对照 |
+| 真实日志微调，BF16 v7 | [两个37/22配置均完成8次更新及自身4→8恢复](results/real-log-ft37-bf16-v7-short8-20261016.json)，VAD／Hydra续训张量及loss逐位一致 | VAD独立22锚点评分完成；Hydra推理进度14/22后有界超时中止，未评分。这不是NAVTRAIN139或合成数据 |
+| 合成输入 | 历史两个SimScale入口已有单场景、明确WE派生奖励协议的CPU及单/双rank结果 | 其余六个WorldEngine rollout/replay/BWM真实导出和完整发布协议未验收；37/22真实日志FT不计入合成覆盖 |
 
-各项结果的源码、镜像、数据范围和原始记录见[验证报告](VALIDATION_zh.md)。
+2026-10-16实测修复镜像为 `sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48`。[构建记录](docker/dependency_repair/BUILD_VALIDATION.json)与[数据重建记录](data_tools/navtrain139/VALIDATION.json)列出实际输入和范围。重新构建的镜像、重新准备的数据都需要自身验证；文件同名不能替代断点兼容检查。
 
-## 公开源码实机复现
+## 数据、权重与运行入口
 
-公开父、子镜像配方已从核验过的官方 SDK 基座无应用层缓存重建，并在第二台服务器完成 14 项真实小集流程。前四项 CPU 数据准备使用既有 post8 镜像，后十项训练与评价使用新镜像。两类原 rare-log LoRA 微调均完成 16 芯片训练、自身断点恢复、原严格比较、22 个独立锚点推理和官方评分；两组比较全部逐位相同。实际准备的训练候选为 37 个，评价为 22 个，按完整驾驶日志划分。[实测证据](results/actual-public-reproduction-16chip-20261014.json)。
+[主指南](../docs/algengine_ascend_zh.md#推荐流程navtrain139--navtest22)给出两条独立调度路径：八次更新的短周期闭环在自身第4次更新处中断，原生八个 epoch 路径在第4个 epoch 处中断；各自继续断点恢复、独立推理和官方 CPU 评分。两条路径均可选择 FP32/BF16。恢复要求源码、镜像、精度、数据/filter、world size、batch和调度合同相同，workers为0，输出使用新目录。官方发布权重用于初始化新训练，不能作为迁移后的完整恢复断点。
 
-新镜像的 `pip check` 仍报告 16 项依赖声明问题，包括 protobuf 约束。这些问题没有阻止已测流程完成，但完整依赖一致性及其他配置的运行仍需核实。
+原[NAVTEST-only smoke流程](../docs/algengine_ascend_zh.md#3-准备真实小数据完成单芯片八次更新)、全量数据入口和稀有日志微调命令仍保留。完整训练的 RAM、图像I/O和设备数量需按目标模型和数据实测，元信息文件大小不等于训练内存。
 
-## 快速开始
+## 历史对照与未完成项
 
-在 Linux ARM64 昇腾服务器克隆迁移分支：
+早期 `cc91…`/243文件源码、post8/3fef镜像的16 rank同步基座对照共四组，两组在原容差内、两组超限；默认执行环境的已完成对照也有超出原数值容差的结果。同步设置尚不能作为通用数值修复。2026-10-14公开镜像的 LoRA 实测见[独立记录](results/actual-public-reproduction-16chip-20261014.json)；当时镜像的16项依赖提示不代表本次修复镜像的 CPU 结果。
 
-```bash
-git clone --branch ascend-910c-algengine --recurse-submodules \
-  https://github.com/ZhengDeL/WorldEngine.git
-cd WorldEngine
-```
+八小时感知训练属于较早的 `858f9d…`/post6环境，不能归到当前镜像。完整 NAVTRAIN 图像训练与收敛、完整独立 NAVTEST、GPU 对照、重复数值复现和多机扩展仍需单独验收，详见[验证报告](VALIDATION_zh.md)。
 
-1. 按[运行环境说明](docker/README_zh.md)构建或导入镜像，记录实际镜像 ID。
-2. 按[数据准备说明](../docs/algengine_ascend_zh.md#2-数据下载权重和目录)准备官方标注、权重、所选相机图像和地图。
-3. 执行[真实小数据验证](../docs/algengine_ascend_zh.md#3-准备真实小数据完成单芯片八次更新)，核对运行记录后，再按目标配置开展训练。
-
-数据、权重下载与解压均在服务器执行。小数据验证可选择性准备 AlgEngine 输入，无需下载全部约 5 TB 资产。
-
-## 运行环境与设备
-
-| 项目 | 实测环境 |
-| --- | --- |
-| 宿主平台 | Linux ARM64，Atlas 800I A3 / Ascend910_9362 |
-| 设备布局 | 8 张双芯物理卡，16 个逻辑芯片，每芯片 64 GiB HBM |
-| 目标运行栈 | PyTorch 2.7.1、Torch-NPU 2.7.1.post8；完整镜像与依赖记录见[环境说明](docker/README_zh.md) |
-| 已验证精度 | FP32；整模型 AMP/BF16 尚未验证 |
-| NPU 入口 | `ascend/run_container.py`；`e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
-
-`--devices` 使用宿主逻辑芯片编号。单芯片功能验证与多芯片训练的资源需求不同；完整 NAVTRAIN 数据对象常驻内存已测量，完整训练的内存、I/O 和机器数量仍需验证。
-
-## 已知限制
-
-公开同步入口的四组独立基座训练对照已完成，其中两组超出原容差，严格数值问题仍待解决。已有八小时感知训练属于较早的 source858/post6 环境；目标 cc91/post8 环境的持续训练尚未完成。
-
-完整 NAVTRAIN 图像训练与收敛、完整独立 NAVTEST、GPU 输出对照、其余六个真实合成配置及多机扩展尚未验证。公开配方重建及两类微调的小集完整流程已有实测，不能替代全部配置和完整训练验收。具体测量与限制见[验证报告](VALIDATION_zh.md#已知限制与待验证范围)。
-
-## 问题报告
-
-提交运行问题时，请提供源码提交与指纹、镜像 ID、配置、精度、逻辑芯片布局、数据 split、复现命令，以及 `launch.json`、`runtime_rank*.json/jsonl` 和相关比较报告。请移除凭据和私有数据路径。
+提交问题时请提供源码提交/指纹、镜像 ID、配置、精度、逻辑芯片映射、数据 split、命令、`launch.json`、各 rank runtime文件及比较报告，并移除凭据与私有数据路径。

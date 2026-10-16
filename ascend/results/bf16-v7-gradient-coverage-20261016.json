@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "result": "independently_verified_actual_VAD_Hydra_BF16_v7_saved_138_parameter_state_coverage_restored",
+  "actual_date": "2026-10-16",
+  "source_fingerprint_FP32_reference": "4ae8ed9f3d34c88c7122b8d08df9b4ab9f5817bab794c0d429da3f3125e5fa5e",
+  "source_fingerprint_BF16_v7": "e14dd6b2bfb2f7f26333733efa133780b1223c055966e0542bd8c0202439f5bc",
+  "source_python_files": 244,
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "torch_npu_version": "2.7.1.post8",
+  "torch_npu_git": "a783f11e456f27d7451a1ea745f1556823357c95",
+  "historical_actual_reference_sha256": "286aa245411f248df701c03f32acbbc8f540e227d6c2f2f11847b330a417258c",
+  "logical_NPU_ranks": 16,
+  "physical_cards": 8,
+  "per_rank_batch": 1,
+  "actual_train_anchors": 139,
+  "independent_eval_anchors": 22,
+  "BF16_autocast_weight_cache_enabled": false,
+  "FP32_master_parameters_and_Adam_state": true,
+  "profiles": [
+    {
+      "profile": "vad",
+      "parameters_in_original_optimizer_groups": 730,
+      "old_BF16_state_parameter_count": 121,
+      "FP32_reference_state_parameter_count": 259,
+      "BF16_v7_state_parameter_count": 259,
+      "prior_missing_parameters": 138,
+      "all138_current_rank0_gradients_present": true,
+      "all138_states_present_in_actual_saved_checkpoint": true,
+      "all138_saved_Adam_steps_equal8": true,
+      "BF16_checkpoint_sha256": "425a3b3c3caca5ed2ff9a34712056749bc33d9669d8cba4af43df104033059f2",
+      "FP32_checkpoint_sha256": "7167e17ed6c12ec0cb6fa05357b2e377486b3fa1a10600ebc25656ffb25bda9f",
+      "actual_CPU_PTH_summary_sha256": "6fa64700ae693265dabf3d8b9f17da5d35820d99d285dd5955dedd7fa4829eda",
+      "actual_original_loader_noinit": true,
+      "actual_CPU_watchdog_exit": 0,
+      "source_and_checkpoint_bytes_unchanged": true,
+      "phases": [
+        {
+          "phase": "cold1",
+          "raw_summary_sha256": "2be9aa3a72853b3bd0d72a254c683354fb01bf643dbec1703e90049aeeb6c601",
+          "ranks_verified": 16,
+          "restored_gradients_per_rank": 138,
+          "restored_Adam_states_per_rank": 138,
+          "exact_original_FP32_state_ID_set_all16": true
+        },
+        {
+          "phase": "continuous8",
+          "raw_summary_sha256": "91ed172eef846a562a2f14083ea8125966af7085d605b5ec22ae1993136c3ddf",
+          "ranks_verified": 16,
+          "restored_gradients_per_rank": 138,
+          "restored_Adam_states_per_rank": 138,
+          "exact_original_FP32_state_ID_set_all16": true
+        }
+      ],
+      "restored_parameter_scope": {
+        "pts_bbox_head.transformer.encoder": 120,
+        "pts_bbox_head.transformer.can_bus_mlp": 4,
+        "img_neck.lateral_convs.0": 2,
+        "img_neck.lateral_convs.1": 2,
+        "img_neck.lateral_convs.2": 2,
+        "img_neck.fpn_convs.0": 2,
+        "img_neck.fpn_convs.1": 2,
+        "img_neck.fpn_convs.2": 2,
+        "img_neck.fpn_convs.3": 2
+      }
+    },
+    {
+      "profile": "hydra",
+      "parameters_in_original_optimizer_groups": 750,
+      "old_BF16_state_parameter_count": 141,
+      "FP32_reference_state_parameter_count": 279,
+      "BF16_v7_state_parameter_count": 279,
+      "prior_missing_parameters": 138,
+      "all138_current_rank0_gradients_present": true,
+      "all138_states_present_in_actual_saved_checkpoint": true,
+      "all138_saved_Adam_steps_equal8": true,
+      "BF16_checkpoint_sha256": "f141a0fb6d7cda195908cf9cdcc1a8478e04ba9f0d1153f23e07f82928f96b94",
+      "FP32_checkpoint_sha256": "a12d0a9a8178928ab82aea1fce9137ed3dc0f33b524e43d307c1ab17b567359e",
+      "actual_CPU_PTH_summary_sha256": "e6c59184bc49a5168ff5bcd488aef99a5c3d5745a1e887dcaa820e14922e9b77",
+      "actual_original_loader_noinit": true,
+      "actual_CPU_watchdog_exit": 0,
+      "source_and_checkpoint_bytes_unchanged": true,
+      "phases": [
+        {
+          "phase": "cold1",
+          "raw_summary_sha256": "4796e5c4c5563610c38012048c47a15c101fd2c90c535a5219db9b34d810fd16",
+          "ranks_verified": 16,
+          "restored_gradients_per_rank": 138,
+          "restored_Adam_states_per_rank": 138,
+          "exact_original_FP32_state_ID_set_all16": true
+        },
+        {
+          "phase": "continuous8",
+          "raw_summary_sha256": "4241b03bbd5daa2e015a8e150c12b07c85183aba055223ca46d0808eb16b1446",
+          "ranks_verified": 16,
+          "restored_gradients_per_rank": 138,
+          "restored_Adam_states_per_rank": 138,
+          "exact_original_FP32_state_ID_set_all16": true
+        }
+      ],
+      "restored_parameter_scope": {
+        "pts_bbox_head.transformer.encoder": 120,
+        "pts_bbox_head.transformer.can_bus_mlp": 4,
+        "img_neck.lateral_convs.0": 2,
+        "img_neck.lateral_convs.1": 2,
+        "img_neck.lateral_convs.2": 2,
+        "img_neck.fpn_convs.0": 2,
+        "img_neck.fpn_convs.1": 2,
+        "img_neck.fpn_convs.2": 2,
+        "img_neck.fpn_convs.3": 2
+      }
+    }
+  ],
+  "interpretation": "Under the unchanged original AdamW implementation, saved step8 on each of the138 parameters establishes eight optimizer visits with non-None gradients. Full all16 runtime metadata agrees with actual saved rank0 optimizer states and exact FP32-reference state-ID coverage.",
+  "limitations": [
+    "Presence/ID/step coverage does not establish nonzero gradient values, parameter-update magnitude, tensor numerical equality or quality equivalence.",
+    "Legitimate frozen/unused parameters are retained; this is not a claim that every trainable parameter received a gradient.",
+    "This fixes and verifies the bounded BF16 training-coverage defect; the pre-existing FP32 strict-resume numerical discrepancy is separate and remains unresolved.",
+    "Distinct source versions differ in exactly two implementation files plus14 individually pinned EOL-only raw transports; all242 other canonicalLF code files match. No full-NAVTRAIN convergence, original-GPU parity or performance acceptance."
+  ],
+  "source_delta_helper_sha256": "9cddc2683682324791b0723fe06010a69a35691523ab03a04e04e70ce54af18d"
+}

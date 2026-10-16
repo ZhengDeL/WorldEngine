@@ -1,0 +1,80 @@
+{
+  "result": "actual_public_combined_recipe_three_CPU_stages_passed_not_NPU",
+  "measured_date_UTC": "2026-10-16",
+  "finished_UTC": "2026-10-16T04:42:34.063233+00:00",
+  "source_image_id": "sha256:1541450982f8c2938f3c387b929ad0ba8a90024d73712b3eabe49631812d12ce",
+  "measured_image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "build_actual_exit": 0,
+  "CPU_stages": {
+    "application": {
+      "actual_exit": 0,
+      "passed": true,
+      "result": "pass_actual_application_environment_CPU_only",
+      "failures": []
+    },
+    "SDK_tools": {
+      "actual_exit": 0,
+      "passed": true,
+      "result": "pass_actual_selected_SDK_tools_CPU_acceptance",
+      "failures": []
+    },
+    "original_CANN_source": {
+      "actual_exit": 0,
+      "passed": true,
+      "result": "pass_actual_CPU_CANN_resourcing_environment",
+      "failures": []
+    }
+  },
+  "original_both_pip_checks_required_exit_zero": true,
+  "selected_SDK_component_count": 9,
+  "genuine_unique_wheels": 60,
+  "wheel_bytes": 151981835,
+  "builder_sha256": "9d1b7c992f863a35fe45a461603b62082f8048cd49ebf1ff556f36774125cf11",
+  "measured_build_tools_manifest_sha256": "369f8e1aed9c069ef4583504e875a7c50466f3b4ff48175df294f52e8718c6f3",
+  "actual_status_collector_sha256": "a7c7715d912a373ff9572c0e784fb4869e0ca56c82011bcde3962efc0bb23669",
+  "recipe_code_and_locks_measured_byte_identical": {
+    "Dockerfile": "0fc208fe76c83313b0cd2e4d745a670769f434a82022048dd90dafbc573f1f0d",
+    "download_wheels.py": "54ec95cad1aff52524aa4fcc6747ae3a48f0a50c90345e8fd5c2c32e0ee33169",
+    "environment/application_CPU_acceptance.py": "374658d83e0a4e7c6b542f660078e6a02963f97f23d0cad0b40af35c00d74352",
+    "environment/compiler_python311.sh": "77c56af9e0d76b51931ec636ebb26867fdb6b406e864942b12b52212a474bdc7",
+    "environment/create_sdk_component_view.py": "199ed55e8354e60c77660acc40dc8d12a26430c471ab9816b71ade81c323e3dd",
+    "environment/Dockerfile.environment": "9bb0270629213816f4a5dcc958258a4a9e10cf66a4f8196eedafbeb1eee9279d",
+    "environment/geospatial_CPU_acceptance.py": "c77319f13386bca103f7e0dd5c555547022fcfe7debe1079df2a8eff68110897",
+    "environment/minimal_dependency_reference.py": "5b32d48ac5da91c25324d15a56b4c05622bd323e12c0fd251312e9d7de5d39eb",
+    "environment/sdk-tools.lock": "614fee19946f432ee5068b8789aea63d47ee55bd2da3599e0c4882a7575e1261",
+    "environment/SDK_RECORD_RELOCATIONS.lock.json": "ffa29b2d01b17e4cff615bc9fe9ee6b676d81681beabf9fd547ba775f9461df5",
+    "environment/sdk_tools_CPU_acceptance.py": "5e212aaa0cb4ef3859323711e0ec3f4df6a69d06323f0c86524e1582583a202e",
+    "environment/SDK_TOOLS_WHEELS.lock.json": "6ce017b935708e8190f2721993417f080cf200c6bb1f59a0133a6169fd5150c5",
+    "environment/verify_launch_environment.py": "c1df8ec986700c81eca2e8d64d2aec6faf210de88ae9d948ad63021d22929ddd",
+    "environment/worldengine_application_environment.py": "b4fc53b695b01e8d91a94b2faecfbfc26531e52091b83e5e532a158ebf7883bd",
+    "runtime/apply_minimal_repair.py": "69e90db1e3115555114cf52aa7b00e2854abc05f19472e0c061906ddff949146",
+    "runtime/argparse.lock": "9be00d046ec7620215de48471d112b55d3f4a75807922d3ad6683dcf3c71019d",
+    "runtime/dependency_cpu_acceptance.py": "5b32d48ac5da91c25324d15a56b4c05622bd323e12c0fd251312e9d7de5d39eb",
+    "runtime/runtime-repair.lock": "7af2947e5f7fa103596d62a807038027b2a2cd80d9ad95ce11c613f0c8b3596b",
+    "runtime/WHEELS.lock.json": "ff150d78bc1815666468d71160629a46bf9dbf99951d78438979c750bb904ecd",
+    "verify_tools.py": "4160f2ee2e54a34dcb65298bc0f04d6fe9911da910aaf627b5d5549041ea38f4",
+    "WHEELS.lock.json": "87fa56d316f4892217c826bf641463697db17aef518ae27b2df668af1f88bbe2"
+  },
+  "NPU_model_execution_verified": false,
+  "GPU_equivalence_verified": false,
+  "full_NAVTRAIN_convergence_verified": false,
+  "strict16_rank_replay_fixed": false,
+  "all_optional_SDK_tools_accepted": false,
+  "whole_original_RECORD_paths_all_present": false,
+  "baseline_missing_RECORD_paths_resolved_only_by_two_exact_existing_publisher_byte_mappings": true,
+  "public_download_CLI_actual_network_execution_verified": true,
+  "scope": "Actual CPU image build, two selected interpreter dependency/API gates and original-CANN-source import/path check; no broader model acceptance",
+  "public_download_validation": {
+    "result": "complete_all_locked_wheels_verified_no_install",
+    "helper_sha256": "54ec95cad1aff52524aa4fcc6747ae3a48f0a50c90345e8fd5c2c32e0ee33169",
+    "lock_sha256": "87fa56d316f4892217c826bf641463697db17aef518ae27b2df668af1f88bbe2",
+    "artifacts": 60,
+    "bytes": 151981835,
+    "all_results_downloaded_whole_SHA_verified": true,
+    "verified_existing_cache_used_for_this_download": false,
+    "finished_UTC": "2026-10-16T04:59:01.183356+00:00",
+    "actual_download_receipt_sha256": "47be5a216f149d0c0cc3482ed997ebe0200369fc5fda0efdb5ef934a909c95af",
+    "actual_launch_receipt_sha256": "cc035fe797ccd9998dafb8bf8373bb09243199725478ca3d100ee804301456db",
+    "boundary": "This later fresh-directory HTTPS download was independent of the measured image build, which used previously whole-hash-verified caches; no model acceptance is inferred."
+  }
+}

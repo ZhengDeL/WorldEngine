@@ -43,8 +43,8 @@ def main():
     p.add_argument('--config',type=Path,required=True)
     p.add_argument('--checkpoint',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--precision',choices=('fp32','fp32-hf32-conv'),default='fp32',
-                   help='FP32 inference with Matmul/Conv HF32 disabled; explicit legacy Conv HF32 mode is fp32-hf32-conv')
+    p.add_argument('--precision',choices=('fp32','fp32-hf32-conv','bf16'),default='fp32',
+                   help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native NPU autocast with an FP32 MSDA island and original FP32 weights')
     p.add_argument('--deterministic',action='store_true',help='Request original Torch/CANN deterministic algorithms with required initial launcher environment')
     args=p.parse_args()
     # Keep actual loaded files and exported artifacts stable across os.chdir(ALG).
@@ -82,7 +82,10 @@ def main():
               '--out',str(args.output/'predictions.pkl'),'--tmpdir',str(args.output/'collect'), '--eval','bbox',
               '--eval-options','jsonfile_prefix='+str(args.output/'metrics')]
     os.chdir(ALG)
-    runpy.run_path(str(ALG/'scripts/test.py'),run_name='__main__')
+    from ascend.autocast import inference_precision
+    bf16_evidence={}
+    with inference_precision(args.precision,bf16_evidence):
+        runpy.run_path(str(ALG/'scripts/test.py'),run_name='__main__')
     torch.npu.synchronize()
     final_precision=precision_state(args.precision,stage='after_original_inference')
     if final_precision['public']!=actual_precision['public']:
@@ -94,7 +97,7 @@ def main():
                       torch_npu_git_version=getattr(getattr(torch_npu,'version',None),'git_version',None),
                       precision=dict(before_model=actual_precision,after_original_inference=final_precision),
                       precision_observation_rank=0,world_size=torch.distributed.get_world_size(),
-                      device_provenance=device_provenance())
+                      device_provenance=device_provenance(),bf16=bf16_evidence if args.precision=='bf16' else None)
         with (args.output/'predictions.pkl').open('rb') as stream:
             results=pickle.load(stream)
         with open(cfg.data.test.nav_filter_path) as stream:

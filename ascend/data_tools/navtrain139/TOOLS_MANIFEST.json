@@ -1,0 +1,48 @@
+{
+  "format_version": 1,
+  "scope": "CPU-only deterministic preparation of a genuine official-data validation subset; no model math or runtime-source changes",
+  "files": {
+    "prepare_navtrain139.py": {
+      "bytes": 27070,
+      "sha256": "3a9c43c8db54fe0bf022ae4ff260cf807424bd3e0a49c2032cd943688b535353"
+    },
+    "INPUTS.lock.json": {
+      "bytes": 6667,
+      "sha256": "a37413649ee37fee2971b44c9d983c8ab991aa5f7210edae1716464ec463886f"
+    },
+    "SUBSET_REFERENCE.json": {
+      "bytes": 496189,
+      "sha256": "b50b11d4892c43d9c4cd04d8f687973a7a340ab714fb6cee87da91c7efa46956"
+    },
+    "DATA_PROVENANCE.json": {
+      "bytes": 15345,
+      "sha256": "4d869939810e359ecf3379aeb26b54c32c4d54f1d96c393089ea57945a9887e2"
+    },
+    "README.md": {
+      "bytes": 5742,
+      "sha256": "bf86c039d76ab0bef9725e7ef2d5c49978bc3885c869e5d6e3b3ce1ed78ecc72"
+    },
+    "README_zh.md": {
+      "bytes": 5260,
+      "sha256": "9d02948da8f77a8256fd7560ea22a8b9d076cbe790c649529ccdaacf5c4e9271"
+    },
+    "VALIDATION.json": {
+      "bytes": 8273,
+      "sha256": "52739f2e937981f211ad3ab98ed89cbcc658171420f8aeb740d1351d7d25d44b"
+    }
+  },
+  "excluded": [
+    "__pycache__",
+    "*.pyc"
+  ],
+  "validation": {
+    "existing_derived_subset_provenance_verified": true,
+    "local_explicit_fake_data_mechanics_passed": true,
+    "new_CLI_actual_official_input_replay_completed": true,
+    "new_CLI_model_or_NPU_acceptance_completed": false
+  },
+  "original_runtime_code_modified": false,
+  "measured_execution_tools_manifest_sha256": "659117e8b104998a5a7cee0e4ca19176f21dd651faaeeb7149fbc605109bec02",
+  "documentation_and_validation_updated_after_execution": true,
+  "executable_input_lock_and_reference_bytes_unchanged": true
+}

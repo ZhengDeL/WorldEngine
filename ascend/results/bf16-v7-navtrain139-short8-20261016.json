@@ -1,0 +1,3138 @@
+{
+  "result": "complete_actual_two_model_BF16_v7_cache_disabled_short8_train_restore_independent22_inference_score_with_original_numeric_outcomes",
+  "source": {
+    "sha256": "e14dd6b2bfb2f7f26333733efa133780b1223c055966e0542bd8c0202439f5bc",
+    "python_files": 244
+  },
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "precision": "bf16",
+  "default_precision": "fp32",
+  "BF16_status": "opt_in_experimental_cache_disabled_complete_named_coverage_observed_original_strict_replay_separate",
+  "BF16_weight_cache_enabled": false,
+  "execution": {
+    "logical_chips": 16,
+    "physical_cards": 8,
+    "batch_per_rank": 1,
+    "global_batch": 16,
+    "workers": 0,
+    "TASK_QUEUE_ENABLE": null,
+    "ASCEND_LAUNCH_BLOCKING": null,
+    "HCCL_DETERMINISTIC": "true",
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "public_matmul_HF32": false,
+    "public_conv_HF32": false
+  },
+  "data": {
+    "training_anchors": 139,
+    "independent_evaluation_anchors": 22,
+    "original_candidates": 8192,
+    "manifest_sha256": "59bfeb040c5df2be8c33d0eadd1ad8b61343612287337e3f3a1a1a2ded1d6183",
+    "preparation_sha256": "ba1ac6161ca7283739f698db0fc174061d9fbd9f78908212337486e69a7b5fe1",
+    "scope": "Deterministic subset derived from official NAVTRAIN/NAVTEST, not an official prepackaged mini or complete benchmark"
+  },
+  "schedule": {
+    "type": "IterBasedRunner",
+    "max_iters": 8,
+    "independent_partial_stop_after": 4,
+    "own_resume": [
+      4,
+      8
+    ],
+    "original_warmup_updates": 500,
+    "eight_updates_are_inside_warmup": true,
+    "epoch8_or_convergence_accepted": false
+  },
+  "actual_counts": {
+    "models": 2,
+    "training_containers": 8,
+    "runtime_rank_reports": 128,
+    "exact_restoration_rank_reports": 32,
+    "inference_containers": 4,
+    "CPU_scoring_containers": 4,
+    "complete_original_numeric_comparisons": 2,
+    "original_numeric_comparisons_inside_tolerance": 0,
+    "original_numeric_comparisons_outside_tolerance": 2
+  },
+  "models": [
+    {
+      "profile": "vad",
+      "original_configuration": {
+        "config": "projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py",
+        "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+        "profile": "e2e_vadv2_100pct",
+        "initializer_file": "e2e_vadv2_100pct_ep8.pth",
+        "initializer_bytes": 434885463,
+        "initializer_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+      },
+      "parameters": {
+        "model": 58207822,
+        "trainable": 33716740,
+        "scope": "Original base-planner configuration with configured backbone freezing; not LoRA or fully unfrozen training"
+      },
+      "jobs": [
+        {
+          "role": "smoke",
+          "initial_iter": 0,
+          "final_iter": 1,
+          "updates_executed": 1,
+          "configured_horizon": 1,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "7c08fe160bc87c10d922a4a231b811ce618cfc9f0b8a1c57228d7434367946ec",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c3eaae7b79c2dae8b04619881c71cf6b4dc9d51c9ef14e70040e6612aa1c75b3",
+              "runtime_JSONL_sha256": "562375ac1b51c87e99e344f05d1f8fa0d4b370699220992f0ae3d8bb388b21ef",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d473f30d77ad5b30961d4a0fc9285a8b5ecc72b52d69abfb593fdd426da406d5",
+              "runtime_JSONL_sha256": "ccf9b2e6aebc0c601a7c137b30d4dcd59e3725ea1dd1a07ccaea8392278bb768",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "53ff04402c0461258cdbb0f668a904418bb038bd9b88119be60174f70b4856f1",
+              "runtime_JSONL_sha256": "8230c578d9bdce182e6a5db1c5d4ac49ac9a0f7ab4748e1b46e62424db11de2e",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c0c6e6b8fcb809a3e3a15465d935164dd6143938070932ba890b4e2dd6b1f415",
+              "runtime_JSONL_sha256": "d0bbe27bf772b47a6c004a3c070cdfbdbe31e9b9c03d2762ff919984f8f97974",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "da48c3533c4de0a1f9e7ce688924c5777005c0987f25d70c91b3c79355edd9c8",
+              "runtime_JSONL_sha256": "26824fd3bc15c436908ba920c9d055d37a2084a0b48eb8a3992dcd189388a9b2",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3a0eabb0ac568754662b4c6582d97caa573232df637ac24b8f2123627a10c6b5",
+              "runtime_JSONL_sha256": "81dbbe77678e65648d2ee389c7e87c2ec02d8fbeb950cddb601fa7a42554fd40",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "865bfd2ad0cf4c0f8a5104bcb2b0f2313190dbaf05a70940c36c3aec0a49c25e",
+              "runtime_JSONL_sha256": "62802c99f82b119ee0f35261770f4021645db00b6da9f596620edbd743814d90",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "6576f2710b39845264ea0311cbdf8828209b59a4f2e400bfc5ddd78dc14361e9",
+              "runtime_JSONL_sha256": "2208335f4af0eab951d1735faae09d97221e639ac3ef88bdbcdf947e69ab9348",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3c512bb8b6ae1db5ade9e7dda7e1d2a37e99087e311a66efc622354d6c9c4ef7",
+              "runtime_JSONL_sha256": "1705a101dd8a6dd05e8fba36520365954eaf116d56eb4822c1222a6c1ea7d453",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "f3a48a346a14b1d3bbea2b25f8437022549a44589568c1e662975868aefa43e6",
+              "runtime_JSONL_sha256": "39a9af2ab2e76b5a6e886dab2ae4f860ae0d5e9ca6af84c12010aed1ba39e6b3",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "2320a8386d92386f9c8059e195907eb198c587d15151174486fb2263341ea38d",
+              "runtime_JSONL_sha256": "e9199a567e496e0d433f7a3e9ce2622002051b9b75a5af251ebd5764155d730a",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "2adabfde0854180b1e911af020693d852fbf4d2d004923dccb54af117490551c",
+              "runtime_JSONL_sha256": "fb2cf0e717de890d0a533cc9c00d8983d71bd47821a9e77c2327dd12324fb211",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "da02ae8b76546c33c45002bf6bf2eab8680310813f98308a3ef711a1b64c72e0",
+              "runtime_JSONL_sha256": "d1c93f523d0db218a6bab04e0e9e849e0a44c0344adfbc870dce83fb957df11f",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "e9af664dcce82b32d0efea7cea8c03299d2afcb78bbfdb5d9f7c6330bc71eadd",
+              "runtime_JSONL_sha256": "f286f74d7d93e0f937fdb4259367c70934f5686fc3f9a7bf99c2ed205e28895f",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3d60ba044f840cabdf8453a7123127117ad499058b41cb5a8df17dde5147a16e",
+              "runtime_JSONL_sha256": "9a2e0a9c05e8dc762d3988e10818142f9f902098afd6d7998d009b08551db972",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d36fd235eae47608137d8e0739b2710b909246529008ca5cccb28d3f7e5d5cf7",
+              "runtime_JSONL_sha256": "47d8497c86fbd82dcdf79650d682ab078f4fbb90e958ae0a74593932735f1209",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "continuous",
+          "initial_iter": 0,
+          "final_iter": 8,
+          "updates_executed": 8,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "425a3b3c3caca5ed2ff9a34712056749bc33d9669d8cba4af43df104033059f2",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "26d3e4c8ddc174ab98f5725ed376ba48b742d51980a0dd3c7592e21b21fe8bf2",
+              "runtime_JSONL_sha256": "f79bfe6f880af800398b87c2a06b335027619f4ffc2f6a20798f2ac4776c341d",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "0cb334d47234bf873d032c0b08c2d17d7278b33418683528f10d7c39ad1372f3",
+              "runtime_JSONL_sha256": "2f2b674bf1244c15e2f65adb6d3cb11235ba829e5eac0a163efab5fc94003af1",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "dfb42648069a6c49fe718168335fa7b112fe42f4639477ce3ef935be771fe894",
+              "runtime_JSONL_sha256": "35f752e647cb10bffb17eff78cf977dc7a97fe7455dbc6272b3b2e124d0b9c34",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "5b9ed20c6fd1991ae9da55463e7ec806bf523623a00c8d3b1be013e51f492b12",
+              "runtime_JSONL_sha256": "2054f17d283e77c2f2f23e03736e8e3828a53133f50648e46d10d2e2a206a256",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "5893694777186711335eba345aebddf0cb3afb7fe97988b3af17b429362c0fe8",
+              "runtime_JSONL_sha256": "ad24c91ee792a21bc1079235528e39d1e48db684d2dc78514128632eeccda53f",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "0d82a32a67fa5b09aeca33af15995787e8e26aaffcaa27dc7a71f7b582176d52",
+              "runtime_JSONL_sha256": "1335456c3825dee47817baffb3c0fefa6079e9f143a39a78f0139e370d2572be",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "ffe5d3b7a9179af083f440766a287a06ec51c6a48abc3371d790638c7bf66e50",
+              "runtime_JSONL_sha256": "7db64ad79318d80048e8b671295557aaeb0485eafbd81337b2b633bf441d9374",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "f56653e2c0f018ce862468e69abec80cd27c1176617b01a3384984c19767e5cb",
+              "runtime_JSONL_sha256": "0079ac4a2c3007f19aaddf5ca35405babbe79bc085530a6cffef2321b731d5ea",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "4c3d4ce04fdef6af2bc2fa87a0158aaedd02d012ef7f0ef024f49a0f98805aba",
+              "runtime_JSONL_sha256": "688cb328a0d22de86571ffcd921b98f264a3f29aef68a4aea550a5cb51ae1971",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "7f83b2c330b8745051894a0605cf33f564fab62de0cab67eb80e02a2c4346cda",
+              "runtime_JSONL_sha256": "08232531215458054a3cb6d67b0ba9e52dedfab18535b3063089a31504b77733",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cb7a08c786a057146f9ee9d288b9a5ee38a64ed918742c63678d919dfd704ce8",
+              "runtime_JSONL_sha256": "1e92a04cac71837c0db19d3043f90303609e3506ac553f8965ac81fe9472fc22",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "5999edc089424691c074ae0b63dfb4f70e354020c0dd197902b1bc59eaf45eb9",
+              "runtime_JSONL_sha256": "e3bec831f06ad3d140da421bc3c010cd45567e07fce3e8d04e138c332339b886",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d7421b6286ddb36039ab34f4f3d992cc206681a0f40b299f837789ff76a655dc",
+              "runtime_JSONL_sha256": "55d0314ac81fac60f6957cdee31830a73ae05e22af3d7fb409727a221287636b",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cb06ba7dea00b1fc117926f2036b2a20d30a52df3de269dc149c897a525d493d",
+              "runtime_JSONL_sha256": "b443cb92e136c032a6c2b8d52fc2337e858b4294a300c635eabbd6d80b54f52b",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "ecd8f6dc6ff2f3df46f82a2a876b4ce06dc85be9558c382a3844911ca83a05ec",
+              "runtime_JSONL_sha256": "f005f6e32746d23ac3accaee07f4d63f10dba6c2176e739a61c49efeaef7ef2f",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "044d3ae77cd59c038e6c90abde6fd9662b28f56662e7556e132c5db31ebbecea",
+              "runtime_JSONL_sha256": "043a301d3092845df4394e8c2468abc0acbc4c265c20c44800860fe0b6c0bd71",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "partial",
+          "initial_iter": 0,
+          "final_iter": 4,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "591f9d9d49eb08763ecbf9757decd6e87b29058491e8dc3f47526410d198402d",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "1187b435845444257f132502b9de3de8efc0a82503fba89e4d437c4edaf69994",
+              "runtime_JSONL_sha256": "61dd03712b3b858c09e3b0d7cb559946d05b7e3853e27517042001addf8ec50a",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "52755850fd2d06672c524d8dba798659d189c17ccd207bea310e3f52f961f7d8",
+              "runtime_JSONL_sha256": "5b15f2720e42a67bd503c9ae9bc0cd29c9124f01b1cd43299f826ffbc1751411",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "7e3daf9c6619e2b3207793731c4b606bd443210a5e9a91374c82eda0ac281931",
+              "runtime_JSONL_sha256": "20a6e47c687aa3d307627727eb58f2f8c1f87fcf6508214d71ebbf2726e2cc73",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3daa2ce165b21e5b9a9e54c050f9cea3f5f47624cc535070ac07a205c593abf0",
+              "runtime_JSONL_sha256": "341271a4b04a9a98a7fec58cd0e2c5f26d4c04af88af7e551aff51a255e5320e",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "7b81bf0e89c56391cc18a8cfc63ee7f07fa5daad28a14f8aa5f45d71925858a9",
+              "runtime_JSONL_sha256": "7b728795b7ab5abe30e42d6cfb2e7467af3950fd3c167e84e1b0a554eb918348",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "ea12b15b981af48663c7be7fbb7c85a3b1345a053ba8fafd97d5252e703724a0",
+              "runtime_JSONL_sha256": "c46bdbe3258668913f7edce41e78c37f20ebe4ecc390de0b2ecb3e3e4ae43b58",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "1f8e2f77779b1f9a122a11712cb8b8524bc699997c8b5ccb50147cfcf3a096cf",
+              "runtime_JSONL_sha256": "a42bae88f7f5dc3c7b40fb19474675c0b090ceaec1839d4e963fe7a9f0507ab0",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cab23467e1cefd444aa08d941ad3d6421dda888ee993ae561e0167d4785fbf7e",
+              "runtime_JSONL_sha256": "103dc1cb58a2369386a5e3ea6c417fb4e3a8eba75542cb037d9c6b7bb4a1fe08",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9d5130be0c00ec6e34632d5082f5791334e4c7a3ba31c72d710951494bc86de7",
+              "runtime_JSONL_sha256": "382b7aa86e58dea1bcf0c8a8937ab36068883993af33a096d0a517538a118cbf",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "8204cd62a010a5860d4aa7d442f9ebb9fd55d7c19f01706f153fb8e3b48ba4ec",
+              "runtime_JSONL_sha256": "ef786871158bcc4e6d5bb9185ff923dfdc19cd8984e8c006e564c0ed0eefc06d",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "1fa5d15dc50919f27dd41ce54add4c139afd2edb1e69710e84623de06ab44885",
+              "runtime_JSONL_sha256": "ba474af2a531046bca77962657089242c70ac44a957c3fd4d141699fa6e9434c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "de094f2900c6d3f52d54811a176b0cecd13962cdffc95c9a53736d9905b4874e",
+              "runtime_JSONL_sha256": "ed11a255ee5d1631ced7a7c61e55ce1309476d1ef13c5a5149f1111854d3dc68",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "a1b032eb23bf1a695c3a9ae7707f1b927d108b793fa72b3f29ef5af66239afff",
+              "runtime_JSONL_sha256": "ea743bf48f3d8d05122b92cefe5fa1104fd0ec2e0811ecb7a49e1ead531a272b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "159f52940c754cb9f3cfc445e8fd0d9150bcaa932dba06d15aa2cb3cd1e2dc64",
+              "runtime_JSONL_sha256": "810f1e11449371d07084581e7026003fe5083995a6f406df42b98b073eb56740",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "6aa5e0d1fafcaa449b0d0d8f7fec82a3707f88a6cdab21b74b28ea4592da3b44",
+              "runtime_JSONL_sha256": "2aec5eb97920111cba3feb1aab23630468717991a2a0f99303872f706d747ae9",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "af1dfdf53983ac95e1c3632b5d56969bdaa8e5ab1187376523e4008eac31eb0e",
+              "runtime_JSONL_sha256": "540de2da12fa276a4327c0973c7147f946949e8b7996ed0ed5c8c4df168b0774",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "resumed",
+          "initial_iter": 4,
+          "final_iter": 8,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "ba1c7a989f46c7d616603ef42facfbb60c0b6ce0682936046bcd00f840104cfc",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "033c2aff4945285621bb8db0aeaa48a4e21138c0d5a91face0532c046f8c6ec6",
+              "runtime_JSONL_sha256": "557a19382e83c01b7f5f3ee43aede4f11243df1713c4efa87c45bae2a952db27",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9ce2f5ba81ca0deff8986bca270b58653127f7523459edbe7872814405681911",
+              "runtime_JSONL_sha256": "f34345fa4b1dd7e3cc33f24a30aaf3f3718f69448570180b2879b64c22b1addb",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "ea1fe292b44466a088b77bf3f6cb3abded87b6521ff305b67bc45b35678c3411",
+              "runtime_JSONL_sha256": "920f516d7377b7374e557a44911eb28dee1a32c68960a5a25a7658b6c79ba73a",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "882bd0c9250611e4cf2222295d79daf48041d30adfc7331be070b90fe3f89756",
+              "runtime_JSONL_sha256": "683250aaba0bc105b0f8ca024f6cbaf2a704f2f305c35978adb52fe1e6be3fc1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "63f756f250c082fdcbb00be4573384dd99e8970d2709d48d35d1a5f6fed902e9",
+              "runtime_JSONL_sha256": "a119bd9f3b99c06f3fbdfe94a6418e16b78b657933ebc14e480c67a0b91f20fe",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "2b90002cada89f5462d4c4e79151640a7699fa55d7057143f567427dade013c2",
+              "runtime_JSONL_sha256": "e7c10e009d3a07330d11015aace3b9886c8ee9136c2edbf3b5dd560b9a9fef98",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c8c8466b13b9d747a66e61a064a9f7f3681b4d509b7383b98fba34c62d37b6c2",
+              "runtime_JSONL_sha256": "2d9ebfdfc8a4834f65fbb6d656f2c493788d679a976f741ebdd40815eb3b1f81",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "4ae82f91e80983b19ac1cb1108be6bbe5458ef2d63d8c98cd57f527d8898270b",
+              "runtime_JSONL_sha256": "cb1b74fef7c3f9b286f418219518eed5638305582069eabbdbfa9cb2ea00198d",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "52c7a6cca93c40774ac8bb7416ba44069c58ca0372bdeb058c489917cccd0c14",
+              "runtime_JSONL_sha256": "7ded5aa053f5f06fc4cc33c44cc3c78ac9213c759512d09947a10070fa7bc016",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "22a6c1fd54216f9103945723286dd3e5ae6762f9ee00575604c6c80dbd36a3fe",
+              "runtime_JSONL_sha256": "df574765a137ad3d43490b9cfb3b873be46f5e5fcfb392fad8a460ea96b8364c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d4e49007d81922f3cfb1c88032e89b3650b9bdf9711f66b6f9ec6ec4914cadca",
+              "runtime_JSONL_sha256": "a9ebb7db6e2f1cd084f6b68533afc15930f73375d1496dd27734fb5a3dfe399b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "265a0be73d5082bdd96c2e6f0ff885584c1079432ad72f676b20fb6df75ab7a4",
+              "runtime_JSONL_sha256": "f823ab36dbe101a6a72f48d9b12902963f4c973e4679c8f0a2635667504ef57c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "30f638c689ce5dd4958c4d7e30611d1e5027a2ed3c3b13b51af086ac489eb227",
+              "runtime_JSONL_sha256": "993b9e7567c66d6f21e9fba6d3c5d32a729dc96ef17a08e9db08577fb3b8ce58",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cdc03beec34221ae25dd6bd60e115cd1b6fda06de3de5bd43728241eb853f9b1",
+              "runtime_JSONL_sha256": "5491a5a4af95faf3e98e24f1f14a81a912218ea5c7a4f1cc43b0b4f2f984986e",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "aba08a22c50085d6db72b79cbd15ad190ee4f14d4f410ca5fc2350a29607c907",
+              "runtime_JSONL_sha256": "abbdd8be3ec7c304808c06b90cb67975e265cdd02328db788b126c275a35602c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 730,
+                "trainable_parameter_count": 569,
+                "gradient_present_count": 259,
+                "optimizer_state_present_count": 259,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "31868cf29214f1854e4453986e04ad733e161872375bd9fae722a9a171e96597"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "26c81595e6fa64810d83fa2099928511f1a8d16000457b2cf7ad5bd26b74a4c8",
+              "runtime_JSONL_sha256": "a30f562f09e72dbbba99ad3ebfd399480a25832b599250d412430cceed5b51bd",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            }
+          ]
+        }
+      ],
+      "exact_restore_rank_reports": 16,
+      "original_same_precision_comparison": {
+        "classification": "completed_outside_original_tolerance",
+        "original_JSON_result": "fail",
+        "original_comparison_sha256": "ef410eb10c72a40eef81d1c2e48fa5f26862981fb6044e9dff7261ba7d39d894",
+        "official_CPU_loader_receipt_sha256": "a2fff8e7a9b5f111dfeb7f5d054f809b4a03b05d54ca54f4f599a252b6d50f39",
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "actual_CPU_exit": 1,
+        "complete_comparison": true,
+        "completed_updates": 8,
+        "world_size": 16,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model_tensors": {
+          "tensors": 889,
+          "bitwise_equal_tensors": 630,
+          "max_absolute_difference": 0.0002559646964073181
+        },
+        "combined_tensors": {
+          "tensors": 1698,
+          "bitwise_equal_tensors": 921,
+          "max_absolute_difference": 0.023486733436584473
+        },
+        "combined_includes_two_RNG_tensors_per_rank": true,
+        "above_tolerance_model_tensor_paths": 252,
+        "above_tolerance_optimizer_tensor_paths": 285,
+        "maximum_loss_difference": 0.050566673278808594,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "failure_count_method": "Count path prefixes in the combined list; the original shallow-shared model failures list is not treated as model-only"
+      },
+      "independent_evaluation": [
+        {
+          "stage": "official_pretrained",
+          "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+          "inference_receipt_sha256": "afc05e8b531741cbb120c5f95b9c96672cf31b7154585aa7b68708cd3075ecfb",
+          "predictions_sha256": "21c02733857ccb7de4e76104dc336203f6701487d833bc1ca95d0554d95341f7",
+          "official_score_sha256": "3367d341d5adbf4bcd1c171c0eb7a27a72ea61f3d4f18f7fc4abe761d1847602",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 0.9545454545454546,
+            "ego_progress": 0.7980850139751954,
+            "time_to_collision_within_bound": 0.9545454545454546,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.8704142103684525
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        },
+        {
+          "stage": "adapted_step8",
+          "checkpoint_sha256": "ba1c7a989f46c7d616603ef42facfbb60c0b6ce0682936046bcd00f840104cfc",
+          "inference_receipt_sha256": "021e361efc0f41f102272f3278f218010ea629fa7ef06be9e46a15359f34d3d1",
+          "predictions_sha256": "e646464582b3a7abf4c1897288804c8fa7267ec0f350de3fcc3c1953c85b8805",
+          "official_score_sha256": "1920cfdb6d9876a39bd99029df4e1293a3b86bc2c5b59dc617f409000db2d0c1",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8192533479168549,
+            "time_to_collision_within_bound": 0.9545454545454546,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9057495010259622
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        }
+      ],
+      "capacity_only_measured_peaks_bytes": {
+        "peak_allocated_bytes": 13962535936,
+        "peak_reserved_bytes": 17676894208,
+        "peak_rss_bytes": 4084916224
+      }
+    },
+    {
+      "profile": "hydra",
+      "original_configuration": {
+        "config": "projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py",
+        "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+        "profile": "e2e_hydramdp_100pct",
+        "initializer_file": "e2e_hydramdp_100pct_ep8.pth",
+        "initializer_bytes": 450763271,
+        "initializer_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+      },
+      "parameters": {
+        "model": 59528787,
+        "trainable": 35037705,
+        "scope": "Original base-planner configuration with configured backbone freezing; not LoRA or fully unfrozen training"
+      },
+      "jobs": [
+        {
+          "role": "smoke",
+          "initial_iter": 0,
+          "final_iter": 1,
+          "updates_executed": 1,
+          "configured_horizon": 1,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "83c608bb964a1bdc27ee23cd72525ac77321d5c7ba518bfe5f3bfa7f3f81ed97",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "87800bad05bf2eea4c95577f7f87fa874cd8fa6beaebbeed9ed8eafc83b6985c",
+              "runtime_JSONL_sha256": "d464971d6364ed89236c504eb0e10952aff47f59fb83cc3456cadd9186ce25ab",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "95b1d7d978051901b10fcdcf2349c59e15e84795b1639fd1d612ade402aa6876",
+              "runtime_JSONL_sha256": "d35aaf808e9d7ad454af2b70836ad69483869cb95370bc81eca58d49d53e2d75",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9280d6072611a2f77c6d9dde87a4a41d8a5e2521870fd11e0d80758491c37e21",
+              "runtime_JSONL_sha256": "249c73bbbeeac50effe57b02ed9cb9f0bb66e9f7fb447d602e3936b6b834b905",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "1f01b6fefad0612cd7b9325074012cd4dd5ba20afda5a0e50214051605d3f671",
+              "runtime_JSONL_sha256": "2c5a1f63af60b9d148fe5a0841ea6b8b94951cd4227e6ab05a6c82517887abe5",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "f87015c1adee239fd3f1fdafb91d25eb31ede255019aab31e9e7cc87969a85b4",
+              "runtime_JSONL_sha256": "3fe6a59becd3a6c5b2cbdf6dbfb92e9a4cb6e1d24cd05648b0be5958e09413dd",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c6bf58d6f4860c751de0b870596949bb07267ea74fb5ac6de7dcc4f0130a29fd",
+              "runtime_JSONL_sha256": "b29ef0aebcd1ceea52bf426d6f7b6875befba6b299d08efc0847d10a9238c05a",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "6e96a5ba4cd0750e0d91b82e1eaa4201e943987e806b3d4210934e7e6d759108",
+              "runtime_JSONL_sha256": "f0de4f587a6248aa5cee898cafde0fe5cf7f4d676707ec283832c2144772d14d",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9d18d37f43c669b59991104cd284e440f9bc647f55e0a6be1b661e7bcc003c4b",
+              "runtime_JSONL_sha256": "04554b95d8f81c8eea44e2609e6d55c12d246e9c79f1bc5d1804db330907d6bb",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "0193962a023cdd5f3e6e0cbcfb1e301f36eb1525b50f221a718981318439665c",
+              "runtime_JSONL_sha256": "941cc7e20ba28a577bb99df9dc5460d1f8acc20fd182ae408d55d9af4e1e3197",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "531ac3244a5c7e2ee6ea4e24ccc18bb3f5b3912b15323d8bddc590274d6ec2d3",
+              "runtime_JSONL_sha256": "e2a7daf61552249b097dd25f9d92b710baf443ae6baea8211791f568c07f6e98",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "a1300144fffb28a6e887410f28030e5251dbf415f49fef017fed86f2090f66e4",
+              "runtime_JSONL_sha256": "c3fb58e931b892e8f4ab08891309c81268308954507de6b4c33795ab3079bc1c",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "0933989ac95379257cffee39ea1bfa66ac118f48e52e60f5055981b5224b4304",
+              "runtime_JSONL_sha256": "3e3fb90055bcb78cf442763d277ab294acebc4e31eea1da9c60ed27c8c852dff",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "df9c5ca33b7b21e8973131f97a289c7b96483682b344b965158fd5ba43578179",
+              "runtime_JSONL_sha256": "fd6d2b9f81736e9b08ffff9ffe5de0caf9c21d1214a7626ca79b1dc191d0037a",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "6bbadaf95eaee2613899a1bc9cd48b0202f0d1666d318cdc53e7eb71103b0bf5",
+              "runtime_JSONL_sha256": "479d939171fe9249385fef8c23f375145d9588e81177fda3ced4fadfe93d7eab",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3020b1e2f8793df81b25d919acd8eae62237114f32cdbad74e4ee356b4b730b2",
+              "runtime_JSONL_sha256": "9485383bb173d1213be63b2d6ba5922706dbbf47375cbdabba2e6d2cdd02acce",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cc7e173eae595f47bc011a7a5a1689df3a579f9ddd07a2b905828cb5c22a6818",
+              "runtime_JSONL_sha256": "c673b3eb0e915ec7bb64535e8a4119040524b60e95b7c2dc08a2fb47268ccb78",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "continuous",
+          "initial_iter": 0,
+          "final_iter": 8,
+          "updates_executed": 8,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "f141a0fb6d7cda195908cf9cdcc1a8478e04ba9f0d1153f23e07f82928f96b94",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "85e7c9e3eee3308303970b183d595a380be7d97dc2a6691b896110d43e389863",
+              "runtime_JSONL_sha256": "37e0239f1868764957e0ab7e5fd6e2a066f0a5ae6519274411571ae71dd46d03",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "fb24dfea947e5e0f3af38078d5db6f1dea66e095a831a3d557f7121e4ddd4290",
+              "runtime_JSONL_sha256": "9ee3a56449c974046a4082904deeb2ccfd20a1550dba9fd5d00d07d3f55d0d81",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "0537e040345bba2715766e0439e9bfa25ef0e3fb409aedd467c8e80134b08e05",
+              "runtime_JSONL_sha256": "c9f4f3a1af362e9c1d48f2e99adb6e531c5f56654c31a6607133ce81c85efeae",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "726b2c597c28a02f83ba4e83d6fb7e0c21b23a78274febc30d3da425c6406612",
+              "runtime_JSONL_sha256": "f92603f65fe6dd605f138b85419bf845a4fe711eb2b5a8aa6657d317314e9590",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "2917470e75ccb861305156dc38cb46c1f8cc145d0a8e6077219acf5a4b50ba22",
+              "runtime_JSONL_sha256": "b2ce5005967b6b4ccddc416c8dff7be66bdbaaa41e218e66fe7a6b5daf7e7abe",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "75ee36a49023de9e979e54e08948eb23add987faf97250945aafc352c725f494",
+              "runtime_JSONL_sha256": "751f39f7fdefee2adca0d97305472cdf6822d31e1f0da54d0ba6a45e7349a376",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "12877c0603660f3f54fd9b21fa3b776c93b7f621c1ed65b3c3259d734151af6e",
+              "runtime_JSONL_sha256": "8eccebb7d90467358ba54afd0bca9c7548adfc8014ce2877468227808a679f4a",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "3920df11260909d6f843849fa2cfa1a1c99d39fc81715e23158ea504d533bae9",
+              "runtime_JSONL_sha256": "34e5a48cdf9c503fa583bc43512f4d86de3681765609920b1d88d2f6e495f1cf",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "86a52012f84032446bd333ece64791379a501f4cbd8aecfd4a159f431d2414cb",
+              "runtime_JSONL_sha256": "cbdbe32af888af5073ff551fea656f1ba22c8b2977124f32da96a4411a134fed",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "876da005b434a4683ac75247263c9d571fb44705278462295126b4d17784bd71",
+              "runtime_JSONL_sha256": "bfdddf1f2642a487e00f0e66663c3fc5f1d0bd98527e18aad977f4876577dabb",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "1a9cd30d2a7800ad54b4c1c1b2928bbc1f0ec482157fbe8c4e632247891fda32",
+              "runtime_JSONL_sha256": "46c046fec38a89a4e9a14ff436e135c791f34585844be449f7641fd10b54c950",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "17e74fc72063765ecd10b9ca29a3107bcaffe85d376d3ae4c6d679014ddc2bc5",
+              "runtime_JSONL_sha256": "7c9d9c8f654a7f05b1f64469a71e4a2ae38a72bbcd0933847c057795f9e561f7",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "91af117190bcc42cc31d98852f05f33089baf3266ac1cef3e0776ade7b466a5c",
+              "runtime_JSONL_sha256": "d902b930a2397fb06cde7ed2f30cb186bdb03fadccf5f3fffaf37c74516512d2",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "61735eb7ced71c367b630a6f4b3fbcdf799573b955f58b551083a7d3d7301f27",
+              "runtime_JSONL_sha256": "7b45d88793aad3e8fe93ed6473dd7c4544dd1267e008e41423d27ae3ea14ec6d",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "89b42f14940950093428c4d8ee59ac72217de49f723324036f8e10eb2cf95395",
+              "runtime_JSONL_sha256": "8c3e3b3deb54f7dc87796ead489088f9f917d27edb736daf34f8ab11412c8360",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "519167d7ded5fa62097ebb167b340f47f4b0b4da1af79e66657639aa35c92aa0",
+              "runtime_JSONL_sha256": "8d305fdea0424b98cd94bd4becc1a90653ed27bdb560168efb275b96be23b795",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "partial",
+          "initial_iter": 0,
+          "final_iter": 4,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "8fac82211af1185550382f005f1955bf4f5adc50aae7bf3316bfbef2e160ba83",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "34729a787bd20579456648cb757a0364e8786afe6efceeb544c4148970c28ba1",
+              "runtime_JSONL_sha256": "96c778a06127eaee8f2095867a5101d08fa0e3d3ace1af74d34f859d8e6264be",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "e21040f986c2d74ae5496139a0c6183e79641f40348d65440c8e947a55b284b8",
+              "runtime_JSONL_sha256": "86618f3a978d3b580f258007774316e2541c2390a3b2b8061e4174cbd90e69e1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "5bf41e0546e4b3aa479f4edc19d4ffc62d313eafd48f26292252860bd8ac0e65",
+              "runtime_JSONL_sha256": "1de591c69b421deb8d758a7df9f6d405e0ff562b4102bed0a5b087210c9bccf7",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "cf4498cd21dd1b73b8392c13bcbfd632397ce14bc0c8e76651f3b5b5a70fe687",
+              "runtime_JSONL_sha256": "ab87adbf290ca73155d6ca24d77db419c7e06134c0dbf0680f38a57d58545ce1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "2ee31bb8e18d9e29fda767350ecce5c250ecae59d58b25602f78227fe229d1dd",
+              "runtime_JSONL_sha256": "eb046cb3e30360b4f64d875386f9ac417693349aee0f85528ee57bda306f5ad4",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "e09a1c880eccdebae03295107bfecca3802806cae273c4c8931a5d9f68db8461",
+              "runtime_JSONL_sha256": "a3593de3833cdcc28688854786e903521298ae7c9bc729442aa75ffd0bfb5f8c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "7a95925a977f797d7d1f2c153e67e3ad4ccc3bbc60f6576c6cede02b2ee40f8b",
+              "runtime_JSONL_sha256": "0b25aa3cd0233677221281bf7c57b8fef18f44d3dab2d238bad19e73319af66c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d89cffac55f5533fc604a3591e2ac8b6f162e748ba969b9c8bf9f6f4d800ef06",
+              "runtime_JSONL_sha256": "53578f787caafd7e56338565051eccfbb4b38a22371dc21249b10c23209eed18",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "49f19ed10f662f26ab6950acafcc4b9097d5e2f4de83d0f7b0b830e3dd2c89e4",
+              "runtime_JSONL_sha256": "125eb815501f371a8447722cc1d1c7c2b2895f2b1a8a22d63b0b5d247705d094",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "e73ec75f2aa59fb9a5dcf48b9ce0088f15f4c28e3fc3af77ee8666e233d5340f",
+              "runtime_JSONL_sha256": "5c7087a7a27155ec770dc70cec31f0f427e7f1f44f98bdd5fa84248e2602d798",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "f165de849435206d2a6e789e2390b330ca6d34c06694b6b18737c4dcc8e5ade4",
+              "runtime_JSONL_sha256": "4771fa0b33e662ba827fe36058a5de2b8d872656934499a57e08d9badad11210",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "e7a97714df1ff92a91b6c7f1d7275ab0583de45f5181e45ff00bd696d0588aa0",
+              "runtime_JSONL_sha256": "637405a2fd6ab18e83671012d00549758fbfbc7167b5b543e01617e8dcfeb730",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "6620fc0a51986a28d065b02db6adfe45fe55215fe4ffe38362891bfb03c6112b",
+              "runtime_JSONL_sha256": "6c4d691de5c03b9cf5c86d71feb03abf2b390179c0270783f92abf0e7bf9d9e0",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c5999a842bdfb0ce9fd83bc44d926972ecc7b0a936b99500a184a5a7f3acef78",
+              "runtime_JSONL_sha256": "e8775462a23c9bb31ac5d65c6c79ca15c5bfd68f058819d62c89d5704eebb1a7",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9628a5dc2c21af6f9fb58665cf342b6e8a22100af3d022f7fec8fecafdc370fe",
+              "runtime_JSONL_sha256": "22e6f19e3889aeafc78d6f7690d4d9dea5537aff0d55621ec3c43a1197f3eb30",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "99970095587fb7e939a045ce67fc2f02e1eaa7b740852690752a1e32fcb6b8ad",
+              "runtime_JSONL_sha256": "f2fb5a8aa76aeedf2c6643da697c9cd5f03bebc4b0549f8b1295d4ea68c1c896",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": null,
+              "restoration_check_applicable": false
+            }
+          ]
+        },
+        {
+          "role": "resumed",
+          "initial_iter": 4,
+          "final_iter": 8,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "82bab1fde1d41aa55a3c89393ba7f940733d7e3a8ba376beeec82a19d3196621",
+          "ranks": [
+            {
+              "rank": 0,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "82e540154ffe9aa009c71d022f779a808d8bfb8e7d1d75aab8e07824c63a37f5",
+              "runtime_JSONL_sha256": "1c726d6be3a059b6cd03d36b93a5633ae491a46bd78c8abcb41eafaaab13bdac",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 1,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c3932f4587e2d8ad32e1e3bc2e2a50886e1aa152797d44f5ba1ed07a9a5a87d5",
+              "runtime_JSONL_sha256": "13f96812cbf0843eabd6c3749b1278c5c03685823eec99f78f96bd84826e485b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 2,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "71b53058fbca9768a21dd11f14f5859f75d3190d80d8a16cbe2dca578ac43a80",
+              "runtime_JSONL_sha256": "6c60add936c838da250e055e90c7c3f559c7f6c7193e7fe892b0a79a4a1f605c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 3,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "5ec7430c3a6dd3d8b2bfd0afee999bac065ff9cc1e36c78b9cd01417172c2906",
+              "runtime_JSONL_sha256": "1f266f73b22896c2b7293fe7c18328427e4c3291d2fc22228b0a12e2ab5437ac",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 4,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "13c729ddded597bdafe20ce915cf75f2d4c72aecdadc54ba34ccc9bf1ccb6ea0",
+              "runtime_JSONL_sha256": "2d507a4de5287f25c6b48210dcf47db30102207059c43a561ea5a19f75b9e5d0",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 5,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "c97944a1b3b5b094262b27c2d7cc495ccbc2c755b0cf0371005b4526f278c1c6",
+              "runtime_JSONL_sha256": "77a5d8fcd6b75478d405fc34bc0dac18f8e39d0021322a55d9946965eea61646",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 6,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "ca8a1636db304e4970bc5fd813e89891c888141c58f8273898beadf17740feeb",
+              "runtime_JSONL_sha256": "eb9af03a0c36dd4ae5c8226c59a8813813c805b815c671534000fc51e41c98e0",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 7,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "716a7280ecc57069cb89269e127078f4592abb76558a4f16268f8b1c88003bc1",
+              "runtime_JSONL_sha256": "f43ce40b557bc24ab595202929909358f0a6a243ba3ed6aaed2516bdca24ee8d",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 8,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "4eb0adb1ce8f774c7613a6327b623ac83108d670bc3146f3638377d67783d433",
+              "runtime_JSONL_sha256": "6f40b063525734ad0bcb8b8401c7a343cf6ae7d4e53dab50b75d532979a607a1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 9,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "79f097b782c7e8432dd68f8cfb61b805fbe8b172af78188e00071a1a2168c713",
+              "runtime_JSONL_sha256": "6b646140ed0b54cb32d72235aef968cf842ac7d812b2bebcd12cc5cf3ed480c0",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 10,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "f00553149efa8a900946e628c6e78efa95f0c727490ac578abd737ebfa43abde",
+              "runtime_JSONL_sha256": "17360141e169f5f7337b0a0fc5c9f98616aa0927ce8c700fa5d834f63aaf3177",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 11,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "bd5c0921ff046a0be1a7b9e3bd7ba79e65314d7e634056669185302d76250493",
+              "runtime_JSONL_sha256": "eb11af005bff7413e72deb680de33e0dd4855b3ad36af921fbcb7cccd7a66079",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 12,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "a46343aa7fc771dcadd46d9fe196e3f018b673e802e38e1a95d101835009bb99",
+              "runtime_JSONL_sha256": "a05336e84bf4c3960b45e9c0c84efc17f6ef42253f220988658da6f65ac67f9a",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 13,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "9d6c23a1a3db74018ed9b8513f1ede3e12ee6e0fe9955da3516f2577ef2bc7e1",
+              "runtime_JSONL_sha256": "d9b9d296a7c9140b88dd4054fd40ca181719b77d4bdfb15f29c15255eae9e32f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 14,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "d1641e599974f6e2e08d85200e0fb12d0a1164a5f1c0410a29771936bd556c6c",
+              "runtime_JSONL_sha256": "65a2b371fb73829503289930e7e162a28604deff24c854868aec5bff70e300db",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            },
+            {
+              "rank": 15,
+              "complete_named_parameter_coverage": {
+                "result": "verified_complete_named_gradient_and_optimizer_coverage_metadata_not_FP32_equivalence",
+                "model_parameter_count": 750,
+                "trainable_parameter_count": 589,
+                "gradient_present_count": 279,
+                "optimizer_state_present_count": 279,
+                "FP32_reference_coverage_comparison_still_required": true,
+                "trainable_gradient_missing_count": 310,
+                "trainable_optimizer_state_missing_count": 310,
+                "original_complete_named_coverage_canonical_JSON_sha256": "5f7fbc4aac7966075543f24b22b3d57e84ad7315458eb6648019011bac4a369d"
+              },
+              "BF16_weight_cache_disabled": true,
+              "stable_precision_policy_unchanged": true,
+              "runtime_sha256": "edeb834aa07f199e19e38bdfa3f6598a13ecba6724d938f5d99c33e126abe5d0",
+              "runtime_JSONL_sha256": "910201f4a59e64458e799864ea5f504beaa7a08623f29f094dfd8d2732f77e69",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true,
+              "restoration_check_applicable": true
+            }
+          ]
+        }
+      ],
+      "exact_restore_rank_reports": 16,
+      "original_same_precision_comparison": {
+        "classification": "completed_outside_original_tolerance",
+        "original_JSON_result": "fail",
+        "original_comparison_sha256": "b0689750b71e617def6d8ed10a3f8698fa487b573a12ef0a432cac4ca9f950fd",
+        "official_CPU_loader_receipt_sha256": "a2fff8e7a9b5f111dfeb7f5d054f809b4a03b05d54ca54f4f599a252b6d50f39",
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "actual_CPU_exit": 1,
+        "complete_comparison": true,
+        "completed_updates": 8,
+        "world_size": 16,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model_tensors": {
+          "tensors": 909,
+          "bitwise_equal_tensors": 630,
+          "max_absolute_difference": 0.0004060305655002594
+        },
+        "combined_tensors": {
+          "tensors": 1778,
+          "bitwise_equal_tensors": 941,
+          "max_absolute_difference": 0.31602728366851807
+        },
+        "combined_includes_two_RNG_tensors_per_rank": true,
+        "above_tolerance_model_tensor_paths": 274,
+        "above_tolerance_optimizer_tensor_paths": 320,
+        "maximum_loss_difference": 0.04635047912597656,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "failure_count_method": "Count path prefixes in the combined list; the original shallow-shared model failures list is not treated as model-only"
+      },
+      "independent_evaluation": [
+        {
+          "stage": "official_pretrained",
+          "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+          "inference_receipt_sha256": "42a54832786b6cd600b6cee725a0ba9e54a075b73225831d14cc6723cd47f21c",
+          "predictions_sha256": "478a96d3ade77a2e0cf8c1fcd165cd89b0d3cdbf26347c2a25b9570d3308f1d0",
+          "official_score_sha256": "e583526e32c847e113a4419645ad2a2117863f4840d0bea8cf34504dbb59f0ef",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8806550193004378,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9502729247085159
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        },
+        {
+          "stage": "adapted_step8",
+          "checkpoint_sha256": "82bab1fde1d41aa55a3c89393ba7f940733d7e3a8ba376beeec82a19d3196621",
+          "inference_receipt_sha256": "69d5d2ef836122966ce402ecc0657e54f4dc1104d52c54f52c29eddaae07346a",
+          "predictions_sha256": "61a57e850447a2f6557c98a382e3881058debef24018c3b7a9e36e7405d7caa5",
+          "official_score_sha256": "a76f2843b70dcf10d9b84e279a4bd31bcc57c5dff42addacb5c63e6991af0e9c",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8949659296733937,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9562358040305806
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        }
+      ],
+      "capacity_only_measured_peaks_bytes": {
+        "peak_allocated_bytes": 13991044096,
+        "peak_reserved_bytes": 17760780288,
+        "peak_rss_bytes": 4147752960
+      }
+    }
+  ],
+  "started_UTC": "2026-10-16T10:03:23.270004+00:00",
+  "finished_UTC": "2026-10-16T10:30:38.569665+00:00",
+  "release": {
+    "owned_running_after": [],
+    "ownership_errors": [],
+    "watchdog_exit": 0,
+    "source_data_initializers_environment_and_metric_cache_unchanged": true
+  },
+  "raw_evidence": {
+    "original_summary_sha256": "6cac140a73df93914cf261c4a726ac25f0ec0397b151b363679e1be2a6f3b2ec",
+    "original_summary_bytes": 139608710,
+    "original_raw_retained_privately": true,
+    "raw_commands_addresses_absolute_paths_PIDs_omitted": true
+  },
+  "FP32_matched_short_chain_verified_here": false,
+  "FP32_BF16_trajectory_measurements_completed": false,
+  "quality_equivalence_accepted": false,
+  "full_NAVTRAIN_convergence_accepted": false,
+  "GPU_comparison_completed": false,
+  "scope": "Functional short-run completion, complete named-gradient/state metadata, original numerical replay and model quality are separate checks. Score differences on 22 anchors are measurements, not evidence of improvement or generalization. The v6 incomplete-coverage record is retained separately.",
+  "coverage_acceptance_record": {
+    "file": "bf16-v7-gradient-coverage-20261016.json",
+    "sha256": "1a3ff05a2823964c8f3daaca787f39859a78a23e2edef4b0e53ee98a2d03b3e0",
+    "scope": "Independent all16 metadata and saved rank0 Adam.step coverage; tensor numerical and quality acceptance remain separate"
+  },
+  "superseded_v6_execution_record": {
+    "file": "bf16-navtrain139-short8-20261016.json",
+    "sha256": "bf40ef04f8221d3926939ca4def72d8b42750ce92e085c6617c22cf2e6aaf075",
+    "retained_unchanged": true,
+    "accepted_as_correct_BF16_training": false
+  },
+  "source_transport_scope": {
+    "two_implementation_files_changed_from_FP32_reference": true,
+    "other242_files_canonical_LF_identical": true,
+    "other228_files_raw_byte_identical": true,
+    "other14_files_exact_EOL_only": true,
+    "FP32_reference_source": "4ae8ed9f3d34c88c7122b8d08df9b4ab9f5817bab794c0d429da3f3125e5fa5e"
+  }
+}

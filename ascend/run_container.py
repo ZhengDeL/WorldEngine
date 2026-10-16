@@ -49,8 +49,8 @@ def main():
     p.add_argument('--check-interval',type=int)
     p.add_argument('--upstream-schedule',action='store_true')
     p.add_argument('--deterministic',action='store_true')
-    p.add_argument('--precision',choices=('fp32','fp32-hf32-conv'),default='fp32',
-                   help='Training/inference precision; fp32 disables Matmul/Conv HF32, fp32-hf32-conv reproduces legacy Conv HF32')
+    p.add_argument('--precision',choices=('fp32','fp32-hf32-conv','bf16'),default='fp32',
+                   help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native NPU autocast with FP32 MSDA and FP32 master training state, without a scaler')
     p.add_argument('--debug-anomaly',action='store_true')
     args=p.parse_args()
     if args.train_filter and (args.task!='train' or not args.data_root or args.mini_prepared):

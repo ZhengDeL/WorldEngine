@@ -1,0 +1,178 @@
+{
+  "result": "actual_public_CLI_NAVTRAIN139_NAVTEST22_CPU_reproduction_passed_not_model_acceptance",
+  "measured_date_UTC": "2026-10-16",
+  "started_UTC": "2026-10-16T05:22:27.308947+00:00",
+  "finished_UTC": "2026-10-16T05:25:57.143440+00:00",
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "public_preparation_helper_sha256": "3a9c43c8db54fe0bf022ae4ff260cf807424bd3e0a49c2032cd943688b535353",
+  "public_CPU_controller_sha256": "6c456c211e91e92453bf1772398a3413a2bb0a63459bfac4f2acd74a50f97edf",
+  "measured_tools_manifest_sha256": "659117e8b104998a5a7cee0e4ca19176f21dd651faaeeb7149fbc605109bec02",
+  "input_lock_sha256": "a37413649ee37fee2971b44c9d983c8ab991aa5f7210edae1716464ec463886f",
+  "subset_reference_sha256": "b50b11d4892c43d9c4cd04d8f687973a7a340ab714fb6cee87da91c7efa46956",
+  "all_original_inputs_before_after_identical": true,
+  "original_inputs_before": {
+    "navtrain_annotations": {
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b"
+    },
+    "navtrain_pdm": {
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca"
+    },
+    "navtest_annotations": {
+      "bytes": 848516627,
+      "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+    },
+    "navtest_pdm": {
+      "bytes": 2791314758,
+      "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+    },
+    "train_cameras": {
+      "bytes": 2781004086,
+      "sha256": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e"
+    },
+    "eval_cameras": {
+      "bytes": 1629921998,
+      "sha256": "67a9c6ca0cb7ed650e93e2790425f8676f4749125e72f6f9f9f003eedfc36c57"
+    }
+  },
+  "original_inputs_after": {
+    "navtrain_annotations": {
+      "bytes": 16125493728,
+      "sha256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b"
+    },
+    "navtrain_pdm": {
+      "bytes": 23736976138,
+      "sha256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca"
+    },
+    "navtest_annotations": {
+      "bytes": 848516627,
+      "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+    },
+    "navtest_pdm": {
+      "bytes": 2791314758,
+      "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+    },
+    "train_cameras": {
+      "bytes": 2781004086,
+      "sha256": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e"
+    },
+    "eval_cameras": {
+      "bytes": 1629921998,
+      "sha256": "67a9c6ca0cb7ed650e93e2790425f8676f4749125e72f6f9f9f003eedfc36c57"
+    }
+  },
+  "metadata_source_method_AST_only": true,
+  "dataset_pipeline_or_model_executed": false,
+  "new_manual_or_synthetic_labels_created": false,
+  "train_anchors": 139,
+  "train_annotation_frames": 284,
+  "eval_anchors": 22,
+  "eval_annotation_frames": 51,
+  "required_raw_JPEGs": 1832,
+  "required_raw_JPEG_bytes": 393759333,
+  "all_required_JPEG_bytes_SHA_and_decode_verified": true,
+  "original_FP32_8192_metric_arrays_checked": 966,
+  "original_PDM_candidate_values_and_order_preserved": true,
+  "all_six_metadata_byte_identical_to_prior_derived_subset": true,
+  "six_metadata_full_nested_value_comparison": {
+    "nuplan_openscene_navtrain_log.pkl": {
+      "new_SHA256": "e7acf81abe04b5acc82cb6dc891ea938cf0b9cd0220448785e74ea591a6180b8",
+      "legacy_SHA256": "e7acf81abe04b5acc82cb6dc891ea938cf0b9cd0220448785e74ea591a6180b8",
+      "new_value_digest": "5978a610dd3caa9eb3b7e4c8f85fb2a137f672d62e4a5c8f4df783e41a145576",
+      "legacy_value_digest": "5978a610dd3caa9eb3b7e4c8f85fb2a137f672d62e4a5c8f4df783e41a145576",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    },
+    "pdm_8192_gt_cache_navtrain_log.pkl": {
+      "new_SHA256": "5b528bac3e2ac1dce7035b47d5fcf9fb615ffd4d40ca6328b2e9e186e6fa02a4",
+      "legacy_SHA256": "5b528bac3e2ac1dce7035b47d5fcf9fb615ffd4d40ca6328b2e9e186e6fa02a4",
+      "new_value_digest": "709be0cc3ce663c4a99d84aad72a8e80c4218a204f8a3290a9a11756968f8348",
+      "legacy_value_digest": "709be0cc3ce663c4a99d84aad72a8e80c4218a204f8a3290a9a11756968f8348",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    },
+    "navtrain_log_anchors.yaml": {
+      "new_SHA256": "b2d3d7f7077aea8712c7015061c990d7ea3b5b2839641a972cee2aeca1d9fd97",
+      "legacy_SHA256": "b2d3d7f7077aea8712c7015061c990d7ea3b5b2839641a972cee2aeca1d9fd97",
+      "new_value_digest": "fec25158225c2886d04fe5a5e30a65df4cb1b5c4403515595eb2c5420e257a68",
+      "legacy_value_digest": "fec25158225c2886d04fe5a5e30a65df4cb1b5c4403515595eb2c5420e257a68",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    },
+    "worldengine_navtest_eval.pkl": {
+      "new_SHA256": "07b1a358894024a0f8ae4dfadfa1a93e2bf91d2d9c2ae587edfbdbdf2d82e2e1",
+      "legacy_SHA256": "07b1a358894024a0f8ae4dfadfa1a93e2bf91d2d9c2ae587edfbdbdf2d82e2e1",
+      "new_value_digest": "692f96fa02997b2583097e026c19acc102077d82496e240c8e3cdecbfcc140e3",
+      "legacy_value_digest": "692f96fa02997b2583097e026c19acc102077d82496e240c8e3cdecbfcc140e3",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    },
+    "worldengine_navtest_eval_pdm.pkl": {
+      "new_SHA256": "864876b1e57f439578ae4fc60e0a1492625521f8b6139cf8ca967783fee79f66",
+      "legacy_SHA256": "864876b1e57f439578ae4fc60e0a1492625521f8b6139cf8ca967783fee79f66",
+      "new_value_digest": "5f559ba1b836bf883e1f634ed8debdeec3cd6be5af09c1cb1eb61cc10d579510",
+      "legacy_value_digest": "5f559ba1b836bf883e1f634ed8debdeec3cd6be5af09c1cb1eb61cc10d579510",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    },
+    "worldengine_navtest_eval.yaml": {
+      "new_SHA256": "1f299a612102e812d3305286541d94640912e97287acbe00071d572a5826b42e",
+      "legacy_SHA256": "1f299a612102e812d3305286541d94640912e97287acbe00071d572a5826b42e",
+      "new_value_digest": "42490bae7f95874b5dcd244308d1a471e89ac88121456a53a16a4c0d5e8556fd",
+      "legacy_value_digest": "42490bae7f95874b5dcd244308d1a471e89ac88121456a53a16a4c0d5e8556fd",
+      "byte_identical": true,
+      "complete_nested_values_and_array_order_equal": true
+    }
+  },
+  "independence": {
+    "train_eval_token_overlap": 0,
+    "used_frame_overlap": 0,
+    "camera_reference_overlap": 0
+  },
+  "public_preparation_elapsed_seconds": 203.85318064689636,
+  "preparation_peak_RSS_bytes": 51092897792,
+  "actual_CPU_stages": {
+    "preparation_execution": {
+      "actual_exit": 0,
+      "Docker_actual_exit": 0,
+      "OOMKilled": false,
+      "NPU_devices": [],
+      "runtime": "runc",
+      "network": "none",
+      "memory_bytes": 137438953472,
+      "NanoCpus": 8000000000,
+      "PidsLimit": 2048
+    },
+    "metadata_compare_execution": {
+      "actual_exit": 0,
+      "Docker_actual_exit": 0,
+      "OOMKilled": false,
+      "NPU_devices": [],
+      "runtime": "runc",
+      "network": "none",
+      "memory_bytes": 137438953472,
+      "NanoCpus": 8000000000,
+      "PidsLimit": 2048
+    }
+  },
+  "owned_release": {
+    "remaining": [],
+    "stops": [],
+    "errors": [],
+    "watchdog_actual_exit": 0
+  },
+  "actual_raw_evidence_sha256": {
+    "summary.json": "4aa1945d90afaabfdc61e02e75df52429b0a3d8919b81698fbc8699e3905bd5a",
+    "manifest.json": "59bfeb040c5df2be8c33d0eadd1ad8b61343612287337e3f3a1a1a2ded1d6183",
+    "preparation.json": "ba1ac6161ca7283739f698db0fc174061d9fbd9f78908212337486e69a7b5fe1",
+    "result.json": "d5817f92434d9ae54f1cbe054b39bfd07f3601bec3ca376525bd565422b9aa00",
+    "metadata_comparison.json": "be12c3ffe7940df786469b2483ab68fe3890bb8d6e82b6c3108439acadb88627",
+    "watchdog_result.json": "eb7d0d9c7d0d5c248f0b17bc62b394a63d22f8d974ea50b37ef135db264accd9"
+  },
+  "not_official_prepackaged_139_22_package": true,
+  "NPU_model_acceptance_inferred": false,
+  "full_NAVTRAIN_convergence_verified": false,
+  "GPU_equivalence_verified": false,
+  "boundary": "This is a deterministic preparation replay from the six pinned original cached publisher files, followed by full six-payload value/order and byte comparison. Actual model training, resume and quality measurements are separate validations."
+}

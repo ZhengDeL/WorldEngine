@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "scope": "Six pinned original publisher artifacts; cached Linux-server inputs only, no downloader",
+  "artifacts": [
+    {
+      "dataset": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "bytes": 16125493728,
+      "publisher_LFS_SHA256": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b",
+      "publisher_blob_oid": "643950683d705c102346a7cf7c9ea9724226dcee",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtrain.pkl",
+      "actual_whole_input_SHA_before_after_verified": true
+    },
+    {
+      "dataset": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "bytes": 23736976138,
+      "publisher_LFS_SHA256": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca",
+      "publisher_blob_oid": "6760948241b46492aabe155c1f0eab7de958ca64",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtrain.pkl",
+      "actual_whole_input_SHA_before_after_verified": true
+    },
+    {
+      "dataset": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl",
+      "bytes": 848516627,
+      "publisher_LFS_SHA256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b",
+      "publisher_blob_oid": "a2938ae68412cff9bb0561752f56d5ee18641d73",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl",
+      "actual_prior_mini_publisher_checksum_verified": true
+    },
+    {
+      "dataset": "OpenDriveLab/WorldEngine",
+      "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "path": "data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl",
+      "bytes": 2791314758,
+      "publisher_LFS_SHA256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316",
+      "publisher_blob_oid": "4fc42833d38e65867661e8ef7a6f3f3387edd618",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl",
+      "actual_prior_mini_publisher_checksum_verified": true
+    },
+    {
+      "dataset": "OpenDriveLab/OpenScene",
+      "revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+      "path": "openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz",
+      "bytes": 2781004086,
+      "publisher_LFS_SHA256": "4b7f59cfdedede8405cd7ae2828179a7a79e96b26c7b1d6da86dad698b31677e",
+      "publisher_blob_oid": "61417da13fa16e6eecf17282207db97bae65aef0",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_12.tgz",
+      "actual_whole_input_SHA_before_after_verified": true
+    },
+    {
+      "dataset": "OpenDriveLab/OpenScene",
+      "revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+      "path": "openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_30.tgz",
+      "bytes": 1629921998,
+      "publisher_LFS_SHA256": "67a9c6ca0cb7ed650e93e2790425f8676f4749125e72f6f9f9f003eedfc36c57",
+      "publisher_blob_oid": "b457c2753a698eeb2c182cfda4eaf8449d3fa99a",
+      "official_URL": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_30.tgz",
+      "mirror_URL": "https://hf-mirror.com/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_30.tgz",
+      "actual_prior_mini_publisher_checksum_verified": true
+    }
+  ],
+  "original_splits": {
+    "NAVTRAIN": {
+      "upstream_git_revision": "ec13257a95690a3e74d201f3b94064313a9369f8",
+      "path": "projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml",
+      "canonical_LF_SHA256": "a4b66adcb33836dc6ef0afd69d049c42aa9579e23721b6c26e8b9582e45d9a93",
+      "tokens": 103288,
+      "logs": 1192,
+      "official_GitHub_URL": "https://github.com/OpenDriveLab/WorldEngine/blob/ec13257a95690a3e74d201f3b94064313a9369f8/projects/AlgEngine/configs/navsim_splits/navtrain_split/navtrain.yaml"
+    },
+    "NAVTEST": {
+      "upstream_git_revision": "ec13257a95690a3e74d201f3b94064313a9369f8",
+      "path": "projects/AlgEngine/configs/navsim_splits/navtest_split/navtest.yaml",
+      "canonical_LF_SHA256": "61284edf5003c0291f843ce9817c822ba306609a62d54544223adae3fc7fc9cd",
+      "tokens": 12146,
+      "logs": 136,
+      "official_GitHub_URL": "https://github.com/OpenDriveLab/WorldEngine/blob/ec13257a95690a3e74d201f3b94064313a9369f8/projects/AlgEngine/configs/navsim_splits/navtest_split/navtest.yaml"
+    }
+  },
+  "original_dataset_source": {
+    "path": "projects/AlgEngine/mmdet3d_plugin/datasets/navsim_openscene_nuplan.py",
+    "canonical_LF_SHA256": "564e9de48056dd8dd88426ce20f238961ce698f96135ec3da084d43fea8f6805"
+  },
+  "reference_runtime_source_sha256": "cc91deb86ab5f4a8d08e5009f8ac396d06a7ebbf03d4ed83e38a04a50d2b1d88"
+}

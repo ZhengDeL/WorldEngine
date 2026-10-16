@@ -324,6 +324,10 @@ class AscendRuntimeHook(Hook):
                     peak_allocated_bytes=torch.npu.max_memory_allocated(),peak_reserved_bytes=torch.npu.max_memory_reserved(),
                     peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
                     resume_contract=runner.resume_contract)
+        if before_precision['mode']=='bf16':
+            evidence=getattr(runner,'_ascend_bf16_evidence',None)
+            if not evidence:raise RuntimeError('Actual BF16 forward/master-state evidence missing')
+            report['bf16']=evidence
         report.update(initialization_matches=self.initialization_matches,optimizer_initial_steps=self.optimizer_initial_steps,
                       restoration=getattr(runner,'_ascend_restoration',None),
                       watched_parameter_name=self.watched_parameter_name,raw_loss_count=self.raw_loss_count,

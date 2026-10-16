@@ -8,14 +8,14 @@ WorldEngine contains **AlgEngine**, for model training and evaluation, and **Sim
 
 | Task | NPU entry point |
 | --- | --- |
-| Build/import the environment | [Container installation](../ascend/docker/README.md) |
+| Build the runtime | [Public parent recipe](../ascend/docker/README.md), then [dependency environment](../ascend/docker/dependency_repair/README.md) |
 | Download selected official assets | `ascend/tools/download_algengine_assets.py` |
-| Prepare a genuine small real-data split | `ascend/tools/prepare_real_mini.py`, then `ascend/split_mini.py` |
+| Prepare the fixed official-data subset | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README.md); the alternative NAVTEST-only mini remains in section 3 |
 | Train a published configuration | `ascend/run_container.py --config ...` |
 | Original-style shell frontends | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`, `e2e_dist_eval_npu.sh` |
 | Resume complete training state | The same training arguments plus `--resume ...` and a new output directory |
 | Run inference | `ascend/run_container.py --task inference --config <dumped_config>` |
-| Independently score small-data trajectories | `ascend/official_score.py`, on CPU |
+| Official CPU scoring | `ascend/tools/score_cached.py` with genuine metric-cache payloads; `ascend/official_score.py` can first generate them from logs/maps |
 | Select rare cases | Original `projects/AlgEngine/scripts/rare_case_sampling_by_pdms.py` |
 | Prepare genuine SimScale inputs | [Data tools](../ascend/data_tools/README.md) |
 | Reproduce the measured 16-chip synchronous candidate | [Eight-update protocol](../ascend/execution/README.md) |
@@ -30,7 +30,7 @@ git rev-parse HEAD
 git submodule status
 ```
 
-Follow [Container installation](../ascend/docker/README.md) before training. The host needs a working Ascend driver, Docker, Python 3 and readable NPU character devices. The image supplies PyTorch/Torch-NPU, OpenMMLab, DrivingSDK and the geospatial dependencies. Do not replace them with the upstream CUDA wheels.
+Build the [public parent image](../ascend/docker/README.md), then complete the [dependency environment and its three CPU checks](../ascend/docker/dependency_repair/README.md) before training. The host needs a working Ascend driver, Docker, Python 3 and readable NPU character devices. The image supplies PyTorch/Torch-NPU, OpenMMLab, DrivingSDK and the geospatial dependencies. Do not replace them with the upstream CUDA wheels.
 
 Use the image tag and **actual image ID** obtained by that installation procedure. The examples explicitly pass both values rather than relying on the launcher's historical defaults. A saved checkpoint must resume with the same image and source contract.
 
@@ -69,6 +69,13 @@ VOCAB="$DATA/alg_engine/test_8192_kmeans.npy"
 VAD_INIT="$WEIGHTS/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth"
 VAD_BASE="$WEIGHTS/vadv2/e2e_vadv2_50pct_ep8.pth"
 HYDRA_BASE="$WEIGHTS/hydramdp/e2e_hydramdp_50pct_ep8.pth"
+```
+
+The content lock also includes the official 100% planning checkpoints. Both complete files have been [verified against their published sizes and SHA-256 hashes](../ascend/evidence/planning-checkpoints-20261016.json). Pass the selected file as `--checkpoint` when starting a new fine-tuning task; the configuration and filter still determine the training-data scope.
+
+```bash
+VAD_BASE_100="$WEIGHTS/vadv2/e2e_vadv2_100pct_ep8.pth"
+HYDRA_BASE_100="$WEIGHTS/hydramdp/e2e_hydramdp_100pct_ep8.pth"
 ```
 
 The Hugging Face and hf-mirror routes request the pinned publication revision. The ModelScope route requests its `master` revision and verifies the same locked file sizes and SHA256 values; it does not claim to request the Hugging Face commit on ModelScope. The receipt records the requested revision and content-reference revision separately. Select the route with `--source modelscope` or `--source huggingface`. The downloader excludes camera packages, maps, raw logs and SimEngine assets. Existing valid files are reused; retain the checksum checks when changing routes.
@@ -160,7 +167,177 @@ DATA/
     └── navsim_logs/test/      # genuine logs for independent CPU rescoring
 ```
 
+## Recommended workflow: NAVTRAIN139 / NAVTEST22
+
+Use this route for a fixed real-data validation run. The [public preparation tool](../ascend/data_tools/navtrain139/README.md) derives 139 training anchors from an original NAVTRAIN log and 22 evaluation anchors from a separate NAVTEST log. It preserves the original labels and all 8192 PDM candidates. This is a documented derived subset, not an official prepackaged mini or the complete benchmark.
+
+### Prepare the environment, inputs and weights
+
+Build the public post8 parent, then the [application/compiler dependency environment](../ascend/docker/dependency_repair/README.md), and run all three CPU acceptance commands there. Set `IMAGE` and `IMAGE_ID` to that final image. The measured repair passed both unfiltered `pip check` invocations and the API check after sourcing CANN. These CPU checks do not establish model acceptance.
+
+Download the annotation/PDM groups and official weights with the commands in section 2, including `--group navtrain`. The data tool's [input lock](../ascend/data_tools/navtrain139/INPUTS.lock.json) gives the six exact URLs, revisions, sizes and hashes. Reuse verified server files. Its two required camera archives are **mini camera 12** and **test camera 30**; a different shard cannot substitute for them. The six original inputs total 47,913,227,335 bytes when none are cached. An [independent official API audit](../ascend/evidence/official-data-origins-20261016.json) matched all six files' pinned revisions, paths, sizes and LFS hashes on 2026-10-16; that metadata query did not download the file payloads. The full camera corpus and SimEngine data are not required.
+
+Run the complete [CPU preparation command](../ascend/data_tools/navtrain139/README.md#run-on-the-linux-server), setting its `OUTPUT_PARENT="$WORK/navtrain139"`. Create that parent first and keep `prepared/` nonexistent. The tool reads the original archives directly, so these two archives do not need a separate extraction. It writes a launcher-ready split and copies only 1832 referenced original JPEGs. Do **not** run `split_mini.py` on this output. Its CPU replay, input hashes, full metadata comparison and image checks are in [VALIDATION.json](../ascend/data_tools/navtrain139/VALIDATION.json).
+
+Set `VOCAB`, `VAD_BASE_100` and `HYDRA_BASE_100` from section 2. These are official 100%-trained planning initializers. The `--mini-prepared` option below selects the 139/22 validation data; the weight filename does not turn this into full NAVTRAIN training. Maps must be present at `MAPS`.
+
+### Short validation: eight updates
+
+Use this route when the device window is limited. Run VADv2/HydraMDP and FP32/BF16 as four separate combinations with independent outputs. The continuous branch performs eight updates. A separate interrupted branch keeps `--steps 8`, stops with `--stop-after 4`, and resumes its own update-4 checkpoint to update 8. Setting `--steps 4` would change the learning-rate contract. This uses IterBasedRunner and does not establish eight epochs or convergence.
+
+```bash
+PREPARED="$WORK/navtrain139/prepared"
+test -f "$PREPARED/manifest.json"
+test -f "$PREPARED/preparation.json"
+test -f "$MAPS/nuplan-maps-v1.0.json"
+MODEL=vad                 # vad or hydra
+PRECISION=fp32            # repeat separately with bf16
+DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+case "$MODEL" in
+  vad) CONFIG=worldengine/e2e_vadv2_100pct.py; INITIALIZER="$VAD_BASE_100" ;;
+  hydra) CONFIG=hydramdp/e2e_hydramdp_100pct.py; INITIALIZER="$HYDRA_BASE_100" ;;
+  *) printf 'Select MODEL=vad or MODEL=hydra\n' >&2; exit 2 ;;
+esac
+STEM=$(basename "$CONFIG" .py)
+PREFIX="$RUNS/${MODEL}_navtrain139_${PRECISION}_updates8"
+SHORT_COMMON=(--devices "$DEVICES" --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$SOURCE/projects/AlgEngine/configs/$CONFIG"
+  --mini-prepared "$PREPARED" --checkpoint "$INITIALIZER" --vocab "$VOCAB"
+  --maps "$MAPS" --runtime --steps 8 --batch-size 1 --workers 0
+  --precision "$PRECISION" --deterministic --upstream-schedule
+  --checkpoint-interval 4 --check-interval 1 --memory 256g --cpus 128
+  --pids-limit 8192)
+
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" --output "${PREFIX}_continuous"
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" --stop-after 4 \
+  --output "${PREFIX}_partial"
+python3 ascend/run_container.py "${SHORT_COMMON[@]}" \
+  --resume "${PREFIX}_partial/iter_4.pth" --output "${PREFIX}_resumed"
+END_CHECKPOINT=iter_8.pth
+END_UPDATES=8
+```
+
+After selecting this route, skip the epoch commands below and continue with the shared CPU comparison, independent 22-token inference and official scoring. Keep the `PREFIX`, `END_CHECKPOINT` and `END_UPDATES` set above.
+
+### Native epoch workflow: eight epochs
+
+Select this alternative for native epoch-runner validation. Its checkpoints cannot be exchanged with the eight-update route. Each command uses a new output; continuous, interrupted and resumed runs keep the same eight-epoch horizon.
+
+```bash
+PREPARED="$WORK/navtrain139/prepared"
+test -f "$PREPARED/manifest.json"
+test -f "$PREPARED/preparation.json"
+test -f "$MAPS/nuplan-maps-v1.0.json"
+MODEL=vad                 # vad or hydra
+PRECISION=fp32            # bf16 is an experimental, separate run
+DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+case "$MODEL" in
+  vad) CONFIG=worldengine/e2e_vadv2_100pct.py; INITIALIZER="$VAD_BASE_100" ;;
+  hydra) CONFIG=hydramdp/e2e_hydramdp_100pct.py; INITIALIZER="$HYDRA_BASE_100" ;;
+  *) printf 'Select MODEL=vad or MODEL=hydra\n' >&2; exit 2 ;;
+esac
+STEM=$(basename "$CONFIG" .py)
+PREFIX="$RUNS/${MODEL}_navtrain139_${PRECISION}_epochs8"
+COMMON=(--devices "$DEVICES" --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$SOURCE/projects/AlgEngine/configs/$CONFIG"
+  --mini-prepared "$PREPARED" --checkpoint "$INITIALIZER" --vocab "$VOCAB"
+  --maps "$MAPS" --runtime --epochs 8 --batch-size 1 --workers 0
+  --precision "$PRECISION" --deterministic --upstream-schedule
+  --checkpoint-interval 4 --check-interval 1 --memory 256g --cpus 128
+  --pids-limit 8192)
+
+python3 ascend/run_container.py "${COMMON[@]}" --output "${PREFIX}_continuous"
+python3 ascend/run_container.py "${COMMON[@]}" --stop-after-epochs 4 \
+  --output "${PREFIX}_partial"
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --resume "${PREFIX}_partial/epoch_4.pth" --output "${PREFIX}_resumed"
+END_CHECKPOINT=epoch_8.pth
+END_UPDATES=72
+```
+
+At 16 ranks and B1, 139 anchors give nine updates per epoch: the continuous and resumed endpoints have 72 updates; the interrupted run stops at 36. This exercises the original epoch runner on a small subset, not convergence over the original 103,288-anchor split. The 256g limit is a subset training allocation and is not suitable evidence for full-data training capacity. This device list describes 16 logical chips on one host; check the physical mapping before using it.
+
+`fp32` is the default and disables both public Matmul/Conv HF32 flags. `bf16` uses native NPU forward autocast with the history/current shared-weight cache disabled; master parameters, gradients, optimizer state, MSDA and planning loss remain FP32, without a loss scaler. Geometry and original BatchNorm/SyncBatchNorm use FP32 islands while retaining original modules, running statistics and collectives. On source `e14dd6b2…`/244 Python files and image `3522…`, both official100 planners completed [eight BF16 updates, own restoration and 22-token inference/scoring on 16 ranks](../ascend/results/bf16-v7-navtrain139-short8-20261016.json). [All-rank and saved-Adam evidence](../ascend/results/bf16-v7-gradient-coverage-20261016.json) verifies restoration of the prior 138 coverage omissions per model. Both complete numerical replays still exceed unchanged original tolerances. Eight updates are within 500 warmup updates, not convergence or quality/numerical equivalence. Set `PRECISION=bf16` to test this opt-in experimental mode with separate outputs and own checkpoints. An FP32 checkpoint cannot resume under a BF16 contract.
+
+The v6 execution record is superseded as training acceptance: [matched checkpoints confirmed 138 optimizer-state IDs missing from each BF16 model relative to FP32](../ascend/results/bf16-v6-optimizer-coverage-20261016.json). A [real CPU cache probe](../ascend/results/bf16-autocast-history-cache-cpu-20261016.json) reproduced missing shared-layer gradients after history `no_grad`, despite a finite loss and an updating head. The CPU mechanism and old checkpoint-coverage defect are established; the v7 coverage repair has separate actual NPU/saved-state verification. This does not explain earlier FP32 replay differences or establish a universal numerical repair.
+
+The [recorded FP32/BF16 comparison](../ascend/results/fp32-bf16-v7-matched8-planning-20261016.json) covers four model/stage combinations on the same 22 held-out anchors, each with all 40 poses. Same-official-weight inference is separate from each precision's independently trained eight-update checkpoint. These are measurements without a quality-equivalence threshold, not GPU comparisons.
+
+Compare the two complete endpoints on CPU using the unchanged public comparator:
+
+```bash
+COMPARISON="${PREFIX}_comparison"
+mkdir -p "$COMPARISON"
+COMPARE_EXIT=0
+docker run --rm --runtime runc --network none --memory 24g --cpus 8 \
+  --pids-limit 2048 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
+  -e OMP_NUM_THREADS=4 -e OPENBLAS_NUM_THREADS=4 \
+  -v "$SOURCE:/source:ro" -v "$RUNS:$RUNS:ro" \
+  -v "$COMPARISON:/checks:rw" -w /source "$IMAGE_ID" \
+  /opt/conda/envs/bevformer/bin/python -c '
+import runpy, sys, torch, torch_npu
+from torch_npu.utils import serialization
+assert torch.load is serialization.load
+assert not torch.npu.is_initialized()
+sys.argv = ["ascend/compare_resume.py"] + sys.argv[1:]
+runpy.run_path("ascend/compare_resume.py", run_name="__main__")
+' --continuous "${PREFIX}_continuous/$END_CHECKPOINT" \
+  --resumed "${PREFIX}_resumed/$END_CHECKPOINT" \
+  --continuous-run "${PREFIX}_continuous" --partial-run "${PREFIX}_partial" \
+  --resumed-run "${PREFIX}_resumed" --output /checks/comparison.json \
+  || COMPARE_EXIT=$?
+python3 - "$COMPARE_EXIT" "$COMPARISON/comparison.json" "$END_UPDATES" <<'PY'
+import json, sys
+from pathlib import Path
+code = int(sys.argv[1])
+report = json.loads(Path(sys.argv[2]).read_text())
+expected = {0: "pass", 1: "fail"}
+assert code in expected and report["result"] == expected[code]
+assert report["tensor_tolerance"] == {"atol": 1e-6, "rtol": 1e-5}
+assert report["loss_absolute_tolerance"] == 1e-4
+assert report["world_size"] == 16 and report["completed_updates"] == int(sys.argv[3])
+print("Original numerical comparison:", report["result"])
+PY
+```
+
+The comparison checks model/optimizer tensors, rank RNG, tokens, LR and losses. Its original tensor tolerance is `atol=1e-6, rtol=1e-5`, and maximum loss difference must be below `1e-4`. The command captures completed comparisons outside the original tolerance (original JSON `result=fail`, exit1, with a complete matching report) so independent inference/scoring can still run; missing or inconsistent reports stop the workflow. Retain an above-tolerance comparison as its numerical result, even when every restoration and training command exited successfully. Do not bypass the source, data, image or precision contract.
+
+### Independent inference and official CPU scoring
+
+Use the selected route's resumed configuration and endpoint checkpoint. `END_CHECKPOINT` is `iter_8.pth` or `epoch_8.pth`. The same command can evaluate the continuous endpoint by selecting that run's paths and a different output.
+
+```bash
+INFERENCE="${PREFIX}_resumed_eval"
+python3 ascend/run_container.py --devices 0 --task inference \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "${PREFIX}_resumed/${STEM}_rank0.py" \
+  --checkpoint "${PREFIX}_resumed/$END_CHECKPOINT" --mini-prepared "$PREPARED" \
+  --vocab "$VOCAB" --maps "$MAPS" --precision "$PRECISION" --deterministic \
+  --memory 64g --cpus 16 --pids-limit 2048 --output "$INFERENCE"
+
+CACHE=/datasets/worldengine/official_metric_cache
+SCORE="${PREFIX}_resumed_score"
+mkdir -p "$SCORE"
+docker run --rm --runtime runc --network none --memory 24g --cpus 8 \
+  --pids-limit 2048 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
+  -e OMP_NUM_THREADS=1 -e OPENBLAS_NUM_THREADS=1 \
+  -v "$SOURCE:/source:ro" -v "$INFERENCE:/predictions:ro" \
+  -v "$CACHE:$CACHE:ro" -v "$SCORE:/output:rw" -w /source "$IMAGE_ID" \
+  /opt/conda/envs/bevformer/bin/python ascend/tools/score_cached.py \
+  --predictions /predictions/predictions.pkl --metric-cache "$CACHE" \
+  --output /output/score
+cat "$SCORE/score/official_score.json"
+```
+
+The scorer requires original official NAVSIM metric-cache payloads for all 22 prediction tokens. Training PDM labels are not this cache. The helper selects exactly those prediction tokens and leaves payload bytes and scoring mathematics unchanged. Keep symlink targets reachable inside the container; mount additional target roots at the same absolute paths when needed. If the cache is unavailable, section 6 describes generation from genuine logs and maps.
+
+Check `inference_validation.json`, the 22-token score and the original comparison JSON independently. Full NAVTRAIN convergence, complete NAVTEST quality, GPU comparison and general 16-rank numerical reproducibility remain separate acceptance items. Current model results are recorded in the [validation report](../ascend/FULL_ALGENGINE.md); environment/data CPU results must not be presented as a model pass.
+
+Recompute all exported poses and the seven official-score differences with the [public CPU comparison tool](../tools/validation/README.md). It accepts either FP32/BF16 or GPU/NPU exports and does not apply a quality-equivalence threshold.
+
 ## 3. Prepare a small real dataset and run eight updates
+
+This is the alternative NAVTEST-only smoke-data path. For genuine NAVTRAIN training anchors and a fixed independent evaluation split, use the recommended NAVTRAIN139/NAVTEST22 workflow above.
 
 This route prepares data from the real NAVTEST annotation/PDM and available camera files. It preserves the original labels and 8192-entry reward vectors. The resulting train/evaluation split is separated by whole driving logs; it is an adaptation check, not the official full NAVTRAIN/NAVTEST benchmark.
 
@@ -330,7 +507,7 @@ runpy.run_path("ascend/compare_resume.py", run_name="__main__")
 cat "$CHECK/comparison.json"
 ```
 
-The comparator checks tensors, losses, tokens, LR and final RNG at its unchanged thresholds. A restore report passing does not establish that all later computation reproduces the continuous run. Default 16-chip strict controls still include failures; consult the [current results](../ascend/results/strict-replay-post8-20261014.json) before adopting that topology for reproducibility-sensitive runs.
+The comparator checks tensors, losses, tokens, LR and final RNG at its unchanged thresholds. A restore report passing does not establish that all later computation reproduces the continuous run. Completed default 16-chip strict controls include above-tolerance results; consult the [current results](../ascend/results/strict-replay-post8-20261014.json) before adopting that topology for reproducibility-sensitive runs.
 
 ## 6. Evaluation and official scoring
 
@@ -497,6 +674,8 @@ These files select collision, off-road and bottom-1%-progress cases. Very small 
 
 ## 8. Fine-tuning and original configuration variants
 
+The current [BF16 v7 real-log FT record](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) is separate from NAVTRAIN139: both original 37/22 configurations completed eight updates, own update-4 restoration and bitwise replay comparison. VAD completed 22-anchor inference/scoring; Hydra's inference was interrupted at console progress 14/22 by a bounded execution timeout, with no official score. This does not add producer-synthetic coverage or establish convergence.
+
 For rare **real-log** VAD fine-tuning, initialize from the matching planner checkpoint and supply the generated YAML. This does not require a SimEngine rollout:
 
 ```bash
@@ -575,7 +754,8 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 | `can't start new thread` / EAGAIN | Inspect container PID/thread count. Default PID limit is `max(2048, 512*ranks)`; the 16-rank examples use 8192. |
 | `EL0020`, device occupied, `507899` | Stop starting jobs on that chip; check exact device/container ownership with the machine administrator. Do not infer availability only from a blank process list. |
 | Resume contract mismatch | Compare source, image, data/filter, precision/environment, world size and schedule. Restore the matching inputs instead of bypassing the guard. |
-| NaN/Inf or failed numerical comparison | Retain the run and inspect the recorded raw loss/gradient/state evidence. Do not increase tolerances to turn a failure into a pass. |
+| NaN/Inf | Retain the run and investigate the recorded raw loss, gradients and training state. |
+| Completed comparison outside the original tolerance | Retain the original numerical report and checkpoints. Keep the original thresholds; successful restoration does not establish numerical replay. |
 | Official scoring cannot find cache payloads | Check token coverage and paths in `metadata/*.csv`; regenerate the relocated index/cache. |
 
 The [validation report](../ascend/FULL_ALGENGINE.md) records the measured conditions, versions and results for small-data training, restoration and scoring. The public rebuild and two 16-rank LoRA fine-tuning workflows have actual small-data evidence. Four independent synchronous base-planner controls completed, with two comparisons outside the original tolerance. Full NAVTRAIN convergence, complete independent NAVTEST results, the other six genuine synthetic configurations and sustained operation in the target environment remain unvalidated.

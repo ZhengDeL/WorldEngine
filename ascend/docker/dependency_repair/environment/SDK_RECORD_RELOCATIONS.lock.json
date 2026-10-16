@@ -1,0 +1,38 @@
+{
+  "result": "actual_original_SDK_RECORD_relocations_exact_publisher_bytes",
+  "original_image_id": "sha256:4d09e93cd351a3e9efc63a6937e3a2c15f7214594d3ca3bc4c36bd84667e084c",
+  "actual_record_inventory_sha256": "f0a20b80cb277b848739f9187bf637dc45149d4869fc7a8fd4d8fb8a59af7944",
+  "actual_host_receipt_sha256": "933be08a5101ec3b3a0e88ba66599d00c0a8bf232e982c43b8d6615e45a6d038",
+  "declared_entries": 6585,
+  "declared_original_missing_locations": 2,
+  "present_file_RECORD_hash_or_size_mismatches": 0,
+  "relocations": {
+    "te-0.4.0.dist-info::../../LICENSE": {
+      "distribution": "te",
+      "record_path": "../../LICENSE",
+      "original_declared_location": "/usr/local/Ascend/cann-9.1.0/LICENSE",
+      "original_location_exists": false,
+      "actual_path": "/usr/local/Ascend/cann-9.1.0/python/site-packages/te-0.4.0.dist-info/LICENSE",
+      "bytes": 11357,
+      "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+      "declared_hash": "sha256=tAkwu8-AdEyGxGoSvJ2gVmQdcicWw3j1ZZueVV74M-E",
+      "declared_size": "11357",
+      "classification": "license_or_notice"
+    },
+    "ms_service_profiler-26.0.0.dist-info::../../bin/msserviceprofiler": {
+      "distribution": "ms_service_profiler",
+      "record_path": "../../bin/msserviceprofiler",
+      "original_declared_location": "/usr/local/Ascend/cann-9.1.0/aarch64-linux/bin/msserviceprofiler",
+      "original_location_exists": false,
+      "actual_path": "/usr/local/Ascend/cann-9.1.0/python/site-packages/bin/msserviceprofiler",
+      "bytes": 198,
+      "sha256": "5d17c8d1e555bce4161a150fd2c60d2da206590fd9c55d300e09b610dfc7879c",
+      "declared_hash": "sha256=XRfI0eVVvOQWGhUP0sYNLaIGWQ_ZxV0wDgm2EN_Hh5w",
+      "declared_size": "198",
+      "classification": "runtime_or_distribution_payload"
+    }
+  },
+  "original_SDK_or_metadata_modified": false,
+  "all_RECORD_original_paths_present": false,
+  "scope": "Two exact verified relocated publisher files; other missing/runtime/metadata changes remain errors"
+}

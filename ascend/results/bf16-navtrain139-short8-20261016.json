@@ -1,0 +1,1327 @@
+{
+  "result": "complete_actual_two_model_BF16_short8_train_restore_independent22_inference_score_both_original_replays_outside_tolerance",
+  "source": {
+    "sha256": "4ae8ed9f3d34c88c7122b8d08df9b4ab9f5817bab794c0d429da3f3125e5fa5e",
+    "python_files": 244
+  },
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "precision": "bf16",
+  "default_precision": "fp32",
+  "BF16_status": "opt_in_experimental_original_strict_replay_not_accepted",
+  "execution": {
+    "logical_chips": 16,
+    "physical_cards": 8,
+    "batch_per_rank": 1,
+    "global_batch": 16,
+    "workers": 0,
+    "TASK_QUEUE_ENABLE": null,
+    "ASCEND_LAUNCH_BLOCKING": null,
+    "HCCL_DETERMINISTIC": "true",
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "public_matmul_HF32": false,
+    "public_conv_HF32": false
+  },
+  "data": {
+    "training_anchors": 139,
+    "independent_evaluation_anchors": 22,
+    "original_candidates": 8192,
+    "manifest_sha256": "59bfeb040c5df2be8c33d0eadd1ad8b61343612287337e3f3a1a1a2ded1d6183",
+    "preparation_sha256": "ba1ac6161ca7283739f698db0fc174061d9fbd9f78908212337486e69a7b5fe1",
+    "scope": "Deterministic subset derived from official NAVTRAIN/NAVTEST, not an official prepackaged mini or complete benchmark"
+  },
+  "schedule": {
+    "type": "IterBasedRunner",
+    "max_iters": 8,
+    "independent_partial_stop_after": 4,
+    "own_resume": [
+      4,
+      8
+    ],
+    "original_warmup_updates": 500,
+    "eight_updates_are_inside_warmup": true,
+    "epoch8_or_convergence_accepted": false
+  },
+  "actual_counts": {
+    "models": 2,
+    "training_containers": 8,
+    "runtime_rank_reports": 128,
+    "exact_restoration_rank_reports": 32,
+    "inference_containers": 4,
+    "CPU_scoring_containers": 4,
+    "complete_original_numeric_comparisons": 2,
+    "original_numeric_comparisons_inside_tolerance": 0,
+    "original_numeric_comparisons_outside_tolerance": 2
+  },
+  "models": [
+    {
+      "profile": "vad",
+      "original_configuration": {
+        "config": "projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py",
+        "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+        "profile": "e2e_vadv2_100pct",
+        "initializer_file": "e2e_vadv2_100pct_ep8.pth",
+        "initializer_bytes": 434885463,
+        "initializer_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+      },
+      "parameters": {
+        "model": 58207822,
+        "trainable": 33716740,
+        "scope": "Original base-planner configuration with configured backbone freezing; not LoRA or fully unfrozen training"
+      },
+      "jobs": [
+        {
+          "role": "smoke",
+          "initial_iter": 0,
+          "final_iter": 1,
+          "updates_executed": 1,
+          "configured_horizon": 1,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "620c2a1e3cd2f9ab0b35e09bfb4613717b46a1c2b0ffebfb35df205619decff9",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "bc3442018577c7d234fe84685f4e09087e4099af22489dbe412e21f0e9347d47",
+              "runtime_JSONL_sha256": "6d78600fbfca7affca4f48314f8666c1499b5b4fe3b1ca630071a8b10616d0c5",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "bfd92457fc0c20bcff4f97764a7fe09c86de54b46bcf07c43527183c59dba5b1",
+              "runtime_JSONL_sha256": "0214c48a6d308f82321561ac4dba38edff4171751e3c51dac1dc6fab7f194b48",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "0d51fe8cb070e4f3a3a4a9e97e5b8ca5ad0c8ea068e12c9e7c70b99f344c1df0",
+              "runtime_JSONL_sha256": "3eac7f915000ded7b12d5f398f001bf1a5c368e634551edbcd96be0a5cce6667",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "e3913afc9b228c8f322f6d087711cb20525e130d79307a9f1a1131213894003a",
+              "runtime_JSONL_sha256": "e16f46380653ba574ecec8368371f6469d2bad550e0cea2119348ac0b57a6f8d",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "7d4e8631c29939e7a9d92df3fabe65972101085b9e83bbbaae6f388c9f0a6422",
+              "runtime_JSONL_sha256": "e28fdef62a13c42d00503651b6445459f1a41ca22d7a6f537001b0ba994f6ee5",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "836687050924b2255f23d57a0e50455e6bf91b3af2782e58c96c67dd0544ce4e",
+              "runtime_JSONL_sha256": "51e7db82b8745cd4dbc424ee41ea95fc1cddd9dfd01c46fdf82f89187ffa2e12",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "dabddcdd578f1b2254875fc4690b10298e2a634bc245670300e5917dffa0c2f6",
+              "runtime_JSONL_sha256": "7109cae7b22591edcaef3b580aea603731af9dba7b0c6a0fcdf3fa3d1505bc1d",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "8276f802bb3c20c916744b3c9c0cc2404403f7db0670cba028f4d5ccf52da57e",
+              "runtime_JSONL_sha256": "bf26c4f60e0fb04e220fcb3d0fd95a7972937294c3d20e77d987669fa5d073bd",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "34dcd07acee8af5d2f8df676269866b97a0f5603d70f147fed8e2d29804e3094",
+              "runtime_JSONL_sha256": "8afe4e0ae174b6589762236965d24e3d164379845a3d43d7a9441d03c4dc4bd4",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "a742741d64f73e88d1ae243c3accbb347a240c6fec48e94e23f297d9acb4a5be",
+              "runtime_JSONL_sha256": "133bf999fddb624317bce5df4a845f0805aee7dad1f1185c52b87f1ad5dc771b",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "4748477d36af5d1bb03462de17ee230d165945e67f6fd7979076a2bc1d9a2b16",
+              "runtime_JSONL_sha256": "cbee6023dee8b3ca89083e7302aa4a4fe66db8c504122d223b09c10fc3ed32cd",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "f9edf267707b4984bb9fc6be6b40af8401ebaa807d8da4a7431fdf5a67f8afa1",
+              "runtime_JSONL_sha256": "96fc662a82581a608568e891787aba8c43f41281a756e94beba9b38c4f466c86",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "db46e1fcc5c67819eb5e207bbd18ec99c0fac5966194ef3353d004f230cea9da",
+              "runtime_JSONL_sha256": "1fef05528e63ab17017af8723a992065aa3bf8d8bb3bdfb55440ce04d6d98dfe",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "2ae8936614223d4da9c9e44224f201c66a472a3f6238cb7626baef825ed97bbb",
+              "runtime_JSONL_sha256": "f5bedba1fb080c910e0018ceb5d53f14ec2df41a4e977a1795cb1744d9293ea2",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "5762dd889f73e9e372028b3af1030b7886ed7cf53fbea16478dae1cece579f16",
+              "runtime_JSONL_sha256": "11b21919377e2ee9d8ab776707cc0a7979afcccca8e6c466768779b0ad266aae",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "d911cca89b74268cc8cb7d8bcc59e2ac801603601f84049adba5e6b643a64c2b",
+              "runtime_JSONL_sha256": "3070c7d827fa52aba1210a19bda5ad99079ae60009039779b6fb6891ebad8f0c",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "continuous",
+          "initial_iter": 0,
+          "final_iter": 8,
+          "updates_executed": 8,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "c3552a357c17471c056576af04055ffec17a3d50cd992b13be4fd5050681edb8",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "90cb14c7903385b73d4b7ba742f4bf64a9a7351844e336065872fe6e346d04c5",
+              "runtime_JSONL_sha256": "b3a7ec862c4ff3a7bd103a5c0f5b0b7fb5bd30fbb7021f1ffbfba5cf9591cc36",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "ae71537cf74583ebb92a07f50c9a240e92d28bbfcc3ede3d440dde0f473253a8",
+              "runtime_JSONL_sha256": "abe42bde4bbfcc09eebcc657e16dc6fea589ab1ae9a5b8d2ab3517732bfcdf00",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "9d0d9f92c0efc421795ebb6ced7e4824f0647398dfe244e8ff72400030c269fa",
+              "runtime_JSONL_sha256": "7611b9261b3c500a0649cf3d8057642b8fa26e23a903b1a8fd779153e142bdde",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "43af6f2d0035b4845faa67379c47dab96d0202030b92fb31f4a45cc4e901c979",
+              "runtime_JSONL_sha256": "053073ad48a044b71d37c60e031ec6e0120694b901e17120b3afd17e82771a77",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "295a8500916030597fdb052f6a0053a6372d8c516a9e4034d0be3ff7cc0e3390",
+              "runtime_JSONL_sha256": "381d82d32f7e60b4fb06b7bdc9feb3da4f2ff26194f0aea3628b5f61b2e7254c",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "f46606dc58c3d1b47068fd8d9c58a720b62fd8403a9443cc41e6ce7e27482f6e",
+              "runtime_JSONL_sha256": "fec26ecfeb1bd2cf1a61974fe4080b7a085ca9242eac27da3b2971ada94d5ad9",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "ca660b1b3e3e06949963c0ccb0de31a662900e18ec7d241a1f8d3ef4a58b4d84",
+              "runtime_JSONL_sha256": "72a97dd28e36787747501e240ac0d2948947db99bedb92a1308425b79e10550d",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "b5fa6aba854b302bac7d940a17f61e1de67c875ba1c3a182b2442c71309bfca2",
+              "runtime_JSONL_sha256": "8fa3aa21dbe0bf07b9f12fd3326c04619e7544ccc15ba608908a47d780710ffa",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "9e9bdf1471ad696c3718e4d344f6ed5888d58e9d30ecba2d485ea560b625d057",
+              "runtime_JSONL_sha256": "5727d5e0ab53355247a52110f5f0d3131bce7825601273d21eeb3ef0a12eff12",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "b558c6f7dd3e51837560affb3b20daf3a060bb68b6f4f3aeb88d2df2c0ee5b36",
+              "runtime_JSONL_sha256": "1084142c61b9cf3358dfb66f2eb8442e719fd9f0197d03449824c38e2c4bd299",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "6f03e848f8daf23bb1fdcdcb4cfc20d9883b0b254adf1c7d14e768c30afbe001",
+              "runtime_JSONL_sha256": "9f9165faa7771df974287f2bff2ddbee330ab51285bbff6bce4767ecd2881937",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "9ba4a9a90c616b099b74aa40bf0347f3a01da311614459480a1e86423be79376",
+              "runtime_JSONL_sha256": "b949db0aa94934ad8d1f29049d670e409304e5281982e7861c3fe8d811fe9aa9",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "8943c0db794efe2b3e98014824868b99a328d008226c70b2772907a3267549e7",
+              "runtime_JSONL_sha256": "f6731cfdd1550b989990d47dde30b3c86f759ba23266b69692c8cb05f89585a4",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "ba904982bfd13952c6e8d63ffa9120a3731c48af3a17886b4d83afb94aa68bc1",
+              "runtime_JSONL_sha256": "8852030ba052851367be66e5aa9ff287ffb85a7c1b4b402c9f8f87a46ac55061",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "bf723da73177b446abf3c30288b1908293a3c5b1ffb2edcba105b1d4c6bbe819",
+              "runtime_JSONL_sha256": "3058c6afc88817c9a2edea6b2b61959e2c129d9fe71d78669d10b8bc1b9ef6ca",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "8f34185bea40b445e494caae3d91203bc96f0cac102e10016c1fd912f900689c",
+              "runtime_JSONL_sha256": "c3297c7aa7b76801c38fc3a938d7b67d791ed3b8fc469dd3c536d5a1da2c9d97",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "partial",
+          "initial_iter": 0,
+          "final_iter": 4,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "9f5d7779a74d18b40cf5dfd1a70eb42d8554d1d889d6b79df625d9c683be006c",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "482633a211bca96e339382d71a78dc864a1389c59b68f9cffafdf1aa39d1732e",
+              "runtime_JSONL_sha256": "0fa6c54fa904580d4676786ffe66d960ffafea150ea264a2537f02a28b872c67",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "dfd8814d9a904e5932c3c3dc288af23e50bc66254ab26cc7cc26950c7781a0a1",
+              "runtime_JSONL_sha256": "1c19bab67fca0d00bc25f5eb3fc86034c462904248c834138f2fc176482b106f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "0be64fa5867ef002c0239d6ae8d36a38163afcca2246236a46f5d2e9c496410c",
+              "runtime_JSONL_sha256": "24bb0748b39ed17076047a3be51c395272723ab1ad400295a9c541b9e69bf487",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "ded6021648caefc221e35173031cda323fe451ba1ae288a8b5a64c62fea996a2",
+              "runtime_JSONL_sha256": "8b91a35c896b97a3e9aa488b7e7c8a970d79363a82aec06780ca32f7cf5d2d65",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "f817f35da47129cd59890bf37cf45c3f8bf9e3f368dab324642884d0a92c686d",
+              "runtime_JSONL_sha256": "5a052f08b0af6329de0b220ce583a10be2a78f3f5b10a7df6325dca8dca55ba9",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "aabe4d00eaa1f98db3d07c310213d619fb4271db94733025c071bfa017a6b88b",
+              "runtime_JSONL_sha256": "2b6c2cf792e223f3ffe51991da071ff8f620dbdd4133068085cfe3a931a122bb",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "923a119b3a23dd8842f86136835b70e364c9a36cca7430c505b471a777e8fbe0",
+              "runtime_JSONL_sha256": "6a3d132d0d5637df4a32d878047f7b90d74b2509dcc141968f6ca0834078b4c1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "a00786571b46c6313617b84af1c4f408c24892ba6ac03c4417cf05e8345869fa",
+              "runtime_JSONL_sha256": "f9f324579d425e7aab6c92ae532a20b18fdcc42019b467ffe155a197a1c8e7ee",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "d059e2fbcf540c2581cb79391563141e870a63e687ebd31e8add7074dc506f61",
+              "runtime_JSONL_sha256": "d4cceee044506720fe58e80e012b75e72078c9a87a3795c28a417a6441712d5f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "355a04ea9c0bd56b86ab3a3332e720f3e172de69ca3ec961928a8264a791c1cc",
+              "runtime_JSONL_sha256": "fe9840fbfc7704e9c0e198c26460e4562d5d14ce82a3a4437e86a46d972bbf44",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "acd345207eaaaf602079b98ecad66a513383ed901d9c7e08728d073c2e17622c",
+              "runtime_JSONL_sha256": "ded5d7ae731b66f6ee5cc35c0ca141038c90824c927c91d126f9d2de1ebf2f2a",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "09fb5d6b0c3063f9b79c7d338d9a6b3e865a9fb2d243f7abe6ee0d7c84425c65",
+              "runtime_JSONL_sha256": "66aba46b8fc038b89280d77c8f1b7cbe604fa64cba2a8f405936f745aff91f77",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "ad563763b26ed8bee867fb3054ecfcc6307b91d58bb849c012c00f905281b52a",
+              "runtime_JSONL_sha256": "749866aca5afde05c92719be54175f0a5d755cc3f8dddccdee329fb2600a3ea3",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "b8a71f203cf31b208f31408d358af985a907d35a02c87b04ba5fc0993f6dfaef",
+              "runtime_JSONL_sha256": "4a2b6c8f584f40e28bd745c10dd1eb183733e101f2bf1d070d17e9f7507b619f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "3882850fc3f73adb775be01add511d8d2c7140aba954c450d3140c80970981a9",
+              "runtime_JSONL_sha256": "1e6383bd3e5df1fbe40f23c69d9ab39a0cdf51e9bca1690355ef7fab70d58894",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "16b9ad22f1442c6d217eef828adb07f55707ae8b768c282fe414c9a312ab25df",
+              "runtime_JSONL_sha256": "afa1d6510ae32c34891bab04a01a64119666bd7c84c033c1103f9490d0fd97ce",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "resumed",
+          "initial_iter": 4,
+          "final_iter": 8,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "ee7e3ce6e6daeab7c39f5e6f16f1064f4958ec3366428f7844654c6048bb47d0",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "169b3b40ed15849d3a6825d03ab032f187474462cd5d952b78ab874bb3b6cc98",
+              "runtime_JSONL_sha256": "8831f86b2d292ee9f39614070ad78d09305e58c60c21745640b84d5bfa5152be",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "a01f301e3c6c216f426c9c75810996ed5d7542540f23d948a959b3a37a4be53d",
+              "runtime_JSONL_sha256": "5437f9be4f2017bcb1f9ce8736c3a865034874e3a695e3951a0d4377dc45c05b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "709a74dae822cc89c405339129a370687cb4c4e5411fc19b557636d19c55455b",
+              "runtime_JSONL_sha256": "55bff4bb87112813a478edab75db3928cbc3ea4ae10600d59aaef13269661f6e",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "d78f9227d2b936dc61c09532f6ef485cd39fcaa3c237d7ea96609dd9881974c7",
+              "runtime_JSONL_sha256": "abddb967188a70bcc5884975647029d7ed8f01a2adc30ebde2758943e5ea1ae3",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "6a6a69d1f6a86c431a69dbdc7d70f14da7b800fe1179bd64e7bd0fa01b2a262b",
+              "runtime_JSONL_sha256": "1269c69ace97cf65293cafb074f2097384b4a23667a64d92626131a0be6c291d",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "6ed868cfa1928db1f62eba931784c6481d337d26393a051db93352db008f93db",
+              "runtime_JSONL_sha256": "6f279deb0cda7eeacac8f882a56eded472ccde6a809b72d506032d2779787c31",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "bf0413f67a31ae4ea55e30600f88eaf2421e8ca3bebab33c77a8783a332ce401",
+              "runtime_JSONL_sha256": "223e4152acd55fb53d61a31c093c758f3c417c8088a9af49d878fddacb96526b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "753ec99046137b1938d8b04cc8c4132c58905abf17d33ab8b7d0d6e9a473652a",
+              "runtime_JSONL_sha256": "0c2f0648dc0278dfec1f1174ad5f325ec4017337a44815817ffc59d29e631c37",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "e89239e96c0129dfc854712b4839f114c0d0ff4685bf08c5e0a29023be8f6796",
+              "runtime_JSONL_sha256": "48b07f86b60f8fe15b36428c86c8572bdaadc9cc4264c46a054fd330c3df4c7b",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "b94befbf7e7c81bf989430c04e37da0bcc5d0677563376c4a28e7d106ac974c5",
+              "runtime_JSONL_sha256": "9e57e43f3fc884e2bee5143ecf11ee5842e0aeeadcf367b7b40ca7c57e63df64",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "f628b7746425a671dbbfcb124db34a00a594e5d4256a4af37e094d2b2a7de7b2",
+              "runtime_JSONL_sha256": "c40d2cc1cac3f85dcdb1634a286c75fad316e97c56e403ea225967943305008f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "bb5e31071fb86d93774de721c9bb94c7b8179f555208ecbc18534149f291d3d8",
+              "runtime_JSONL_sha256": "4d849f9033410c4cd687f8f18d01040bcf7ff1a2076c8c73b924df6494f9ae35",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "fcb34b831c1ece9442b5fa554036a3d05c1783cfede40042a5576fd273c87f4b",
+              "runtime_JSONL_sha256": "52d7df9a36a0809b10c7a9ca9b22dbc212bd71ad0e65d8c16fe7afc72c1375dd",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "83910511c4486cd92d2ad8c538b51617edf9fedcbbb62460272e7540b061e041",
+              "runtime_JSONL_sha256": "3fdfc6edeaa048b59165926ac5eab9658f6bd6eea504207598ec76f1cbcf2c38",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "38bafb8804d3fc5180049b4d262538bd9e4d2690499eca21ffe4d9afb476492a",
+              "runtime_JSONL_sha256": "02b0b619c3cfaf3baa9e1b0c4c7863bf86bf4dc22450808956d04d5ada13b928",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "e6dbaa32345f6fd40b6447f39296a6c5644ebea635d7dae0942e321abd5cdc2b",
+              "runtime_JSONL_sha256": "7af60d4f4abbf83459f0c2c45f675cfc19c8d8a4e0181620ceabd9b97f9dbc07",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            }
+          ]
+        }
+      ],
+      "exact_restore_rank_reports": 16,
+      "original_same_precision_comparison": {
+        "classification": "completed_outside_original_tolerance",
+        "original_JSON_result": "fail",
+        "original_comparison_sha256": "c723b71100064bb512c6a4595c29ff03c7a8867640b89c4fa3c770c38e3633b0",
+        "official_CPU_loader_receipt_sha256": "a2fff8e7a9b5f111dfeb7f5d054f809b4a03b05d54ca54f4f599a252b6d50f39",
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "actual_CPU_exit": 1,
+        "complete_comparison": true,
+        "completed_updates": 8,
+        "world_size": 16,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model_tensors": {
+          "tensors": 889,
+          "bitwise_equal_tensors": 768,
+          "max_absolute_difference": 0.000337112694978714
+        },
+        "combined_tensors": {
+          "tensors": 1284,
+          "bitwise_equal_tensors": 921,
+          "max_absolute_difference": 0.012727420777082443
+        },
+        "combined_includes_two_RNG_tensors_per_rank": true,
+        "above_tolerance_model_tensor_paths": 119,
+        "above_tolerance_optimizer_tensor_paths": 140,
+        "maximum_loss_difference": 0.04748106002807617,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "failure_count_method": "Count path prefixes in the combined list; the original shallow-shared model failures list is not treated as model-only"
+      },
+      "independent_evaluation": [
+        {
+          "stage": "official_pretrained",
+          "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+          "inference_receipt_sha256": "8bdc132aaec0ef93edc78addb09ecedc33275f5db47a32cf2bdcea8985260c63",
+          "predictions_sha256": "21c02733857ccb7de4e76104dc336203f6701487d833bc1ca95d0554d95341f7",
+          "official_score_sha256": "3367d341d5adbf4bcd1c171c0eb7a27a72ea61f3d4f18f7fc4abe761d1847602",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 0.9545454545454546,
+            "ego_progress": 0.7980850139751954,
+            "time_to_collision_within_bound": 0.9545454545454546,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.8704142103684525
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        },
+        {
+          "stage": "adapted_step8",
+          "checkpoint_sha256": "ee7e3ce6e6daeab7c39f5e6f16f1064f4958ec3366428f7844654c6048bb47d0",
+          "inference_receipt_sha256": "7c9bd5ac700bf164baf49a76627d6e8f69d0fd770ece041c6930d6cc0488d7be",
+          "predictions_sha256": "e152bb5310c1358ebf6161cac93527b4c2c22b79720406093c249971ff25ebe2",
+          "official_score_sha256": "8a273ada47c924bed1295c8463ec7e7b85117835e7b6304e5ce0c4f4134dedb2",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8142601549374668,
+            "time_to_collision_within_bound": 0.9545454545454546,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9036690039512171
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        }
+      ],
+      "capacity_only_measured_peaks_bytes": {
+        "peak_allocated_bytes": 10113229312,
+        "peak_reserved_bytes": 13964935168,
+        "peak_rss_bytes": 3829428224
+      }
+    },
+    {
+      "profile": "hydra",
+      "original_configuration": {
+        "config": "projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py",
+        "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+        "profile": "e2e_hydramdp_100pct",
+        "initializer_file": "e2e_hydramdp_100pct_ep8.pth",
+        "initializer_bytes": 450763271,
+        "initializer_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+      },
+      "parameters": {
+        "model": 59528787,
+        "trainable": 35037705,
+        "scope": "Original base-planner configuration with configured backbone freezing; not LoRA or fully unfrozen training"
+      },
+      "jobs": [
+        {
+          "role": "smoke",
+          "initial_iter": 0,
+          "final_iter": 1,
+          "updates_executed": 1,
+          "configured_horizon": 1,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "86e1ff0fe842e82c87a1104925082e483940a631e2e67f47356e2ecddd7602bc",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "968e0ac2505271e3056ffea58cc74a69aa0b108850f732d19ce9c2a845df3eb0",
+              "runtime_JSONL_sha256": "e52b15a9bc41a5ead8b28d1a57870c6cd419ad832f3b5970619e257a3f80ac51",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "0a185c211dad26cb845f02c1f342f85c9301fd684fb8f4e6339d979ef74b20ee",
+              "runtime_JSONL_sha256": "9e0b00ea6c742898b1941d5b96d115f2645840c216bb0923708e9b45861787ed",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "1e5a269616dd657f2fed9452aee048297a110b554dd02970c5c299e08451c76f",
+              "runtime_JSONL_sha256": "ef4f46ea2da5d3b696f8ebc796883fe5ba08632d6a067114e8d039460026363a",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "87d254fb12d7e2ff75132752eff95337ea975e8ebd86a6a1c18ab5e5c7f36c6c",
+              "runtime_JSONL_sha256": "6e9955c909553d6c54fd618be38f17fa6ce3e30de02000ca6a6aa2496df04e93",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "60733cefb600994fc138d0b98f2a0214d8a2d3a055eafe059e887f61e0bda821",
+              "runtime_JSONL_sha256": "c2a027774987deb6accb336257d8ae0db91ec7a8353aa9bd9db24334148ce4ff",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "88c029148544ab6f4d927cc9b05105a4a2ed9f06458b58ad07ed3a18a3b89145",
+              "runtime_JSONL_sha256": "3e94d41555c7fb6028e68beac6df9deaaf24c1e671e8678f3feb6448786182da",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "959dcda5a48423d99edf67167263fbb6e6c29e926b62c300436ae3c048b40f64",
+              "runtime_JSONL_sha256": "3523a419accaff32e398912d03cfa7f9ca9511bb7be12fb01c9424193d5723ee",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "df81586c54a91f3f899f8e0ed44106be2a7ae7d7df99c3445febd3366a14b421",
+              "runtime_JSONL_sha256": "646c90ee66abf837b47006b153f903564b5d14c493fa031ae7ce5f9e9918ccab",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "9ffed93e00c73f0b9597f435b110d44606d7766447b923e9c2420dc48e05c0cc",
+              "runtime_JSONL_sha256": "814f7aa5e45cd33fecb89f4286637655c708d27426dd2ddd9075e96a5f9a6b12",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "7071b06f01fb6d2539ebbc556ca29ac9d3a6639b3729170da595e0515efe1fed",
+              "runtime_JSONL_sha256": "524dec945592eac15a863823d37189c6e72a00144821f86bdd09c3d3c88ca352",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "d9f6554aa98026b3c2b60dc7b2d94be45644c0893e10f5f48125854a029d73b2",
+              "runtime_JSONL_sha256": "df5175059f8fc2e14d3e020704e85bccceb6580a104b0416a957b1ea88660a5b",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "af4210d7c75704a96fb05995250e2222bba2d08e86f98518ff660d0350c8a936",
+              "runtime_JSONL_sha256": "cad29a6dab55b855c3faf6db258df8688bf98ed07e7200d9c7c98279ca9cc7c8",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "255fe21c96eecc7516a4a9f8ab5d5827f0890714f90a6f79e2523199fce3781d",
+              "runtime_JSONL_sha256": "db9e67b5d9085637168d00ddb1639cd725552b8bf9858fdf0be8b54cf179d047",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "b6339d1ccc9534c12e9d31c4ddf04914168cc26f578e408914f4ebb96d10445a",
+              "runtime_JSONL_sha256": "4e72013f79f3edf573a94441e54067e8917f09849c93b60c0ca9171670deab07",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "9258a9e961c37bb904ad79fd8f9aa83825c0737a1a2d5159942214dfa09813b3",
+              "runtime_JSONL_sha256": "e874145719f2085123b2fd589b58f018c2bb8b00ab0f0aeddbebe96ae396d7b4",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "4e02e155160360f7431ea47f249021da723b1fc6ccb52023a4bef4a1feb971bb",
+              "runtime_JSONL_sha256": "16402b3b5b4c2fa20e1a5b195d89270cdf2271cad0d45b8d09ce98e2e88373d5",
+              "completed_update_records": 1,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "continuous",
+          "initial_iter": 0,
+          "final_iter": 8,
+          "updates_executed": 8,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "ea5fc7c2ca7b7f25a6f71a34133feca8b30242b40e580594c48e18e03df6dcea",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "d2f443c72db6f4604d3505f65572d1747310aa4a9579b8c18fa2e0bef30d6d1c",
+              "runtime_JSONL_sha256": "b5dda45b580437da132c2e5f03acf27dd20819ebb32e57931c865b343c1fcd29",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "13a7f6e7a31c8dbd359037b43500f6c9d6eff458f7d5116eb95fde644155c722",
+              "runtime_JSONL_sha256": "75a7fd86834308911c9cce849e97016020bea2b0ff2234f62caef5862d202b00",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "bc882984b8f0d614f840fc7ecde1d997b6a681464e7a5d15be5092d5ae3a9f26",
+              "runtime_JSONL_sha256": "3ff2a0c69228df0b92b9c6ef6a0956c6d9a9e8bfcda03e70fbbfc80da1944cdc",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "0303b29a094da43bd5c2b4b35f2abb1b7a8a02a7d13987f3fcb1eacba8a02094",
+              "runtime_JSONL_sha256": "269ec51b1088255be261566326e35838e50a13ad742e7d67100e7c9e30e19fbc",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "636c74b6badb18409a6b107d636c1ceb257024585797b4d37a7d656633a7e3b0",
+              "runtime_JSONL_sha256": "f1fad48131dfa1c39801bfacfa68907f6c3c4b83bcbb698b528706bb56721609",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "e832806eab601c82577c71c87a5316429d1683a826f7d16ca5322467b4bde82b",
+              "runtime_JSONL_sha256": "66bd401c4cfa4cbcc56f404a8332c860222ed6ca72b058102a702e6dfa09aabf",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "7725d0edb9bda3f1bc2539f6d857bfb99b7eabc9d9d8011541e5d2b147da8f43",
+              "runtime_JSONL_sha256": "82278cdab4a5fe0b996530e4f7085420d79a566d40c1ad085a88422173b4c3bb",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "2a88a0b39d6a3e2b96d58a7c5eb4e5c84c5c096a6476367f0d4d60aa03a40ce8",
+              "runtime_JSONL_sha256": "e046c08ff8fe7174a960464e19d5cfe29f1409b59534dc4bc7e3332604871577",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "d5bb39f8ec36dc2bcdd4c3e7131fafd86e558b451d7814cc17855c23933f3520",
+              "runtime_JSONL_sha256": "781dbdd2301a4988647dbac83cf3b33851149f1d606f81bc258195618e0ee9ec",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "775b17c878b76aaed9d0e6980da75460b156a1dff2b823666c233238fc9afa50",
+              "runtime_JSONL_sha256": "f51463d0c8064a1247691e7c80685e946fa4a2775428ebdf4f351746a6eb6803",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "aa435bc555ec33a6451fac65941e3ddda608f6e4a4a650de51227e3cc2b7ea23",
+              "runtime_JSONL_sha256": "ad0a45ec7671f4da2e0947fcb40c58dd5fbb9ef05826938afa184b25ca36a0cd",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "4576fb737bf96773c3909060c1211dd391dcef6d457cec14cebf8da8d91fce90",
+              "runtime_JSONL_sha256": "9ec7f3feab87d975058ae187bf2cd7c62e4267bde026e0b82ede856a0183baf3",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "f696788494158189ac3ea4980b6edb37cad0d48b0042d894d44e03946814b6f6",
+              "runtime_JSONL_sha256": "72f0ba0c6aef5108f5dcf8cabfdeadd90cc7d9bc3ab91c5582531fe25f672d66",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "2357d54fa6649f3b7b4a6c2f0a51b87f5b6cfe8ad705fc9fe0dc93d0d30faba1",
+              "runtime_JSONL_sha256": "010075da2f09d618311fc2eed16de6b2854eb5e37c3d3e89c2fafe4c6801d280",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "d8a577eb8351d7d8f2bad13b9b6fe7c5b373bc9d7878f1ee8675060a67df4be0",
+              "runtime_JSONL_sha256": "edc1dc370828447d499b4f5c9d769399cba2b46225482f0582b45e41b325b284",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "38d135d8ebdd00654c35168b4e167c07594afeecf330ae0d151697d04f1c2c3b",
+              "runtime_JSONL_sha256": "2612b4d8446c06e82b7fb8584ad3205da78dfa71018a0093712badbc81d05c77",
+              "completed_update_records": 8,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "partial",
+          "initial_iter": 0,
+          "final_iter": 4,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "18a2740d8d73eb879a135c3038a37c220df1b051c878c431c3bfedf7566f296e",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "90c7ec990109726570bba43c3c88280d929f234f43c3d0e88dc52752e4074b94",
+              "runtime_JSONL_sha256": "0f439bac94b9e232bbb49a76b7dd321f7fda007098cebf6c38aafffc18144fc8",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "9fa31227b2442c970e96f0356ea74a14a3d1524770fdeee722460ced03958f90",
+              "runtime_JSONL_sha256": "a131cd35354c4ace74840c89cad9bf623569879345c5f6e52b867ae03b8ed5a7",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "ca2b0b52bdf794138320cd81562ce4685ad56fb407643ad4a7316b820c9440e7",
+              "runtime_JSONL_sha256": "b03b990837e2e7927cf67c88b9ea92f1577bcbda666e355adc50b1810f0249ca",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "91d13d5e854474188c6bad4dec536f2eded92dd39782362d3f36395bb1f8aedf",
+              "runtime_JSONL_sha256": "dd32469e92dcf1e51e2a51fd4098c347437f39ed2d770b77a9aead111b5fbd7e",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "4c2c3e5d81540bbeb35d63c8e3e40a9782eababcb72f89faa1a4d43a2e45936b",
+              "runtime_JSONL_sha256": "45cec211d4404f80beb96dfeb0dc3c85c0018ace7f47dd19deb23289a4456081",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "881310bd3a1ec9033f429c6f3e7ac0641f71d582f8ed635e857e2bee72d2a219",
+              "runtime_JSONL_sha256": "2530e0df60078b517c130f36c1d70137d12d112922261f6b49b59a99255edba7",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "13fab908d28b054e6a9c99e8ed88d0c8b1ce32db78a317c5cc6daf5dfef4f33a",
+              "runtime_JSONL_sha256": "96d366a7b6a95304728e759d32d039f1dd8d82c61df4f7dfd357f98038693493",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "e1c7e74774856ff5f20dcbc92bcc506394c5b9279c5f9d03d7429bb3885742fd",
+              "runtime_JSONL_sha256": "02ec153fa295ffdb1eaab9713ee8514710ade53a159c225881ed3f3896715b9c",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "60e0939207abd2ed0648496748d051da906f8f9e6443f745fb133be6c0d2bf3d",
+              "runtime_JSONL_sha256": "950aecdfec8044eec0ed99893947d445d5fe723888f8012e24c23d6619eeaf6a",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "ad277612c47df9be460db7493b47bad777af862cbbb4cf1708db4207447fdcb6",
+              "runtime_JSONL_sha256": "8de8241fe3580ba6df12e12e38a23744e54fdf4ce43fc14af6c2dcdf79e9c9e9",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "7c12ec186d108a7fe85316d5ca30d8d7a73fec1177fa92c41d9b118d4aad6b1d",
+              "runtime_JSONL_sha256": "3ed5d91cfdeaf36e6deee953302092ee88e2df7d094a2939ef14874726cb2bb4",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "2b3994f63c36dc6ac10b350235d285c72ea76323be56a11afdea7c69b6bfb7af",
+              "runtime_JSONL_sha256": "99d7fdeb03da5ed671d6c31d591244adbfe712977c7b42dfffec24b9027bb791",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "7ece87911e4244215bf8cfdcc1b166f69005a4a19ffaa9149e2a7d95c8449574",
+              "runtime_JSONL_sha256": "16ea4b23e569d2d8e8254167da311c78edfdffe8255e9a8e36e7688f97842cbe",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "5449da85f1afe87dd2fad44a98536d4718409b58567afceac6c425a96f2ec6df",
+              "runtime_JSONL_sha256": "702a5764e84ea04382c26e29ea69e57254c74d93266314f9711228384868ee9e",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "e7adc2695f8cbe2554d33074c6eed10997fd64d03de6f693abea2b533bf8af10",
+              "runtime_JSONL_sha256": "c00ba2f625a29d2d01a81a8d6236e5520bb81432f21b22d59b0bbf58a4f41127",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "c5877b5123ce7b019e762d39b266f5c7d3a071229c911bb711d24c70c704152b",
+              "runtime_JSONL_sha256": "44534ec36edaac21ca39030f77c95501e2ec943084c60c9aca2378e67e8bfcd1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": false
+            }
+          ]
+        },
+        {
+          "role": "resumed",
+          "initial_iter": 4,
+          "final_iter": 8,
+          "updates_executed": 4,
+          "configured_horizon": 8,
+          "world_size": 16,
+          "actual_exit": 0,
+          "Docker_exit": 0,
+          "OOMKilled": false,
+          "checkpoint_sha256": "a175afd32abcd082782d30f72d52a1c27629d6aca2ccdb267d3f76ebcfa5c6a3",
+          "ranks": [
+            {
+              "rank": 0,
+              "runtime_sha256": "eb981cc6960937e38fe21fd6fc94489570749c59e35ef9627eb6bed611d0c141",
+              "runtime_JSONL_sha256": "f4f77f2759a6b19530a8eb59b345acb43ccf59174c1ed01c7cf5656a5a157e60",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 1,
+              "runtime_sha256": "eb7c98b8524259bf04262d89290198e5977ea9b37e0e703c08e37ac8691ef401",
+              "runtime_JSONL_sha256": "6888f60a2a2818992d3258e80b2be07284eedb76901714f6af61551bd4dbfae2",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 2,
+              "runtime_sha256": "dcdf7ab30c54088d559eb1f4e234143146c23a6d029f1b79f8b0343720a13646",
+              "runtime_JSONL_sha256": "204fb63531f76266148843c3d15e234786a7daf4e0f7cae6b5fefa57348b91c2",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 3,
+              "runtime_sha256": "25c6852a0cc31e146e6be1151c488260c4c9419403b00419a50bd58d0d56e02f",
+              "runtime_JSONL_sha256": "b0a9e46d16812f2340271ed8313ea9c2412235cee385182fb9c8e4cda8580376",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 4,
+              "runtime_sha256": "d65df25bb606d4f3e79884d9c2c0210f40e6f6e5620cc7124e17809d5dff66a8",
+              "runtime_JSONL_sha256": "608eecb7b9e02a5d42644f33df65111d564ad84ef9d57a24d893ac96385fbd86",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 5,
+              "runtime_sha256": "ecf4fe64776f854a9d9b34e55e98a12c1edeaeb6e6eedf632c607636923b8449",
+              "runtime_JSONL_sha256": "f6bc5cc6d884517a92ac2ae9b1112fdcb07a08dcb05f3fe055ce247113310ea9",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 6,
+              "runtime_sha256": "c42f61d75d8a9619f202a16fa14d388d24bedfb7a440e6af8a395a8b5fb8e407",
+              "runtime_JSONL_sha256": "69ccf2a89c41732e907d7cc8969a35a3e175d0360d731d88c8a20e1613a207f2",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 7,
+              "runtime_sha256": "4cab06e92232cfea36145b41c3663f46d2331765f170042a43cd4d25850bb937",
+              "runtime_JSONL_sha256": "ecf0f37afacd0359d1a3c53b8bcc7c4e1987d46846dca21958b02006b0115a76",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 8,
+              "runtime_sha256": "54002c15f66c786438df1386789306af1f702a47bc69828e6456937f323174eb",
+              "runtime_JSONL_sha256": "302e82a3d1023f55225a6d73d8d7ad228c991c78b1920bfa7100d866e5130776",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 9,
+              "runtime_sha256": "6d91ccd1fa2a53779fd7c9b6e79734dfae75dc1ccce241f6b53a882ad76265f5",
+              "runtime_JSONL_sha256": "e28b14d62c9b187c748e967256b5ca8b10d987dc36e7fa25249a205592d0f763",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 10,
+              "runtime_sha256": "ed854afcb1ea3aff66d46ce8218f7152eac7f140995dcf257e282d2aa9acb5b2",
+              "runtime_JSONL_sha256": "a962c2c7213c372197e761ac4298b688fdc66a788cff023c168e76f1b22f5fe9",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 11,
+              "runtime_sha256": "be289684b6c52cb2f1e1cc1fcbc2f53ded74f6ab17745502c7a7855525e7d1f8",
+              "runtime_JSONL_sha256": "0c2da5d6ae529292b5aa808984d71e1bf6623ec19bd40120a8294bc02a4e14cb",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 12,
+              "runtime_sha256": "19361f55171d235843e9a34216aa1fd0197669acf48ecc185b0bb0951640b959",
+              "runtime_JSONL_sha256": "b6e523a0a4b7fcdd0e44510d9adcf3ef609e2c96c0cdc8eee58291a9c3c61ef1",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 13,
+              "runtime_sha256": "388863aed487084e12d8c9a3734fefdf9fd40e19326a80e66afd3116b63873c5",
+              "runtime_JSONL_sha256": "66bc0e2132cec3956cfb6b2cd98df5600b24e47ac3a39155ca231e0e2f236f8f",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 14,
+              "runtime_sha256": "3986b297bc68b143d0f3e1ebcf4ffc4d7cf62f4fc0e6b6375b9428974def3f91",
+              "runtime_JSONL_sha256": "16f9d636a93f69f6fbe6e1c69e172b67d31bc6bdb57fe7141a543b82a526adbb",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            },
+            {
+              "rank": 15,
+              "runtime_sha256": "6a9dc6ff7a1b83985e3ba94fcfefc5504d4aa8491f609218ed0d7d4dcc1857f8",
+              "runtime_JSONL_sha256": "8de40463c9e455825a00adb594a8b9ce426c8c36863f2b607f0681ac7c2590f2",
+              "completed_update_records": 4,
+              "exact_saved_state_restore_passed": true
+            }
+          ]
+        }
+      ],
+      "exact_restore_rank_reports": 16,
+      "original_same_precision_comparison": {
+        "classification": "completed_outside_original_tolerance",
+        "original_JSON_result": "fail",
+        "original_comparison_sha256": "6c108474b340317a52167393bc64278ba7b65ec68797844d72f327075fabd161",
+        "official_CPU_loader_receipt_sha256": "a2fff8e7a9b5f111dfeb7f5d054f809b4a03b05d54ca54f4f599a252b6d50f39",
+        "original_comparator_sha256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+        "original_CPU_wrapper_sha256": "2eb274e8fd6ae73d2a81c8c62df3d4c59d882307cac26e496ff9a432691bb474",
+        "actual_CPU_exit": 1,
+        "complete_comparison": true,
+        "completed_updates": 8,
+        "world_size": 16,
+        "tensor_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "loss_absolute_tolerance": 0.0001,
+        "model_tensors": {
+          "tensors": 909,
+          "bitwise_equal_tensors": 768,
+          "max_absolute_difference": 0.00038817524909973145
+        },
+        "combined_tensors": {
+          "tensors": 1364,
+          "bitwise_equal_tensors": 941,
+          "max_absolute_difference": 0.09518872201442719
+        },
+        "combined_includes_two_RNG_tensors_per_rank": true,
+        "above_tolerance_model_tensor_paths": 136,
+        "above_tolerance_optimizer_tensor_paths": 153,
+        "maximum_loss_difference": 0.03777027130126953,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_rng_states": true,
+        "failure_count_method": "Count path prefixes in the combined list; the original shallow-shared model failures list is not treated as model-only"
+      },
+      "independent_evaluation": [
+        {
+          "stage": "official_pretrained",
+          "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+          "inference_receipt_sha256": "49ce8464f0fe3712379441fd9a9f6bd0eb8e9ba0f74dea994def32de1c5b40eb",
+          "predictions_sha256": "478a96d3ade77a2e0cf8c1fcd165cd89b0d3cdbf26347c2a25b9570d3308f1d0",
+          "official_score_sha256": "e583526e32c847e113a4419645ad2a2117863f4840d0bea8cf34504dbb59f0ef",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8806550193004378,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9502729247085159
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        },
+        {
+          "stage": "adapted_step8",
+          "checkpoint_sha256": "a175afd32abcd082782d30f72d52a1c27629d6aca2ccdb267d3f76ebcfa5c6a3",
+          "inference_receipt_sha256": "fdcca7975f362bd5db8b1868e2c1646503df07dfbe5229fcdb97ccca0b834817",
+          "predictions_sha256": "41ec270f910ee34faf373557674bd06f69952c1f2ee7bc55dcd491333daa5d0e",
+          "official_score_sha256": "e7ae64a6e03c1608d96be2b4bf6a07675d9ec538533d91cc125f74da72118072",
+          "cache_selection_sha256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5",
+          "anchors": 22,
+          "unique_tokens": 22,
+          "trajectory_shape": [
+            40,
+            3
+          ],
+          "all_trajectories_finite": true,
+          "independent_log_split": true,
+          "actual_inference_exit": 0,
+          "actual_CPU_score_exit": 0,
+          "valid_scored_tokens": 22,
+          "official_NAVSIM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.8925363242410643,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.9552234684337766
+          },
+          "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+          "measurement_not_quality_improvement_or_acceptance": true
+        }
+      ],
+      "capacity_only_measured_peaks_bytes": {
+        "peak_allocated_bytes": 10142213632,
+        "peak_reserved_bytes": 13998489600,
+        "peak_rss_bytes": 3876941824
+      }
+    }
+  ],
+  "started_UTC": "2026-10-16T09:01:55.101528+00:00",
+  "finished_UTC": "2026-10-16T09:27:57.130636+00:00",
+  "release": {
+    "owned_running_after": [],
+    "ownership_errors": [],
+    "watchdog_exit": 0,
+    "source_data_initializers_environment_and_metric_cache_unchanged": true
+  },
+  "raw_evidence": {
+    "original_summary_sha256": "f5030fbf886245f124b3c7271b752ec7800d5d5d8d4c1371ad38628b36b257e9",
+    "original_summary_bytes": 40154004,
+    "original_raw_retained_privately": true,
+    "raw_commands_addresses_absolute_paths_PIDs_omitted": true
+  },
+  "FP32_matched_short_chain_verified_here": false,
+  "FP32_BF16_trajectory_measurements_completed": false,
+  "quality_equivalence_accepted": false,
+  "full_NAVTRAIN_convergence_accepted": false,
+  "GPU_comparison_completed": false,
+  "scope": "Functional short-run completion and strict numerical outcome are separate. Both complete original BF16 comparisons are outside tolerance; score differences on 22 anchors are measurements, not evidence of improvement or generalization."
+}

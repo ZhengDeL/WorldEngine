@@ -82,7 +82,8 @@ IMAGE=local/worldengine:26.1.0-a3-clean-20261013
 EXPECTED=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f
 test "$(docker image inspect --format '{{.Id}}' "$IMAGE")" = "$EXPECTED"
 NPU_DEVICE=0
-OUT=/var/ai-model/lzd/worldengine/rechecks/msda_$(date +%Y%m%d_%H%M%S)
+EVIDENCE_ROOT=/path/to/msda-validation
+OUT="$EVIDENCE_ROOT/rechecks/msda_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$OUT"
 docker run --rm --network host --memory 24g --cpus 8 --shm-size 4g \
   --device "/dev/davinci$NPU_DEVICE" --device /dev/davinci_manager \
@@ -117,8 +118,9 @@ IMAGE=local/worldengine:26.1.0-a3-clean-20261013
 EXPECTED=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f
 test "$(docker image inspect --format '{{.Id}}' "$IMAGE")" = "$EXPECTED"
 SRC="$PWD"
-CASE=/var/ai-model/lzd/worldengine/msda_precision_20261013/controlled_replays_v6/navformer_vadv2_v6
-OUT=/var/ai-model/lzd/worldengine/rechecks/cpu_replay_$(date +%Y%m%d_%H%M%S)
+EVIDENCE_ROOT=/path/to/msda-validation
+CASE="$EVIDENCE_ROOT/msda_precision_20261013/controlled_replays_v6/navformer_vadv2_v6"
+OUT="$EVIDENCE_ROOT/rechecks/cpu_replay_$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$OUT"
 docker run --rm --network none --memory 32g --cpus 8 \
   -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 -e OMP_NUM_THREADS=4 -e OPENBLAS_NUM_THREADS=4 \

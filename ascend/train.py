@@ -54,8 +54,8 @@ def main():
     parser.add_argument('--check-interval', type=int, default=10)
     parser.add_argument('--upstream-schedule', action='store_true', help='Keep original optimizer LR and warmup parameters')
     parser.add_argument('--deterministic', action='store_true', help='Request deterministic PyTorch/CANN algorithms for numerical replay checks')
-    parser.add_argument('--precision', choices=('fp32','fp32-hf32-conv'), default='fp32',
-                        help='Training FP32 with Matmul/Conv HF32 disabled; fp32-hf32-conv reproduces legacy Conv HF32')
+    parser.add_argument('--precision', choices=('fp32','fp32-hf32-conv','bf16'), default='fp32',
+                        help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native forward/loss autocast with FP32 master parameters, optimizer state and MSDA, without a scaler (implies --runtime)')
     parser.add_argument('--debug-anomaly', action='store_true', help='Record the forward origin of a failing backward operation')
     args = parser.parse_args()
     if args.train_filter and (not args.data_root or args.mini_prepared):
@@ -64,6 +64,7 @@ def main():
         args.train_filter=args.train_filter.resolve()
         if not args.train_filter.is_file() or 'navtrain' not in args.train_filter.name or 'navtest' in args.train_filter.name:
             parser.error('--train-filter must be a NAVTRAIN file whose resolved basename contains navtrain and excludes navtest; the original dataset selects its PDM cache by this name')
+    if args.precision=='bf16':args.runtime=True
     if args.resume or args.stop_after or args.duration_seconds or args.epochs or args.stop_after_epochs:
         args.runtime = True
     if args.steps and args.epochs:parser.error('Choose a step or epoch schedule')
@@ -254,6 +255,9 @@ def main():
                               stop_after_epochs=args.stop_after_epochs,duration_seconds=args.duration_seconds,
                               check_interval=args.check_interval,device_provenance=device_provenance())]
         cfg.log_config=dict(interval=10,hooks=[dict(type='TextLoggerHook',by_epoch=not bool(args.steps))])
+    if args.precision=='bf16':
+        cfg.custom_imports['imports'].append('ascend.autocast')
+        cfg.custom_hooks.insert(0,dict(type='AscendBFloat16Hook',priority='LOW'))
     cfg.find_unused_parameters = True
     if args.validate:
         cfg.ascend_epoch_evaluation=True
@@ -270,7 +274,12 @@ def main():
     if (args.steps is not None or args.runtime) and not args.validate:
         sys.argv.append('--no-validate')
     os.chdir(ALG)
-    runpy.run_path(str(ALG/'scripts/train.py'), run_name='__main__')
+    if args.precision=='bf16':
+        from ascend.autocast import training_precision_cleanup
+        with training_precision_cleanup(args.precision):
+            runpy.run_path(str(ALG/'scripts/train.py'), run_name='__main__')
+    else:
+        runpy.run_path(str(ALG/'scripts/train.py'), run_name='__main__')
 
 
 if __name__ == '__main__':

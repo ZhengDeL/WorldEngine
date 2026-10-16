@@ -17,24 +17,28 @@
 
 ## AlgEngine on Ascend 910C / A3
 
-The `ascend-910c-algengine` branch provides NPU training, fine-tuning and evaluation
-entry points for AlgEngine. SimEngine retains its upstream GPU workflow.
+The `ascend-910c-algengine` branch adds NPU training, fine-tuning, complete
+checkpoint restoration, inference and evaluation entry points for AlgEngine.
+SimEngine retains its upstream GPU workflow.
 
 - [English usage guide](docs/algengine_ascend.md) / [中文使用指南](docs/algengine_ascend_zh.md)
-- [NPU documentation](ascend/README.md), [container installation](ascend/docker/README.md)
+- [Application/compiler environment](ascend/docker/dependency_repair/README.md),
+  [official-data NAVTRAIN139 / NAVTEST22 preparation](ascend/data_tools/navtrain139/README.md)
 - [Validation report](ascend/FULL_ALGENGINE.md) / [中文验证报告](ascend/VALIDATION_zh.md)
 
-The public Docker recipes were rebuilt from the verified official SDK base.
-On a second Ascend server, two original real-log LoRA fine-tuning configurations
-completed 16-rank training, own-checkpoint replay, independent inference and
-official CPU scoring on a genuine small dataset. Both replay comparisons were
-bitwise equal. [Versioned reproduction evidence](ascend/results/actual-public-reproduction-16chip-20261014.json).
+The public dependency recipe and deterministic official-data subset have CPU
+reproduction records. The usage guide covers official 100%-trained planning
+initializers, FP32 training, own-checkpoint resume, independent inference and
+original NAVSIM scoring. Both official 100% planning configurations completed
+[eight BF16 v7 updates, own-checkpoint restoration and independent scoring on 16 ranks](ascend/results/bf16-v7-navtrain139-short8-20261016.json), with
+[the prior 138 gradient/Adam coverage omissions restored per model](ascend/results/bf16-v7-gradient-coverage-20261016.json). Both complete replay
+comparisons still exceeded the original tolerances. BF16 remains experimental;
+the defective v6 execution record is retained separately. Historical
+small-data model results are versioned separately. Full NAVTRAIN convergence,
+full independent benchmark quality, GPU comparison and general numerical
+reproducibility remain outside completed acceptance.
 
-Four further base-planner controls executed the public synchronous adapter;
-two completed comparisons were within the original tolerance and two were
-outside it. That numerical issue remains unresolved. Full NAVTRAIN convergence,
-complete independent benchmark quality, remaining synthetic exports and GPU
-comparison are outside the completed acceptance scope.
+The separate [BF16 v7 rare-log fine-tuning record](ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) contains two bitwise replay comparisons on 37/22 real-log data, one complete VAD evaluation chain and an interrupted Hydra evaluation; it does not extend the NAVTRAIN139 result.
 
 <div id="top" align="center">
 <p align="center">

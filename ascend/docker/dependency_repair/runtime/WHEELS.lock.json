@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "candidate_unbuilt_unverified",
+  "base_image_id": "sha256:1541450982f8c2938f3c387b929ad0ba8a90024d73712b3eabe49631812d12ce",
+  "python": "3.10",
+  "platform": "linux/aarch64",
+  "scope": "Real runtime repair; SDK profiler and TE issues deliberately remain visible.",
+  "artifacts": [
+    {
+      "name": "protobuf",
+      "version": "4.25.8",
+      "metadata_url": "https://pypi.org/pypi/protobuf/4.25.8/json",
+      "filename": "protobuf-4.25.8-cp37-abi3-manylinux2014_aarch64.whl",
+      "sha256": "9ad7ef62d92baf5a8654fbb88dac7fa5594cfa70fd3440488a5ca3bfc6d795a7",
+      "bytes": 294005,
+      "url": "https://files.pythonhosted.org/packages/bd/6d/a4a198b61808dd3d1ee187082ccc21499bc949d639feb948961b48be9a7e/protobuf-4.25.8-cp37-abi3-manylinux2014_aarch64.whl",
+      "requires_python": ">=3.8"
+    },
+    {
+      "name": "opencv-python",
+      "version": "4.11.0.86",
+      "metadata_url": "https://pypi.org/pypi/opencv-python/4.11.0.86/json",
+      "filename": "opencv_python-4.11.0.86-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "1b92ae2c8852208817e6776ba1ea0d6b1e0a1b5431e971a2a0ddd2a8cc398202",
+      "bytes": 42230439,
+      "url": "https://files.pythonhosted.org/packages/f3/bd/29c126788da65c1fb2b5fb621b7fed0ed5f9122aa22a0868c5e2c15c6d23/opencv_python-4.11.0.86-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "requires_python": ">=3.6"
+    },
+    {
+      "name": "importlib-metadata",
+      "version": "8.5.0",
+      "metadata_url": "https://pypi.org/pypi/importlib-metadata/8.5.0/json",
+      "filename": "importlib_metadata-8.5.0-py3-none-any.whl",
+      "sha256": "45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b",
+      "bytes": 26514,
+      "url": "https://files.pythonhosted.org/packages/a0/d9/a1e041c5e7caa9a05c925f4bdbdfb7f006d1f74996af53467bc394c97be7/importlib_metadata-8.5.0-py3-none-any.whl",
+      "requires_python": ">=3.8"
+    },
+    {
+      "name": "zipp",
+      "version": "3.20.2",
+      "metadata_url": "https://pypi.org/pypi/zipp/3.20.2/json",
+      "filename": "zipp-3.20.2-py3-none-any.whl",
+      "sha256": "a817ac80d6cf4b23bf7f2828b7cabf326f15a001bea8b1f9b49631780ba28350",
+      "bytes": 9200,
+      "url": "https://files.pythonhosted.org/packages/62/8b/5ba542fa83c90e09eac972fc9baca7a88e7e7ca4b221a89251954019308b/zipp-3.20.2-py3-none-any.whl",
+      "requires_python": ">=3.8"
+    },
+    {
+      "name": "regex",
+      "version": "2024.11.6",
+      "metadata_url": "https://pypi.org/pypi/regex/2024.11.6/json",
+      "filename": "regex-2024.11.6-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "d3660c82f209655a06b587d55e723f0b813d3a7db2e32e5e7dc64ac2a9e86fde",
+      "bytes": 782511,
+      "url": "https://files.pythonhosted.org/packages/78/a2/6dd36e16341ab95e4c6073426561b9bfdeb1a9c9b63ab1b579c2e96cb105/regex-2024.11.6-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "requires_python": ">=3.8"
+    },
+    {
+      "name": "safetensors",
+      "version": "0.5.3",
+      "metadata_url": "https://pypi.org/pypi/safetensors/0.5.3/json",
+      "filename": "safetensors-0.5.3-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "sha256": "11bce6164887cd491ca75c2326a113ba934be596e22b28b1742ce27b1d076467",
+      "bytes": 459493,
+      "url": "https://files.pythonhosted.org/packages/5d/9a/add3e6fef267658075c5a41573c26d42d80c935cdc992384dfae435feaef/safetensors-0.5.3-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+      "requires_python": ">=3.7"
+    },
+    {
+      "name": "hf-xet",
+      "version": "1.1.10",
+      "metadata_url": "https://pypi.org/pypi/hf-xet/1.1.10/json",
+      "filename": "hf_xet-1.1.10-cp37-abi3-manylinux_2_28_aarch64.whl",
+      "sha256": "eae7c1fc8a664e54753ffc235e11427ca61f4b0477d757cc4eb9ae374b69f09c",
+      "bytes": 3087167,
+      "url": "https://files.pythonhosted.org/packages/01/a7/0b2e242b918cc30e1f91980f3c4b026ff2eedaf1e2ad96933bca164b2869/hf_xet-1.1.10-cp37-abi3-manylinux_2_28_aarch64.whl",
+      "requires_python": ">=3.8"
+    },
+    {
+      "name": "argparse",
+      "version": "1.4.0",
+      "metadata_url": "https://pypi.org/pypi/argparse/1.4.0/json",
+      "filename": "argparse-1.4.0-py2.py3-none-any.whl",
+      "sha256": "c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314",
+      "bytes": 23000,
+      "url": "https://files.pythonhosted.org/packages/f2/94/3af39d34be01a24a6e65433d19e107099374224905f1e0cc6bbe1fd22a2f/argparse-1.4.0-py2.py3-none-any.whl",
+      "requires_python": null
+    }
+  ]
+}

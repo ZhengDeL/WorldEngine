@@ -1,0 +1,30 @@
+{
+  "result": "verified_official_planning_checkpoint_content",
+  "observed_date": "2026-10-16",
+  "publisher": {
+    "dataset": "OpenDriveLab/WorldEngine",
+    "revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+    "SHA256_reference": "publisher Git LFS whole-file OID; not Xet/CDN ETag"
+  },
+  "artifacts": [
+    {
+      "path": "data/alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth",
+      "bytes": 450763271,
+      "sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "complete_file_size_and_SHA256_verified": true,
+      "publisher_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth"
+    },
+    {
+      "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "bytes": 434885463,
+      "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "complete_file_size_and_SHA256_verified": true,
+      "publisher_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine/resolve/d0e88d858533ca407a3387a26577c083aa7b3617/data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth"
+    }
+  ],
+  "boundaries": [
+    "Content verification only; not a model execution, convergence or GPU/NPU parity result.",
+    "Initialize a new training task with --checkpoint. Released planning weights are not complete Ascend runtime --resume checkpoints.",
+    "100pct describes the published base checkpoint; it does not change the fine-tuning dataset filter."
+  ]
+}

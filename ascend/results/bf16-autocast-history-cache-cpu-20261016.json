@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "result": "actual_CPU_history_no_grad_autocast_cache_mechanism_reproduced_not_AlgEngine_attribution",
+  "date": "2026-10-16",
+  "raw_probe": {
+    "sha256": "2412f2dedf03662dfe8e5412b4e51c9b68ba8762c631a884498e6749dc477d5c",
+    "bytes": 10047
+  },
+  "raw_summary": {
+    "sha256": "24ee4cd84525f52cde126d825e0bc1936f24196914d7dc3315cd929da2d32e0e",
+    "bytes": 43885
+  },
+  "controller_sha256": "a230fb09f46a88366b8ac3f2155c76e8ca9c069135df3b03e465e165df6fe54d",
+  "worker_sha256": "d8d906c902a9c293cca755e55fd6d0ec86ac9c296343370b89ee0a76d4ba10de",
+  "torch_version": "2.7.1+cpu",
+  "autocast_python_sha256": "6468083ccaf28a04b5f55802929e8e61d53ba86d52dfb797977d5da0e45aab3e",
+  "actual_CPU_execution": {
+    "actual_exit": 0,
+    "Docker_exit": 0,
+    "OOMKilled": false,
+    "runtime": "runc",
+    "network": "none",
+    "Devices": [],
+    "watchdog_exit": 0,
+    "CUDA_initialized_before": false,
+    "CUDA_initialized_after": false,
+    "TorchNPU_imported": false
+  },
+  "cases": [
+    {
+      "module": "Linear",
+      "policy": "default_cache",
+      "actual_cache_enabled": true,
+      "history_requires_grad": false,
+      "current_features_requires_grad": false,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": false,
+          "dtype": null,
+          "finite": null
+        },
+        "0.bias": {
+          "present": false,
+          "dtype": null,
+          "finite": null
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": false,
+          "step": null
+        },
+        "0.bias": {
+          "present": false,
+          "step": null
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0,
+        "0.bias": 0.0,
+        "1.weight": 0.0010040104389190674,
+        "1.bias": 0.0010027885437011719
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": false,
+      "all_parameters_device_CPU": true
+    },
+    {
+      "module": "Linear",
+      "policy": "cache_disabled",
+      "actual_cache_enabled": false,
+      "history_requires_grad": false,
+      "current_features_requires_grad": true,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "0.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "0.bias": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0010045170783996582,
+        "0.bias": 0.001004636287689209,
+        "1.weight": 0.0010040104389190674,
+        "1.bias": 0.0010027885437011719
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": true,
+      "all_parameters_device_CPU": true
+    },
+    {
+      "module": "Linear",
+      "policy": "clear_after_history",
+      "actual_cache_enabled": true,
+      "history_requires_grad": false,
+      "current_features_requires_grad": true,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "0.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "0.bias": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0010045170783996582,
+        "0.bias": 0.001004636287689209,
+        "1.weight": 0.0010040104389190674,
+        "1.bias": 0.0010027885437011719
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": true,
+      "all_parameters_device_CPU": true
+    },
+    {
+      "module": "Conv2d",
+      "policy": "default_cache",
+      "actual_cache_enabled": true,
+      "history_requires_grad": false,
+      "current_features_requires_grad": false,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": false,
+          "dtype": null,
+          "finite": null
+        },
+        "0.bias": {
+          "present": false,
+          "dtype": null,
+          "finite": null
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": false,
+          "step": null
+        },
+        "0.bias": {
+          "present": false,
+          "step": null
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0,
+        "0.bias": 0.0,
+        "1.weight": 0.001004636287689209,
+        "1.bias": 0.0010006502270698547
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": false,
+      "all_parameters_device_CPU": true
+    },
+    {
+      "module": "Conv2d",
+      "policy": "cache_disabled",
+      "actual_cache_enabled": false,
+      "history_requires_grad": false,
+      "current_features_requires_grad": true,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "0.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "0.bias": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0010062456130981445,
+        "0.bias": 0.0010064244270324707,
+        "1.weight": 0.001004636287689209,
+        "1.bias": 0.0010006502270698547
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": true,
+      "all_parameters_device_CPU": true
+    },
+    {
+      "module": "Conv2d",
+      "policy": "clear_after_history",
+      "actual_cache_enabled": true,
+      "history_requires_grad": false,
+      "current_features_requires_grad": true,
+      "current_loss_requires_grad": true,
+      "current_dtype": "torch.bfloat16",
+      "original_model_training_restored": true,
+      "gradients": {
+        "0.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "0.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.weight": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        },
+        "1.bias": {
+          "present": true,
+          "dtype": "torch.float32",
+          "finite": true
+        }
+      },
+      "optimizer_parameter_state": {
+        "0.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "0.bias": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.weight": {
+          "present": true,
+          "step": 1.0
+        },
+        "1.bias": {
+          "present": true,
+          "step": 1.0
+        }
+      },
+      "parameter_max_abs_update": {
+        "0.weight": 0.0010062456130981445,
+        "0.bias": 0.0010064244270324707,
+        "1.weight": 0.001004636287689209,
+        "1.bias": 0.0010006502270698547
+      },
+      "watched_head_weight_updated": true,
+      "all_trainable_gradients_present": true,
+      "all_parameters_device_CPU": true
+    }
+  ],
+  "scope": "Six CPU toy-model cases reproduce missing shared-layer gradient/Adam state under cached history-no_grad weights, while the head still updates. Disabling or clearing the cache restores this toy-model coverage. This is not an NPU AlgEngine execution, a whole-model cause attribution, a BF16 fix acceptance, or an explanation of earlier FP32 replay differences.",
+  "BF16_v6_complete_trainable_gradient_coverage_accepted": false,
+  "BF16_v7_model_retest_completed": false
+}

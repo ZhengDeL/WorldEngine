@@ -77,7 +77,7 @@
   ],
   "actual_server_CPU_replay": false,
   "actual_training_accepted": false,
-  "fixture": "F:\\lizhengde\\000_codex\\116_qianyi\\_worldengine_overnight_20261013\\_portable_export_fixture_f0ea3437",
+  "fixture": "<local fixture path omitted>",
   "remaining_acceptance": {
     "genuine_synthetic_configurations_exercised": 2,
     "other_six_genuine_synthetic_configuration_inputs_ready": false,
@@ -88,5 +88,18 @@
     "published_SimScale_v2_16384_reward_equivalence_accepted": false,
     "full_SimEngine_execution_accepted": false,
     "scope": "One genuine scene, one explicitly filtered normal anchor per configuration, original WE four-second logged-traffic 8192 derived rewards. A local fixture or CPU-only receipt does not inherit separate NPU acceptance."
+  },
+  "public_evidence_redaction": {
+    "original_raw_sha256": "3b419f43fc9b7a156c131430131be5e1d93490fceedf3bf7ae517b894b9c6095",
+    "original_raw_bytes": 2593,
+    "original_raw_retained_privately": true,
+    "redacted_fields": [
+      {
+        "json_pointer": "/fixture",
+        "reason": "Local workspace path; no test input content or outcome altered"
+      }
+    ],
+    "unchanged_result_and_tool_identity": true,
+    "note": "Public location-only redaction. All original fields except fixture are preserved exactly as JSON values; the public file has a new file hash."
   }
 }

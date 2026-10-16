@@ -5,6 +5,11 @@
   "excludes": "SimEngine assets and raw OpenScene camera files",
   "assets": [
     {
+      "path": "data/alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth",
+      "bytes": 450763271,
+      "sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+    },
+    {
       "path": "data/alg_engine/ckpts/hydramdp/e2e_hydramdp_50pct_ep8.pth",
       "bytes": 450763271,
       "sha256": "7e39dcd2d64e3bca32cbeca3a3e127de736a505c220ef47a24d854b4cf093065"
@@ -13,6 +18,11 @@
       "path": "data/alg_engine/ckpts/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth",
       "bytes": 319956525,
       "sha256": "2a81595fcee9df0ef93e9f76d7e735752786802f8a907c0c06949afb03ecea7a"
+    },
+    {
+      "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "bytes": 434885463,
+      "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
     },
     {
       "path": "data/alg_engine/ckpts/vadv2/e2e_vadv2_50pct_ep8.pth",
