@@ -91,8 +91,11 @@ CPU result.
 
 The eight-hour perception run belongs to the earlier `858f9d…`/post6
 environment. It does not establish sustained training in the current image.
+A separate [official100 GPU/NPU FP32 comparison](results/gpu-npu-official100-eval22-20261016.json)
+matched both models' selected trajectories and all seven per-token official-score
+metrics on the same 22 anchors.
 Complete NAVTRAIN image training/convergence, full independent NAVTEST,
-GPU comparison, repeated numerical reproducibility and multi-node scaling
+GPU training, broader cross-precision quality validation, repeated numerical reproducibility and multi-node scaling
 remain separate acceptance items. See the [validation report](FULL_ALGENGINE.md).
 
 Report issues with the source commit/fingerprint, image ID, config, precision,

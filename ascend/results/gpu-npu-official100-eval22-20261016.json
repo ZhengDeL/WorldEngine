@@ -1,0 +1,574 @@
+{
+  "schema_version": 1,
+  "result": "completed_original_CUDA_official100_eval22_and_same_checkpoint_NPU_FP32_output_measurement",
+  "status": "completed_bounded_validation",
+  "date": "2026-10-16",
+  "GPU_hardware": {
+    "device": "NVIDIA H20-3e",
+    "CUDA_compute_capability": [
+      9,
+      0
+    ],
+    "inference_world_size": 1,
+    "visible_devices_per_model": 1
+  },
+  "original_AlgEngine_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+  "original_AlgEngine_source_manifest_SHA256": "1a0f540d826a17006f60490e801b3a41c1a2999f1a6716ee9cdcc740cea0ba76",
+  "original_AlgEngine_source_files": 263,
+  "original_NAVSIM_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+  "original_NAVSIM_131_file_manifest_SHA256": "f3e5b7e0ddb72bec6203819dcf19e5710c2e551a01465d81d2c859a15eb4e7de",
+  "official_checkpoint_publisher_revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+  "eval22_source_map_SHA256": "63431be87c1c64d9cbde81363145cf534eb66ae08362f5f9f9eb0ab0e06011ce",
+  "heldout_data": {
+    "split": "original_NAVTEST_tokens",
+    "unique_anchors": 22,
+    "annotation_infos": 51,
+    "required_history_frames": 37,
+    "unique_original_JPEGs": 296,
+    "original_input_files_in_package": 304,
+    "labels_changed": false,
+    "PDM_8192_candidate_order_changed": false
+  },
+  "GPU_environment": {
+    "Python": "3.9.9 (main, May  9 2026, 00:00:00) \n[GCC 10.3.1]",
+    "core_package_versions": {
+      "torch": "2.0.1+cu118",
+      "torchvision": "0.15.2+cu118",
+      "mmcv": "1.6.2",
+      "mmcls": "0.25.0",
+      "mmdet": "2.25.3",
+      "mmdet3d": "1.0.0rc6",
+      "mmseg": "0.29.1",
+      "numpy": "1.23.4",
+      "numba": "0.56.4",
+      "networkx": "2.5",
+      "hydra": "1.2.0",
+      "omegaconf": "2.3.0",
+      "shapely": "2.0.4"
+    },
+    "CUDA_build": "11.8",
+    "dependency_check_clean": false,
+    "pip_check_actual_exit": 1,
+    "exactly_two_approved_metadata_conflicts": [
+      "mmdet3d 1.0.0rc6 has requirement networkx<2.3,>=2.2, but you have networkx 2.5.",
+      "mmdet3d 1.0.0rc6 has requirement numba==0.53.0, but you have numba 0.56.4."
+    ],
+    "actual_original_MMCV_extension_SHA256": "2103019cd5dde4201e0c56e2704dd37946a5c27136e83aa8d1f7915c5cee4d19",
+    "CPU_environment_report_SHA256": "dcd6ab2989084ab04765aa91cdb91bcd7205d3f86cbb163f7e258d590b42099d",
+    "postbuild_CPU_environment_proof_summary_SHA256": "e641742e45ea2ce602d961e44a5e891687f4eb7e48ca79de29d79fe49396a0d6"
+  },
+  "NPU_reference": {
+    "precision": "FP32",
+    "published_proof_SHA256": "d7d10a782d511d80ab5e34e5e3666a02b7bb5478445a84ea397cca4ea0bf8fd9",
+    "preserved_reference_manifest_SHA256": "cc0ea24d71d49bede9ecd6cff97b83f4f661a3ef19f5dad96d27285317a0d5d5",
+    "source_mapping_SHA256": "a57c3b169ab0db1e871f7314bb2b28f6ecd16c8da13bc08d00a30350f838766a",
+    "adaptation_source_fingerprint": "4ae8ed9f3d34c88c7122b8d08df9b4ab9f5817bab794c0d429da3f3125e5fa5e",
+    "stage": "official_pretrained; adapted8 results excluded",
+    "Torch": "2.7.1+cpu",
+    "MMCV": "1.7.2",
+    "NumPy_actual_application_import": "1.23.5",
+    "Python_actual_application_import": "3.10.21",
+    "software_stack_differs_from_GPU": true
+  },
+  "private_validation_adapters": {
+    "campaign_SHA256": "6ea2616f9a45fe0dc737a56ac2b8750681ae36922c01b4a4053fb2d144190e7a",
+    "original_CUDA_inference_adapter_SHA256": "d0a0efbdc68c9cb9dcac46274acc4b98e674c809ac29323b6f8e1a11555b0b0c",
+    "original_CPU_score_worker_SHA256": "1c0f3f57b411e216ab2dc822b4284eda90f355db410f0d8625409f3fad23cfbf",
+    "unchanged_original_score_source_SHA256": "491702df001102ff358064156e450fe0536fb34ced4d90ffb0d8632f78ec9f16",
+    "CPU_planning_measurement_worker_SHA256": "1923761a0a461de9a6a60d80b8beef65af7d59739c718d1e3fd99449a4378b34",
+    "unchanged_public_CPU_measurement_functions_SHA256": "0ff90c7a44d6fb0b996a4e86594ff9d237ef1684c45da82c16b82c47bea9d3f7",
+    "original_models_CUDA_source_and_math_modified": false,
+    "original_test_main_replaced_by_explicit_private_adapter": true,
+    "original_test_imported_builder_loader_checkpoint_DDP_and_multi_gpu_test_functions_delegated": true
+  },
+  "models": [
+    {
+      "model": "VADv2",
+      "profile": "vad",
+      "official100_checkpoint_SHA256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "GPU_inference_summary_SHA256": "92d17b87c62b9b59664d28e2bf17ac2baa6081c82f03b5a3c32da84cba28805e",
+      "GPU_predictions_pickle_SHA256": "95c9977f645e940c4f00ed94a9b7fbfed9fa4fdab53ee3897d8d3d1e9e42df57",
+      "GPU_predictions_pickle_bytes": 14548,
+      "NPU_FP32_official_pretrained_predictions_pickle_SHA256": "797e4ac9a39d36273afe98b43865805774e054647ddb2b634dba39e0358fc02e",
+      "GPU_original_zero_score_summary_SHA256": "c132f9e53e8744a9c8d67d6a7016ceddd6131d0b6cc82a17851bc7f99d32914d",
+      "GPU_original_zero_official_score_metrics": {
+        "no_at_fault_collisions": 0.6363636363636364,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.7272727272727273,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.0
+      },
+      "GPU_Haswell_process_score_summary_SHA256": "c3e70ec2e5124aebc3c27a924bbe9dbbc1f81ddad2de8935bdfcf4bf470eacdc",
+      "GPU_Haswell_official_score_JSON_SHA256": "8828a1ff8fddf987a353d209bcdc778f464cc00f898238ceaba452def71e71b2",
+      "GPU_Haswell_official_scores_CSV_SHA256": "b5e82e1429a1d9eb9e3569f88f8951705ea3a45c43a0e67fe72430aad4de0d78",
+      "CPU_measurement_SHA256": "684cb13010d1e9ef210e7e0255b34f20d6765b5853a5d075ad75cd1a0efb6dd8",
+      "checkpoint_key_structure": {
+        "model_entries": 889,
+        "checkpoint_entries": 889,
+        "matching_shape_entries": 889,
+        "missing_model_keys": [],
+        "unexpected_checkpoint_keys": [],
+        "shape_mismatches": []
+      },
+      "source_263_files_unchanged": true,
+      "input_304_files_unchanged": true,
+      "anchors": 22,
+      "poses_per_anchor": 40,
+      "components_per_pose": 3,
+      "trajectory_dtype": "float32",
+      "all22_chosen_indices_equal": true,
+      "all22_40x3_trajectory_tensor_bytes_equal": true,
+      "compared_trajectory_scalar_values": 2640,
+      "compared_logical_trajectory_tensor_bytes": 10560,
+      "pickle_container_bytes_compared_as_equal": false,
+      "trajectory_measurements": {
+        "tokens": 22,
+        "poses_per_token": 40,
+        "compared_poses": 880,
+        "chosen_ind_equal_count": 22,
+        "exact_trajectory_equal_count": 22,
+        "all_pose_position_difference_metres": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "per_token_final_position_difference_metres": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "all_pose_heading_circular_difference_radians": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        }
+      },
+      "official_NAVSIM_7_metrics_GPU_Haswell": {
+        "no_at_fault_collisions": 1.0,
+        "drivable_area_compliance": 0.9545454545454546,
+        "ego_progress": 0.7961818836866938,
+        "time_to_collision_within_bound": 0.9545454545454546,
+        "comfort": 1.0,
+        "driving_direction_compliance": 1.0,
+        "score": 0.8696212394149101
+      },
+      "official_NAVSIM_7_metrics_NPU_FP32": {
+        "no_at_fault_collisions": 1.0,
+        "drivable_area_compliance": 0.9545454545454546,
+        "ego_progress": 0.7961818836866938,
+        "time_to_collision_within_bound": 0.9545454545454546,
+        "comfort": 1.0,
+        "driving_direction_compliance": 1.0,
+        "score": 0.8696212394149101
+      },
+      "official_NAVSIM_7_metric_delta_GPU_minus_NPU": {
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.0
+      },
+      "GPU_FP32_policy": {
+        "matmul_allow_tf32": false,
+        "cudnn_allow_tf32": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "autocast_enabled": false,
+        "default_dtype": "torch.float32"
+      },
+      "GPU_floating_model_parameter_dtypes": [
+        "torch.float32"
+      ],
+      "CUDA_model_process_group_destroyed": true,
+      "scoring_CPU_only_no_CUDA_initialization": true,
+      "score_sources_cache_and_predictions_unchanged": true,
+      "NPU_official_scores_CSV_SHA256": "b5e82e1429a1d9eb9e3569f88f8951705ea3a45c43a0e67fe72430aad4de0d78",
+      "GPU_and_NPU_official_scores_CSV_whole_bytes_identical": true,
+      "all22_token_7_official_metric_values_equal": true,
+      "per_token_official_metric_values_compared": 154
+    },
+    {
+      "model": "HydraMDP",
+      "profile": "hydra",
+      "official100_checkpoint_SHA256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "GPU_inference_summary_SHA256": "c8df25cf02c78583acc1b4c00cf4ac46663230175ace3596ddf8d02ba1e34f39",
+      "GPU_predictions_pickle_SHA256": "97138b32c82584fc54abff40ab8bc1931f521fdd14a5a8ee6e134192979c4fe4",
+      "GPU_predictions_pickle_bytes": 14548,
+      "NPU_FP32_official_pretrained_predictions_pickle_SHA256": "fd17a7390d02411ec14174716ff8606226d359b4359c5aaffedbec83f78d7ff5",
+      "GPU_original_zero_score_summary_SHA256": "e125b2c6d381ebaec9596cf3a7960262cae39712448e36941f5dd5c312e6e1f4",
+      "GPU_original_zero_official_score_metrics": {
+        "no_at_fault_collisions": 0.7272727272727273,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.6818181818181818,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.0
+      },
+      "GPU_Haswell_process_score_summary_SHA256": "2951dbcd9ba52b82f5359b421f46dde4eaa7c45d59e3b63cb2a1d8eb3f8096da",
+      "GPU_Haswell_official_score_JSON_SHA256": "a356d6364dc5f8e54abf9839a229a88aa4744e22ab3dbef016b72a22c24d5bfa",
+      "GPU_Haswell_official_scores_CSV_SHA256": "50fb4b35e3175ed5f8c4d825e4c79a4c2a3bd7ad0eda93bd554734121fbb7d3a",
+      "CPU_measurement_SHA256": "0cd029a706af63bb26f30e0eb11d13d18b768d1afc9b77a65aa818821cd3e422",
+      "checkpoint_key_structure": {
+        "model_entries": 909,
+        "checkpoint_entries": 909,
+        "matching_shape_entries": 909,
+        "missing_model_keys": [],
+        "unexpected_checkpoint_keys": [],
+        "shape_mismatches": []
+      },
+      "source_263_files_unchanged": true,
+      "input_304_files_unchanged": true,
+      "anchors": 22,
+      "poses_per_anchor": 40,
+      "components_per_pose": 3,
+      "trajectory_dtype": "float32",
+      "all22_chosen_indices_equal": true,
+      "all22_40x3_trajectory_tensor_bytes_equal": true,
+      "compared_trajectory_scalar_values": 2640,
+      "compared_logical_trajectory_tensor_bytes": 10560,
+      "pickle_container_bytes_compared_as_equal": false,
+      "trajectory_measurements": {
+        "tokens": 22,
+        "poses_per_token": 40,
+        "compared_poses": 880,
+        "chosen_ind_equal_count": 22,
+        "exact_trajectory_equal_count": 22,
+        "all_pose_position_difference_metres": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "per_token_final_position_difference_metres": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "all_pose_heading_circular_difference_radians": {
+          "mean": 0.0,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        }
+      },
+      "official_NAVSIM_7_metrics_GPU_Haswell": {
+        "no_at_fault_collisions": 1.0,
+        "drivable_area_compliance": 1.0,
+        "ego_progress": 0.8784422844924161,
+        "time_to_collision_within_bound": 1.0,
+        "comfort": 1.0,
+        "driving_direction_compliance": 1.0,
+        "score": 0.9493509518718398
+      },
+      "official_NAVSIM_7_metrics_NPU_FP32": {
+        "no_at_fault_collisions": 1.0,
+        "drivable_area_compliance": 1.0,
+        "ego_progress": 0.8784422844924161,
+        "time_to_collision_within_bound": 1.0,
+        "comfort": 1.0,
+        "driving_direction_compliance": 1.0,
+        "score": 0.9493509518718398
+      },
+      "official_NAVSIM_7_metric_delta_GPU_minus_NPU": {
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.0
+      },
+      "GPU_FP32_policy": {
+        "matmul_allow_tf32": false,
+        "cudnn_allow_tf32": false,
+        "cudnn_benchmark": false,
+        "cudnn_deterministic": true,
+        "autocast_enabled": false,
+        "default_dtype": "torch.float32"
+      },
+      "GPU_floating_model_parameter_dtypes": [
+        "torch.float32"
+      ],
+      "CUDA_model_process_group_destroyed": true,
+      "scoring_CPU_only_no_CUDA_initialization": true,
+      "score_sources_cache_and_predictions_unchanged": true,
+      "NPU_official_scores_CSV_SHA256": "50fb4b35e3175ed5f8c4d825e4c79a4c2a3bd7ad0eda93bd554734121fbb7d3a",
+      "GPU_and_NPU_official_scores_CSV_whole_bytes_identical": true,
+      "all22_token_7_official_metric_values_equal": true,
+      "per_token_official_metric_values_compared": 154
+    }
+  ],
+  "CPU_score_OpenBLAS_case": {
+    "GPU_host_CPU_model": "Intel(R) Xeon(R) Gold 6430",
+    "CPU_family": "6",
+    "CPU_model_number": "143",
+    "NumPy": "1.23.4",
+    "NumPy_OpenBLAS": "0.3.20",
+    "original_NumPy_dispatch": "Cooperlake",
+    "new_scoring_process_environment": {
+      "OPENBLAS_CORETYPE": "Haswell"
+    },
+    "actual_new_NumPy_dispatch": "Haswell",
+    "single_token": "16d3b353ffe650de",
+    "first_original_LQR_matrix_shape": [
+      2,
+      40,
+      40
+    ],
+    "original_and_Haswell_first_matrix_elementwise_identical": true,
+    "original_first_APA_minus_A_max_abs": 2293.842465784486,
+    "Haswell_first_APA_minus_A_max_abs": 4.6074255521944e-15,
+    "same_installed_versions_module_files_and_all_loaded_numerical_DSO_bytes": true,
+    "only_reported_environment_difference_OPENBLAS_CORETYPE": true,
+    "actual_loaded_numerical_runtime_libraries": [
+      {
+        "library_basename": "cython_blas.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 295337,
+        "SHA256": "335dd369a1c9f608658d2415d094e006f561c3694f87d106c1a93674c4fd78ed"
+      },
+      {
+        "library_basename": "cython_lapack.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 820753,
+        "SHA256": "10f58bccc574c42741a74df0c6d69a81d1834c98ddc3e5dca623b10f529f8b88"
+      },
+      {
+        "library_basename": "_flapack.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 2295529,
+        "SHA256": "ed951dea9273c83ef56fe8e78a6207fc9c7f2f23c511783ae8f4a4e25883fdc4"
+      },
+      {
+        "library_basename": "libopenblasp-r0-41284840.3.18.so",
+        "bytes": 32825265,
+        "SHA256": "9537c8fb23a09bc8ddab1595c1ea82fcaf4f71b1d3a3e61956ace7b3b895d7c6"
+      },
+      {
+        "library_basename": "_fblas.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 670473,
+        "SHA256": "649f19bedce0e9af8bc352e3c94e1a3766bf21ae096f626f2f06a633ffec7ce6"
+      },
+      {
+        "library_basename": "_umath_linalg.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 239200,
+        "SHA256": "aa03f3d4347f0b213355cf8154a52ae96ec125e2d3d31ca814a00ce8d812a5a3"
+      },
+      {
+        "library_basename": "libquadmath-96973f99.so.0.0.0",
+        "bytes": 247608,
+        "SHA256": "97cda85ddb5163e2da6e1edb4e1d6b557833a99a40eda079ae37e5039465b65d"
+      },
+      {
+        "library_basename": "libgfortran-040039e1.so.5.0.0",
+        "bytes": 2686064,
+        "SHA256": "47ab3b68295b0a3ce8990a448de7fab11abddbc160f8895972ca9aa712cf86d0"
+      },
+      {
+        "library_basename": "libopenblas64_p-r0-742d56dc.3.20.so",
+        "bytes": 32876856,
+        "SHA256": "38e7298921fb5c867349724aa21e45d2b6f51f166adb4d38ab4016aafc4b0e9e"
+      },
+      {
+        "library_basename": "_multiarray_umath.cpython-39-x86_64-linux-gnu.so",
+        "bytes": 5955584,
+        "SHA256": "aeef918c447fa9dc8cc6a070df2c00a5933662a0bc64f1db980e33b4d0a3de5e"
+      },
+      {
+        "library_basename": "libstdc++.so.6.0.29",
+        "bytes": 17981480,
+        "SHA256": "4f045231ff3a95c2fbfde450575f0ef45d23e95be15193c8729b521fc363ece4"
+      },
+      {
+        "library_basename": "libgomp-a34b3233.so.1",
+        "bytes": 168721,
+        "SHA256": "570455c2902d6cc2a7f367703c06dac07495dd7f8a1ed2c8fc4cea628c881b13"
+      },
+      {
+        "library_basename": "libcublasLt.so.11",
+        "bytes": 574565016,
+        "SHA256": "b6d14a7461b3ec1995427fd179b98b915c9fc81057366ab7bfa4681451b0d308"
+      },
+      {
+        "library_basename": "libcublas.so.11",
+        "bytes": 94729912,
+        "SHA256": "3b81d170cd613cf9ee24d30b483f7b6d8170d6d32a0354fc207d09c943ae3f62"
+      }
+    ],
+    "old_default_dispatch_report_SHA256": "f51b8091fef6661f1ddfb08ea8fe0ac323107f4e492e75c4039f4f1e8070a151",
+    "actual_Haswell_dispatch_report_SHA256": "88857974dcf91543bb3a6c321117216820a2fe02c2f1a73f011531a586d6d03e",
+    "old_single_token_report_SHA256": "2b3b363b3dd7c939b8477ef04c69630d30d4b055327c1cae30f4c616baac158d",
+    "new_single_token_report_SHA256": "83162f03befb2586077360764800463662055d22ce6fffaf927fadd82e65992d",
+    "actual_Haswell_two_score_command_receipt_SHA256": "3335b26f993f8135d5b3bb94336ec227d1bd096eab325cb38c79049bda7bbcc6",
+    "original_zero_score_raw_reports_preserved": true,
+    "no_package_source_model_weights_or_scorer_formula_changed": true,
+    "GPU_inference_rerun_for_CPU_fix": false,
+    "inference": "The incorrect default CPU dispatch produced an incorrect pseudoinverse and unstable simulation. The same actual matrix and installed binary bytes under Haswell dispatch restored the numerical result, and all22 original scores were recomputed for each model. This is a bounded CPU scoring runtime finding.",
+    "fixed_loaded_numerical_DSO_files_count": 14,
+    "DSO_identity_boundary": "Every listed actual loaded numerical runtime library retained its exact path, byte count and SHA256 between default and Haswell CPU processes. No installed numerical library binary or package was replaced. Private absolute paths are omitted here."
+  },
+  "original_CUDA_MSDA_tiny": {
+    "raw_report_SHA256": "3e86dee3269330bd77f2b44447e2b11e9fe96bc06c99a0f745de7d0cc68b5f99",
+    "worker_SHA256": "165a9c6252f475992f82208560c63698c73016b0c956b8bc2e3b1fc3e41b93b4",
+    "actual_CUDA_execution": true,
+    "forward_and_three_gradients_all_original_gates_passed": true,
+    "comparisons": {
+      "forward": {
+        "shape": [
+          1,
+          7,
+          8
+        ],
+        "elements": 56,
+        "finite": true,
+        "max_abs": 2.384185791015625e-07,
+        "allclose": true,
+        "atol": 2e-05,
+        "rtol": 2e-05
+      },
+      "value_gradient": {
+        "shape": [
+          1,
+          5,
+          2,
+          4
+        ],
+        "elements": 40,
+        "finite": true,
+        "max_abs": 2.384185791015625e-07,
+        "allclose": true,
+        "atol": 0.001,
+        "rtol": 0.0001
+      },
+      "locations_gradient": {
+        "shape": [
+          1,
+          7,
+          2,
+          2,
+          3,
+          2
+        ],
+        "elements": 168,
+        "finite": true,
+        "max_abs": 4.76837158203125e-07,
+        "allclose": true,
+        "atol": 0.001,
+        "rtol": 0.0001
+      },
+      "weights_gradient": {
+        "shape": [
+          1,
+          7,
+          2,
+          2,
+          3
+        ],
+        "elements": 84,
+        "finite": true,
+        "max_abs": 1.1920928955078125e-07,
+        "allclose": true,
+        "atol": 0.001,
+        "rtol": 0.0001
+      }
+    },
+    "scope": "One actual small original CUDA MSDA tuple; full forward and three gradients CPU32, not full matrix/model/strict replay"
+  },
+  "completed_campaign_evidence": {
+    "raw_campaign_summary_SHA256": "496851af38efa76cea9dc2fd400956b4e5cdbca0d07c0cb40ecd51b1db270665",
+    "registry_SHA256": "64445285769d9fe6c97f0622c9d462847b3df8428d0b589dcc77e8139deeb853",
+    "watchdog_report_SHA256": "d5e0993b75fae12431b22d80ca366d9fbce31bc7c868bdcf73a28b855d1dfde0",
+    "seven_child_actual_exits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "watchdog_actual_exit": 0,
+    "remaining_owned_processes_count": 0,
+    "tool_identity_unchanged": true
+  },
+  "boundaries": [
+    "Same official100 pretrained checkpoint FP32 inference on the same22 NAVTEST anchors only.",
+    "For each model all22 selected indices and all40x3 float32 trajectory bytes match the preserved NPU FP32 exports. The14 aggregate official metric comparisons have observed delta zero after the explicit Haswell CPU scoring process.",
+    "This is an end-to-end comparison of different software stacks; sameJPEG inputs do not independently prove every preprocessing or intermediate Tensor bitwise equal.",
+    "No GPU training, resume, BF16, training-gradient equivalence, full NAVTEST quality, or convergence claim.",
+    "The original CUDA MSDA tiny proof covers one tuple, not the full matrix or model backward.",
+    "No general quality acceptance threshold or hardware-only causal claim is defined.",
+    "Original default CPU zero-score attempts and failed prerequisite attempts are retained, and are not overwritten by the corrected score reports."
+  ],
+  "intended_public_repository_path": "ascend/results/gpu-npu-official100-eval22-20261016.json",
+  "official_metric_cache": {
+    "transfer_proof_SHA256": "ad355528dd4761249ab38a2f55d83a1085c8a1bf730640e4b3ebcf26a6585098",
+    "token_count": 22,
+    "payload_SHA256_by_token": {
+      "ad54eadf72625631": "c09fa4039fc23343476e41ff2e20b21a9412ffa255bd620e6e04d44dd93612c3",
+      "86c5b7af4b47513d": "d249e204557711cb8be09deafe7c9e3f6c7d2a8ce5c9a4edc3b7c6bc971741db",
+      "3fd7c487c29f53bc": "21932150186cf64846600c8ef65779018a1ad00645a93c254f37524d80814505",
+      "95e6e7c4cfe15b91": "786530fae74de5a5cf80adbd423ef9930b276f8e9b49d058058aaed155279bb8",
+      "5469a6a592ef55d0": "2d8e574d2c5884bcd8caf143fb3fbbd3f8fd4d80b41145a31f9a6e3f6b7bfbba",
+      "ec90dfde532d5633": "9a6143038fd6e4c43c87afc35e2b995b5abcb795c973e743ccb22e951b9c8c9a",
+      "c64f55518a18575b": "3482baab11bec41ddd3b70367bd0971a3dfc84d53fd967d993e08ff72d9ceb7d",
+      "16d3b353ffe650de": "15f744578589af262c30ff6232ee88fbebef4ea68e5fc0404f9b2216c55ae82e",
+      "803addaf65355261": "a4b5823908689dd0e9a171f5802638601a029a669452e2334b1bed28733f004e",
+      "1b96821ba3425e3b": "7f1bc07535c90161f2df14e05c1e0d9bf67f16fd11c0269cb10c08ff9d4f5cb4",
+      "4421e25bf73a553b": "b844b82519425fcc329af797cf71e980a9b150655b7468193bb1d1555c1fdac2",
+      "b683672d37cc5001": "1c1abcd02a44e5f05b4f6d0370d992dee6a42dfa8d134ce863b596e1ac61eecd",
+      "33c738c5f199510e": "88cdffedbff7a926e6517341e56b372f1baece0ee8723a48875e1e86a6d9fbbb",
+      "a5b2403d85fc511d": "f0641644ce898a3f98ee2109e99f9fb4c3df71f88645af4b7454f760ab56f3ab",
+      "944eece37ff15fa1": "e40d6358a0f5f6e9e15f24f45db6a58c3a6fbca3f7127dc104a5399a0bea3e4d",
+      "2ff39958d9f35279": "a6b1d712603e21614c36429630733c6c4fc694741e98cc7b9578077cb063a43c",
+      "d471c0c48cb05f04": "90a3ca23b7648a5f4e7314fe362fbb4d3e7cb0d7db242a1a7ee0cce659d1027d",
+      "89652dfe12165def": "3dbac551d8b917ac8feecd8f0330f3d2f3a902bb97033b39856ed2b397f4e725",
+      "f73281d701fd56a6": "25b3578ed907d68ae2537c1d8b17c4efc4eeb18ecf6fea085ddfbf16fbb6e68f",
+      "9bd57127fa3b5d8d": "8e2e2eea3196d55a0e46fe55212dbc94d4dc882332c5a8953bb3eda22f48d0da",
+      "4c9a89b8cd2853d6": "ee2126e43bb72ed0072ec211f930b6ddef5827d09e412d572e8ea740f9062670",
+      "555af87f71415a3d": "1d6a35895c3d5ca73f4dc869f192874c845ebf8a737cac004c8b07adbb0c9d97"
+    },
+    "all22_payload_SHA256_match_actual_NPU_FP32_cache": true
+  },
+  "publication": {
+    "repo": "ZhengDeL/WorldEngine",
+    "branch": "ascend-910c-algengine",
+    "path": "ascend/results/gpu-npu-official100-eval22-20261016.json",
+    "identified_by_containing_git_commit": true
+  },
+  "final_readonly_release_audit": {
+    "raw_audit_SHA256": "b7a8a66536e4cd6a38d0b9b0d5ed5582b7ef79efd349eb45580d6009e8ccd998",
+    "observed_UTC": "2026-10-16T12:33:45.259317+00:00",
+    "result": "complete_readonly_identified_owned_GPU_task_release_audit_no_processes_signalled",
+    "registered_job_identities_checked": 7,
+    "all_registered_PID_starttime_and_argv_identities_absent": true,
+    "identified_owned_task_process_count": 0,
+    "GPU0_actual_compute_app_count": 0,
+    "GPU0_query_actual_exit": 0,
+    "watchdog_actual_exit": 0,
+    "read_only": true,
+    "processes_signalled": false,
+    "foreign_processes_or_services_modified": false,
+    "actual_Haswell_CPU_score_completions": {
+      "vad": {
+        "summary_SHA256": "c3e70ec2e5124aebc3c27a924bbe9dbbc1f81ddad2de8935bdfcf4bf470eacdc",
+        "finished_UTC": "2026-10-16T12:29:16.601895+00:00",
+        "CPU_only_no_CUDA_initialization": true,
+        "source_and_inputs_unchanged": true
+      },
+      "hydra": {
+        "summary_SHA256": "2951dbcd9ba52b82f5359b421f46dde4eaa7c45d59e3b63cb2a1d8eb3f8096da",
+        "finished_UTC": "2026-10-16T12:29:22.131073+00:00",
+        "CPU_only_no_CUDA_initialization": true,
+        "source_and_inputs_unchanged": true
+      }
+    },
+    "ownership_scope": "Bounded proc inventory; only exact task root/tmp paths, exact registered PID+starttime+argv, and currently attached descendants are marked owned. Probe invocation ancestors are excluded. No signals are sent."
+  }
+}

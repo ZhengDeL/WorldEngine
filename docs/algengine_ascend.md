@@ -331,7 +331,7 @@ cat "$SCORE/score/official_score.json"
 
 The scorer requires original official NAVSIM metric-cache payloads for all 22 prediction tokens. Training PDM labels are not this cache. The helper selects exactly those prediction tokens and leaves payload bytes and scoring mathematics unchanged. Keep symlink targets reachable inside the container; mount additional target roots at the same absolute paths when needed. If the cache is unavailable, section 6 describes generation from genuine logs and maps.
 
-Check `inference_validation.json`, the 22-token score and the original comparison JSON independently. Full NAVTRAIN convergence, complete NAVTEST quality, GPU comparison and general 16-rank numerical reproducibility remain separate acceptance items. Current model results are recorded in the [validation report](../ascend/FULL_ALGENGINE.md); environment/data CPU results must not be presented as a model pass.
+Check `inference_validation.json`, the 22-token score and the original comparison JSON independently. The separate [official100 GPU/NPU FP32 comparison](../ascend/results/gpu-npu-official100-eval22-20261016.json) covers these same 22 evaluation anchors; it does not establish full NAVTRAIN convergence, complete NAVTEST quality, GPU training or general 16-rank numerical reproducibility. Current model results are recorded in the [validation report](../ascend/FULL_ALGENGINE.md); environment/data CPU results must not be presented as a model pass.
 
 Recompute all exported poses and the seven official-score differences with the [public CPU comparison tool](../tools/validation/README.md). It accepts either FP32/BF16 or GPU/NPU exports and does not apply a quality-equivalence threshold.
 
@@ -592,7 +592,63 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 64g -
   ' bash "$CACHE" "$WORK"
 ```
 
-The full-score CPU example is a starting resource limit, not a measured full benchmark budget. Keep cache payloads reachable at the paths in their metadata, or relocate/rebuild the index. Generated trajectory models such as DiffusionDrive require official rescoring; the inference CSV alone must not be treated as final PDMS. Full GPU/NPU trajectory comparison has not been performed.
+The full-score CPU example is a starting resource limit, not a measured full benchmark budget. Keep cache payloads reachable at the paths in their metadata, or relocate/rebuild the index. Generated trajectory models such as DiffusionDrive require official rescoring; the inference CSV alone must not be treated as final PDMS. The recorded GPU/NPU comparison is limited to two official100 FP32 planners on 22 anchors, not a complete benchmark or GPU training.
+
+<a id="x86-cpu-scoring-of-gpu-exports"></a>
+
+### x86 CPU scoring of GPU exports
+
+The public `ascend/scoring.py` is byte-identical to the scorer used for the
+[recorded original-CUDA comparison](../ascend/results/gpu-npu-official100-eval22-20261016.json).
+It accepts the original `predictions.pkl` list and matching official NAVSIM
+metric-cache payloads. It samples `trajectory[4::5]` for the original eight-pose
+score; the [CPU comparison tool](../tools/validation/README.md) measures all 40
+exported poses separately. Training PDM labels and embedded prediction metrics
+are not a substitute for the official cache or rescoring.
+
+On the measured Xeon Gold 6430, NumPy 1.23.4/OpenBLAS 0.3.20 default dispatch
+produced incorrect LQR results and zero scores. The unchanged packages and
+scoring formula recovered with `OPENBLAS_CORETYPE=Haswell` in fresh CPU
+processes. This condition is verified for that CPU/software combination;
+it is not a global NPU environment setting or a general recommendation for
+other BLAS builds. See the [upstream issue](https://github.com/numpy/numpy/issues/24903).
+
+From this repository root, use the existing CUDA Python environment with the
+original NAVSIM/NuPlan dependencies and the checked-out NAVSIM submodule. Set
+paths to your own completed 22-token export, its official cache and a new output:
+
+```bash
+GPU_PREDICTIONS=/path/to/your_GPU_run/predictions.pkl
+OFFICIAL_CACHE22=/path/to/official22/metric_cache
+GPU_SCORE_OUT=/path/to/new_GPU_export_CPU_score
+CUDA_VISIBLE_DEVICES='' OPENBLAS_CORETYPE=Haswell \
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  python - "$GPU_PREDICTIONS" "$OFFICIAL_CACHE22" "$GPU_SCORE_OUT" <<'PY'
+import pickle
+import sys
+from pathlib import Path
+from ascend.scoring import score_predictions
+
+predictions, cache, output = map(Path, sys.argv[1:])
+if output.exists() or output.is_symlink():
+    raise SystemExit("Use a fresh CPU-score output directory")
+with predictions.open("rb") as stream:
+    records = pickle.load(stream)
+if len(records) != 22 or len({row["token"] for row in records}) != 22:
+    raise SystemExit("This example requires the complete 22-token export")
+payloads = list(cache.rglob("metric_cache.pkl"))
+if len(payloads) != 22 or {path.parent.name for path in payloads} != {row["token"] for row in records}:
+    raise SystemExit("Provide exactly the 22 matching official cache payloads")
+print(score_predictions(records, cache, output))
+PY
+```
+
+Keep `official_score.json` and `official_scores.csv`, including any anomalous
+attempts. The measured two models matched the NPU reference in all 40×3
+trajectory values and every per-token official metric after the CPU environment
+correction. The source/framework stacks differ, and matching JPEG bytes do not
+prove bitwise-identical preprocessing tensors. This is bounded inference/output
+evidence, without a quality-equivalence threshold or a pure-hardware diagnosis.
 
 ## 7. Evaluate NAVTRAIN and select rare cases
 

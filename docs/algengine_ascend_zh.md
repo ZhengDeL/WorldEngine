@@ -333,7 +333,7 @@ cat "$SCORE/score/official_score.json"
 
 评分需要覆盖22个预测 token 的原官方 NAVSIM metric-cache。训练用 PDM 标签不能代替它。工具仅选取本次预测的 token，不改缓存内容和评分数学。若缓存使用软链，需在容器内保留目标可达；必要时将目标根目录按同一绝对路径只读挂载。没有官方缓存时，按第6节从真实日志与地图生成。
 
-分别检查 `inference_validation.json`、22个 token 的官方评分及原数值比较 JSON。完整 NAVTRAIN 收敛、完整 NAVTEST 质量、GPU 对照和通用16 rank数值复现仍需单独验收。当前模型结果见[验证报告](../ascend/VALIDATION_zh.md)，不能用环境或数据准备的 CPU 通过结果代替模型通过。
+分别检查 `inference_validation.json`、22个 token 的官方评分及原数值比较 JSON。独立的[官方100权重GPU／NPU FP32对照](../ascend/results/gpu-npu-official100-eval22-20261016.json)限同一22个评价锚点，不证明完整NAVTRAIN收敛、完整NAVTEST质量、GPU训练或通用16 rank数值复现。当前模型结果见[验证报告](../ascend/VALIDATION_zh.md)，不能用环境或数据准备的 CPU 通过结果代替模型通过。
 
 可使用[公开CPU比较工具](../tools/validation/README.md)从原预测和官方CSV重算全部位姿及七项评分差分；同一接口可用于FP32／BF16或GPU／NPU输出，不设置质量等价阈值。
 
@@ -594,7 +594,45 @@ docker run --rm --network none -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 --memory 64g -
   ' bash "$CACHE" "$WORK"
 ```
 
-64g 是完整评分命令的初始资源示例，尚非完整基准的实测预算。cache payload 必须可按 metadata 的路径读取；搬迁后重新建立索引或生成 cache。DiffusionDrive 等生成式轨迹模型必须经过官方重新评分，不能把推理 CSV 当成最终 PDMS。GPU/NPU 相同模型轨迹对照尚未执行。
+64g 是完整评分命令的初始资源示例，尚非完整基准的实测预算。cache payload 必须可按 metadata 的路径读取；搬迁后重新建立索引或生成 cache。DiffusionDrive 等生成式轨迹模型必须经过官方重新评分，不能把推理 CSV 当成最终 PDMS。已有GPU／NPU对照限两个官方100基座的22锚点FP32推理，不是完整基准或GPU训练。
+
+<a id="x86-cpu-scoring-of-gpu-exports"></a>
+
+### 在x86 CPU上重算GPU导出的官方评分
+
+公开`ascend/scoring.py`与[原CUDA对照实测](../ascend/results/gpu-npu-official100-eval22-20261016.json)使用的评分源码逐字节一致。输入为原`predictions.pkl`列表和匹配的官方NAVSIM metric-cache；原评分从`trajectory[4::5]`选择8点，[CPU比较工具](../tools/validation/README.md)另行量测全部40个导出位姿。训练PDM标签和预测中内嵌的指标不能替代官方cache及独立重评分。
+
+实测Xeon Gold6430上，NumPy1.23.4／OpenBLAS0.3.20默认分派导致LQR计算异常和0分；在新CPU进程设置`OPENBLAS_CORETYPE=Haswell`后，未改包和评分公式即可恢复。该条件仅针对已测CPU／软件组合，**不要设为NPU全局环境，也不外推到其它BLAS构建**。相关依据见[NumPy上游问题](https://github.com/numpy/numpy/issues/24903)。
+
+在本仓根目录，使用已有CUDA Python环境及原NAVSIM／NuPlan依赖，并检出NAVSIM子模块。以下路径指向本次自己完整导出的22-token预测、对应官方cache和一个新输出目录：
+
+```bash
+GPU_PREDICTIONS=/path/to/your_GPU_run/predictions.pkl
+OFFICIAL_CACHE22=/path/to/official22/metric_cache
+GPU_SCORE_OUT=/path/to/new_GPU_export_CPU_score
+CUDA_VISIBLE_DEVICES='' OPENBLAS_CORETYPE=Haswell \
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+  python - "$GPU_PREDICTIONS" "$OFFICIAL_CACHE22" "$GPU_SCORE_OUT" <<'PY'
+import pickle
+import sys
+from pathlib import Path
+from ascend.scoring import score_predictions
+
+predictions, cache, output = map(Path, sys.argv[1:])
+if output.exists() or output.is_symlink():
+    raise SystemExit("Use a fresh CPU-score output directory")
+with predictions.open("rb") as stream:
+    records = pickle.load(stream)
+if len(records) != 22 or len({row["token"] for row in records}) != 22:
+    raise SystemExit("This example requires the complete 22-token export")
+payloads = list(cache.rglob("metric_cache.pkl"))
+if len(payloads) != 22 or {path.parent.name for path in payloads} != {row["token"] for row in records}:
+    raise SystemExit("Provide exactly the 22 matching official cache payloads")
+print(score_predictions(records, cache, output))
+PY
+```
+
+保留`official_score.json`及`official_scores.csv`，异常尝试也不覆盖。两模型实测中，CPU环境纠正后，全部40×3轨迹值和每个token的七项官方指标均与NPU参照相同。两侧源码／框架栈不同，相同JPEG不证明预处理Tensor逐位一致；该结果限有界推理输出，未设质量等价阈值，也不是纯硬件归因。
 
 ## 7. 在 NAVTRAIN 上评价并筛选稀有场景
 

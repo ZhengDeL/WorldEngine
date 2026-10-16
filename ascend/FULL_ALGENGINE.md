@@ -21,7 +21,48 @@ defective v6 record is retained separately. Both v7 replay comparisons exceeded
 the original tolerances. The strict-replay numerical issue remains unresolved.
 Complete AlgEngine acceptance remains open: the evidence does not establish
 full NAVTRAIN convergence, complete independent quality, all genuine synthetic
-inputs, GPU equivalence or sustained operation of the final environment.
+inputs, general GPU equivalence or sustained operation of the final environment.
+
+## Original CUDA/NPU FP32 inference comparison — October 16, 2026
+
+The original CUDA and Ascend FP32 paths completed inference on the same official
+100% VADv2/HydraMDP weights and the same 22 held-out anchors. Each model's 22
+selected indices and all 880 exported `(x, y, heading)` poses matched bitwise,
+including dtype. Independent original NAVSIM rescoring also produced identical
+per-token CSV bytes: all seven metrics for each of the 22 tokens matched.
+
+| Model | Selected indices / trajectories matched | Maximum position / wrapped-heading difference | GPU / NPU official score |
+| --- | --- | --- | --- |
+| VADv2 | 22/22; all 40 poses per token | 0 m / 0 rad | 0.8696212394149101 / 0.8696212394149101 |
+| HydraMDP | 22/22; all 40 poses per token | 0 m / 0 rad | 0.9493509518718398 / 0.9493509518718398 |
+
+This was one FP32 inference run per model on one H20 GPU, with TF32 disabled;
+it was not GPU training. The GPU stack used Python 3.9.9, PyTorch 2.0.1+cu118,
+MMCV-full 1.6.2 and original AlgEngine source `3eded7…`. The preserved NPU
+reference used Python 3.10, PyTorch 2.7.1/Torch-NPU 2.7.1.post8, source
+`4ae8ed9f…` and image `3522f3ac…`. The GPU environment retained two explicit
+MMDet3D dependency-declaration conflicts: Numba 0.56.4 against `==0.53.0`, and
+NetworkX 2.5 against `<2.3`. It was not a dependency-clean environment.
+
+Initial CPU scoring on the GPU host returned zero scores. On its Xeon Gold 6430,
+NumPy 1.23.4/OpenBLAS 0.3.20 selected Cooperlake and produced an invalid LQR
+pseudoinverse. Selecting `OPENBLAS_CORETYPE=Haswell` **only in fresh CPU scoring
+processes** restored the same-matrix residual from 2293.842 to 4.607e-15 and
+the complete 22-token scores above. The original packages, loaded-library hashes,
+model predictions and scoring formula were unchanged; the initial zero-score
+records remain preserved. The workaround is consistent with the
+[upstream NumPy report](https://github.com/numpy/numpy/issues/24903), and is
+validated here only for this CPU/software combination.
+
+The [complete comparison record](results/gpu-npu-official100-eval22-20261016.json)
+separates trajectory identity, corrected CPU scoring and the original scoring
+failure. [CPU rescoring instructions](../docs/algengine_ascend.md#x86-cpu-scoring-of-gpu-exports)
+use the unchanged public scorer. These are two model comparisons on the same 22
+anchors, not 44 independent scenarios. Equal JPEG bytes do not establish
+bitwise-equal preprocessed model tensors. Different software stacks prevent
+isolating a pure hardware cause; no quality or platform-equivalence threshold
+was applied. Full-data quality, GPU training, repeated runs, throughput and the
+unresolved 16-rank base-training replay issue remain outside this result.
 
 ## FP32 short-run validation — October 16, 2026
 
@@ -246,8 +287,9 @@ These are measurements on 22 tokens, without a quality acceptance threshold.
 The eight updates remain inside the original 500-update warmup. They are not
 eight epochs, convergence evidence or evidence of a quality improvement.
 The matching FP32 short-run chain is recorded above; no valid FP32/BF16
-equivalence is accepted from the defective v6 run. H20 GPU hardware is available, but its original CUDA
-AlgEngine environment has not been established; GPU/NPU equivalence was not run.
+equivalence is accepted from the defective v6 run. The separate original-CUDA
+FP32/official100 comparison is recorded above; it does not validate these
+historical BF16 outputs or establish general GPU/NPU equivalence.
 
 Evidence: [complete BF16 short-run record](results/bf16-navtrain139-short8-20261016.json),
 [actual CPU cache-mechanism probe](results/bf16-autocast-history-cache-cpu-20261016.json),
@@ -596,7 +638,7 @@ observations and do not establish paired GPU/NPU throughput or cost advantages.
 | Independent quality | Complete NAVTEST common/rare evaluation, adequate rare coverage and agreed quality thresholds |
 | Data and capacity | Full current/history JPEG coverage, image decode/pipeline quality, full training/evaluation RAM, HBM and I/O |
 | Synthetic scope | Genuine producer exports and original training/evaluation coverage for the other six configurations |
-| Precision and platform extensions | Resolve the completed BF16 replay comparisons outside tolerance; extend the fixed-subset FP32/BF16 measurements and complete GPU comparison, multi-node training and second-order-gradient validation |
+| Precision and platform extensions | Resolve the completed BF16 replay comparisons outside tolerance; extend the fixed-subset FP32/BF16 and official100 GPU/NPU inference measurements to broader data and repeated runs; validate multi-node training and second-order gradients |
 | Public environment reproduction | The October 16 public repaired image passed application, selected SDK-tool and original-CANN-source CPU checks, including two unfiltered pip checks with exit 0. All optional SDK tools and sustained operation of the final environment remain outside that acceptance |
 | Sustained operation | 24-hour/target-duration testing with the same final source, image and execution settings |
 
