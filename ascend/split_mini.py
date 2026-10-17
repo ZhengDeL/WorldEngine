@@ -58,7 +58,7 @@ def main():
     # Keep the old baseline files for provenance; phase-specific files drive runs.
     for name in ('worldengine_navtest_smoke.pkl','worldengine_navtest_smoke.yaml','worldengine_navtest_smoke_pdm.pkl'):
         (output/name).symlink_to(source/name)
-    (output/'cameras').symlink_to(source/'cameras',target_is_directory=True)
+    (output/'cameras').symlink_to((source/'cameras').resolve(strict=True),target_is_directory=True)
     manifest['split_files_sha256']={x.name:hashlib.sha256(x.read_bytes()).hexdigest() for x in output.iterdir() if x.is_file() and not x.is_symlink()}
     (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     print(json.dumps(manifest,indent=2))

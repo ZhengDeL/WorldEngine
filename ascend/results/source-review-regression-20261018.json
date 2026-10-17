@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "status": "completed_bounded_CPU_regressions_and_SOURCE3_single_update_compatibility",
+  "measured_two_update_device_source": {
+    "sha256": "3d46c07f4ff06e078c5963bbb500030fe683f2226bdcc60a70789b10db02c134",
+    "python_files": 245
+  },
+  "reviewed_publication_source": {
+    "sha256": "40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b",
+    "python_files": 245
+  },
+  "unchanged_other_source_files_canonical_LF": 239,
+  "runtime_fingerprint_definition": "All projects/AlgEngine Python files plus top-level ascend Python files, sorted path bytes followed by canonical LF source bytes; unchanged count245.",
+  "original_numerical_tolerances": {
+    "atol": 1e-06,
+    "rtol": 1e-05,
+    "raw_loss_absolute_strict_upper_bound": 0.0001
+  },
+  "model_operator_optimizer_or_training_formula_changed": false,
+  "source_updates": [
+    {
+      "path": "ascend/compare_resume.py",
+      "before_SHA256": "9f2cb1cd4a2638cba9a4be24d8a56242909c638ca0bde616445435982ec35330",
+      "after_SHA256": "ba855451c728aa4bc921fe0fa89440407fe7e25acbe404b8567e9f3d600b0d0c",
+      "scope": "validation-gate-only"
+    },
+    {
+      "path": "ascend/validate_msda.py",
+      "before_SHA256": "5a898191f716dec2536ab1b7e208c0651ef750b2fdf929c4eaec37d2e1b78d5d",
+      "after_SHA256": "3ad9f0c6e5d14e1710fbde6959604f5092fee85140e1d63a5c7219c1c68b3269",
+      "scope": "validation-gate-only"
+    },
+    {
+      "path": "ascend/validate_msda_layout.py",
+      "before_SHA256": "6b4c946c5881eb2f398582c7eb7c7c9155de7517f3f82e4bb5170e9c623224b1",
+      "after_SHA256": "4fd92bc00975bba5bc81ae974ba8b6f800395eee3850c9ecb3cef8d831a845f0",
+      "scope": "validation-gate-only"
+    },
+    {
+      "path": "ascend/train.py",
+      "before_SHA256": "579349d31766fd4ef9b0eaabdb6408e7a4907902ecc3595a961a6a4f3c0f52a2",
+      "after_SHA256": "b8cec70bf89352dac3bea0557787f999f013740fdae2eaeb0e513dc1abd2fa19",
+      "scope": "CLI-argument-guard-only"
+    },
+    {
+      "path": "ascend/run_container.py",
+      "before_SHA256": "5b0a750625599430b25cc1762cae10816ea75f40560b374b5e1a878144594e0e",
+      "after_SHA256": "3c3e5973d63fecc5587082ac5ca293127eb55e2b5c82ec8d234f5cc36e680024",
+      "scope": "CLI-guard-and-checkpoint-selection-only"
+    },
+    {
+      "path": "ascend/split_mini.py",
+      "before_SHA256": "f095d6a829636880ac226a78a8deca6fa8d816d1eeecef584096a0c99613a82c",
+      "after_SHA256": "15b8d44216ef3b6f142f99f5026aab4013bc4347b82b771eb9d7d2fb70283b00",
+      "scope": "camera-symlink-final-target-only"
+    }
+  ],
+  "CPU_regression_evidence": {
+    "validation_guard_regressions_46_SHA256": "9636638cb7fab99d502781b450d62c53db103ff85e2f9ecb8699ecf6cc7df001",
+    "CLI_argument_and_launch_regressions_38_SHA256": "3d5ce0dd1e92f41327b9d6c7bd6b83950f2b48ca702afbf13f02cda2c0ab4192",
+    "independent_CPU46_CLI38_audit_SHA256": "5029a1e07f0e919ecb6745e40eb8c488fd49a1386af8e0d7837145a77980d72d"
+  },
+  "camera_portability": {
+    "scope": "Synthetic two-log filesystem unit fixture; not official-data or model validation.",
+    "actual_containers": 2,
+    "runtime": "runc",
+    "network": "none",
+    "devices": [],
+    "actual_exit_codes": [
+      0,
+      0
+    ],
+    "original_intermediate_link_readable": false,
+    "resolved_final_target_readable": true,
+    "phase_metadata_six_files_byte_identical": true,
+    "labels_and_PDM_order_preserved": true,
+    "camera_target_bytes_and_SHA256_preserved": true,
+    "actual_CPU_summary_SHA256": "f473f03d1b643c13d6c806879ea1451f8ab83198686cfb1df847788e96f8b700",
+    "independent_actual_CPU_audit_SHA256": "4ff366db0ee47d32425685d54b5b3b62e1c473299e51a8599f6b58fd36fd8f22"
+  },
+  "new_public_CPU_test": {
+    "path": "tools/validation/test_validation_guards.py",
+    "SHA256": "dee5f62b2a585910112ef6012066aba6bc3ec303f88b00ec0170699438a2e603",
+    "actual_methods": 6,
+    "all_completed_without_skips": true,
+    "actual_CPU_summary_SHA256": "7e9f02b51cdd1b7826af0e3763f531d2141b16cf11ab7510c4079c8349926847",
+    "independent_CPU_audit_SHA256": "98998f2ea5de029f296692c436383c978eb56e4608a730249ac06951dd44448c",
+    "scope": "Real tiny CPU checkpoint guards and explicit CLI/Docker/device test doubles; no accelerator execution.",
+    "outside_245_runtime_fingerprint": true
+  },
+  "saved_checkpoint_strict_rechecks": [
+    {
+      "model": "VADv2",
+      "independent_actual_CPU_audit_SHA256": "a5062a94f722108d21256452d384b6b16319609b1a192256c771aa58899f9ab9",
+      "comparator_SHA256": "ba855451c728aa4bc921fe0fa89440407fe7e25acbe404b8567e9f3d600b0d0c",
+      "checkpoint_source": {
+        "sha256": "3d46c07f4ff06e078c5963bbb500030fe683f2226bdcc60a70789b10db02c134",
+        "python_files": 245
+      },
+      "scope": "Recheck the same actual saved two-update same-continuous-prefix model/optimizer/RNG/loss evidence; no new device training."
+    },
+    {
+      "model": "HydraMDP",
+      "independent_actual_CPU_audit_SHA256": "17369c1847e44485cbae48617f62b03e8e02c5bf0e261d970f3fa796be43bec1",
+      "comparator_SHA256": "ba855451c728aa4bc921fe0fa89440407fe7e25acbe404b8567e9f3d600b0d0c",
+      "checkpoint_source": {
+        "sha256": "3d46c07f4ff06e078c5963bbb500030fe683f2226bdcc60a70789b10db02c134",
+        "python_files": 245
+      },
+      "scope": "Recheck the same actual saved two-update same-continuous-prefix model/optimizer/RNG/loss evidence; no new device training."
+    }
+  ],
+  "boundaries": [
+    "CPU fixture completion does not establish arbitrary model correctness or convergence.",
+    "Original device control checkpoints remain attributed to source3d46/245.",
+    "Reference CPU32 disagreements and earlier longer-horizon numerical negatives remain unchanged."
+  ],
+  "additional_SOURCE3_device_compatibility": {
+    "result": "completed_single_unwrapped_public_VADv2_FP32_update_and_readonly_CPU_revalidation",
+    "source": {
+      "sha256": "40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b",
+      "python_files": 245
+    },
+    "world_size": 16,
+    "per_rank_batch": 1,
+    "global_batch": 16,
+    "configured_step_horizon": 2,
+    "stop_after_update": 1,
+    "actual_completed_updates": 1,
+    "precision": "fp32",
+    "msda_backend": "cuda-compatible",
+    "original_official100_backbone_freeze_configuration": true,
+    "private_numerical_overlay_installed": false,
+    "checkpoint_saved_only_rank0": true,
+    "checkpoint_SHA256": "44326e3b2c23d162c41538c9fa46b7c9a7950283561979ce4db51892c8e441fa",
+    "checkpoint_ZIP_all_member_CRC_verified": true,
+    "rank_evidence": [
+      {
+        "rank": 0,
+        "runtime_SHA256": "a29cbc441fe5117d1713f15758f605c1cdd5cebaf8b028a2bdc0e6ec6507f6e6",
+        "runtime_jsonl_SHA256": "54476b2255787216cb72016f42b586fdc035276ec54a5f0d926aee0208c7958a",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 1,
+        "runtime_SHA256": "e6b7efe331dc7d0ba71423e698f42f8148c57d26b68fab73b7912343154631d6",
+        "runtime_jsonl_SHA256": "b66a3ea6f34bfecf4490d2d53a84f1b76f971705d675a83d3c17430abacc2e33",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 2,
+        "runtime_SHA256": "87d3f943af6ed985e3593badf7e26cc7e86714117d7024cc9d1f534e5dc79695",
+        "runtime_jsonl_SHA256": "2e8bdaa41dacc702e85bf4a121038ca335d2a71b04c0ca6e1b0e56e7346d7f7e",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 3,
+        "runtime_SHA256": "f9fffed6f250109482701930e4d1bf8d633d12b21281db1c9882385e89f06bce",
+        "runtime_jsonl_SHA256": "864f3026c61aa7ef4287a1d69e3a6bea5b4b40d8d4e4f6ad3e152cb41d44c295",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 4,
+        "runtime_SHA256": "3c4cb88ee90c622e64ae0c0a62ea955717d83521a2e1b6c87c1db787e6f1056a",
+        "runtime_jsonl_SHA256": "5d4a72489ad78d5dc849a7f529fd46fd9c31b863c12a0a31d926287673e4a4b7",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 5,
+        "runtime_SHA256": "b87b3a03c00bd35f94b7c5ab43898fb27eae1039fbd7cab6c0cb44d7ffc4dc23",
+        "runtime_jsonl_SHA256": "a3f6dd8e24449d7d43997c66bbf300bb8e03b9b04655a075f8ae42728a891ed5",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 6,
+        "runtime_SHA256": "1cfc8ffc1cca2e1070d2ac6cd1c9fd4060b4b4bf877afcb0cae5370019ab9f25",
+        "runtime_jsonl_SHA256": "c98d2d73a0c3759b1e1b970380b095bad31974c4ec0d9ba902dacfb5e74764b1",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 7,
+        "runtime_SHA256": "eadd29a2ca11b9d94a858ce1dcbf88a9ef973dfd01811fd44ebabf9d0036adc9",
+        "runtime_jsonl_SHA256": "59b7ae025cc216eec0f33bf7c6ce0f4b0decf1836c5b5f6eeb42a0a66a7081c4",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 8,
+        "runtime_SHA256": "f7a97f30b3ddccbc5fb01fd498a698bbde4df90b311d88a7bf4d80c2635eaa0e",
+        "runtime_jsonl_SHA256": "92f49cdbc6b781bc395771bc06b4bcde6bedb53332c053a10d2084556a3d0478",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 9,
+        "runtime_SHA256": "3148db83a2fec09375f8d253dacf3037751723a9f0e9dcda443bd65304887a84",
+        "runtime_jsonl_SHA256": "e5de221ec38c9cdf4dbeaa17ebe8c63e3096b91c026b7f9b3d6f7bc90e5c1af5",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 10,
+        "runtime_SHA256": "4eb900bdf3a0466d8c6cec95d0fc20bb47c0206ff40f7364b837bf67365fb5d9",
+        "runtime_jsonl_SHA256": "15f407e1461c5a1a68e33e7b3ced8addf52d345cde45ba7db407f82e16a5be7d",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 11,
+        "runtime_SHA256": "d9d7662a401521d429945ab0cdb01a0e8a797fad68f045bcdd04f28c3ef95f73",
+        "runtime_jsonl_SHA256": "de5b0d664c950966947bcaf912cd242174cf4908457abf2a3f9ef37e3411d8fa",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 12,
+        "runtime_SHA256": "94f7305d081ed1512e8ba61f312d8a5e387143c30617ee4a206bbe0a30982fba",
+        "runtime_jsonl_SHA256": "dbde19b6324f29a4784dc0793e1dd4bd7bfe24ed17aa199bcaecbd840dbd8bc8",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 13,
+        "runtime_SHA256": "79504fb411d081c59263ab00e6eef63afff93848db531c4cffa4da3cd6a28cc6",
+        "runtime_jsonl_SHA256": "ccfd59c5e7528b49d9f074d5b63c015b49d2f9b10925c571105e1dd7c1d41c84",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 14,
+        "runtime_SHA256": "c4a4ed740084c35fd25bc4c8fd849244565baf8de562a2e7d6fe3731bf62b2c8",
+        "runtime_jsonl_SHA256": "1bf889fd11da3687260d237be95cb026c90b3a7d22e327890a2d556065e3a016",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      },
+      {
+        "rank": 15,
+        "runtime_SHA256": "8765307d4a6d2fcc5e79320d5123907d33814638975c23fe08ce5cd9f77f4948",
+        "runtime_jsonl_SHA256": "7427f5a6984c38182acca9963698112734f3a57c7f8907db91f3aa0311fa4350",
+        "initial_update": 0,
+        "final_update": 1,
+        "actual_updates": 1,
+        "result": "pass"
+      }
+    ],
+    "actual_model_Docker_exit": 0,
+    "original_private_controller_actual_exit": 2,
+    "original_private_postgate_reason": "The private postrun evidence checker expected the default profile name instead of the public config stem. Original training/source/checkpoint were unchanged.",
+    "readonly_reconciliation_actual_exit": 0,
+    "readonly_reconciliation_actual_SHA256": "26fc9fc34aa425213d8fbf4222060d3a782d5bce00a90a58289e9c480596b8b2",
+    "original_private_controller_summary_SHA256": "33ac3176a57ff02ace84f9d11f3af51d542c8306d34b5c8e98859d19fc5db2ba",
+    "protected_artifacts_beforeafter_unchanged": true,
+    "additional_training_during_reconciliation": false,
+    "scope": "One-update compatibility only; not a new two-update replay, independent initialization, BF16 retest, quality or convergence acceptance."
+  }
+}

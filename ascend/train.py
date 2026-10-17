@@ -25,6 +25,28 @@ PROFILES = {
 
 
 
+def _validate_stop_options(args, parser):
+    """Reject stop settings that the selected runner cannot honor."""
+    import math
+    if args.stop_after is not None:
+        if args.steps is None:
+            parser.error('--stop-after requires --steps')
+        if args.stop_after < 1 or args.stop_after > args.steps:
+            parser.error('--stop-after must be between 1 and --steps')
+    if args.duration_seconds is not None:
+        if args.steps is None:
+            parser.error('--duration-seconds requires --steps')
+        if not math.isfinite(args.duration_seconds) or args.duration_seconds <= 0:
+            parser.error('--duration-seconds must be finite and positive')
+    if args.stop_after_epochs is not None:
+        if args.steps is not None:
+            parser.error('--stop-after-epochs requires an epoch schedule without --steps')
+        if args.stop_after_epochs < 1:
+            parser.error('--stop-after-epochs must be positive')
+        if args.epochs is not None and args.stop_after_epochs > args.epochs:
+            parser.error('--stop-after-epochs must not exceed --epochs')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--profile', choices=PROFILES, default='imitation')
@@ -60,6 +82,7 @@ def main():
     parser.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
                         help='FP32 sampling backend; cuda-compatible matches the measured original CUDA arithmetic')
     args = parser.parse_args()
+    _validate_stop_options(args, parser)
     from ascend.msda import configure_backend
     configure_backend(args.msda_backend)
     if args.train_filter and (not args.data_root or args.mini_prepared):

@@ -52,6 +52,70 @@
 
 公开的[原CUDA金样导出器](../tools/validation/README_export_cuda_msda_goldens_zh.md)与[NPU验证器](../tools/validation/README_npu_cuda_msda_zh.md)已完成端到端实测：重新导出原CUDA输入和完整参照、传输全部16个文件，再调用两个真实公开NPU入口。64项CUDA张量比较全部通过；独立CPU32目标仍为8项通过、8项超差。验证器对16个输入文件执行了前后完整校验，源码、后端及原容差均未改变。
 
+## FP32 同次连续前缀续训对照（2026 年 10 月 18 日）
+
+[完整结果](results/cuda-compatible-fp32-strict16-resume2-20261018.json)。使用公开源 `3d46c07f4ff0`（245 个 Python 文件）和 `cuda-compatible` MSDA，16 个 rank、每 rank batch 1（全局 batch 16）、workers 0，统一运行两次更新。连续训练保存第 1、2 次更新的检查点；新进程从同次连续训练的第 1 次更新检查点恢复至第 2 次更新。第 1 次更新由两条链共享，本项检验该检查点之后的续训一致性，不检验独立初始化的一致性。
+
+| 模型 | 模型张量：torch.equal / 总数 | 全部比较张量：torch.equal / 总数 | 模型／全部张量最大绝对差 | 最大 loss 差 | 原门槛 |
+|---|---:|---:|---:|---:|---|
+| VADv2 | 889 / 889 | 1698 / 1698 | 0 / 0 | 0 | 门槛内 |
+| HydraMDP | 909 / 909 | 1778 / 1778 | 0 / 0 | 0 | 门槛内 |
+
+原比较器保持张量 `atol=1e-6`、`rtol=1e-5` 和 loss 差严格小于 `1e-4`。计数中的一致性使用 `torch.equal`，不表示原始张量字节或序列化检查点文件字节相同。公共模型和 Adam 状态由 rank 0 保存；全部张量计数另包含 16 个 rank 的最终 CPU／NPU RNG 张量，并非每个 rank 全部最终模型值的转储。每个完成的模型核验了 16 次完整状态恢复、64 个分类后的四类 RNG 恢复事件和 48 条下载的训练记录；原参与集合的梯度及 Adam 状态逐参数名核对形状、优化器分组位置、FP32 类型与有限值。
+
+数据配置包含 139 个训练锚点，实际当前锚点去重数为 VADv2: 32, HydraMDP: 32，已完成模型的并集为 32。计数仅取历史队列的最后一个 token。本项未新增推理或 NAVSIM 评分；两次更新仍处于原 500 次更新的 warmup 内，不构成收敛、质量、独立初始化复现或八次更新差异修复的验收。历史八次更新的完整超容差结果继续单独保留。
+
+完整状态续训须满足检查点记录的源版本、精度、拓扑和训练总更新数合同。本次设备训练保持上述实测源身份。后续验证器或命令行修订即使不改变模型公式，也可能改变整个检出版本的源指纹，因此不能直接视作可继续恢复旧检查点的同一版本。只读 CPU 结果比较可使用另行标明身份的验证工具版本。
+
+另以单独标识版本的补强 CPU 验证器复核同一批保存结果，检查形状与 dtype、张量及记录有限性、完整更新序列和与合同 world size 对应的 RNG 覆盖。新回执及检查点前后不变的哈希与原比较器结果分开列明。
+
+
+### 复现同前缀对照
+
+为所选模型设置相匹配的 official100 配置和初始化权重。复现实测结果时使用其记录的源码／镜像／数据版本，并在同一检出版本内完成两臂。下列命令新建连续前缀，不加载其他源版本产生的检查点。
+
+```bash
+set -euo pipefail
+: "${WORLDENGINE_ROOT:?Set the public checkout}"
+: "${PREPARED139:?Set the validated NAVTRAIN139 prepared directory}"
+: "${VOCAB:?Set test_8192_kmeans.npy}"
+: "${MAPS:?Set the NuPlan maps directory}"
+: "${IMAGE:?Set the dependency image}"
+: "${EXPECTED_IMAGE_ID:?Set the verified image ID}"
+: "${CONFIG:?Set the VADv2 or HydraMDP official100 config}"
+: "${INITIALIZER:?Set the matching official100 checkpoint}"
+: "${OUTPUT_ROOT:?Set a fresh absolute output directory}"
+: "${MEMORY:?Set the validated container memory limit}"
+: "${CPUS:?Set the validated container CPU limit}"
+: "${PIDS_LIMIT:?Set the validated container task limit}"
+: "${SHM_SIZE:?Set the validated shared-memory limit}"
+test ! -e "$OUTPUT_ROOT"
+mkdir -p "$OUTPUT_ROOT"
+cd "$WORLDENGINE_ROOT"
+continuous="$OUTPUT_ROOT/continuous0to2"
+resumed="$OUTPUT_ROOT/sameprefix_own1to2"
+launcher=(python3 ascend/run_container.py
+  --devices 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+  --mini-prepared "$PREPARED139" --vocab "$VOCAB" --maps "$MAPS"
+  --image "$IMAGE" --expected-image-id "$EXPECTED_IMAGE_ID"
+  --memory "$MEMORY" --cpus "$CPUS" --pids-limit "$PIDS_LIMIT" --shm-size "$SHM_SIZE"
+  --precision fp32 --msda-backend cuda-compatible --deterministic)
+train=(--task train --config "$CONFIG" --checkpoint "$INITIALIZER"
+  --runtime --upstream-schedule --batch-size 1 --workers 0
+  --steps 2 --checkpoint-interval 1 --check-interval 1)
+"${launcher[@]}" "${train[@]}" --output "$continuous"
+test -s "$continuous/iter_1.pth"
+test -s "$continuous/iter_2.pth"
+"${launcher[@]}" "${train[@]}" --resume "$continuous/iter_1.pth" --output "$resumed"
+test -s "$resumed/iter_2.pth"
+```
+
+## 源版本与检查点合同
+
+验证器、命令行和数据路径修订的源指纹为 `40997952fdc9`（245 个 Python 文件）；上述设备对照实测源为 `3d46c07f4ff0`（245 个文件）。MSDA 核心不变，但六个已评审源文件的变化使完整状态续训合同不同。完整续训须使用检查点记录的源版本、精度、拓扑与训练总更新数；官方规划权重仍可用于新训练的初始化。只读 CPU 比较另用 `ba855451…` 验证器，其六项公开 CPU 回归测试可[独立运行](../tools/validation/test_validation_guards.py)。
+
+实测 `3d46` 源码对应提交 [4946f15](https://github.com/ZhengDeL/WorldEngine/tree/4946f15dd2073b7c0974bc2335091246a4ec9023)。复现或恢复上述运行时，请单独检出该提交。更新后的 `4099` 源码可初始化新训练，其追加的 VADv2 单次更新检查见[源码回归报告](results/source-review-regression-20261018.json)。16 rank 实测容器限额为 `MEMORY=256g`、`CPUS=128`、`PIDS_LIMIT=8192`、`SHM_SIZE=8g`；这些是测试限额，不代表最低硬件要求。
+
 ## 训练、自身检查点恢复与推理
 
 2026年10月17日，VADv2、HydraMDP 的 FP32/BF16 四组均通过公开 `cuda-compatible` MSDA 入口，实际完成训练、自身 checkpoint 续训、原 DDP4 推理及独立官方 CPU 评分。四个互斥分组各使用 4 个 rank，每 rank batch1，每组全局 batch4。每个配置从原官方 100%规划权重初始化，先完成第 1 次更新，再用自己的 checkpoint 恢复到第 2 次更新。原 backbone 冻结设置、几何计算、损失、梯度裁剪和 AdamW 均保留。实测显式使用 `--msda-backend cuda-compatible`，默认精度仍是 FP32。BF16 禁用 autocast 权重缓存，实际记录到 Conv/Linear 的 BF16 激活，以及 FP32 主权重、参与更新的梯度和 Adam 状态。

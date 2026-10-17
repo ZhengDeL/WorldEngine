@@ -81,6 +81,8 @@ At the October 13 22:44 snapshot, perception training was still active. The late
 
 Use an idle logical device and a new output directory. The following mounts source read-only and uses the pinned image; it downloads no data. The full-shape probe invokes the same public validator functions with original H8/C32/Q40000 shapes.
 
+The following probe command reproduces the historical `858f9d…` snapshot and its locked source/image; it is not a current-checkout acceptance command. For the current optional backend, use the [fixed-input portable checker](../tools/validation/README_npu_cuda_msda.md).
+
 ```bash
 IMAGE=local/worldengine:26.1.0-a3-clean-20261013
 EXPECTED=sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f

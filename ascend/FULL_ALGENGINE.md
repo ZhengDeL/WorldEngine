@@ -1,6 +1,6 @@
 # AlgEngine Ascend 910C Validation Report
 
-Assessment updated: October 17, 2026. Earlier results retain their recorded source and image.
+Assessment updated: October 18, 2026. Earlier results retain their recorded source and image.
 
 [Chinese validation report](VALIDATION_zh.md) · [Installation and operation guide](../docs/algengine_ascend.md) · [Versioned evidence](results/)
 
@@ -13,6 +13,28 @@ SimEngine deployment on NPU is outside the assessed scope.
 The CUDA-compatible NPU backend completed VADv2 and HydraMDP training, own-checkpoint restoration, independent inference and official CPU scoring in FP32 and BF16. The measured configuration uses four ranks per group and two updates, with eight actual training anchors from the configured NAVTRAIN139 subset and the same 22 held-out evaluation anchors.
 
 Earlier 16-rank, eight-update reference-backend comparisons completed outside their original replay tolerances. Those records remain valid historical limits. The new short functional chain and separate private-candidate two-update positive control do not close longer strict replay, full NAVTRAIN convergence, full NAVTEST quality or untested genuine synthetic-input configurations.
+
+## FP32 same-prefix resume control (October 18, 2026)
+
+[Full result](results/cuda-compatible-fp32-strict16-resume2-20261018.json). Public source `3d46c07f4ff0` (245 Python files), `cuda-compatible` MSDA, 16 ranks with batch 1 per rank (global batch 16), workers 0, and a two-update horizon. A continuous run saved updates 1 and 2; a fresh process resumed that same run’s update-1 checkpoint and completed update 2. The first update is shared by construction, so the numerical control tests continuation from that checkpoint rather than independent initialization.
+
+| Model | Model tensors: torch.equal / total | All compared tensors: torch.equal / total | Max model / all absolute difference | Max loss difference | Original gates |
+|---|---:|---:|---:|---:|---|
+| VADv2 | 889 / 889 | 1698 / 1698 | 0 / 0 | 0 | within tolerance |
+| HydraMDP | 909 / 909 | 1778 / 1778 | 0 / 0 | 0 | within tolerance |
+
+The original comparator retains tensor `atol=1e-6`, `rtol=1e-5` and loss difference strictly below `1e-4`. Its equality count uses `torch.equal`; it does not establish tensor-byte or serialized checkpoint-file identity. Common model and Adam state are saved by rank 0; the all-tensor count additionally includes the final CPU/NPU RNG tensors for all 16 ranks. It is not a dump of every rank’s full final model. Each completed model has 16 exact full-state restores, 64 classified four-state RNG restoration events and 48 downloaded training records. All original participating gradients and Adam states were checked by parameter name, shape, optimizer group position and FP32 finite values.
+
+The data configuration contains 139 training anchors. Actual unique current-anchor counts are VADv2: 32, HydraMDP: 32; the union across completed models is 32. Counts use the last token of each history queue. This control adds no inference or NAVSIM scoring result. Two updates remain within the original 500-update warmup and do not establish convergence, quality, independent-initialization reproducibility or an eight-update fix. Historical completed eight-update numerical negatives remain separate evidence.
+
+Full-state resume requires the checkpoint’s exact source, precision, topology and training-horizon contract. The measured device runs retain the source identity recorded above. Later validation or CLI fixes can change a checkout’s source fingerprint even when model formulas remain unchanged; that newer checkout is not interchangeable for full-state resume. Read-only CPU artifact comparisons may use a separately identified validation-tool version.
+
+A separately identified, stricter CPU validator rechecked the same saved artifacts for shape/dtype, finite tensors and records, complete update sequences and full contract-sized RNG coverage. Its receipts and unchanged-checkpoint hashes are recorded separately from the original comparator results.
+
+
+### Source and checkpoint version contract
+
+The validation, CLI and data-path revision has source fingerprint `40997952fdc9` (245 Python files); the device control above was measured on `3d46c07f4ff0` (245 files). The MSDA core is unchanged, while the six reviewed source changes make these different full-state resume contracts. Use the exact source, precision, topology and horizon recorded by a checkpoint for full resume; official planning weights can still initialize a fresh run. Read-only CPU comparison uses the separately identified `ba855451…` validator. Its six-method public CPU regression suite is [reproducible](../tools/validation/test_validation_guards.py).
 
 ## CUDA-compatible model validation — October 17, 2026
 
@@ -33,7 +55,7 @@ All eight original training containers completed with exit0, and 32 rank-stage r
 
 A metadata lookup error in the orchestration controller was preserved after all eight model jobs had finished. An independent read-only CPU reconciliation supplied the missing Hydra model-state count and rechecked the existing eight checkpoints, 112 rank evidence files, eight launch records and five original control records by whole-file SHA before and after. It did not rerun training or modify the production source. The result keeps the original controller error and the successful reconciliation as separate evidence. Model-process time and CPU-reconciliation time are labeled separately.
 
-These two updates are inside the original 500-update warmup. The scores are bounded functional measurements; score differences do not establish quality improvement or FP32/BF16 quality equivalence. This run does not replace the original 16-rank/global16 strict replay, full-data training, long-run convergence or the untested genuine synthetic-producer configurations. Existing strict numerical replay limits remain open.
+These two updates are inside the original 500-update warmup. The scores are bounded functional measurements; score differences do not establish quality improvement or FP32/BF16 quality equivalence. This run does not replace the earlier eight-update 16-rank/global16 replay, full-data training, long-run convergence or the untested genuine synthetic-producer configurations. Existing strict numerical replay limits remain open.
 
 ## CUDA-compatible MSDA — October 17, 2026
 
@@ -204,6 +226,8 @@ run is not included in this baseline result. Evidence: [complete BF16 v7
 short-run record](results/bf16-v7-navtrain139-short8-20261016.json) and
 [all-rank/saved-Adam coverage verification](results/bf16-v7-gradient-coverage-20261016.json).
 
+In that historical coverage JSON, `actual_train_anchors=139` records the configured subset inventory. The field name is inaccurate: it is not a token-derived count of distinct anchors consumed by training. The original artifact is retained; current controls report configured inventory and actual consumed anchors separately.
+
 ## Real-log fine-tuning: BF16 v7
 
 The original 50% rare-log configurations used the separate NAVTEST-derived
@@ -217,12 +241,12 @@ Each completed continuous updates 0–8 and a fresh-process restore of that
 run's own update-4 checkpoint through update 8. There was no separate partial
 training run or initializer-baseline inference. All four training jobs, 64
 rank reports and 32 exact-restoration reports passed. Both original strict
-comparisons were bitwise equal at the unchanged tensor/loss tolerances.
+comparisons were elementwise equal (`torch.equal`) at the unchanged tensor/loss tolerances.
 
 | Configuration | Model / complete tensor comparison | Maximum tensor / loss difference | Independent evaluation |
 | --- | --- | --- | --- |
-| VADv2 rare-log LoRA/reward, BF16 v7 | 989/989; 1321/1321 bitwise equal | 0 / 0 | Complete 22-anchor inference and original NAVSIM scoring; PDMS 0.8631407605887709 |
-| HydraMDP rare-log LoRA+PG, BF16 v7 | 989/989; 1261/1261 bitwise equal | 0 / 0 | [October 17 follow-up](results/hydra-ft37-bf16-eval22-20261017.json): complete 22-anchor inference and official scoring, PDMS 0.9338557270555728; the original interrupted attempt is retained |
+| VADv2 rare-log LoRA/reward, BF16 v7 | 989/989; 1321/1321 elementwise equal (`torch.equal`) | 0 / 0 | Complete 22-anchor inference and original NAVSIM scoring; PDMS 0.8631407605887709 |
+| HydraMDP rare-log LoRA+PG, BF16 v7 | 989/989; 1261/1261 elementwise equal (`torch.equal`) | 0 / 0 | [October 17 follow-up](results/hydra-ft37-bf16-eval22-20261017.json): complete 22-anchor inference and official scoring, PDMS 0.9338557270555728; the original interrupted attempt is retained |
 
 The complete tensor counts include per-rank RNG tensors. The original Hydra progress
 counter was not a saved prediction count; no complete 22-token prediction or
@@ -533,7 +557,7 @@ elements. Native grid-sampler device execution was observed.
 
 | Mechanism | Implemented behavior and boundary |
 | --- | --- |
-| NPU attention compatibility | NPU-native grid sampling and first-order backward retain the MMCV reference coordinate convention, zero padding and reduction semantics. Legacy projected-L4/actual-L1 input uses the restricted CUDA-source flat-prefix interpretation; actual GPU parity is untested. |
+| NPU attention compatibility | The historical reference route uses NPU-native grid sampling and first-order backward for the MMCV CPU32 target, including the legacy flat-prefix layout. Those historical measurements do not establish CUDA parity. The optional CUDA-compatible backend has separate complete-tensor CUDA evidence for normal and legacy layouts; see the [numerical evidence](MSDA_CUDA.md#numerical-evidence-and-acceptance). |
 | ResNet MaxPool | Uses the differentiable NPU-dispatched PyTorch path instead of the SDK forward-only fusion. |
 | Complete checkpoints | Preserve model, optimizer, per-rank RNG, sampling/LR progress and source/image/data/precision contracts. Exact-state continuation requires workers 0; exact loading and subsequent numerical replay are separate checks. |
 | CPU checkpoint comparison | Uses the installed official Torch-NPU serialization registration before loading legacy NPU storage on CPU, without NPU initialization; original numerical thresholds remain unchanged. |

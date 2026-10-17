@@ -52,6 +52,70 @@ The original CUDA and CPU32 mathematical implementations can choose different bo
 
 The public [CUDA golden exporter](../tools/validation/README_export_cuda_msda_goldens.md) and [NPU checker](../tools/validation/README_npu_cuda_msda.md) were also executed end to end: a fresh original CUDA export, complete 16-file transfer and both actual public NPU entries. All 64 CUDA tensor comparisons passed; the separate CPU32 target retained eight within tolerance and eight outside. The checker verified all 16 input files before and after execution. Source, backend and original tolerances remained unchanged.
 
+## FP32 same-prefix resume control (October 18, 2026)
+
+[Full result](results/cuda-compatible-fp32-strict16-resume2-20261018.json). Public source `3d46c07f4ff0` (245 Python files), `cuda-compatible` MSDA, 16 ranks with batch 1 per rank (global batch 16), workers 0, and a two-update horizon. A continuous run saved updates 1 and 2; a fresh process resumed that same run’s update-1 checkpoint and completed update 2. The first update is shared by construction, so the numerical control tests continuation from that checkpoint rather than independent initialization.
+
+| Model | Model tensors: torch.equal / total | All compared tensors: torch.equal / total | Max model / all absolute difference | Max loss difference | Original gates |
+|---|---:|---:|---:|---:|---|
+| VADv2 | 889 / 889 | 1698 / 1698 | 0 / 0 | 0 | within tolerance |
+| HydraMDP | 909 / 909 | 1778 / 1778 | 0 / 0 | 0 | within tolerance |
+
+The original comparator retains tensor `atol=1e-6`, `rtol=1e-5` and loss difference strictly below `1e-4`. Its equality count uses `torch.equal`; it does not establish tensor-byte or serialized checkpoint-file identity. Common model and Adam state are saved by rank 0; the all-tensor count additionally includes the final CPU/NPU RNG tensors for all 16 ranks. It is not a dump of every rank’s full final model. Each completed model has 16 exact full-state restores, 64 classified four-state RNG restoration events and 48 downloaded training records. All original participating gradients and Adam states were checked by parameter name, shape, optimizer group position and FP32 finite values.
+
+The data configuration contains 139 training anchors. Actual unique current-anchor counts are VADv2: 32, HydraMDP: 32; the union across completed models is 32. Counts use the last token of each history queue. This control adds no inference or NAVSIM scoring result. Two updates remain within the original 500-update warmup and do not establish convergence, quality, independent-initialization reproducibility or an eight-update fix. Historical completed eight-update numerical negatives remain separate evidence.
+
+Full-state resume requires the checkpoint’s exact source, precision, topology and training-horizon contract. The measured device runs retain the source identity recorded above. Later validation or CLI fixes can change a checkout’s source fingerprint even when model formulas remain unchanged; that newer checkout is not interchangeable for full-state resume. Read-only CPU artifact comparisons may use a separately identified validation-tool version.
+
+A separately identified, stricter CPU validator rechecked the same saved artifacts for shape/dtype, finite tensors and records, complete update sequences and full contract-sized RNG coverage. Its receipts and unchanged-checkpoint hashes are recorded separately from the original comparator results.
+
+
+### Reproduce the same-prefix control
+
+Select the matching official100 config and initializer for one model. Reproduce the recorded measurement with its exact source/image/data versions; complete each pair within the same checkout. These commands create a new continuous prefix rather than loading a checkpoint from another source version.
+
+```bash
+set -euo pipefail
+: "${WORLDENGINE_ROOT:?Set the public checkout}"
+: "${PREPARED139:?Set the validated NAVTRAIN139 prepared directory}"
+: "${VOCAB:?Set test_8192_kmeans.npy}"
+: "${MAPS:?Set the NuPlan maps directory}"
+: "${IMAGE:?Set the dependency image}"
+: "${EXPECTED_IMAGE_ID:?Set the verified image ID}"
+: "${CONFIG:?Set the VADv2 or HydraMDP official100 config}"
+: "${INITIALIZER:?Set the matching official100 checkpoint}"
+: "${OUTPUT_ROOT:?Set a fresh absolute output directory}"
+: "${MEMORY:?Set the validated container memory limit}"
+: "${CPUS:?Set the validated container CPU limit}"
+: "${PIDS_LIMIT:?Set the validated container task limit}"
+: "${SHM_SIZE:?Set the validated shared-memory limit}"
+test ! -e "$OUTPUT_ROOT"
+mkdir -p "$OUTPUT_ROOT"
+cd "$WORLDENGINE_ROOT"
+continuous="$OUTPUT_ROOT/continuous0to2"
+resumed="$OUTPUT_ROOT/sameprefix_own1to2"
+launcher=(python3 ascend/run_container.py
+  --devices 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+  --mini-prepared "$PREPARED139" --vocab "$VOCAB" --maps "$MAPS"
+  --image "$IMAGE" --expected-image-id "$EXPECTED_IMAGE_ID"
+  --memory "$MEMORY" --cpus "$CPUS" --pids-limit "$PIDS_LIMIT" --shm-size "$SHM_SIZE"
+  --precision fp32 --msda-backend cuda-compatible --deterministic)
+train=(--task train --config "$CONFIG" --checkpoint "$INITIALIZER"
+  --runtime --upstream-schedule --batch-size 1 --workers 0
+  --steps 2 --checkpoint-interval 1 --check-interval 1)
+"${launcher[@]}" "${train[@]}" --output "$continuous"
+test -s "$continuous/iter_1.pth"
+test -s "$continuous/iter_2.pth"
+"${launcher[@]}" "${train[@]}" --resume "$continuous/iter_1.pth" --output "$resumed"
+test -s "$resumed/iter_2.pth"
+```
+
+## Source and checkpoint version contract
+
+The validation, CLI and data-path revision has source fingerprint `40997952fdc9` (245 Python files); the device control above was measured on `3d46c07f4ff0` (245 files). The MSDA core is unchanged, while the six reviewed source changes make these different full-state resume contracts. Use the exact source, precision, topology and horizon recorded by a checkpoint for full resume; official planning weights can still initialize a fresh run. Read-only CPU comparison uses the separately identified `ba855451…` validator. Its six-method public CPU regression suite is [reproducible](../tools/validation/test_validation_guards.py).
+
+The measured `3d46` source is available at commit [4946f15](https://github.com/ZhengDeL/WorldEngine/tree/4946f15dd2073b7c0974bc2335091246a4ec9023). Use a separate checkout of that commit to reproduce or resume those recorded runs. The updated `4099` source can initialize new training; its additional one-update VADv2 check is recorded in the [source regression report](results/source-review-regression-20261018.json). The recorded 16-rank container limits were `MEMORY=256g`, `CPUS=128`, `PIDS_LIMIT=8192`, `SHM_SIZE=8g`; these are test limits, not measured minimum requirements.
+
 ## Training, own-checkpoint resume and inference
 
 On 17 October 2026, the public `cuda-compatible` MSDA entry completed training, own-checkpoint resume, original DDP4 inference and independent official CPU scoring for VADv2 and HydraMDP in both FP32 and BF16. Four disjoint groups each used four ranks and batch size 1 per rank, giving global batch size 4 per group. Each configuration started from its official 100% planning checkpoint, ran update 1, and resumed its own checkpoint to update 2. Original backbone-freeze settings, geometry, losses, gradient clipping and AdamW were retained. The measured runs explicitly set `--msda-backend cuda-compatible`; FP32 remains the default precision. BF16 used disabled autocast weight caching with actual BF16 Conv/Linear activations and FP32 master weights, participating gradients and Adam state.

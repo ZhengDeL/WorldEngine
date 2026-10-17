@@ -80,7 +80,7 @@ def compare(torch, actual, reference, atol, rtol):
     diff = (actual - reference).abs()
     allowed = atol + rtol * reference.abs()
     bad = (~finite) | (diff > allowed)
-    passed = bool(torch.allclose(actual, reference, atol=atol, rtol=rtol, equal_nan=False))
+    passed = bool(finite.all()) and bool(torch.allclose(actual, reference, atol=atol, rtol=rtol, equal_nan=False))
     a64, r64 = actual.double(), reference.double()
     delta64 = (a64 - r64).abs()
     samples = []

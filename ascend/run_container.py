@@ -10,6 +10,28 @@ IMAGE = 'local/worldengine:26.1.0-a3-clean-20261013'
 IMAGE_ID = 'sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f'
 
 
+def _validate_stop_options(args, parser):
+    """Reject stop settings that the selected runner cannot honor."""
+    import math
+    if args.stop_after is not None:
+        if args.steps is None:
+            parser.error('--stop-after requires --steps')
+        if args.stop_after < 1 or args.stop_after > args.steps:
+            parser.error('--stop-after must be between 1 and --steps')
+    if args.duration_seconds is not None:
+        if args.steps is None:
+            parser.error('--duration-seconds requires --steps')
+        if not math.isfinite(args.duration_seconds) or args.duration_seconds <= 0:
+            parser.error('--duration-seconds must be finite and positive')
+    if args.stop_after_epochs is not None:
+        if args.steps is not None:
+            parser.error('--stop-after-epochs requires an epoch schedule without --steps')
+        if args.stop_after_epochs < 1:
+            parser.error('--stop-after-epochs must be positive')
+        if args.epochs is not None and args.stop_after_epochs > args.epochs:
+            parser.error('--stop-after-epochs must not exceed --epochs')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--devices',required=True,help='Comma-separated host logical NPU IDs; they are chips, not server counts')
@@ -55,6 +77,9 @@ def main():
     p.add_argument('--msda-backend',choices=('reference','cuda-compatible'),default='reference',
                    help='FP32 MSDA implementation; preserve the selection for training, resume and inference')
     args=p.parse_args()
+    _validate_stop_options(args, p)
+    if args.inference_after and args.task != 'train':
+        p.error('--inference-after requires --task train')
     if args.train_filter and (args.task!='train' or not args.data_root or args.mini_prepared):
         p.error('--train-filter requires train with --data-root and without --mini-prepared')
     devices=args.devices.split(',')
@@ -173,7 +198,7 @@ def main():
     if args.inference_after:
         profile=args.config.stem if args.config else args.profile
         inference=['ascend/inference.py','--config',f'/output/{profile}_rank0.py',
-                   '--checkpoint',f'/output/iter_{args.steps}.pth','--output','/output/inference','--precision',args.precision,'--msda-backend',args.msda_backend]
+                   '--checkpoint','/output/latest.pth','--output','/output/inference','--precision',args.precision,'--msda-backend',args.msda_backend]
         if args.deterministic:inference+=['--deterministic']
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'

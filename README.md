@@ -30,6 +30,8 @@ SimEngine retains its upstream GPU workflow.
 
 The CUDA-compatible backend completed [VADv2 and HydraMDP in FP32/BF16](ascend/results/cuda-compatible-navtrain139-short2-20261017.json): two updates, full own-checkpoint restoration, DDP4 inference and independent official NAVSIM scoring. Each group used four logical NPUs. The configured official-data subset contains 139 training anchors; these runs consumed the same eight training anchors and evaluated the same 22 held-out anchors. See the [measured commands](ascend/MSDA_CUDA.md#training-own-checkpoint-resume-and-inference).
 
+The [October 18 FP32 control](ascend/results/cuda-compatible-fp32-strict16-resume2-20261018.json) additionally verified VADv2 and HydraMDP with 16 ranks × batch 1: continuous updates 0→2, then a fresh process resuming that same run’s update-1 checkpoint to update 2. All compared tensors satisfy `torch.equal`; maximum tensor and loss differences are zero. This same-prefix control uses 32 distinct current anchors from the configured 139 and adds no inference or scoring result. See the [source and checkpoint boundary](ascend/MSDA_CUDA.md#source-and-checkpoint-version-contract).
+
 The [validation report](ascend/FULL_ALGENGINE.md) retains earlier 16-rank/eight-update controls, completed numerical comparisons outside their original tolerances, BF16 gradient-coverage repairs and real-log fine-tuning results. Full NAVTRAIN convergence, full independent benchmark quality, untested synthetic inputs and general numerical reproducibility remain outside completed acceptance. Performance optimization is a separate workstream.
 
 <div id="top" align="center">

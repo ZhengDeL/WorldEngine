@@ -186,7 +186,7 @@ def compare(actual, reference, atol, rtol, name, spec, inputs):
     delta = (actual - reference).abs()
     threshold = atol + rtol * reference.abs()
     bad = (~finite) | (delta > threshold)
-    passed = bool(torch.allclose(actual, reference, atol=atol, rtol=rtol,
+    passed = bool(finite.all()) and bool(torch.allclose(actual, reference, atol=atol, rtol=rtol,
                                  equal_nan=False))
     a64, r64 = actual.double(), reference.double()
     diff64 = (a64 - r64).abs()

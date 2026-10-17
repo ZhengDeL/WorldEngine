@@ -93,6 +93,8 @@ VADv2、Hydra 和 DiffusionDrive 的三个代表性断点均完成独立推理�
 
 在服务器进入当前仓库，使用空闲逻辑 NPU 和新输出目录，按 [英文说明中的完整 Docker 命令](MSDA.md#repeat-the-strict-gates-on-the-server)执行。三个脚本分别生成普通、地图特殊布局和完整 Q40000 结果：
 
+以下 probe 命令对应历史 `858f9d…` 快照及其锁定源码／镜像，不作为当前检出版本的验收命令。当前可选后端使用[固定输入的公开检查工具](../tools/validation/README_npu_cuda_msda_zh.md)。
+
 ```bash
 python ascend/validate_msda.py --output /output/strict_matrix.json
 python ascend/validate_msda_layout.py --output /output/msda_layout.json
