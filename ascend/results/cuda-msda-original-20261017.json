@@ -1,0 +1,1914 @@
+{
+  "result": "completed_original_CUDA_MSDA_outside_original_gates_not_attributed",
+  "validator_sha256": "af7309e616f9a02648f9a5b35f8960ea97f51e108b1915bca7843448bd733fea",
+  "cases": [
+    {
+      "name": "temporal_B2_full_Q40000_H8_C32_P4",
+      "batch": 2,
+      "queries": 40000,
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29
+    },
+    {
+      "name": "actual_Q65536_H8_C32_P4_seed29",
+      "batch": 1,
+      "queries": 65536,
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29
+    }
+  ],
+  "requested_device": "cuda:0",
+  "repetitions": 4,
+  "CPU_threads": 4,
+  "maximum_seconds": 300,
+  "strict_deterministic_requested": true,
+  "external_CUDA_kernel_deterministic_registration": "unknown_not_established_by_global_flag",
+  "forward_tolerance": {
+    "atol": 2e-05,
+    "rtol": 2e-05
+  },
+  "gradient_tolerance": {
+    "atol": 0.001,
+    "rtol": 0.0001
+  },
+  "expected_original_Python_source": {
+    "CPU_reference": "4ef9c84cb9016a3554b7fd62d35a6e8f8cb440099103679de01fc0491eaf5128",
+    "CUDA_forward": "3608dc1cd24471538c289cfa89d3866f7c496b18c9f00e85c9c1143385a4c332",
+    "CUDA_backward": "7efd29b77fbc5baf6abeb462b2169080c2f0891d17c278c0c09d00cbef0adbb8"
+  },
+  "native_extension_binary_SHA_is_recorded_not_a_portability_gate": true,
+  "native_extension_compilation_source_not_independently_attested": true,
+  "scope": "Installed original MMCV162 CUDA same-input full forward/three-gradient repetitions and unchanged CPU32 reference; no model, training, NPU or cross-platform equivalence claim",
+  "no_CPU_tensor_reads_inside_GPU_repeat_loop": true,
+  "rows": [
+    {
+      "name": "temporal_B2_full_Q40000_H8_C32_P4",
+      "batch": 2,
+      "queries": 40000,
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "CPU_reference_seconds": 1.556407012991258,
+      "input_sha256_before": [
+        "8a64f3a737ec36342f5ba725e7db6d8854e67fcea9a784b1f0addb2290de09c5",
+        "b54b28df86c0f7eb40334b313b8424ce77c109e9c0c6c91e6d9d684863663299",
+        "766d06c4f1f66cc3b767658ba0abf4e489630dfe79d3638696e21f4891417d66",
+        "dcc8d75bffcf0bb917cfb0762bd7282b498291fbbf97faf8053730fe00d7958c",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "c1136e85127732cea4062fef463d8bfeaadd6fbddf4a30ee966719197f44f965"
+      ],
+      "cpu_input_metadata": [
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        }
+      ],
+      "grad_output_metadata": {
+        "shape": [
+          2,
+          40000,
+          256
+        ],
+        "stride": [
+          10240000,
+          256,
+          1
+        ],
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "contiguous": true,
+        "requires_grad": false
+      },
+      "repetitions": 4,
+      "GPU_input_metadata": [
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        },
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            2560000,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        },
+        {
+          "shape": [
+            2,
+            40000,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            1280000,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        }
+      ],
+      "GPU_metadata_tensor_metadata": [
+        {
+          "shape": [
+            1,
+            2
+          ],
+          "stride": [
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            1
+          ],
+          "stride": [
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            2,
+            40000,
+            256
+          ],
+          "stride": [
+            10240000,
+            256,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        }
+      ],
+      "GPU_input_data_ptrs": [
+        140698229669888,
+        140699651538944,
+        140699001421824
+      ],
+      "GPU_repeat_loop_seconds": 0.013634375005494803,
+      "retained_complete_GPU_bytes": 778240000,
+      "GPU_inputs_unchanged_after_all_repetitions": true,
+      "GPU_metadata_and_grad_output_unchanged_after_all_repetitions": true,
+      "CPU_inputs_unchanged_after_all_repetitions": true,
+      "comparisons_to_original_CPU32": [
+        {
+          "repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 14,
+              "max_absolute_difference": 3.218650817871094e-05,
+              "mean_absolute_difference": 1.064802238238539e-06,
+              "relative_l2": 3.773461703654308e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "f675241950049eef7b5785699cb45a30d262200712dfc4c6189f376c5f233b23"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 3.314018249511719e-05,
+              "mean_absolute_difference": 1.0021684201668067e-06,
+              "relative_l2": 3.776676876515528e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "73ccee944146178815fc88ae132702c64b33fd88b2c30cb8e48133111ecf96c8",
+              "reference_tensor_sha256": "4df211985c78d3d332481a1f5020b5aa63d8caaae2d389403215bddece59ced0"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 10129,
+              "max_absolute_difference": 2411.2860107421875,
+              "mean_absolute_difference": 0.0012029560533915798,
+              "relative_l2": 0.002207457948422986,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "f8a06130096f49290e97a1f2207bb6a05c6e8ec4e98b35127f4a2a5afc91f90e"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0001697540283203125,
+              "mean_absolute_difference": 3.477979900296191e-06,
+              "relative_l2": 3.77711442934938e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "51c5e50ed0c1794e9d602bc41576df972a1c97b9318c0e300ae4207133e292b8"
+            }
+          }
+        },
+        {
+          "repetition": 1,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 14,
+              "max_absolute_difference": 3.218650817871094e-05,
+              "mean_absolute_difference": 1.064802238238539e-06,
+              "relative_l2": 3.773461703654308e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "f675241950049eef7b5785699cb45a30d262200712dfc4c6189f376c5f233b23"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 3.314018249511719e-05,
+              "mean_absolute_difference": 1.002172953073479e-06,
+              "relative_l2": 3.7766836339365813e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a9f1d18869e2af7e699271d8a3ce711ddb4eb475e638e7c80f4e43c3be4ed24a",
+              "reference_tensor_sha256": "4df211985c78d3d332481a1f5020b5aa63d8caaae2d389403215bddece59ced0"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 10129,
+              "max_absolute_difference": 2411.2860107421875,
+              "mean_absolute_difference": 0.0012029560533915798,
+              "relative_l2": 0.002207457948422986,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "f8a06130096f49290e97a1f2207bb6a05c6e8ec4e98b35127f4a2a5afc91f90e"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0001697540283203125,
+              "mean_absolute_difference": 3.477979900296191e-06,
+              "relative_l2": 3.77711442934938e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "51c5e50ed0c1794e9d602bc41576df972a1c97b9318c0e300ae4207133e292b8"
+            }
+          }
+        },
+        {
+          "repetition": 2,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 14,
+              "max_absolute_difference": 3.218650817871094e-05,
+              "mean_absolute_difference": 1.064802238238539e-06,
+              "relative_l2": 3.773461703654308e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "f675241950049eef7b5785699cb45a30d262200712dfc4c6189f376c5f233b23"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 3.314018249511719e-05,
+              "mean_absolute_difference": 1.0021648998147967e-06,
+              "relative_l2": 3.776678275594482e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "ed879f602bac71559cf0ce580aef12ee8c83a00d8c1075dfa8d8694976268562",
+              "reference_tensor_sha256": "4df211985c78d3d332481a1f5020b5aa63d8caaae2d389403215bddece59ced0"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 10129,
+              "max_absolute_difference": 2411.2860107421875,
+              "mean_absolute_difference": 0.0012029560533915798,
+              "relative_l2": 0.002207457948422986,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "f8a06130096f49290e97a1f2207bb6a05c6e8ec4e98b35127f4a2a5afc91f90e"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0001697540283203125,
+              "mean_absolute_difference": 3.477979900296191e-06,
+              "relative_l2": 3.77711442934938e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "51c5e50ed0c1794e9d602bc41576df972a1c97b9318c0e300ae4207133e292b8"
+            }
+          }
+        },
+        {
+          "repetition": 3,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 14,
+              "max_absolute_difference": 3.218650817871094e-05,
+              "mean_absolute_difference": 1.064802238238539e-06,
+              "relative_l2": 3.773461703654308e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "f675241950049eef7b5785699cb45a30d262200712dfc4c6189f376c5f233b23"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 3.314018249511719e-05,
+              "mean_absolute_difference": 1.0021723698628436e-06,
+              "relative_l2": 3.77668486267898e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b187b97adcae157eb17bfdcb9c9d61926bcadcd595bfb2ebbb8cf7510b6cc5e6",
+              "reference_tensor_sha256": "4df211985c78d3d332481a1f5020b5aa63d8caaae2d389403215bddece59ced0"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 10129,
+              "max_absolute_difference": 2411.2860107421875,
+              "mean_absolute_difference": 0.0012029560533915798,
+              "relative_l2": 0.002207457948422986,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "f8a06130096f49290e97a1f2207bb6a05c6e8ec4e98b35127f4a2a5afc91f90e"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0001697540283203125,
+              "mean_absolute_difference": 3.477979900296191e-06,
+              "relative_l2": 3.77711442934938e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "51c5e50ed0c1794e9d602bc41576df972a1c97b9318c0e300ae4207133e292b8"
+            }
+          }
+        }
+      ],
+      "comparisons_to_GPU_repetition0": [
+        {
+          "repetition": 1,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 7.152557373046875e-07,
+              "mean_absolute_difference": 1.2514697491639027e-09,
+              "relative_l2": 1.745568853459941e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a9f1d18869e2af7e699271d8a3ce711ddb4eb475e638e7c80f4e43c3be4ed24a",
+              "reference_tensor_sha256": "73ccee944146178815fc88ae132702c64b33fd88b2c30cb8e48133111ecf96c8"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb"
+            }
+          }
+        },
+        {
+          "repetition": 2,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.76837158203125e-07,
+              "mean_absolute_difference": 1.249485886489765e-09,
+              "relative_l2": 1.7453536548986203e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "ed879f602bac71559cf0ce580aef12ee8c83a00d8c1075dfa8d8694976268562",
+              "reference_tensor_sha256": "73ccee944146178815fc88ae132702c64b33fd88b2c30cb8e48133111ecf96c8"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb"
+            }
+          }
+        },
+        {
+          "repetition": 3,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                2,
+                40000,
+                256
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40",
+              "reference_tensor_sha256": "e068d1b40377d75ac873389bcf9754ddb29c2f4253ab5b8996a7bfa9938d2f40"
+            },
+            "value_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                32
+              ],
+              "elements": 20480000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.76837158203125e-07,
+              "mean_absolute_difference": 1.240552419545793e-09,
+              "relative_l2": 1.7361637070172422e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b187b97adcae157eb17bfdcb9c9d61926bcadcd595bfb2ebbb8cf7510b6cc5e6",
+              "reference_tensor_sha256": "73ccee944146178815fc88ae132702c64b33fd88b2c30cb8e48133111ecf96c8"
+            },
+            "locations_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 5120000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf",
+              "reference_tensor_sha256": "72fa3af92acf78d66a7d866f07fcd35b70498d869b80978c79709e78818befbf"
+            },
+            "weights_gradient": {
+              "shape": [
+                2,
+                40000,
+                8,
+                1,
+                4
+              ],
+              "elements": 2560000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb",
+              "reference_tensor_sha256": "a3f09c3508229d6c047249722b68b76a9c9efb5134dc05aaa2f449a9c1512ccb"
+            }
+          }
+        }
+      ],
+      "all_CPU32_original_gates_passed": false,
+      "all_repeat_original_gates_passed": true,
+      "all_repeat_bitwise_equal": false,
+      "comparison_tensor_count": 28,
+      "seconds": 12.303453640997759
+    },
+    {
+      "name": "actual_Q65536_H8_C32_P4_seed29",
+      "batch": 1,
+      "queries": 65536,
+      "spatial_shapes": [
+        [
+          200,
+          200
+        ]
+      ],
+      "heads": 8,
+      "channels": 32,
+      "points": 4,
+      "seed": 29,
+      "CPU_reference_seconds": 1.379159839998465,
+      "input_sha256_before": [
+        "e3e7d5007f8ec00bf761fc93f2383acaa9b98fe49825c0da352a1702e6c4084a",
+        "cf133cddc921f78a55afa937a8fe8e6842561d31f359c2f908092f1aa4716bb6",
+        "97cf76d6740bf84180095d1f4061f329a1ef1e7d7fb9ab66e925e40e00ff5d13",
+        "dcc8d75bffcf0bb917cfb0762bd7282b498291fbbf97faf8053730fe00d7958c",
+        "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+        "d2bc5377a9f41d14c85c2a3146a389275592690c265d2673e10345f9d8bb617f"
+      ],
+      "cpu_input_metadata": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            1,
+            65536,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            4194304,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            1,
+            65536,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            2097152,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cpu",
+          "contiguous": true,
+          "requires_grad": false
+        }
+      ],
+      "grad_output_metadata": {
+        "shape": [
+          1,
+          65536,
+          256
+        ],
+        "stride": [
+          16777216,
+          256,
+          1
+        ],
+        "storage_offset": 0,
+        "dtype": "torch.float32",
+        "device": "cpu",
+        "contiguous": true,
+        "requires_grad": false
+      },
+      "repetitions": 4,
+      "GPU_input_metadata": [
+        {
+          "shape": [
+            1,
+            40000,
+            8,
+            32
+          ],
+          "stride": [
+            10240000,
+            256,
+            32,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        },
+        {
+          "shape": [
+            1,
+            65536,
+            8,
+            1,
+            4,
+            2
+          ],
+          "stride": [
+            4194304,
+            64,
+            8,
+            8,
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        },
+        {
+          "shape": [
+            1,
+            65536,
+            8,
+            1,
+            4
+          ],
+          "stride": [
+            2097152,
+            32,
+            4,
+            4,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": true
+        }
+      ],
+      "GPU_metadata_tensor_metadata": [
+        {
+          "shape": [
+            1,
+            2
+          ],
+          "stride": [
+            2,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            1
+          ],
+          "stride": [
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        },
+        {
+          "shape": [
+            1,
+            65536,
+            256
+          ],
+          "stride": [
+            16777216,
+            256,
+            1
+          ],
+          "storage_offset": 0,
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "contiguous": true,
+          "requires_grad": false
+        }
+      ],
+      "GPU_input_data_ptrs": [
+        140697021710336,
+        140697738936320,
+        140698531659776
+      ],
+      "GPU_repeat_loop_seconds": 0.008071774005657062,
+      "retained_complete_GPU_bytes": 532938752,
+      "GPU_inputs_unchanged_after_all_repetitions": true,
+      "GPU_metadata_and_grad_output_unchanged_after_all_repetitions": true,
+      "CPU_inputs_unchanged_after_all_repetitions": true,
+      "comparisons_to_original_CPU32": [
+        {
+          "repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 9,
+              "max_absolute_difference": 3.528594970703125e-05,
+              "mean_absolute_difference": 1.0661917723400008e-06,
+              "relative_l2": 3.776033140468772e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "1cc9e18fd8cfa8decbc4a8d65e7f48b8cd3839389cc98abfeca1ee2c49939d1d"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.559755325317383e-05,
+              "mean_absolute_difference": 1.3322701026415196e-06,
+              "relative_l2": 3.7790685580625123e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "368e6a5d7a2d726458318a3befc244c6f0ca6738758df82d63f90952da6ce5bd",
+              "reference_tensor_sha256": "c8f65738daa7495900e63fc79ffc7a169bab9c5fdb8426118430f69ddbc7252c"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 8204,
+              "max_absolute_difference": 1824.4653930664062,
+              "mean_absolute_difference": 0.0007789768349110516,
+              "relative_l2": 0.0016541664491128217,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "e7af239e61a0fd45aa92f6740619376e9d8464849f8d4da0f2039a7867b4286e"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.000179290771484375,
+              "mean_absolute_difference": 3.472301906265636e-06,
+              "relative_l2": 3.7778788406515447e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "645b807c86d034bc6e9dbb89a0a6029d17ddff98574f3a13c66031e2fd40febd"
+            }
+          }
+        },
+        {
+          "repetition": 1,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 9,
+              "max_absolute_difference": 3.528594970703125e-05,
+              "mean_absolute_difference": 1.0661917723400008e-06,
+              "relative_l2": 3.776033140468772e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "1cc9e18fd8cfa8decbc4a8d65e7f48b8cd3839389cc98abfeca1ee2c49939d1d"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.559755325317383e-05,
+              "mean_absolute_difference": 1.3322688334615585e-06,
+              "relative_l2": 3.7790633089864633e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b58f32fef84edeea446c36cd14c1f05091616abce23db25540851df111deba26",
+              "reference_tensor_sha256": "c8f65738daa7495900e63fc79ffc7a169bab9c5fdb8426118430f69ddbc7252c"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 8204,
+              "max_absolute_difference": 1824.4653930664062,
+              "mean_absolute_difference": 0.0007789768349110516,
+              "relative_l2": 0.0016541664491128217,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "e7af239e61a0fd45aa92f6740619376e9d8464849f8d4da0f2039a7867b4286e"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.000179290771484375,
+              "mean_absolute_difference": 3.472301906265636e-06,
+              "relative_l2": 3.7778788406515447e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "645b807c86d034bc6e9dbb89a0a6029d17ddff98574f3a13c66031e2fd40febd"
+            }
+          }
+        },
+        {
+          "repetition": 2,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 9,
+              "max_absolute_difference": 3.528594970703125e-05,
+              "mean_absolute_difference": 1.0661917723400008e-06,
+              "relative_l2": 3.776033140468772e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "1cc9e18fd8cfa8decbc4a8d65e7f48b8cd3839389cc98abfeca1ee2c49939d1d"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.559755325317383e-05,
+              "mean_absolute_difference": 1.3322723501045353e-06,
+              "relative_l2": 3.7790810265578453e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "7ae4392837257edf829a065cbb4c76e6363cdfb632516e91e6b80a93eb74175e",
+              "reference_tensor_sha256": "c8f65738daa7495900e63fc79ffc7a169bab9c5fdb8426118430f69ddbc7252c"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 8204,
+              "max_absolute_difference": 1824.4653930664062,
+              "mean_absolute_difference": 0.0007789768349110516,
+              "relative_l2": 0.0016541664491128217,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "e7af239e61a0fd45aa92f6740619376e9d8464849f8d4da0f2039a7867b4286e"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.000179290771484375,
+              "mean_absolute_difference": 3.472301906265636e-06,
+              "relative_l2": 3.7778788406515447e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "645b807c86d034bc6e9dbb89a0a6029d17ddff98574f3a13c66031e2fd40febd"
+            }
+          }
+        },
+        {
+          "repetition": 3,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 9,
+              "max_absolute_difference": 3.528594970703125e-05,
+              "mean_absolute_difference": 1.0661917723400008e-06,
+              "relative_l2": 3.776033140468772e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "1cc9e18fd8cfa8decbc4a8d65e7f48b8cd3839389cc98abfeca1ee2c49939d1d"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 4.559755325317383e-05,
+              "mean_absolute_difference": 1.3322652640199272e-06,
+              "relative_l2": 3.779063500195415e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b45d62611672f53803b1b954dd17b6821e02a5936caee0eb768b9f9aaeccf6d4",
+              "reference_tensor_sha256": "c8f65738daa7495900e63fc79ffc7a169bab9c5fdb8426118430f69ddbc7252c"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 8204,
+              "max_absolute_difference": 1824.4653930664062,
+              "mean_absolute_difference": 0.0007789768349110516,
+              "relative_l2": 0.0016541664491128217,
+              "bitwise_equal": false,
+              "original_gate_passed": false,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "e7af239e61a0fd45aa92f6740619376e9d8464849f8d4da0f2039a7867b4286e"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.000179290771484375,
+              "mean_absolute_difference": 3.472301906265636e-06,
+              "relative_l2": 3.7778788406515447e-06,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "645b807c86d034bc6e9dbb89a0a6029d17ddff98574f3a13c66031e2fd40febd"
+            }
+          }
+        }
+      ],
+      "comparisons_to_GPU_repetition0": [
+        {
+          "repetition": 1,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 9.5367431640625e-07,
+              "mean_absolute_difference": 2.1609675371792037e-09,
+              "relative_l2": 1.990111828753111e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b58f32fef84edeea446c36cd14c1f05091616abce23db25540851df111deba26",
+              "reference_tensor_sha256": "368e6a5d7a2d726458318a3befc244c6f0ca6738758df82d63f90952da6ce5bd"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b"
+            }
+          }
+        },
+        {
+          "repetition": 2,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 9.5367431640625e-07,
+              "mean_absolute_difference": 2.4316566744175817e-09,
+              "relative_l2": 2.1213696982028482e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "7ae4392837257edf829a065cbb4c76e6363cdfb632516e91e6b80a93eb74175e",
+              "reference_tensor_sha256": "368e6a5d7a2d726458318a3befc244c6f0ca6738758df82d63f90952da6ce5bd"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b"
+            }
+          }
+        },
+        {
+          "repetition": 3,
+          "reference_repetition": 0,
+          "tensors": {
+            "forward": {
+              "shape": [
+                1,
+                65536,
+                256
+              ],
+              "elements": 16777216,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 2e-05,
+              "relative_tolerance": 2e-05,
+              "actual_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1",
+              "reference_tensor_sha256": "e024b399f6fc07a36e7f4e3c13351436bc41fc77a60a8c90c673faf24923f1b1"
+            },
+            "value_gradient": {
+              "shape": [
+                1,
+                40000,
+                8,
+                32
+              ],
+              "elements": 10240000,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 9.5367431640625e-07,
+              "mean_absolute_difference": 2.5434586444106345e-09,
+              "relative_l2": 2.1745647336673393e-08,
+              "bitwise_equal": false,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "b45d62611672f53803b1b954dd17b6821e02a5936caee0eb768b9f9aaeccf6d4",
+              "reference_tensor_sha256": "368e6a5d7a2d726458318a3befc244c6f0ca6738758df82d63f90952da6ce5bd"
+            },
+            "locations_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4,
+                2
+              ],
+              "elements": 4194304,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649",
+              "reference_tensor_sha256": "4bf210196ef98a06c60dc76a9ee1ae31fa9b21dd4616005b5c2de8b48dd6c649"
+            },
+            "weights_gradient": {
+              "shape": [
+                1,
+                65536,
+                8,
+                1,
+                4
+              ],
+              "elements": 2097152,
+              "dtype": "torch.float32",
+              "all_finite": true,
+              "failing_elements": 0,
+              "max_absolute_difference": 0.0,
+              "mean_absolute_difference": 0.0,
+              "relative_l2": 0.0,
+              "bitwise_equal": true,
+              "original_gate_passed": true,
+              "absolute_tolerance": 0.001,
+              "relative_tolerance": 0.0001,
+              "actual_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b",
+              "reference_tensor_sha256": "2f710858731602add8a0fb11ad9aa568e66721918c98a054eaa909dedd631d5b"
+            }
+          }
+        }
+      ],
+      "all_CPU32_original_gates_passed": false,
+      "all_repeat_original_gates_passed": true,
+      "all_repeat_bitwise_equal": false,
+      "comparison_tensor_count": 28,
+      "seconds": 8.154957253995235
+    }
+  ],
+  "started_UTC": "2026-10-17T12:16:16.553180+00:00",
+  "actual_precision_before": {
+    "default_dtype": "torch.float32",
+    "matmul_TF32": false,
+    "cudnn_TF32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "autocast_enabled": false,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "CPU_threads": 4
+  },
+  "source_before": {
+    "extension": "2103019cd5dde4201e0c56e2704dd37946a5c27136e83aa8d1f7915c5cee4d19",
+    "CPU_reference": "4ef9c84cb9016a3554b7fd62d35a6e8f8cb440099103679de01fc0491eaf5128",
+    "CUDA_forward": "3608dc1cd24471538c289cfa89d3866f7c496b18c9f00e85c9c1143385a4c332",
+    "CUDA_backward": "7efd29b77fbc5baf6abeb462b2169080c2f0891d17c278c0c09d00cbef0adbb8",
+    "Python_module_file": "<installed-package>/mmcv/ops/multi_scale_deform_attn.py",
+    "Python_module_sha256": "3933b64b78fa185aaf3406e4fddf2aa97be5758e2963fbcbce81e0359e6a78e7"
+  },
+  "torch_version": "2.0.1+cu118",
+  "CUDA_build": "11.8",
+  "mmcv_version": "1.6.2",
+  "numpy_version": "1.23.4",
+  "device": {
+    "local_index": 0,
+    "name": "NVIDIA H20-3e",
+    "capability": [
+      9,
+      0
+    ],
+    "free_bytes_before": 149769289728,
+    "total_bytes": 150111977472
+  },
+  "actual_environment": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "LD_LIBRARY_PATH": "<redacted runtime library search path>"
+  },
+  "actual_warnings": [],
+  "actual_precision_after": {
+    "default_dtype": "torch.float32",
+    "matmul_TF32": false,
+    "cudnn_TF32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "autocast_enabled": false,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "CPU_threads": 4
+  },
+  "source_after": {
+    "extension": "2103019cd5dde4201e0c56e2704dd37946a5c27136e83aa8d1f7915c5cee4d19",
+    "CPU_reference": "4ef9c84cb9016a3554b7fd62d35a6e8f8cb440099103679de01fc0491eaf5128",
+    "CUDA_forward": "3608dc1cd24471538c289cfa89d3866f7c496b18c9f00e85c9c1143385a4c332",
+    "CUDA_backward": "7efd29b77fbc5baf6abeb462b2169080c2f0891d17c278c0c09d00cbef0adbb8",
+    "Python_module_file": "<installed-package>/mmcv/ops/multi_scale_deform_attn.py",
+    "Python_module_sha256": "3933b64b78fa185aaf3406e4fddf2aa97be5758e2963fbcbce81e0359e6a78e7"
+  },
+  "completed_cases": 2,
+  "full_tensor_comparison_count": 56,
+  "all_CPU32_original_gates_passed": false,
+  "all_repeat_original_gates_passed": true,
+  "all_repeat_bitwise_equal": false,
+  "original_source_unchanged": true,
+  "original_math_or_dropout_modified": false,
+  "peak_allocated_GPU_bytes": 976241664,
+  "actual_exit": 1,
+  "finished_UTC": "2026-10-17T12:16:40.020868+00:00",
+  "public_evidence": {
+    "schema": 1,
+    "status": "completed_bounded_validation",
+    "raw_report_SHA256": "83dc1dc57c0e18f1d9360d87edc78d33d70214254a5b4343502708b8dae662d0",
+    "redaction_method": "Copy the complete original JSON. Replace only the two installed Python module path strings and the complete LD_LIBRARY_PATH string; no original numeric value, comparison, flag, source hash or other field is changed.",
+    "redacted_JSON_paths": [
+      "source_before.Python_module_file",
+      "source_after.Python_module_file",
+      "actual_environment.LD_LIBRARY_PATH"
+    ],
+    "actual_parent_summary_SHA256": "4cc8ae78b66b0fe704ce896a81ab2961d791f205a40cf47618b702f7f28922d1",
+    "actual_parent_watchdog_SHA256": "04619177376d7d873a21bd758e21cb90e0dda13d575a9f3ffb43f8fbb74f5164",
+    "actual_parent_portable_exit": 1,
+    "owned_processes_remaining": 0,
+    "watchdog_result": "normal_stop_no_deadline_trigger",
+    "independent_reproduction_audit_SHA256": "48656ff44661ca334d8719bb5b012c18564b14c5dfbf92bfd51a674bbcb6e785",
+    "all6_input_and_all4_CPU32_Tensor_SHA256_match_original_report": true,
+    "original_report_SHA256": "ea4d82ef0c70cafadf46d6b6af7653a962f774fce4ba316cbf36245fbea6fe3d",
+    "normal_L1_only": true,
+    "special_raw_L4_spatial_L1_GPU_tested": false,
+    "new_NPU_execution": false,
+    "numeric_result_is_not_all_gates_pass": true,
+    "identified_by_containing_git_commit": true
+  }
+}

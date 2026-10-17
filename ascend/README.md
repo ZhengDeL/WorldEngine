@@ -94,8 +94,11 @@ environment. It does not establish sustained training in the current image.
 A separate [official100 GPU/NPU FP32 comparison](results/gpu-npu-official100-eval22-20261016.json)
 matched both models' selected trajectories and all seven per-token official-score
 metrics on the same 22 anchors.
+The [original CUDA baseline](CUDA_BASELINE.md) records full MSDA gradients and
+eight-GPU short training/resume controls, including completed comparisons outside
+the unchanged numerical gates. It does not resolve NPU training reproducibility.
 Complete NAVTRAIN image training/convergence, full independent NAVTEST,
-GPU training, broader cross-precision quality validation, repeated numerical reproducibility and multi-node scaling
+paired GPU/NPU training validation, broader cross-precision quality validation, repeated numerical reproducibility and multi-node scaling
 remain separate acceptance items. See the [validation report](FULL_ALGENGINE.md).
 
 Report issues with the source commit/fingerprint, image ID, config, precision,

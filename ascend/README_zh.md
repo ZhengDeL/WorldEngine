@@ -52,6 +52,6 @@
 
 早期 `cc91…`/243文件源码、post8/3fef镜像的16 rank同步基座对照共四组，两组在原容差内、两组超限；默认执行环境的已完成对照也有超出原数值容差的结果。同步设置尚不能作为通用数值修复。2026-10-14公开镜像的 LoRA 实测见[独立记录](results/actual-public-reproduction-16chip-20261014.json)；当时镜像的16项依赖提示不代表本次修复镜像的 CPU 结果。
 
-八小时感知训练属于较早的 `858f9d…`/post6环境，不能归到当前镜像。[官方100权重GPU／NPU FP32对照](results/gpu-npu-official100-eval22-20261016.json)中，两模型在同22锚点的选择轨迹和七项逐token官方指标一致。完整NAVTRAIN图像训练与收敛、完整独立NAVTEST、GPU训练、更广范围的跨精度质量验证、重复数值复现和多机扩展仍需单独验收，详见[验证报告](VALIDATION_zh.md)。
+八小时感知训练属于较早的 `858f9d…`/post6环境，不能归到当前镜像。[官方100权重GPU／NPU FP32对照](results/gpu-npu-official100-eval22-20261016.json)中，两模型在同22锚点的选择轨迹和七项逐token官方指标一致。[原CUDA基线](CUDA_BASELINE_zh.md)补充完整MSDA梯度及八GPU短周期训练、恢复对照；完整比较中仍有数值超出原门槛，未解决NPU训练严格复现问题。完整NAVTRAIN图像训练与收敛、完整独立NAVTEST、成对GPU／NPU训练验证、更广范围的跨精度质量验证、重复数值复现和多机扩展仍需单独验收，详见[验证报告](VALIDATION_zh.md)。
 
 提交问题时请提供源码提交/指纹、镜像 ID、配置、精度、逻辑芯片映射、数据 split、命令、`launch.json`、各 rank runtime文件及比较报告，并移除凭据与私有数据路径。

@@ -34,8 +34,8 @@ original NAVSIM scoring. Both official 100% planning configurations completed
 [the prior 138 gradient/Adam coverage omissions restored per model](ascend/results/bf16-v7-gradient-coverage-20261016.json). Both complete replay
 comparisons still exceeded the original tolerances. BF16 remains experimental;
 the defective v6 execution record is retained separately. Historical
-small-data model results are versioned separately. A separate [official100 GPU/NPU FP32 comparison](ascend/results/gpu-npu-official100-eval22-20261016.json) matched both models' selected trajectories and all seven per-token official-score metrics on the same 22 anchors. Full NAVTRAIN convergence,
-full independent benchmark quality, GPU training, broader cross-precision quality validation and general numerical
+small-data model results are versioned separately. A separate [official100 GPU/NPU FP32 comparison](ascend/results/gpu-npu-official100-eval22-20261016.json) matched both models' selected trajectories and all seven per-token official-score metrics on the same 22 anchors. The [original CUDA baseline](ascend/CUDA_BASELINE.md) adds complete MSDA gradients and eight-GPU short training/resume measurements; completed comparisons include values outside the unchanged numerical gates. Full NAVTRAIN convergence,
+full independent benchmark quality, paired GPU/NPU training validation, broader cross-precision quality validation and general numerical
 reproducibility remain outside completed acceptance.
 
 The separate [BF16 v7 rare-log fine-tuning record](ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) contains two bitwise replay comparisons on 37/22 real-log data, one complete VAD evaluation chain and an interrupted Hydra evaluation; it does not extend the NAVTRAIN139 result.

@@ -4,6 +4,8 @@
 
 The tested FP32 MSDA location-gradient path passes the original CPU32 tolerance. The original full-module report remains historical evidence for source fingerprint `96a7bef…`; its hour-long throughput and memory numbers are not measurements of this implementation.
 
+The [October 17 original CUDA baseline](CUDA_BASELINE.md) adds full forward/three-gradient measurements on two normal L1 shapes and original eight-GPU training controls. The CUDA extension itself contains elements outside the unchanged CPU32 gates on these inputs. This does not invalidate the recorded NPU-to-CPU32 results or establish matched-input CUDA/NPU gradient agreement.
+
 The recorded runtime fingerprint is `858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d` (242 Python files: recursive AlgEngine Python plus top-level Ascend Python; CRLF normalized to LF). The normal and layout validators are included. Supplemental probe files have their own SHA256 in the result. The locked runtime image is `local/worldengine:26.1.0-a3-clean-20261013`, ID `sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f`.
 
 ## Implementation
@@ -18,7 +20,7 @@ The original `200×200/Q300/H8/C32/seed29` location-gradient case recorded **0/1
 
 ## Original map layout
 
-The original map head projects four location/weight levels while supplying one BEV level. In [MMCV 1.7.2 CUDA host](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/pytorch/cuda/ms_deform_attn_cuda.cu) and [kernel indexing](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/common/cuda/ms_deform_attn_cuda_kernel.cuh), the actual spatial level count determines raw-buffer strides. We infer a **global flat-prefix** interpretation across batch/query/head from these sources. No GPU device was available to measure this behavior.
+The original map head projects four location/weight levels while supplying one BEV level. In [MMCV 1.7.2 CUDA host](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/pytorch/cuda/ms_deform_attn_cuda.cu) and [kernel indexing](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/common/cuda/ms_deform_attn_cuda_kernel.cuh), the actual spatial level count determines raw-buffer strides. We infer a **global flat-prefix** interpretation across batch/query/head from these sources. The historical layout experiment did not measure complete CUDA and NPU outputs and gradients from the same serialized inputs. The October 17 normal-L1 CUDA tests do not establish this mismatched-level layout result.
 
 The installed SDK forward experiment instead matched a per-query prefix and differed from that CUDA-source interpretation. Therefore preserving the earlier SDK result would preserve a different storage interpretation. The new MMCV compatibility path retains original checkpoint/projection sizes and the inferred CUDA flat prefix. It only accepts actual L1/projected L4, H8/P4/C32 and contiguous floating inputs; other mismatched level counts are rejected. It is selected by this layout structure, not by a module name. Unused raw location/weight tails receive exactly zero gradients. The SDK experiment is a forward-only diagnostic, not a GPU comparison or a complete SDK backward characterization.
 
@@ -39,7 +41,7 @@ The installed SDK forward experiment instead matched a per-query prefix and diff
 | Complete checkpoint CPU audit | 45/45 distinct checkpoint paths passed model/optimizer finiteness, source/counter/RNG checks |
 | Representative planning inference and official scoring | VADv2, Hydra and DiffusionDrive each passed 22 unique independent anchors and official CPU score coverage |
 
-The normal matrix also covers multiple seeds, four feature levels, nonsquare shapes, B2/B8, boundaries/adjacent FP32 values, size-one axes, noncontiguous inputs/gradients and varied attention weights. Original model regressions retain 200×200 BEV, 900 tracking queries and eight cameras. Complete acceptance of all eight genuine synthetic configurations, full NAVTRAIN convergence, full-image training RAM/I/O/time and GPU comparison remain separate. [Subset preparation tools](data_tools/README.md) report bounded results for two synthetic configurations.
+The normal matrix also covers multiple seeds, four feature levels, nonsquare shapes, B2/B8, boundaries/adjacent FP32 values, size-one axes, noncontiguous inputs/gradients and varied attention weights. Original model regressions retain 200×200 BEV, 900 tracking queries and eight cameras. Complete acceptance of all eight genuine synthetic configurations, full NAVTRAIN convergence, full-image training RAM/I/O/time, matched-input full-tensor CUDA/NPU MSDA comparisons and paired training/quality validation remain separate. The bounded [official-weight FP32 model comparison](results/gpu-npu-official100-eval22-20261016.json) and [original CUDA operator/training baseline](CUDA_BASELINE.md) have separate scopes. [Subset preparation tools](data_tools/README.md) report bounded results for two synthetic configurations.
 
 ## Source858 training and continuation
 

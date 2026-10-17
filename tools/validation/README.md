@@ -14,6 +14,13 @@ finite floating NumPy `trajectory` of shape `(40, 3)` and integer `chosen_ind`.
 The restricted loader rejects Torch storages and arbitrary pickle globals.
 Use trusted experiment exports, and retain their original hashes.
 
+## Original CUDA MSDA baseline
+
+The separate [CUDA MSDA validator](README_cuda_msda.md) ([中文](README_cuda_msda_zh.md))
+checks complete operator outputs/gradients with the original CPU32 and repeated
+native gates. See the [measured CUDA operator and training baseline](../../ascend/CUDA_BASELINE.md)
+([中文](../../ascend/CUDA_BASELINE_zh.md)); numerical negatives remain explicit.
+
 ## Compare trajectories and original scores
 
 First produce each arm's predictions with the

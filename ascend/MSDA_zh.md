@@ -4,6 +4,8 @@
 
 FP32 路径的位置梯度门禁已通过，原容差未改。本文说明 NPU 原生采样实现及对应实测。原报告中 `96a7bef…` 指纹、一小时 428 更新和内存/吞吐属于历史版本，本文模型实测对应下述 `858f9d…` 版本。
 
+[10 月 17 日原 CUDA 基线](CUDA_BASELINE_zh.md)补充了两个普通 L1 大形状的完整前向／三种梯度及原八 GPU 训练对照。原 CUDA 扩展在这些输入上也有元素超出未修改的 CPU32 门槛。这不推翻已记录的 NPU 对 CPU32 结果，也不能证明同输入 CUDA／NPU 梯度已经对齐。
+
 2026 年 10 月 13 日 22:44 的历史快照中，VADv2、HydraMDP 的八 rank 断点恢复均成功执行，**后续两项比较均有 Tensor 超出原容差**，结果见下文及[对应 JSON](evidence/eight-rank-resume-20261013-evening.json)。MSDA 算子门禁和此前单 rank 重放通过的结论仍有效。当时感知长训尚在运行；此后完成的[旧源码/post6 八小时记录](results/eight-hour-perception-stability-20261014.json)另行发布，不能作为当前 cc91/post8 的长训验收。
 
 实测代码指纹为 `858f9d01181d3d62c35d0635881b22c62daf1a5f5af8123f622055de05da422d`，覆盖 AlgEngine 递归 Python 和 ascend 顶层 Python 共 242 个文件，CRLF 统一为 LF；两个普通/布局验证脚本包含在内。补充 probe 脚本另外记录 SHA256。沿用固定干净镜像 `local/worldengine:26.1.0-a3-clean-20261013`，ID 为 `sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f`。
@@ -20,7 +22,7 @@ MMCV 和 mx_driving 的实际 FP32 入口使用同一实现。算子内部关闭
 
 判定规则仍是 `绝对误差 <= atol + rtol × |参考值|`：前向 **atol=2e-5、rtol=2e-5**；value、位置、权重三种梯度均为 **atol=1e-3、rtol=1e-4**。所有元素均检查，CPU64 仅用于诊断，不能替换 CPU32 参考。
 
-早期超容差用例 `200×200、Q300、H8、C32、seed29` 的位置梯度超差元素由 **35/19200** 减至 **0/19200**，最大绝对误差为 **0.001220703125**，通过原绝对与相对联合容差。结果未达到逐位相同，GPU fused 算子对照也尚未实测。
+早期超容差用例 `200×200、Q300、H8、C32、seed29` 的位置梯度超差元素由 **35/19200** 减至 **0/19200**，最大绝对误差为 **0.001220703125**，通过原绝对与相对联合容差。结果未达到逐位相同；该 CPU32 对照本身不能证明 GPU fused 算子对应性。
 
 | 已执行验证 | 实际结果 |
 |---|---|
@@ -81,7 +83,7 @@ VADv2、Hydra 和 DiffusionDrive 的三个代表性断点均完成独立推理�
 
 ## 原地图头的特殊布局
 
-完整模型回归发现，原地图头投影四个 level，空间输入却只有单层 BEV。[MMCV 1.7.2 CUDA host](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/pytorch/cuda/ms_deform_attn_cuda.cu) 与 [kernel 索引](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/common/cuda/ms_deform_attn_cuda_kernel.cuh) 使用实际空间 level 数确定连续原始缓冲区步长，据此推断原 CUDA 采用跨 batch/query/head 的全局扁平前缀。该解释来自源码，尚无 GPU 实机对照。
+完整模型回归发现，原地图头投影四个 level，空间输入却只有单层 BEV。[MMCV 1.7.2 CUDA host](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/pytorch/cuda/ms_deform_attn_cuda.cu) 与 [kernel 索引](https://github.com/open-mmlab/mmcv/blob/v1.7.2/mmcv/ops/csrc/common/cuda/ms_deform_attn_cuda_kernel.cuh) 使用实际空间 level 数确定连续原始缓冲区步长，据此推断原 CUDA 采用跨 batch/query/head 的全局扁平前缀。该历史布局实验未用同一批序列化输入完成 CUDA 与 NPU 的完整输出、梯度对照；10 月 17 日普通 L1 CUDA 测试不替代这项 level 不一致布局的验证。
 
 已安装 SDK 的固定输入前向实验符合逐 query 前缀，与上述 CUDA 源码解释不同。新实现保留原参数、checkpoint 投影尺寸和推断的 CUDA 存储解释，仅在 MMCV 实际 L1/投影 L4、H8/P4/C32、连续浮点输入条件下启用；其他 level 矛盾会被拒绝。实现按布局结构判断，不按模块名称匹配。梯度返回原 L4 形状，未访问尾部精确为零。旧 SDK 诊断仅检查前向，未验证其完整后向或 GPU/NPU 对照。
 
@@ -99,7 +101,7 @@ python ascend/probes/full_shape_gate_probe.py --output /output/full_shape_gate.j
 
 命令须在固定 NPU 镜像和环境中运行，并核对整体退出码 0 及报告中的每项结果。真实训练、原生 epoch、完整断点续训和独立评价见 [中文操作文档](README_zh.md)。完整续训会检查源码、原配置、数据、拓扑、优化器/LR 和镜像；旧源码断点不能直接作为新源码完整续训的输入。
 
-完整 NAVTRAIN 收敛、八个真实合成配置的完整验收、图像训练 RAM/I/O/工期及 GPU 对照仍未完成。[子集工具](data_tools/README_zh.md)另有两个合成配置的小数据结果。本文保留八 rank 超容差记录；当前 16 rank 默认执行和同步候选的结果见[最新实测概况](README_zh.md)。算子通过不构成整套 AlgEngine 正式验收。
+完整 NAVTRAIN 收敛、八个真实合成配置的完整验收、全图像训练 RAM/I/O/工期、同输入完整张量的 CUDA／NPU MSDA 对照及成对训练／质量验证仍需单独验收。[官方权重 FP32 模型对照](results/gpu-npu-official100-eval22-20261016.json)和[原 CUDA 算子／训练基线](CUDA_BASELINE_zh.md)各有明确范围。[子集工具](data_tools/README_zh.md)另有两个合成配置的小数据结果。本文保留八 rank 超容差记录；当前 16 rank 默认执行和同步候选的结果见[最新实测概况](README_zh.md)。算子通过不构成整套 AlgEngine 正式验收。
 
 ## CPU 严格重放对照
 
