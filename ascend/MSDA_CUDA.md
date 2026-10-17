@@ -69,10 +69,12 @@ Full-state resume requires the checkpoint’s exact source, precision, topology 
 
 A separately identified, stricter CPU validator rechecked the same saved artifacts for shape/dtype, finite tensors and records, complete update sequences and full contract-sized RNG coverage. Its receipts and unchanged-checkpoint hashes are recorded separately from the original comparator results.
 
+The recorded comparison used a metadata observer (`8148ff59`) around the original public training entry to inspect RNG restoration and named gradient/Adam coverage; the numerical functions and checkpoint contract were preserved, but observation can affect execution timing. The public launcher commands omit that observer and its full diagnostic records, so the same `torch.equal` outcome has not been verified for an unobserved run; compare each new run's saved artifacts independently using the [CPU checkpoint comparison](../docs/algengine_ascend.md#5-save-and-resume-complete-training-state).
 
-### Reproduce the same-prefix control
 
-Select the matching official100 config and initializer for one model. Reproduce the recorded measurement with its exact source/image/data versions; complete each pair within the same checkout. These commands create a new continuous prefix rather than loading a checkpoint from another source version.
+### Run the same-prefix training/resume protocol
+
+Select the matching official100 config and initializer for one model. Follow the measured training/resume protocol with its exact source/image/data versions; complete each pair within the same checkout. These commands create a new continuous prefix rather than loading a checkpoint from another source version.
 
 ```bash
 set -euo pipefail
