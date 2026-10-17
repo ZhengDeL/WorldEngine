@@ -2,6 +2,8 @@
 
 This is the NPU counterpart of the [original AlgEngine usage guide](algengine_usage.md). It follows the same workflow: prepare data, train, evaluate, select rare cases, and fine-tune. Run the commands below on the Linux NPU server, from the repository root. The original GPU shell scripts remain available for GPU users; the NPU entry point is `ascend/run_container.py`.
 
+For the CUDA-compatible route, pass `--msda-backend cuda-compatible` consistently to training, full-state resume and inference. Omitting it keeps the default `reference`. See the [MSDA backend guide](../ascend/MSDA_CUDA.md) for commands and scope.
+
 WorldEngine contains **AlgEngine**, for model training and evaluation, and **SimEngine**, for rendering, simulation and rollout generation. This guide covers AlgEngine. Existing genuine SimEngine exports can be used as training inputs; deploying its renderer on NPU is outside this guide.
 
 ## Quick reference
@@ -730,7 +732,7 @@ These files select collision, off-road and bottom-1%-progress cases. Very small 
 
 ## 8. Fine-tuning and original configuration variants
 
-The current [BF16 v7 real-log FT record](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) is separate from NAVTRAIN139: both original 37/22 configurations completed eight updates, own update-4 restoration and bitwise replay comparison. VAD completed 22-anchor inference/scoring; Hydra's inference was interrupted at console progress 14/22 by a bounded execution timeout, with no official score. This does not add producer-synthetic coverage or establish convergence.
+The [October 16 BF16 v7 real-log FT record](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) is separate from NAVTRAIN139: both original 37/22 configurations completed eight updates, own update-4 restoration and bitwise replay comparison. That record includes complete VAD evaluation and Hydra inference interrupted at console progress 14/22 before official scoring. A [fresh Hydra completion on October 17](../ascend/results/hydra-ft37-bf16-eval22-20261017.json) used the same own-update-8 checkpoint for all 22 anchors and the original NAVSIM CPU scorer, measuring PDMS 0.9338557270555728; the interrupted run remains recorded. These functional results do not add producer-synthetic coverage or establish convergence.
 
 For rare **real-log** VAD fine-tuning, initialize from the matching planner checkpoint and supply the generated YAML. This does not require a SimEngine rollout:
 

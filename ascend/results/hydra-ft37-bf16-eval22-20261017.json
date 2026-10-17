@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "result": "completed_independent_22_anchor_inference_and_official_NAVSIM_scoring",
+  "scope": "HydraMDP BF16 v7 original50percent initialized, LoRA and policy-gradient rare-log FT37 checkpoint after own4-to8 continuation. Separate from NAVTRAIN139 and the new CUDA-compatible MSDA candidate.",
+  "training": {
+    "new_training": false,
+    "historical_updates": 8,
+    "historical_own_resume": "4-to-8 on all16 logical chips",
+    "original50percent_initializer_SHA256": "7e39dcd2d64e3bca32cbeca3a3e127de736a505c220ef47a24d854b4cf093065",
+    "checkpoint_SHA256": "6a32e8e1b61ee4c5e897460bd054f5e5f18366222c30c7a30709ba650d94dd4d",
+    "dumped_config_SHA256": "a7d00e9af4fb9193103231a2c7f18e7ed7b57583fa5f0f21e21f84915f6208a0"
+  },
+  "evaluation": {
+    "anchors": 22,
+    "unique_tokens": 22,
+    "trajectory_shape": [
+      40,
+      3
+    ],
+    "all_finite": true,
+    "independent_log_split": true,
+    "training_evaluation_overlap": {
+      "anchor_tokens": 0,
+      "driving_logs": 0,
+      "four_frame_history_tokens": 0,
+      "JPEG_relative_paths": 0,
+      "JPEG_content_SHA256": 0,
+      "train_history_frames": 57,
+      "eval_history_frames": 37,
+      "train_JPEG_paths": 456,
+      "eval_JPEG_paths": 296
+    },
+    "selected_trajectories_match_original_vocabulary": true,
+    "vocabulary_SHA256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35",
+    "partial14_reused": false,
+    "old_partial14_modified": false,
+    "precision": "bf16",
+    "BF16_weight_cache_enabled": false,
+    "MSDA_core_arithmetic": "FP32 original reference-compatible NPU implementation",
+    "predictions_SHA256": "91f21a38d0b863c9dc58172319c449913451bbb47ce364bf308c1cc3ac45bcba"
+  },
+  "official_NAVSIM": {
+    "valid_tokens": 22,
+    "scorer_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+    "CPU_only": true,
+    "metrics": {
+      "no_at_fault_collisions": 1.0,
+      "drivable_area_compliance": 1.0,
+      "ego_progress": 0.8412537449333747,
+      "time_to_collision_within_bound": 1.0,
+      "comfort": 1.0,
+      "driving_direction_compliance": 0.9772727272727273,
+      "score": 0.9338557270555728
+    },
+    "result_SHA256": "fba5eaba1afc7a726e29ab4a62cac91493555fbf83e08a69f5e8c3f9694b895c",
+    "cache_selection_SHA256": "49c807e69e6983d2a078e3370142b5f75964576a7d2d9f2b6a660ab87b3b7bb5"
+  },
+  "environment": {
+    "image_ID": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "source_fingerprint": "e14dd6b2bfb2f7f26333733efa133780b1223c055966e0542bd8c0202439f5bc",
+    "world_size": 1,
+    "physical_chip": 1
+  },
+  "evidence": {
+    "summary_SHA256": "7f7bf213bc3bbf1df641b56e3b37036479cff9642752f20668bd6de3c26f3285",
+    "watchdog_SHA256": "af0f3a1be0ba197b4dbfe57e78e529daadf1b75f66c5e5fbc841b43ff8ace4a3",
+    "controller_SHA256": "3cb98c9c82ef06057f0acaa67a8b40e3ff1ee1391d9175f8bd4dffd3c7a1f6d9",
+    "inference_receipt_SHA256": "ef90eabe3bcfd398b4513c8b7f97ca086347d07861939c00ae5e77b728b652df",
+    "inference_exit": 0,
+    "CPU_score_exit": 0,
+    "controller_exit": 0,
+    "watchdog_exit": 0,
+    "remaining_owned_jobs": []
+  },
+  "limitations": [
+    "Small independent real NAVTEST subset only",
+    "No full NAVTRAIN convergence acceptance",
+    "No trained-checkpoint GPU comparison",
+    "No new MSDA candidate whole-model acceptance",
+    "PDMS is a measured subset score, not a benchmark or qualified driving-quality claim"
+  ]
+}

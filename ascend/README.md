@@ -2,6 +2,8 @@
 
 [中文](README_zh.md) · [Installation and usage](../docs/algengine_ascend.md)
 
+MSDA defaults to `reference`; use `--msda-backend cuda-compatible` for the optional [CUDA-compatible route](MSDA_CUDA.md).
+
 The `ascend-910c-algengine` branch provides NPU entry points for WorldEngine
 AlgEngine training, fine-tuning, checkpoint restoration, inference and
 evaluation. SimEngine retains its upstream GPU simulation and rendering path.
@@ -45,10 +47,12 @@ The complete 5 TB publication is not needed for this workflow.
 | --- | --- | --- |
 | Dependency environment | Public combined image passed application, selected SDK-tool and original-CANN-source CPU checks; both unfiltered `pip check` commands exited 0 | CPU checks do not establish cold-cache NPU model or all optional SDK-tool acceptance |
 | NAVTRAIN139 / NAVTEST22 | Public CLI rebuilt the fixed subset from six original inputs; all 1832 JPEGs passed SHA/decode checks; all six derived metadata files matched the prior subset by complete values, order and bytes | One training log and one evaluation log; full NAVTRAIN convergence and full NAVTEST quality remain unverified |
-| FP32 training and fine-tuning | Both original 100% planning configurations completed [eight-update training, own-checkpoint restoration and 22-token inference/scoring](results/fp32-navtrain139-short8-20261016.json); historical fine-tuning is versioned separately | Both current strict replay comparisons completed outside original tolerance. Restoration and score measurements do not establish convergence or quality improvement |
-| BF16 v7 | Both official 100% planners completed [eight updates, own restoration and 22-token inference/scoring](results/bf16-v7-navtrain139-short8-20261016.json); [all 16 ranks and saved checkpoints verify 138 gradient/Adam entries restored per model](results/bf16-v7-gradient-coverage-20261016.json) | Both complete strict comparisons remain outside original tolerance. Opt-in/experimental; no convergence or quality-equivalence acceptance. Defective v6 records are retained separately |
+| CUDA-compatible MSDA | [Normal MX/MMCV entries and MMCV raw-L4 layout](results/npu-cuda-msda-20261017.json) meet the original CUDA tolerances; separate CPU32 negatives are retained. Fresh CUDA export-to-NPU reproduction also completed | FP32/C32, measured shapes and first-order gradients |
+| CUDA-compatible VADv2 / HydraMDP, FP32 / BF16 | [Two updates, exact own-state restoration, DDP4 inference and official scoring](results/cuda-compatible-navtrain139-short2-20261017.json), four ranks per group | Eight actual training anchors; the same 22 evaluation anchors across all groups. No convergence, quality-equivalence or 16-rank strict-replay claim |
+| FP32 reference — October 16 | Both original 100% planning configurations completed [eight-update training, own-checkpoint restoration and 22-token inference/scoring](results/fp32-navtrain139-short8-20261016.json); historical fine-tuning is versioned separately | Both recorded strict replay comparisons completed outside original tolerance. Restoration and score measurements do not establish convergence or quality improvement |
+| BF16 v7 reference — October 16 | Both official 100% planners completed [eight updates, own restoration and 22-token inference/scoring](results/bf16-v7-navtrain139-short8-20261016.json); [all 16 ranks and saved checkpoints verify 138 gradient/Adam entries restored per model](results/bf16-v7-gradient-coverage-20261016.json) | Both complete strict comparisons remain outside original tolerance. Opt-in/experimental; no convergence or quality-equivalence acceptance. Defective v6 records are retained separately |
 | FP32/BF16 output comparison | [Four complete 880-pose comparisons](results/fp32-bf16-v7-matched8-planning-20261016.json) on the same 22 held-out anchors, using same official weights and each own eight-update checkpoint | Measurements without a quality-equivalence threshold; adapted checkpoints include training differences. Not GPU/NPU parity |
-| Rare-log FT, BF16 v7 | [Both 37/22 real-log configurations completed 8 updates and own 4→8 restoration](results/real-log-ft37-bf16-v7-short8-20261016.json); VAD/Hydra replay tensors and losses were bitwise equal | VAD completed independent 22-anchor scoring; Hydra inference stopped at progress 14/22 after a bounded timeout and has no FT score. This is not NAVTRAIN139 or synthetic data |
+| Rare-log FT, BF16 v7 | [Both 37/22 real-log configurations completed 8 updates and own 4→8 restoration](results/real-log-ft37-bf16-v7-short8-20261016.json); VAD/Hydra replay tensors and losses were bitwise equal | Both checkpoints completed independent 22-anchor inference and official NAVSIM scoring; [Hydra follow-up](results/hydra-ft37-bf16-eval22-20261017.json): PDMS 0.933856. Historical interrupted output is retained. This is not NAVTRAIN139, synthetic coverage or a quality-equivalence result |
 | Synthetic inputs | Historical two SimScale entries have one-scene, explicitly derived-WE-reward CPU and one/two-rank results | Six WorldEngine rollout/replay/BWM exports and complete published-protocol acceptance remain open; real-log 37/22 FT does not count as synthetic coverage |
 
 The repaired image measured on 2026-10-16 is
@@ -67,6 +71,8 @@ the original full-data path and rare-log fine-tuning. Official published weights
 initialize a new run; they are not migration resume checkpoints.
 
 ## Run, save and resume
+
+The [CUDA-compatible guide](MSDA_CUDA.md#training-own-checkpoint-resume-and-inference) provides the measured four-rank/two-update chain for both models and precisions, including independent official scoring.
 
 The [usage guide](../docs/algengine_ascend.md#recommended-workflow-navtrain139--navtest22)
 provides FP32/BF16 selection and two separate horizons: a short eight-update

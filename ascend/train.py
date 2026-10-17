@@ -57,7 +57,11 @@ def main():
     parser.add_argument('--precision', choices=('fp32','fp32-hf32-conv','bf16'), default='fp32',
                         help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native forward/loss autocast with FP32 master parameters, optimizer state and MSDA, without a scaler (implies --runtime)')
     parser.add_argument('--debug-anomaly', action='store_true', help='Record the forward origin of a failing backward operation')
+    parser.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
+                        help='FP32 sampling backend; cuda-compatible matches the measured original CUDA arithmetic')
     args = parser.parse_args()
+    from ascend.msda import configure_backend
+    configure_backend(args.msda_backend)
     if args.train_filter and (not args.data_root or args.mini_prepared):
         parser.error('--train-filter requires --data-root without --mini-prepared')
     if args.train_filter:

@@ -6,8 +6,47 @@ recomputed in backward so each decoder layer retains only its original inputs.
 The coordinate, zero-padding and boundary rules follow the unmodified MMCV
 PyTorch reference; this does not establish GPU fused-kernel numerical parity.
 """
+import os
+from types import SimpleNamespace
+
 import torch
 import torch.nn.functional as F
+
+BACKENDS = ('reference', 'cuda-compatible')
+_CUDA_FUNCTION = None
+
+
+def configure_backend(name):
+    """Select a process-local backend before model construction."""
+    if name not in BACKENDS:
+        raise ValueError('Unsupported MSDA backend: ' + str(name))
+    os.environ['WORLDENGINE_MSDA_BACKEND'] = name
+
+
+def backend_policy():
+    name = os.environ.get('WORLDENGINE_MSDA_BACKEND', 'reference')
+    if name not in BACKENDS:
+        raise ValueError('Unsupported MSDA backend: ' + name)
+    if name == 'cuda-compatible':
+        from ascend.msda_cuda_compatible import POLICY
+        return dict(backend=name, implementation=dict(POLICY))
+    return dict(backend=name, implementation='MMCV CPU32 mathematical reference via NPU grid_sample')
+
+
+def _cuda_function():
+    global _CUDA_FUNCTION
+    if _CUDA_FUNCTION is None:
+        from ascend.msda_cuda_compatible import make_function
+        _CUDA_FUNCTION = make_function(torch)
+    return _CUDA_FUNCTION
+
+
+class _ForwardContext:
+    """Temporary candidate context without a reference to the outer context."""
+    __slots__ = ('pairs', 'legacy', 'chunk', 'saved')
+
+    def save_for_backward(self, *tensors):
+        self.saved = tensors
 
 
 def _sample(value, shape_pairs, locations, weights, legacy_cuda_layout=False):
@@ -89,8 +128,14 @@ def reference_forward(ctx, value, shapes, starts, locations, weights,
     ctx._worldengine_reference_msda = True
     ctx._worldengine_msda_shapes = pairs
     ctx._worldengine_msda_legacy_layout = legacy_layout
+    ctx._worldengine_msda_backend = backend_policy()['backend']
     ctx.save_for_backward(value, locations, weights)
     with torch.autocast(device_type='npu', enabled=False):
+        if ctx._worldengine_msda_backend == 'cuda-compatible':
+            inner = _ForwardContext()
+            return _cuda_function().forward(
+                inner, value, locations, weights,
+                tuple(tuple(pair) for pair in pairs), legacy_layout, 2048)
         return _sample(value, pairs, locations, weights, legacy_layout)
 
 
@@ -99,6 +144,15 @@ def reference_backward(ctx, grad_output):
     needed = [ctx.needs_input_grad[index] for index in (0, 3, 4)]
     if not any(needed):
         return None, None, None, None, None
+    if ctx._worldengine_msda_backend == 'cuda-compatible':
+        inner = SimpleNamespace(
+            pairs=tuple(tuple(pair) for pair in ctx._worldengine_msda_shapes),
+            legacy=ctx._worldengine_msda_legacy_layout, chunk=2048,
+            saved_tensors=saved,
+            needs_input_grad=tuple(needed) + (False, False, False))
+        with torch.autocast(device_type='npu', enabled=False):
+            gradients = _cuda_function().backward(inner, grad_output)
+        return gradients[0], None, None, gradients[1], gradients[2]
     with torch.enable_grad(), torch.autocast(device_type='npu', enabled=False):
         inputs = [item.detach().requires_grad_(flag) for item, flag in zip(saved, needed)]
         output = _sample(inputs[0], ctx._worldengine_msda_shapes, inputs[1], inputs[2],

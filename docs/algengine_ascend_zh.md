@@ -2,6 +2,8 @@
 
 本文是[原 AlgEngine 使用指南](algengine_usage.md)的 NPU 操作版，按数据准备、训练、评价、稀有场景筛选和微调的顺序说明。命令在 Linux NPU 服务器执行，默认当前目录是仓库根目录。原 GPU 脚本保留；NPU 使用 `ascend/run_container.py` 或新增的 `_npu.sh` 前端。
 
+选择 `--msda-backend cuda-compatible` 时，训练、完整状态恢复和推理应保持相同后端；省略该参数则使用默认 `reference`。具体命令及适用范围见[MSDA 后端指南](../ascend/MSDA_CUDA_zh.md)。
+
 WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimEngine** 负责渲染、仿真和 rollout 生成。这里操作 AlgEngine；已有的真实 SimEngine 导出可以作为训练输入，本指南不部署其渲染器。
 
 ## 常用入口
@@ -714,7 +716,7 @@ PY
 
 ## 8. 真实日志微调和合成数据配置
 
-当前[BF16 v7真实日志微调记录](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json)与NAVTRAIN139分开：两个原37/22配置均完成8次更新、自身第4次更新恢复及逐位一致的续训对照；VAD完成22锚点推理／评分，Hydra在日志进度14/22时因有界执行超时中止，未评分。这不增加producer合成数据覆盖，也不代表收敛。
+[10月16日 BF16 v7 真实日志微调记录](../ascend/results/real-log-ft37-bf16-v7-short8-20261016.json)与 NAVTRAIN139 分开：两个原37/22配置均完成8次更新、自身第4次更新恢复及逐位一致的续训对照。该记录包含完整 VAD 评价，以及在日志进度14/22时中断、尚未评分的 Hydra 推理。[10月17日 Hydra 补充验证](../ascend/results/hydra-ft37-bf16-eval22-20261017.json)使用同一自身第8次更新检查点，重新完成全部22锚点推理及原 NAVSIM CPU 评分，实测 PDMS 为0.9338557270555728；原中断记录继续保留。这些功能结果不增加 producer 合成数据覆盖，也不代表收敛。
 
 VAD 的 rare **真实日志**微调使用对应 planner 权重初始化，并传入上节 YAML；这一配置无需 SimEngine rollout：
 

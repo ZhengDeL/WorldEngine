@@ -19,6 +19,8 @@ def precision_state(mode,stage='after_public_precision_setters_before_model_cons
                 environment={name:os.environ.get(name) for name in
                              ('CLOSE_MATMUL_K_SHIFT','HCCL_DETERMINISTIC','TASK_QUEUE_ENABLE','ASCEND_LAUNCH_BLOCKING')},
                 observation_stage=stage)
+    from ascend.msda import backend_policy
+    result['msda'] = backend_policy()
     if mode=='bf16':
         result['autocast_policy']=dict(enabled=True,device_type='npu',dtype='torch.bfloat16',
             master_parameter_dtype='torch.float32',optimizer_state_dtype='torch.float32',

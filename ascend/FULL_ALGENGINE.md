@@ -1,6 +1,6 @@
 # AlgEngine Ascend 910C Validation Report
 
-Assessment updated: October 16, 2026. Earlier results retain their recorded source and image.
+Assessment updated: October 17, 2026. Earlier results retain their recorded source and image.
 
 [Chinese validation report](VALIDATION_zh.md) · [Installation and operation guide](../docs/algengine_ascend.md) · [Versioned evidence](results/)
 
@@ -10,18 +10,67 @@ WorldEngine contains AlgEngine for model training and evaluation, and SimEngine
 for simulation, rendering and rollout generation. This report covers AlgEngine.
 SimEngine deployment on NPU is outside the assessed scope.
 
-Training, fine-tuning, inference, official CPU scoring and complete-checkpoint
-restoration have run on Ascend 910C within the configurations recorded below.
-The latest FP32 base-planner runs completed eight updates, their own
-checkpoint restoration, held-out inference and official scoring for both
-models. Both complete replay comparisons exceeded the original tolerances.
-FP32 remains the default. BF16 v7 also completed the short-run chain and
-verified restoration of the 138 missing gradient/Adam entries per model; the
-defective v6 record is retained separately. Both v7 replay comparisons exceeded
-the original tolerances. The strict-replay numerical issue remains unresolved.
-Complete AlgEngine acceptance remains open: the evidence does not establish
-full NAVTRAIN convergence, complete independent quality, all genuine synthetic
-inputs, general GPU equivalence or sustained operation of the final environment.
+The CUDA-compatible NPU backend completed VADv2 and HydraMDP training, own-checkpoint restoration, independent inference and official CPU scoring in FP32 and BF16. The measured configuration uses four ranks per group and two updates, with eight actual training anchors from the configured NAVTRAIN139 subset and the same 22 held-out evaluation anchors.
+
+Earlier 16-rank, eight-update reference-backend comparisons completed outside their original replay tolerances. Those records remain valid historical limits. The new short functional chain and separate private-candidate two-update positive control do not close longer strict replay, full NAVTRAIN convergence, full NAVTEST quality or untested genuine synthetic-input configurations.
+
+## CUDA-compatible model validation — October 17, 2026
+
+On 17 October 2026, the public `cuda-compatible` MSDA entry completed training, own-checkpoint resume, original DDP4 inference and independent official CPU scoring for VADv2 and HydraMDP in both FP32 and BF16. Four disjoint groups each used four ranks and batch size 1 per rank, giving global batch size 4 per group. Each configuration started from its official 100% planning checkpoint, ran update 1, and resumed its own checkpoint to update 2. Original backbone-freeze settings, geometry, losses, gradient clipping and AdamW were retained. The measured runs explicitly set `--msda-backend cuda-compatible`; FP32 remains the default precision. BF16 used disabled autocast weight caching with actual BF16 Conv/Linear activations and FP32 master weights, participating gradients and Adam state.
+
+The configured training subset contains 139 anchors deterministically derived from the original official data. Each configuration actually consumed 8 distinct current anchors in its two updates; all four configurations consumed the same set, so their union is also 8. History-queue frames are not counted as additional current anchors.
+
+| Model | Precision | Ranks × batch per rank | Updates and own resume | Held-out anchors | Official PDMS |
+|---|---|---|---|---|---|
+| VADv2 | FP32 | 4 × 1 | 1 → own checkpoint → 2 | 22 | 0.871938963172 |
+| VADv2 | BF16 | 4 × 1 | 1 → own checkpoint → 2 | 22 | 0.908986383163 |
+| HydraMDP | FP32 | 4 × 1 | 1 → own checkpoint → 2 | 22 | 0.953343369212 |
+| HydraMDP | BF16 | 4 × 1 | 1 → own checkpoint → 2 | 22 | 0.953676351654 |
+
+All four branches use the same 22 held-out anchors; these are not 88 independent scenes. Every inference branch exported 22 unique finite 40×3 trajectories with the original vocabulary check. The original NAVSIM scorer independently evaluated genuine official cache payloads: all 22 tokens were valid in each branch, and all seven metrics plus their per-token CSVs are retained. [Complete result and hashes](results/cuda-compatible-navtrain139-short2-20261017.json) provides full-precision metrics, source/input/checkpoint/receipt hashes and the measured scope.
+
+All eight original training containers completed with exit0, and 32 rank-stage receipts passed. All 16 own-resume rank receipts restored the original full model and Adam state, with classified Python/NumPy/CPU/NPU RNG restoration exact. The original participating parameter tensor counts with gradients and Adam state were 259 for VADv2 and 279 for HydraMDP; the full named parameter audits covered 730 and 750 tensors respectively. This does not claim every trainable parameter participates in every update. The four inference containers and four CPU scoring containers also completed with exit0 and normal release; original sources and inputs remained unchanged.
+
+A metadata lookup error in the orchestration controller was preserved after all eight model jobs had finished. An independent read-only CPU reconciliation supplied the missing Hydra model-state count and rechecked the existing eight checkpoints, 112 rank evidence files, eight launch records and five original control records by whole-file SHA before and after. It did not rerun training or modify the production source. The result keeps the original controller error and the successful reconciliation as separate evidence. Model-process time and CPU-reconciliation time are labeled separately.
+
+These two updates are inside the original 500-update warmup. The scores are bounded functional measurements; score differences do not establish quality improvement or FP32/BF16 quality equivalence. This run does not replace the original 16-rank/global16 strict replay, full-data training, long-run convergence or the untested genuine synthetic-producer configurations. Existing strict numerical replay limits remain open.
+
+## CUDA-compatible MSDA — October 17, 2026
+
+The optional `--msda-backend cuda-compatible` uses FP32 compensated sampling
+coordinates and first-order gradients on NPU. Both actual public registered
+entries, MX and MMCV, passed all 64 complete comparisons against saved original
+CUDA outputs and gradients on the two full shapes, B2/Q40000 and B1/Q65536.
+The original tolerances were retained. The 16 separate CPU32 comparisons contain
+eight within tolerance and eight outside tolerance; these complete negatives
+are retained alongside the CUDA results.
+
+The measured public source fingerprint is `3d46c07f…` / 245 Python files,
+with the `3522f3ac…` image. The default `reference` backend retains the
+historical CPU32 mathematical target. Train, resume and inference record and
+check the selected backend. See the [implementation and usage guide](MSDA_CUDA.md)
+and [complete operator evidence](results/npu-cuda-msda-20261017.json) for exact
+source identities, supplementary layout checks and supported scope.
+
+A separate 16-rank VAD FP32 two-update control used the private v8 numerical
+overlay on source `e14dd6b2…`. Independent continuous training and own-checkpoint
+restoration produced exactly equal values in all 889 model tensors and all
+1,698 complete-checkpoint tensors, with zero loss difference. All 144 rank
+evidence files were checked. This is a short-run positive control, not a
+public-backend model result or an eight-update replay acceptance. The original
+comparator uses `torch.equal`; this does not assert byte identity of serialized
+checkpoints. [Bounded replay evidence](results/npu-private-msda-vad-fp32-replay2-20261017.json)
+
+This operator result and the separate two-update control do not close the
+historical full-model replay comparisons below. The [original CUDA training baseline](CUDA_BASELINE.md) also records
+completed eight-GPU VADv2/HydraMDP training and checkpoint-restoration controls,
+whose complete replay comparisons remain outside their original tolerances.
+
+The previously interrupted Hydra BF16 FT37 evaluation was independently rerun
+to completion: all 22 trajectories and all 22 official NAVSIM scores are valid,
+with PDMS **0.9338557270555728**. It uses the original reference backend and the
+same historical eight-update checkpoint; it is separate from the new MSDA
+backend. [Follow-up evidence](results/hydra-ft37-bf16-eval22-20261017.json)
 
 ## Original CUDA/NPU FP32 inference comparison — October 16, 2026
 
@@ -86,7 +135,7 @@ completed outside tolerance:
 | HydraMDP 100% | 252 / 314 | 0.00036209821701049805 / 0.22671931982040405 | 0.037529945373535156 |
 
 VAD compared 889 model/1698 combined tensors; Hydra compared 909/1778. The
-combined counts include optimizer state and32 rank RNG tensors. Original
+combined counts include optimizer state and 32 rank RNG tensors. Original
 tensor `atol=1e-6, rtol=1e-5` and loss tolerance `1e-4` were retained. Tokens,
 learning rates and final rank RNG states matched in both pairs.
 
@@ -173,11 +222,11 @@ comparisons were bitwise equal at the unchanged tensor/loss tolerances.
 | Configuration | Model / complete tensor comparison | Maximum tensor / loss difference | Independent evaluation |
 | --- | --- | --- | --- |
 | VADv2 rare-log LoRA/reward, BF16 v7 | 989/989; 1321/1321 bitwise equal | 0 / 0 | Complete 22-anchor inference and original NAVSIM scoring; PDMS 0.8631407605887709 |
-| HydraMDP rare-log LoRA+PG, BF16 v7 | 989/989; 1261/1261 bitwise equal | 0 / 0 | Incomplete: console progress 14/22, then exit 137 after the bounded auxiliary timeout; official scoring was not executed |
+| HydraMDP rare-log LoRA+PG, BF16 v7 | 989/989; 1261/1261 bitwise equal | 0 / 0 | [October 17 follow-up](results/hydra-ft37-bf16-eval22-20261017.json): complete 22-anchor inference and official scoring, PDMS 0.9338557270555728; the original interrupted attempt is retained |
 
-The complete tensor counts include per-rank RNG tensors. The Hydra progress
-counter is not a saved prediction count; no complete 22-token prediction or
-score is accepted. Its separate OOM state was not retained. The watchdog
+The complete tensor counts include per-rank RNG tensors. The original Hydra progress
+counter was not a saved prediction count; no complete 22-token prediction or
+score is accepted from that interrupted attempt. Its separate OOM state was not retained. The watchdog
 reported no stop actions and had not reached its cutoff, so the interruption
 is not attributed to a watchdog kill. All nine registered containers were
 stopped, and source/data/weights/cache hashes were unchanged.

@@ -1,5 +1,7 @@
 # Original CUDA MSDA validation
 
+For fixed original CUDA tensors and registered-entry NPU comparison, use the [golden exporter](README_export_cuda_msda_goldens.md) and [NPU checker](README_npu_cuda_msda.md).
+
 [中文](README_cuda_msda_zh.md) · [Measured CUDA baseline](../../ascend/CUDA_BASELINE.md)
 
 This standalone Linux tool checks the original `mmcv-full==1.6.2` CUDA MSDA

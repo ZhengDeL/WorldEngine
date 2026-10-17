@@ -2,6 +2,8 @@
 
 [English](MSDA.md) · [MSDA 实测结果](evidence/msda-precision-20261013.json) · [八 rank 重放结果](evidence/eight-rank-resume-20261013-evening.json)
 
+本页记录默认 `reference` 路径及其历史 CPU32 目标。可选的[CUDA-compatible 后端](MSDA_CUDA_zh.md)使用单独的数值目标：公版 MX/MMCV 注册入口的 64 项完整 CUDA 张量比较通过，16 项 CPU32 比较中 8 项通过、8 项超差，见[算子验证记录](results/npu-cuda-msda-20261017.json)。这些结果不改变历史 CPU32 门槛，整模型结果单独记录。
+
 FP32 路径的位置梯度门禁已通过，原容差未改。本文说明 NPU 原生采样实现及对应实测。原报告中 `96a7bef…` 指纹、一小时 428 更新和内存/吞吐属于历史版本，本文模型实测对应下述 `858f9d…` 版本。
 
 [10 月 17 日原 CUDA 基线](CUDA_BASELINE_zh.md)补充了两个普通 L1 大形状的完整前向／三种梯度及原八 GPU 训练对照。原 CUDA 扩展在这些输入上也有元素超出未修改的 CPU32 门槛。这不推翻已记录的 NPU 对 CPU32 结果，也不能证明同输入 CUDA／NPU 梯度已经对齐。

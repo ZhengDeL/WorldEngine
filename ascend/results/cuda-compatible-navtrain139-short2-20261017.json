@@ -1,0 +1,1034 @@
+{
+  "status": "completed_bounded_public_four_group_training_resume_DDP4_inference_and_original_CPU_scoring",
+  "source": {
+    "canonical_SHA256": "3d46c07f4ff06e078c5963bbb500030fe683f2226bdcc60a70789b10db02c134",
+    "Python_files": 245
+  },
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "msda_backend": "cuda-compatible",
+  "data": {
+    "training": "Deterministic official NAVTRAIN-derived139 anchors",
+    "evaluation": "The same independent22 held-out anchors",
+    "official_data_proof_SHA256": "4aa1945d90afaabfdc61e02e75df52429b0a3d8919b81698fbc8699e3905bd5a",
+    "manual_labels_created": false,
+    "configured_inputs": {
+      "manifest_SHA256": "59bfeb040c5df2be8c33d0eadd1ad8b61343612287337e3f3a1a1a2ded1d6183",
+      "preparation_SHA256": "ba1ac6161ca7283739f698db0fc174061d9fbd9f78908212337486e69a7b5fe1",
+      "metadata_files_SHA256": {
+        "nuplan_openscene_navtrain_log.pkl": "e7acf81abe04b5acc82cb6dc891ea938cf0b9cd0220448785e74ea591a6180b8",
+        "pdm_8192_gt_cache_navtrain_log.pkl": "5b528bac3e2ac1dce7035b47d5fcf9fb615ffd4d40ca6328b2e9e186e6fa02a4",
+        "navtrain_log_anchors.yaml": "b2d3d7f7077aea8712c7015061c990d7ea3b5b2839641a972cee2aeca1d9fd97",
+        "worldengine_navtest_eval.pkl": "07b1a358894024a0f8ae4dfadfa1a93e2bf91d2d9c2ae587edfbdbdf2d82e2e1",
+        "worldengine_navtest_eval_pdm.pkl": "864876b1e57f439578ae4fc60e0a1492625521f8b6139cf8ca967783fee79f66",
+        "worldengine_navtest_eval.yaml": "1f299a612102e812d3305286541d94640912e97287acbe00071d572a5826b42e"
+      },
+      "configured_camera_JPEG_files": 1832,
+      "train": {
+        "configured_anchors": 139,
+        "configured_frames": 284,
+        "annotation": "nuplan_openscene_navtrain_log.pkl",
+        "filter": "navtrain_log_anchors.yaml",
+        "pdm_prefix": "pdm_8192_gt_cache_navtrain_log"
+      },
+      "evaluation": {
+        "configured_anchors": 22,
+        "configured_frames": 51,
+        "annotation": "worldengine_navtest_eval.pkl",
+        "filter": "worldengine_navtest_eval.yaml",
+        "pdm_prefix": "worldengine_navtest_eval_pdm"
+      },
+      "configured_train_eval_logs_disjoint": true,
+      "boundary": "Configured input inventory; this two-update run does not consume or train on every configured anchor."
+    },
+    "configured_training_anchors": 139,
+    "evaluation_unique_anchors": 22,
+    "same_eval_anchors_reused_for_all_four_groups": true,
+    "inventory_is_not_a_claim_all139_training_anchors_were_consumed": true,
+    "actual_selected_training_unique_anchors_per_group": 8,
+    "actual_selected_training_unique_anchors_campaign_union": 8,
+    "actual_training_anchor_update_sample_records_per_group": 8,
+    "actual_training_anchor_update_sample_records_campaign_total": 32,
+    "same8_training_anchors_reused_for_all_four_groups": true,
+    "raw_anchor_audit_SHA256": "0ae0c721860f27917a00462797df7d3e64ef3bb00a2c0ab3560e45ae05879779",
+    "actual_selected_training_anchor_set_canonical_SHA256": "3c647e8baf2c77a69d76abc0dabd76ef1749df98ccb1d7aa83fbdaa057b020c4",
+    "actual_selected_training_anchors": [
+      "1f499339bf215b13",
+      "41fc591d99c45605",
+      "46b1ee12074d5157",
+      "55d8babe347a567b",
+      "5ea9ac1622af524a",
+      "996fd357a40d5a5a",
+      "bed9e7fe43c95a70",
+      "c2136a9ff4fe55c4"
+    ],
+    "actual_selected_training_anchor_set_hash_definition": "SHA256 of UTF-8 JSON sorted unique anchor list with separators comma and colon; no whitespace.",
+    "actual_training_anchor_observation_definition": "Each original rank/update JSONL record contributes exactly record.tokens[-1], the current training anchor; preceding queue/history tokens are excluded. All selected anchors were matched to the configured139 train-anchor set. Counts come from32 immutable raw records, not batch arithmetic."
+  },
+  "configuration": {
+    "groups": 4,
+    "ranks_per_group": 4,
+    "per_rank_batch": 1,
+    "global_batch_per_group": 4,
+    "distinct_logical_NPU_participants": 16,
+    "horizon_updates": 2,
+    "warmup_updates": 500,
+    "workers": 0,
+    "seed": 20261012,
+    "initializer": "Original official100 planning weights; original backbone-freeze settings retained",
+    "profiles": {
+      "vad": {
+        "original_config": "projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py",
+        "official_weight_SHA256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+      },
+      "hydra": {
+        "original_config": "projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py",
+        "official_weight_SHA256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+      }
+    }
+  },
+  "training_summary_SHA256": "a04a96770552a751d8491ec7c230bda92a08ba7120e28790b91ab6bdc17b347d",
+  "training_stages": [
+    {
+      "profile": "vad",
+      "precision": "fp32",
+      "physical_devices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "stage": "fresh0to1",
+      "initial_update": 0,
+      "final_update": 1,
+      "checkpoint_SHA256": "236dbd84277522e37bbfb69b9c533c82e404fc0c60b9fcdc5aaf992746fc3676",
+      "resume_checkpoint_SHA256": null,
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T14:59:29.022272661Z",
+        "finished_UTC": "2026-10-17T15:05:23.614893161Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "645b0d8b66a44c63a66cff1d163c56911caaa2bfa8a9a1b4dec9e49446fc04a8",
+          "runtime_JSONL_SHA256": "f0ace44a2216e5acbf7ebb5b5b37d00ac47282acbed8e218e56676f7732fc4df",
+          "wrapper_receipt_SHA256": "1a97b62630a63a05e953c47cb0c4f38b736ac0251216c2c853b0e1b663db549c",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "54750b5592bf48258f26271eaf539078e072896f1e2075eaff99e6aa6750073e",
+          "runtime_JSONL_SHA256": "d7ba15b603b084b18d8f1bf475ea340129436e14faea15e212eafbe3c2f3035a",
+          "wrapper_receipt_SHA256": "b59d2ca955a50f6d900b35da8e51a9e6140576da9899f3c02c15bdc54cf08450",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "39878af15a3ef927623c95e77f81fb27a1dab64fe850749b7507956596e9940f",
+          "runtime_JSONL_SHA256": "7b6270abfab6bae50e821f5f049b57cbcee8b1316b4045020a184c8dd5ed0a11",
+          "wrapper_receipt_SHA256": "fc8c0ede486d1d96c30b06a2c5f89da7325b3adc8079870afe970896171e8b28",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "3771d5464caaf98dc514e4df855662632a28d12d787b16293d59bef886f901d4",
+          "runtime_JSONL_SHA256": "0ecba9792455b544d4e6b29abdea3e608216e71ff762c83480e64d7239da7a28",
+          "wrapper_receipt_SHA256": "3682e41a9b0858cdb6f86c789c608891c38e96eefa281aa4f130987f4606fe9a",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        }
+      ]
+    },
+    {
+      "profile": "hydra",
+      "precision": "fp32",
+      "physical_devices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "stage": "fresh0to1",
+      "initial_update": 0,
+      "final_update": 1,
+      "checkpoint_SHA256": "41bc3803d499d4600083e89e22ae070547032b8bb0375e473b4d67b25827f670",
+      "resume_checkpoint_SHA256": null,
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T14:59:29.164316821Z",
+        "finished_UTC": "2026-10-17T15:05:26.138135381Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "3f86a4272ed70c58d0f432e243c9241abf7ce6f9e39b3b00a07a47a0f60eee88",
+          "runtime_JSONL_SHA256": "d2b11bc93e30cf87eab93dd38d1a32db4521ac0f7ff86eef88bcfdfd766a39ef",
+          "wrapper_receipt_SHA256": "b9549661abdcac49edadae3f511809ec69f2fc3020fa9e134ae44a0974601f30",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "fa328fa3ee82e7d831ee7052eb06d106c54a60ff7a8823eb6622566d310a7316",
+          "runtime_JSONL_SHA256": "b532a586744e33a2441ea2f91619f494a17cc6a520483d854836749064de321b",
+          "wrapper_receipt_SHA256": "5ffef1af53d3d8f1d7541e22d7e6366dc5b103d3033dcc80d7a8cc4bb6d9aa99",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "01ec7662980a8d41e529e273a8084cbce540f1cf7c1439e35294f4d09f1ffa28",
+          "runtime_JSONL_SHA256": "4f0bc59f038d7fbbcec62c3687232176ff6286f694b84386d4861624227dc269",
+          "wrapper_receipt_SHA256": "e1566f26f04b78b04b2fc0b6546e259ea4e415ee4fca7897e3dc0fdd9d9df521",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "a5e6f6c290e6e63460157d36905315ddd0cafb21b7a50d6dc5b780e82f28b477",
+          "runtime_JSONL_SHA256": "1b46aedfb722f8638178bf2b42cad4275cf9df49faa918f168326d1f1075f197",
+          "wrapper_receipt_SHA256": "5540f97e7ce92ca33e9104df6e5309f2f1bc8f58a25f5ebe29be15c97a4d9035",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        }
+      ]
+    },
+    {
+      "profile": "vad",
+      "precision": "bf16",
+      "physical_devices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stage": "fresh0to1",
+      "initial_update": 0,
+      "final_update": 1,
+      "checkpoint_SHA256": "2d5d1ab0eae170958886c6419184688d11e09187b6641a75b7adf952a50c64e0",
+      "resume_checkpoint_SHA256": null,
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T14:59:29.310050051Z",
+        "finished_UTC": "2026-10-17T15:05:20.671687051Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "73a7854758b0076d3985c27f9054f2e4c4a8ae47f4a0859d7e85ace9e68d5a1c",
+          "runtime_JSONL_SHA256": "a57436586804723d46035111d990ce2a0f24687775896b4d443d74604c1c75be",
+          "wrapper_receipt_SHA256": "f40003d9a7910c66bd750169c2998256532b71ca0f1dc06787d387cf6ad01e7b",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "c55a8186f0ea07cb15bfb747d0a03e4429ea812c89d587d5677b386610afd4c6",
+          "runtime_JSONL_SHA256": "0e737bb7c8dda2a54fe74bdde480489ba9dc4ed78090004fee3c31136184e762",
+          "wrapper_receipt_SHA256": "defb2e3a48544991f61c020b499a8a3b1d1710d33759af133dc468ff9634bf5b",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "d524cfdd09b97ce55c8ae49642d4c2151761bc638ba5484bcb2c065fc1469587",
+          "runtime_JSONL_SHA256": "21b0db0dc5c38b91f979670b702f9e73ee2acc9741ea8cb92b03fdd783a588fd",
+          "wrapper_receipt_SHA256": "b25b20863e24cf5b21c8b57057c50ddd603dd2bc931ce389206bbb831b47858e",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "d4697014d11f5f821c6dfefbeb4039470cd38000e592150157c29c93998674c8",
+          "runtime_JSONL_SHA256": "05971192f478c94612a25e42f12efd2674b9b036d3347503f2cb98b96877998b",
+          "wrapper_receipt_SHA256": "536a27b57044922065f5a239d68d3adbb54039383c940faf647dc0bd8c5eee6c",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "3bbc0fabf32804814edda440179b03ed7991d5f21cc194a1e1f9cde0ac0ddb19",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        }
+      ]
+    },
+    {
+      "profile": "hydra",
+      "precision": "bf16",
+      "physical_devices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "stage": "fresh0to1",
+      "initial_update": 0,
+      "final_update": 1,
+      "checkpoint_SHA256": "20db0dd0320ebcf310d7c4c1bcfe4ac88b533e1d80c0d2738ed02f8b6df9dfa9",
+      "resume_checkpoint_SHA256": null,
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T14:59:29.428231411Z",
+        "finished_UTC": "2026-10-17T15:05:22.553632351Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "14b542b28c4e2a7fc2770f054c5b06a8f6c72a422bd43494ceb6bc2fe32d59ad",
+          "runtime_JSONL_SHA256": "debc4fab724c8d2f2c59508fa1dde576f4067a0ac8f0f1d6651ae9b6c1a1e37f",
+          "wrapper_receipt_SHA256": "d163cd86fd48262912e3f97e8eb19bec00f299d33c07a59d0e70bb27f36e2226",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "82a47610d4c57f2672442a63156c804d34607fc755ae27ed6620281e47dbf320",
+          "runtime_JSONL_SHA256": "4f80f6d089cf6cde8c62a64ef4dec2fd949a25d792e6b30a238fbf36db7acff3",
+          "wrapper_receipt_SHA256": "44ce185b7bb589b24d299e4dd62b19afaf71da29ebb4cc7f6eab3b11b9e544b0",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "124a5028e1feaa53111f581d340042c026236941d08ea04e758492488e0fb0af",
+          "runtime_JSONL_SHA256": "54d87a9c977498ff705d4c895beabfb9eb2c8febfa9e3d05b49db3eb09916bfe",
+          "wrapper_receipt_SHA256": "f0aad43f936658609d6739f395b36045b19341f876e5bcf7619a866c16f2dc24",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "72a15b49688cb3b804b1a75bbb15ae496c3cecb7af01dedc472898c858d5f058",
+          "runtime_JSONL_SHA256": "0aabdbe235b54120366e2e1594dad33bdc126628e818fbde3a446c5196a823b4",
+          "wrapper_receipt_SHA256": "25dc2bca00a0920f07387c79e20a9f4460ee317d99814290d77bea894bb90796",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "fe5c14a170953ab6c094e4663c327f81a6b6aa404b5a2f1714419e1e3428bba5",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 1,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": false
+        }
+      ]
+    },
+    {
+      "profile": "vad",
+      "precision": "bf16",
+      "physical_devices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "stage": "own1to2",
+      "initial_update": 1,
+      "final_update": 2,
+      "checkpoint_SHA256": "044646d2da0b8f5e0f0704dc8c1642d1d7721740d4ec6b874936726ee4a79b34",
+      "resume_checkpoint_SHA256": "2d5d1ab0eae170958886c6419184688d11e09187b6641a75b7adf952a50c64e0",
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T15:05:22.443769341Z",
+        "finished_UTC": "2026-10-17T15:11:16.211596441Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "d1df7a98847d9eb9fe62119aefb1d9afdf587b0459d5c8dae76406a2e3c753d7",
+          "runtime_JSONL_SHA256": "69ea6db7eabe194f54519e0e8edb55e4a570fd9bc9aacc3a22f979526c50d8cf",
+          "wrapper_receipt_SHA256": "b77876bf7dfe0f9cb59f27c390d2db9b421736f1f995c96ccd3acdfee415977b",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "762596935215c46f4f64bd9511f0c92d59278aa31a102a23523a1a4a8589fbcf",
+          "runtime_JSONL_SHA256": "6bbe2541c026891f3d49fd3288646c1473420e2e6a1ea6b403a72b6bb15f7064",
+          "wrapper_receipt_SHA256": "55f01eaebcab8d1ff2a9639ce70c326483beb98081ef96a1ef71262bf7e9815f",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "f64450f85aba6c400b6aec18e7f4e1686df472de5ff85c4e1f047532be5aa874",
+          "runtime_JSONL_SHA256": "2d75d21a515be61baf45ff836d674ddbb28959e3fa004912476346f9bc49d3b5",
+          "wrapper_receipt_SHA256": "39cca46fb60b5bb54536dc26840295186780957b7b94056f1d005825ef5e1509",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "010b004a674a454cf613c36b4fb9fdcd40e1afe1dadb0b99dec646cd2539f4e1",
+          "runtime_JSONL_SHA256": "90444fe321ef9bd0f75e2bc5b4b927aaf07749fc005fc36cb74f5933bd522a9c",
+          "wrapper_receipt_SHA256": "e57ed7719a357f425a525b6509ca5ebfa6d3351ebaf2dd5875067e1138e04de5",
+          "resume_contract_canonical_SHA256": "fe0c8a22d3ceab9cbdfee31bce11d043968a4744b28dacc24d0da680bcbc95b8",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        }
+      ]
+    },
+    {
+      "profile": "hydra",
+      "precision": "bf16",
+      "physical_devices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "stage": "own1to2",
+      "initial_update": 1,
+      "final_update": 2,
+      "checkpoint_SHA256": "2ffb1c3cc502924113075c287d0d013648121b5ce2dc194041daf2bc949826fb",
+      "resume_checkpoint_SHA256": "20db0dd0320ebcf310d7c4c1bcfe4ac88b533e1d80c0d2738ed02f8b6df9dfa9",
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T15:05:23.616258901Z",
+        "finished_UTC": "2026-10-17T15:11:24.591705221Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "6a909e06fba97623657c08879497aefd844a25643a42bec7a80d45b6485d5524",
+          "runtime_JSONL_SHA256": "47a213320da15132691fe310519941d3bafe33bf938938642db58812f569f9b1",
+          "wrapper_receipt_SHA256": "53f09034dd4fc9dfc66bc68adc5ee42c292fd3296d583c4a661bf58b13fb762d",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "49d8186862150b566f10b511f1c1070cc63a3ae1db5eef6828808fec6d0e1b1d",
+          "runtime_JSONL_SHA256": "4a1a4a0c62961f07fa050b468cadff887157fb0f3f4b1ffe1e2d889d4e2955d3",
+          "wrapper_receipt_SHA256": "7e04ae6aa061d3ec601e39bee66fcc696a7b2472fdc062810ed255a12ecc8926",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "2d270d447af56b9f980a9ebd4ef29090a2ea17067abb6e66eece2e788c1fe2d8",
+          "runtime_JSONL_SHA256": "5684b092d8562c0b608c11730251b7dbd3bfafd1c2fc3603b45b0c8dbff2e783",
+          "wrapper_receipt_SHA256": "d80f2afdd568d19c8ef474deb845acb9e4dcd3b2a8de4d75c3624d1dd5d44e56",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "f1bd4876979c8e2965253949624d5ad43b74eb1a6053870a6a46cf5bc72ac6d7",
+          "runtime_JSONL_SHA256": "1e3e7bb12f5efe005ea40ce1ffb5427ea3e3d2b97dbae9fbfa939fede73d2308",
+          "wrapper_receipt_SHA256": "e2b705febe1dcb41c1b74b0e54bc0d629193f093f9d9bff46f0247fed2982eb5",
+          "resume_contract_canonical_SHA256": "52005a0b52d6f994c818d778121a1c09d7d38040627c710e10a634db51987e08",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        }
+      ]
+    },
+    {
+      "profile": "vad",
+      "precision": "fp32",
+      "physical_devices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "stage": "own1to2",
+      "initial_update": 1,
+      "final_update": 2,
+      "checkpoint_SHA256": "3f127f6f29bdf954c6c7eaf4f8c47d67a3c3f457d7ab986eaf08a4e566957cb2",
+      "resume_checkpoint_SHA256": "236dbd84277522e37bbfb69b9c533c82e404fc0c60b9fcdc5aaf992746fc3676",
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T15:05:25.229430621Z",
+        "finished_UTC": "2026-10-17T15:11:19.383353521Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "5c60cb57a96edcf0fe66656256e939f54e6c3cfe45425db929a886420bd37a82",
+          "runtime_JSONL_SHA256": "75a117021ac3e6a9dab251a6d8b4d414dc7cb46580ec58da19b44e7c0e1a0930",
+          "wrapper_receipt_SHA256": "88dd0bd3e116cb140d6f834c362b83b92c63ae6caa22a54ac1d35e74a38a3cb8",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "07c8e9ad72147199d1b8142ab3044c53164eab663350145dc39ea86b82ca9664",
+          "runtime_JSONL_SHA256": "53daf97eee5f9658bd9a1dd8bc974e63d384bdb81f846da64ddd64fef846d0ee",
+          "wrapper_receipt_SHA256": "37ab3e4a12a83d5c074c18ef1c19dc2e889be2fc376a2ff4995a7c65865667f0",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "440dbbe7ae6fbbe10f71a26af490b7695c9e9a546f6f419abe820024f44087c5",
+          "runtime_JSONL_SHA256": "25c11e2ca728b4bbd07d909ebcf061262514a4b8d88dd38509ff5b017de7743a",
+          "wrapper_receipt_SHA256": "aeb92d25a5271131645c3c7e1f5b32da67fccb98d8a4ee5939eded2980f73f75",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "707629a46bc1524612ef31e3e4c9de5ba78a236c73af9d2c64d1a6fdd744fde2",
+          "runtime_JSONL_SHA256": "f290f0545e5827e83d96fc49cf6aac2b01538b18068eb89da0f19df936849da1",
+          "wrapper_receipt_SHA256": "e68a074a7dc354a0b65d5c1e92387d2d6842087c064ae22b1e2141a532ad71a6",
+          "resume_contract_canonical_SHA256": "337cd1b3e559ac1702cf472d3185c88bc04a9e8b5cc16770a9dd123af19de40c",
+          "complete_named_parameter_coverage_canonical_SHA256": "fb0772dc01aa6e14e5ff07d17971a5a719844d4b9726319a5014b27eacd85ade",
+          "model_named_parameter_tensors": 730,
+          "trainable_parameter_tensors": 569,
+          "original_participating_gradient_and_Adam_parameter_tensors": 259,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        }
+      ]
+    },
+    {
+      "profile": "hydra",
+      "precision": "fp32",
+      "physical_devices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "stage": "own1to2",
+      "initial_update": 1,
+      "final_update": 2,
+      "checkpoint_SHA256": "6f46d02e331f1953518a0e2d1f2829e5eeba036a8be715aae0f6072dfa3c4e4a",
+      "resume_checkpoint_SHA256": "41bc3803d499d4600083e89e22ae070547032b8bb0375e473b4d67b25827f670",
+      "execution": {
+        "actual_exit": 0,
+        "OOMKilled": false,
+        "started_UTC": "2026-10-17T15:05:27.336531041Z",
+        "finished_UTC": "2026-10-17T15:11:22.984522731Z"
+      },
+      "ranks": [
+        {
+          "rank": 0,
+          "runtime_SHA256": "23fb739f4d9fc4dd94c7ea7b2c8c37f4b4af92f60ef10bffee32ff1e59466692",
+          "runtime_JSONL_SHA256": "240f425e9b100549b049dc725864cea50013b809aa0b6bb5448170427056942f",
+          "wrapper_receipt_SHA256": "d5258b14a7f882a55341a3a70312de3c930549022934a2f89bf646b079b76cca",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 1,
+          "runtime_SHA256": "513065d51555d7f888b3967de28d677105d483969c4fe7c171e8555c10864179",
+          "runtime_JSONL_SHA256": "e53357a64d5016dcb0dad040cbf6a1335c73665bb1960b3acc376f578bdbf16f",
+          "wrapper_receipt_SHA256": "c124d787f0b717f69a5b51e36087ccd1b1ece971e942cc9e8776a5f233db59fa",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 2,
+          "runtime_SHA256": "26acd2fbc59298f88dd81777815cdd90f01ca12599ca7821aa575a2d68fadc29",
+          "runtime_JSONL_SHA256": "416e1b719ad2176df5cd46d5c3d0ad1dc5a109b85bbc87b64ee36777e3f2f74f",
+          "wrapper_receipt_SHA256": "0f20c13fe4e1fa24bbb81167996c99159ecee3f612ec6523bfb35117f50b166b",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        },
+        {
+          "rank": 3,
+          "runtime_SHA256": "e2bbf3d4a55936e3acd08224f14051370e3897587ec8c3eed068a1cf26ca44be",
+          "runtime_JSONL_SHA256": "e0c7e6952dfbf433f859a9988656fa7219382a79b97ae6a946e5fbc05f374be1",
+          "wrapper_receipt_SHA256": "e2328e48eb750ee9b01e68bda1bea9535ed89da60013caf358e0f5c7108303c2",
+          "resume_contract_canonical_SHA256": "c2ac8dae831c53cdb603d09114c727e5c49fb27792db91c300a4e6069e07918c",
+          "complete_named_parameter_coverage_canonical_SHA256": "d43e1782598a45cbc8bfa3ae8709c2238a69e21c632e56af919517b5308f7ab9",
+          "model_named_parameter_tensors": 750,
+          "trainable_parameter_tensors": 589,
+          "original_participating_gradient_and_Adam_parameter_tensors": 279,
+          "legitimate_trainable_parameters_unused_in_this_update": 310,
+          "all_participating_gradient_and_Adam_tensors_finite": true,
+          "Adam_step": 2,
+          "stable_precision_policy_unchanged": true,
+          "original_classified_RNG_event_states_exact": true,
+          "exact_saved_model_optimizer_restore": true
+        }
+      ]
+    }
+  ],
+  "inference": {
+    "status": "completed_four_original_public_DDP4_eval22_groups",
+    "summary_SHA256": "40f43f211054565218c93c69e58fdc780a71e452c548382010b8620bbe9e6b08",
+    "finished_UTC": "2026-10-17T15:24:56.093940+00:00",
+    "groups": [
+      {
+        "profile": "vad",
+        "precision": "fp32",
+        "world_size": 4,
+        "anchors": 22,
+        "unique_tokens": 22,
+        "trajectory_shape": [
+          40,
+          3
+        ],
+        "all_trajectories_finite": true,
+        "selected_trajectories_match_original_vocabulary": true,
+        "checkpoint_SHA256": "3f127f6f29bdf954c6c7eaf4f8c47d67a3c3f457d7ab986eaf08a4e566957cb2",
+        "predictions_SHA256": "7a50673ca4cb4eb4e15e154ec53d9b3afaac592c7ef01c38aa59da372bd6358e",
+        "original_validation_canonical_SHA256": "5fde4caea894f8704c4fec340b2c857ac0e134a10e24cd2e980b7a5da497ae2d",
+        "execution": {
+          "actual_exit": 0,
+          "OOMKilled": false,
+          "started_UTC": "2026-10-17T15:20:08.367518411Z",
+          "finished_UTC": "2026-10-17T15:24:45.552524451Z"
+        }
+      },
+      {
+        "profile": "hydra",
+        "precision": "fp32",
+        "world_size": 4,
+        "anchors": 22,
+        "unique_tokens": 22,
+        "trajectory_shape": [
+          40,
+          3
+        ],
+        "all_trajectories_finite": true,
+        "selected_trajectories_match_original_vocabulary": true,
+        "checkpoint_SHA256": "6f46d02e331f1953518a0e2d1f2829e5eeba036a8be715aae0f6072dfa3c4e4a",
+        "predictions_SHA256": "9c88cf8f0ab3763baad518a0922804652af0a1e7526d5deae9371a977ac0e4e7",
+        "original_validation_canonical_SHA256": "ebaa16b221d84991b7cfa55ea78746f3a66388f1d6fb29d0d786fc5f503781d2",
+        "execution": {
+          "actual_exit": 0,
+          "OOMKilled": false,
+          "started_UTC": "2026-10-17T15:20:08.487409521Z",
+          "finished_UTC": "2026-10-17T15:24:45.623665001Z"
+        }
+      },
+      {
+        "profile": "vad",
+        "precision": "bf16",
+        "world_size": 4,
+        "anchors": 22,
+        "unique_tokens": 22,
+        "trajectory_shape": [
+          40,
+          3
+        ],
+        "all_trajectories_finite": true,
+        "selected_trajectories_match_original_vocabulary": true,
+        "checkpoint_SHA256": "044646d2da0b8f5e0f0704dc8c1642d1d7721740d4ec6b874936726ee4a79b34",
+        "predictions_SHA256": "57aa8a9887b40c68e9fdccad89295065c7e6cdb3e50c374ebcac7e8e23bee72e",
+        "original_validation_canonical_SHA256": "b3b591e7c65f9cb3dbb809c048af67b86557672a4d6023af06e8e980ed7b0483",
+        "execution": {
+          "actual_exit": 0,
+          "OOMKilled": false,
+          "started_UTC": "2026-10-17T15:20:08.619207381Z",
+          "finished_UTC": "2026-10-17T15:24:45.566911701Z"
+        }
+      },
+      {
+        "profile": "hydra",
+        "precision": "bf16",
+        "world_size": 4,
+        "anchors": 22,
+        "unique_tokens": 22,
+        "trajectory_shape": [
+          40,
+          3
+        ],
+        "all_trajectories_finite": true,
+        "selected_trajectories_match_original_vocabulary": true,
+        "checkpoint_SHA256": "2ffb1c3cc502924113075c287d0d013648121b5ce2dc194041daf2bc949826fb",
+        "predictions_SHA256": "05d560fd77f9fd214a1767d8e00df5ca32f046988cf86a47606970dd8e8ea384",
+        "original_validation_canonical_SHA256": "7981a5944cfe2c3c831d49254d15e917b9d563cd3c61b9431bfae04e43a9ae73",
+        "execution": {
+          "actual_exit": 0,
+          "OOMKilled": false,
+          "started_UTC": "2026-10-17T15:20:08.752820981Z",
+          "finished_UTC": "2026-10-17T15:24:42.066345571Z"
+        }
+      }
+    ]
+  },
+  "official_CPU_scoring": {
+    "status": "completed_four_original_official_NAVSIM_CPU22_scores",
+    "summary_SHA256": "78b76fa1818f9905c5437d75ad75ff0f733c4d9ec74e50ed704e97de58e112ac",
+    "finished_UTC": "2026-10-17T15:26:07.876329+00:00",
+    "groups": [
+      {
+        "profile": "vad",
+        "precision": "fp32",
+        "valid_tokens": 22,
+        "metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 0.9545454545454546,
+          "ego_progress": 0.8017444207047966,
+          "time_to_collision_within_bound": 0.9545454545454546,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.8719389631724531
+        },
+        "NAVSIM_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+        "predictions_SHA256": "7a50673ca4cb4eb4e15e154ec53d9b3afaac592c7ef01c38aa59da372bd6358e",
+        "official_score_JSON_SHA256": "87e31a50bded5c4425b8230e546fbbd6233dc384c616d624643628111f07f1a7",
+        "official_scores_CSV_SHA256": "fc8570b05c8b0c59eebc1c80969b6e96d1f28908661a29b360a1978f4b62fd81",
+        "CPU_metadata_SHA256": "88ad1ca26720f73347827ff72352dc6616c22bc1fc2b1be15e071c8ac76a6fe4",
+        "accelerator_initialized": false
+      },
+      {
+        "profile": "hydra",
+        "precision": "fp32",
+        "valid_tokens": 22,
+        "metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.8880240861087443,
+          "time_to_collision_within_bound": 1.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.9533433692119765
+        },
+        "NAVSIM_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+        "predictions_SHA256": "9c88cf8f0ab3763baad518a0922804652af0a1e7526d5deae9371a977ac0e4e7",
+        "official_score_JSON_SHA256": "d23eeb34fcf5c6f235f66edc2d30209cbd87da8c309cef819f5cfe9955eb0627",
+        "official_scores_CSV_SHA256": "26275ebccec37e7a9bba5a4cb663029d72e3dc7074296d60fd7f6183bf850763",
+        "CPU_metadata_SHA256": "6e3c2f8d7e6976f87d3e4af39150ecb29ff9a9257081e9ca25dcd75d5f3d49c3",
+        "accelerator_initialized": false
+      },
+      {
+        "profile": "vad",
+        "precision": "bf16",
+        "valid_tokens": 22,
+        "metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.8270218650463018,
+          "time_to_collision_within_bound": 0.9545454545454546,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.9089863831632318
+        },
+        "NAVSIM_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+        "predictions_SHA256": "57aa8a9887b40c68e9fdccad89295065c7e6cdb3e50c374ebcac7e8e23bee72e",
+        "official_score_JSON_SHA256": "5e8665ec31260570d9e114cee0e2cf2ed7d7dbb3e17184c5707c1b0756dc1d9a",
+        "official_scores_CSV_SHA256": "43cbbfcf4aa5d32e52c1c92edd81682ae402a38e0a1f55501887ad2b8292df42",
+        "CPU_metadata_SHA256": "132fcd1d7cefab50fc124dd2f45eb0e438f2691a6db4a81569168a34cb6dab3d",
+        "accelerator_initialized": false
+      },
+      {
+        "profile": "hydra",
+        "precision": "bf16",
+        "valid_tokens": 22,
+        "metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.8888232439684249,
+          "time_to_collision_within_bound": 1.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.9536763516535103
+        },
+        "NAVSIM_commit": "3e8291bfa89ff247231e0227778840cd0a036896",
+        "predictions_SHA256": "05d560fd77f9fd214a1767d8e00df5ca32f046988cf86a47606970dd8e8ea384",
+        "official_score_JSON_SHA256": "d8e8136ec988f9e65d1b31af30b3c708ce7852b264917bedb86733ad22007a41",
+        "official_scores_CSV_SHA256": "0767bf66f3fe14a12dda8226de2de116c2e279167eb9b06c83ec96cbb0e5e2ce",
+        "CPU_metadata_SHA256": "abd9f4bd4860423c70ad021bcd06b7355ab2f597dc1d2fa737460c073149c19f",
+        "accelerator_initialized": false
+      }
+    ]
+  },
+  "scope": {
+    "functional_training_and_exact_own_checkpoint_restore": true,
+    "strict_independent_numerical_replay_tested": false,
+    "original_world16_global16_training_replaced": false,
+    "convergence_validated": false,
+    "quality_equivalence_asserted": false,
+    "all_trainable_parameters_claimed_active": false,
+    "checkpoint_model_state_saved_only_rank0": true,
+    "all_rank_RNG_and_named_participation_audited": true
+  },
+  "limitations": [
+    "Two updates remain within the original500-update warmup; no convergence or quality conclusion.",
+    "Four independent4-rank groups have global batch4 each; this is not the original16-rank/global16 replay.",
+    "Complete saved-state restoration proves checkpoint restoration, not equality of a separately continued numerical trajectory."
+  ],
+  "reconciliation_started_UTC": "2026-10-17T15:17:23.165974+00:00",
+  "reconciliation_finished_UTC": "2026-10-17T15:17:43.212736+00:00",
+  "training_model_processes_started_UTC": "2026-10-17T14:59:29.022272661Z",
+  "training_model_processes_finished_UTC": "2026-10-17T15:11:24.591705221Z",
+  "training_time_scope": "Earliest actual model-container start through latest actual model-container finish across the four parallel groups; not a throughput benchmark.",
+  "completion_reconciliation": {
+    "original_training_controller_SHA256": "66ccefa3bdb175418fd0cedd11ee5c00c64100fdfcebcfba4a3a655402241ae0",
+    "original_controller_summary_SHA256": "7e9049b4c84da445bc2c1ed5a3bb6126c0c2da31d5c9fbf32be746803945b821",
+    "original_controller_actual_exit": 2,
+    "original_controller_error": "KeyError('model_state')",
+    "read_only_reconciliation_controller_SHA256": "2df24342bfc5947298323ebb7d963d06b9db6a00ee0d5db1365bbcca9c94a2a4",
+    "read_only_reconciliation_actual_exit": 0,
+    "original_files_before_after_SHA256_unchanged": 133,
+    "original_training_or_production_source_modified": false,
+    "new_training_started_by_reconciliation": false,
+    "explanation": "All eight original model processes had already exited0. The orchestration lookup omitted Hydra model_state=909; an independent CPU reread retained the original error and verified all existing checkpoints,32 rank-stage receipts,16 own-resume restores and original source/input identities."
+  }
+}

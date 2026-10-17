@@ -52,6 +52,8 @@ def main():
     p.add_argument('--precision',choices=('fp32','fp32-hf32-conv','bf16'),default='fp32',
                    help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native NPU autocast with FP32 MSDA and FP32 master training state, without a scaler')
     p.add_argument('--debug-anomaly',action='store_true')
+    p.add_argument('--msda-backend',choices=('reference','cuda-compatible'),default='reference',
+                   help='FP32 MSDA implementation; preserve the selection for training, resume and inference')
     args=p.parse_args()
     if args.train_filter and (args.task!='train' or not args.data_root or args.mini_prepared):
         p.error('--train-filter requires train with --data-root and without --mini-prepared')
@@ -98,7 +100,7 @@ def main():
                       'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}.items():
         cmd+=['-e',key+'='+value]
     train=['ascend/train.py','--profile',args.profile,'--output','/output','--checkpoint','/weights/initial.pth',
-           '--vocab','/weights/vocab.npy','--precision',args.precision]
+           '--vocab','/weights/vocab.npy','--precision',args.precision,'--msda-backend',args.msda_backend]
     for key in ('batch_size','workers','lr','epochs','stop_after','stop_after_epochs','duration_seconds','checkpoint_interval','check_interval'):
         value=getattr(args,key)
         if value is not None:train+=['--'+key.replace('_','-'),str(value)]
@@ -159,7 +161,7 @@ def main():
     if args.task=='inference':
         config=args.config.resolve(strict=True)
         cmd+=['-v',f'{config}:/config/inference.py:ro']
-        train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output','--precision',args.precision]
+        train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output','--precision',args.precision,'--msda-backend',args.msda_backend]
         if args.deterministic:train+=['--deterministic']
     import shlex
     inner='set +u\nsource /usr/local/Ascend/ascend-toolkit/set_env.sh\nexport PATH=/opt/conda/envs/bevformer/bin:/opt/conda/bin:$PATH\n'
@@ -171,12 +173,12 @@ def main():
     if args.inference_after:
         profile=args.config.stem if args.config else args.profile
         inference=['ascend/inference.py','--config',f'/output/{profile}_rank0.py',
-                   '--checkpoint',f'/output/iter_{args.steps}.pth','--output','/output/inference','--precision',args.precision]
+                   '--checkpoint',f'/output/iter_{args.steps}.pth','--output','/output/inference','--precision',args.precision,'--msda-backend',args.msda_backend]
         if args.deterministic:inference+=['--deterministic']
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'
     cmd += [args.image,'bash','-lc',inner]
-    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic},indent=2))
+    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend},indent=2))
     result=subprocess.run(cmd,check=False)
     raise SystemExit(result.returncode)
 

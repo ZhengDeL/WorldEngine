@@ -17,6 +17,8 @@
 
 ## AlgEngine on Ascend 910C / A3
 
+The default MSDA backend is `reference`; select `--msda-backend cuda-compatible` for the optional [CUDA-compatible route](ascend/MSDA_CUDA.md).
+
 The `ascend-910c-algengine` branch adds NPU training, fine-tuning, complete
 checkpoint restoration, inference and evaluation entry points for AlgEngine.
 SimEngine retains its upstream GPU workflow.
@@ -26,19 +28,9 @@ SimEngine retains its upstream GPU workflow.
   [official-data NAVTRAIN139 / NAVTEST22 preparation](ascend/data_tools/navtrain139/README.md)
 - [Validation report](ascend/FULL_ALGENGINE.md) / [中文验证报告](ascend/VALIDATION_zh.md)
 
-The public dependency recipe and deterministic official-data subset have CPU
-reproduction records. The usage guide covers official 100%-trained planning
-initializers, FP32 training, own-checkpoint resume, independent inference and
-original NAVSIM scoring. Both official 100% planning configurations completed
-[eight BF16 v7 updates, own-checkpoint restoration and independent scoring on 16 ranks](ascend/results/bf16-v7-navtrain139-short8-20261016.json), with
-[the prior 138 gradient/Adam coverage omissions restored per model](ascend/results/bf16-v7-gradient-coverage-20261016.json). Both complete replay
-comparisons still exceeded the original tolerances. BF16 remains experimental;
-the defective v6 execution record is retained separately. Historical
-small-data model results are versioned separately. A separate [official100 GPU/NPU FP32 comparison](ascend/results/gpu-npu-official100-eval22-20261016.json) matched both models' selected trajectories and all seven per-token official-score metrics on the same 22 anchors. The [original CUDA baseline](ascend/CUDA_BASELINE.md) adds complete MSDA gradients and eight-GPU short training/resume measurements; completed comparisons include values outside the unchanged numerical gates. Full NAVTRAIN convergence,
-full independent benchmark quality, paired GPU/NPU training validation, broader cross-precision quality validation and general numerical
-reproducibility remain outside completed acceptance.
+The CUDA-compatible backend completed [VADv2 and HydraMDP in FP32/BF16](ascend/results/cuda-compatible-navtrain139-short2-20261017.json): two updates, full own-checkpoint restoration, DDP4 inference and independent official NAVSIM scoring. Each group used four logical NPUs. The configured official-data subset contains 139 training anchors; these runs consumed the same eight training anchors and evaluated the same 22 held-out anchors. See the [measured commands](ascend/MSDA_CUDA.md#training-own-checkpoint-resume-and-inference).
 
-The separate [BF16 v7 rare-log fine-tuning record](ascend/results/real-log-ft37-bf16-v7-short8-20261016.json) contains two bitwise replay comparisons on 37/22 real-log data, one complete VAD evaluation chain and an interrupted Hydra evaluation; it does not extend the NAVTRAIN139 result.
+The [validation report](ascend/FULL_ALGENGINE.md) retains earlier 16-rank/eight-update controls, completed numerical comparisons outside their original tolerances, BF16 gradient-coverage repairs and real-log fine-tuning results. Full NAVTRAIN convergence, full independent benchmark quality, untested synthetic inputs and general numerical reproducibility remain outside completed acceptance. Performance optimization is a separate workstream.
 
 <div id="top" align="center">
 <p align="center">

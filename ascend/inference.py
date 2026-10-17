@@ -46,7 +46,11 @@ def main():
     p.add_argument('--precision',choices=('fp32','fp32-hf32-conv','bf16'),default='fp32',
                    help='fp32 disables Matmul/Conv HF32; fp32-hf32-conv reproduces legacy Conv HF32; bf16 uses native NPU autocast with an FP32 MSDA island and original FP32 weights')
     p.add_argument('--deterministic',action='store_true',help='Request original Torch/CANN deterministic algorithms with required initial launcher environment')
+    p.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
+                   help='Use the same MSDA backend as training or the selected comparison')
     args=p.parse_args()
+    from ascend.msda import configure_backend
+    configure_backend(args.msda_backend)
     # Keep actual loaded files and exported artifacts stable across os.chdir(ALG).
     args.config=args.config.resolve(strict=True)
     args.checkpoint=args.checkpoint.resolve(strict=True)
@@ -90,6 +94,8 @@ def main():
     final_precision=precision_state(args.precision,stage='after_original_inference')
     if final_precision['public']!=actual_precision['public']:
         raise RuntimeError('Public NPU precision changed during original inference')
+    if final_precision['msda'] != actual_precision['msda']:
+        raise RuntimeError('MSDA backend changed during original inference')
     if torch.distributed.get_rank()==0:
         identity=dict(image_id=os.environ.get('WORLDENGINE_IMAGE_ID'),source_sha256=source_fingerprint(),
                       source_config_sha256=digest(args.config),checkpoint_sha256=digest(args.checkpoint),

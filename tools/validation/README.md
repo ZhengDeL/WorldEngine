@@ -21,6 +21,10 @@ checks complete operator outputs/gradients with the original CPU32 and repeated
 native gates. See the [measured CUDA operator and training baseline](../../ascend/CUDA_BASELINE.md)
 ([中文](../../ascend/CUDA_BASELINE_zh.md)); numerical negatives remain explicit.
 
+## CUDA-to-NPU operator reproduction
+
+The [original CUDA golden exporter](README_export_cuda_msda_goldens.md) ([中文](README_export_cuda_msda_goldens_zh.md)) writes fixed inputs and complete reference tensors. Copy the resulting directory to the NPU host, then use the [registered-entry NPU checker](README_npu_cuda_msda.md) ([中文](README_npu_cuda_msda_zh.md)). Both tools preserve the separate CUDA and CPU32 numerical targets and original tolerances. See the [backend guide](../../ascend/MSDA_CUDA.md) for model usage and measured scope.
+
 ## Compare trajectories and original scores
 
 First produce each arm's predictions with the

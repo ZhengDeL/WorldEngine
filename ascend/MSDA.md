@@ -2,6 +2,8 @@
 
 [中文说明](MSDA_zh.md) · [measured results](evidence/msda-precision-20261013.json)
 
+This page records the default `reference` route and its historical CPU32 target. The optional [CUDA-compatible backend](MSDA_CUDA.md) has a separate target: public MX/MMCV entries pass all 64 complete CUDA tensor comparisons; of 16 CPU32 comparisons, eight pass and eight remain outside tolerance. See the [operator record](results/npu-cuda-msda-20261017.json). These results preserve the historical CPU32 gates; full-model results are separate.
+
 The tested FP32 MSDA location-gradient path passes the original CPU32 tolerance. The original full-module report remains historical evidence for source fingerprint `96a7bef…`; its hour-long throughput and memory numbers are not measurements of this implementation.
 
 The [October 17 original CUDA baseline](CUDA_BASELINE.md) adds full forward/three-gradient measurements on two normal L1 shapes and original eight-GPU training controls. The CUDA extension itself contains elements outside the unchanged CPU32 gates on these inputs. This does not invalidate the recorded NPU-to-CPU32 results or establish matched-input CUDA/NPU gradient agreement.

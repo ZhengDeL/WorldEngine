@@ -307,7 +307,7 @@ class AscendRuntimeHook(Hook):
         before_precision=runner.resume_contract['precision']
         after_precision=precision_state(before_precision['mode'],stage='after_original_training')
         if any(after_precision[key]!=before_precision[key] for key in
-               ('mode','public','torch_deterministic','environment')):
+               ('mode','public','torch_deterministic','environment','msda')):
             raise RuntimeError('Actual NPU precision/execution settings changed during original training')
         for key in ('ALLOW_MATMUL_HF32','ALLOW_CONV_HF32'):
             before=before_precision['raw_options'][key];after=after_precision['raw_options'][key]

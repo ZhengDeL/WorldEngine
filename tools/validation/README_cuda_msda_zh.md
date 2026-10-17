@@ -1,5 +1,7 @@
 # 原 CUDA MSDA 验证
 
+固定原CUDA输入和完整参照的导出、注册入口NPU对照，见[金样导出器](README_export_cuda_msda_goldens_zh.md)及[NPU验证器](README_npu_cuda_msda_zh.md)。
+
 [English](README_cuda_msda.md) · [CUDA 实测基线](../../ascend/CUDA_BASELINE_zh.md)
 
 该独立 Linux 工具比较原 `mmcv-full==1.6.2` CUDA MSDA、未改的 CPU FP32
