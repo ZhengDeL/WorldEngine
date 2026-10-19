@@ -22,6 +22,10 @@
 </div>
 
 
+## Ascend SimEngine assessment
+
+This branch evaluates SimEngine on Ascend 910C. It currently contains a source and dependency assessment; an NPU renderer and closed-loop validation have not been delivered. See the [assessment](docs/simengine_ascend_assessment.md) / [中文评估](docs/simengine_ascend_assessment_zh.md) for the rendering API gaps, required inputs and validation plan.
+
 ## Table of Contents
 - [Highlights](#highlights)
 - [News](#news)
