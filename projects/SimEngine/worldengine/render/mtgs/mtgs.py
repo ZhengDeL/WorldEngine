@@ -10,11 +10,6 @@ import cv2
 from pyquaternion import Quaternion
 import torch
 
-try:
-    from gsplat.rendering import rasterization
-except ImportError:
-    print("Please install gsplat>=1.0.0")
-
 from worldengine.scenario.scenarios.scenario_description import ScenarioDescription as SD
 from worldengine.engine.engine_utils import get_global_config
 from worldengine.utils.geometry_utils import Sim2
@@ -52,9 +47,25 @@ class MTGSRenderEngine(BaseRenderer):
         rasterize_mode: Literal["classic", "antialiased"] = "antialiased",
         radius_clip: float = 0.,
         background_color: Union[Literal["random", "black", "white"], Tuple] = "black",
+        rasterization_backend: Literal['gsplat', 'cann'] = 'gsplat',
+        npu_compat_manifest = None,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
+        self.rasterization_backend = rasterization_backend
+        if rasterization_backend == 'cann':
+            import torch_npu  # Explicit NPU selection; CUDA startup does not import it.
+            if torch.device(self.device).type != 'npu':
+                raise ValueError('The CANN renderer requires an explicit npu:<id> device')
+            from worldengine.render.ascend.cann import CANNRasterizer
+            self._rasterization = CANNRasterizer(npu_compat_manifest)
+            self.pose_device = torch.device('cpu')
+        elif rasterization_backend == 'gsplat':
+            from gsplat.rendering import rasterization
+            self._rasterization = rasterization
+            self.pose_device = self.device
+        else:
+            raise ValueError('Unknown MTGS rasterization backend: '+str(rasterization_backend))
         self.enable_collider = enable_collider
         self.render_depth = render_depth
         self.rasterize_mode = rasterize_mode
@@ -94,8 +105,14 @@ class MTGSRenderEngine(BaseRenderer):
     def _init_gaussian_models(self):
         if hasattr(self, "gaussian_models"):
             del self.gaussian_models
-            torch.cuda.empty_cache()
+            self._empty_device_cache()
         self.gaussian_models = torch.nn.ParameterDict()
+
+    def _empty_device_cache(self):
+        if self.rasterization_backend == 'cann':
+            torch.npu.empty_cache()
+        else:
+            torch.cuda.empty_cache()
 
     @cached_property
     def background_asset(self):
@@ -126,7 +143,7 @@ class MTGSRenderEngine(BaseRenderer):
         digitaltwin_agent2states = {}
         current_scene: SD = self.engine.managers['scenario_manager'].current_scene
         digitaltwin_ego2globals = torch.tensor(
-            np.array(current_scene[SD.METADATA]['digitaltwin_ego2globals']), dtype=torch.float64, device=self.device
+            np.array(current_scene[SD.METADATA]['digitaltwin_ego2globals']), dtype=torch.float64, device=self.pose_device
         )
         digitaltwin_ego2globals_trans = digitaltwin_ego2globals[:, :3, 3]
         digitaltwin_ego2globals_quat = matrix_to_quaternion(digitaltwin_ego2globals[:, :3, :3])
@@ -145,8 +162,8 @@ class MTGSRenderEngine(BaseRenderer):
             in_frame_mask = self.gaussian_models[model_name].log_trans[:, 2] < 1000
 
             digitaltwin_agent2states[asset_token] = {
-                'translation': self.gaussian_models[model_name].log_trans[in_frame_mask].double(),
-                'rotation': self.gaussian_models[model_name].log_quats[in_frame_mask].double(),
+                'translation': self.gaussian_models[model_name].log_trans[in_frame_mask].to(self.pose_device).double(),
+                'rotation': self.gaussian_models[model_name].log_quats[in_frame_mask].to(self.pose_device).double(),
             }
         return digitaltwin_agent2states
 
@@ -175,8 +192,23 @@ class MTGSRenderEngine(BaseRenderer):
             self.submodel_names[asset_token] = model_name
             self.gaussian_models[model_name] = asset_class(
                 asset=sub_asset,
-                model_name=model_name
+                model_name=model_name,
+                sh_backend='torch-npu' if self.rasterization_backend == 'cann' else 'gsplat',
             )
+            if self.rasterization_backend == 'cann':
+                model = self.gaussian_models[model_name]
+                # Keep the small original pose logs at FP64 on CPU.  Loading a
+                # whole checkpoint directly onto NPU would also move unsupported
+                # FP64 metadata there before the model could separate it.
+                pose_logs = {name: getattr(model,name).detach().cpu().double()
+                             for name in ('log_trans','log_quats','log_timestamps')
+                             if hasattr(model,name)}
+                model.float().to(device=self.device)
+                for name,value in pose_logs.items():
+                    if name in model._parameters:
+                        setattr(model,name,torch.nn.Parameter(value,requires_grad=False))
+                    else:
+                        setattr(model,name,value)
 
     @staticmethod
     def get_transform_matrix(rotation, translation):
@@ -335,14 +367,14 @@ class MTGSRenderEngine(BaseRenderer):
             render_mode = "RGB"
 
         BLOCK_WIDTH = 16  # this controls the tile size of rasterization, 16 is a good default
-        render, alpha, _ = rasterization(
+        render, alpha, _ = self._rasterization(
             means=self.collected_gaussians['means'],
             quats=self.collected_gaussians['quats'],
             scales=self.collected_gaussians['scales'],
             opacities=self.collected_gaussians['opacities'],
             colors=self.collected_gaussians['rgbs'],
             viewmats=viewmat,       # [C, 4, 4]
-            Ks=INTRINSICS.cuda(),   # [C, 3, 3]
+            Ks=INTRINSICS.cuda() if self.rasterization_backend == 'gsplat' else INTRINSICS.to(self.device),
             width=SHAPE['width'],
             height=SHAPE['height'],
             tile_size=BLOCK_WIDTH,
@@ -398,8 +430,8 @@ class MTGSRenderEngine(BaseRenderer):
 
         digitaltwin_agent_state = self.digitaltwin_agent2states[name]
 
-        agent_state_xy = torch.tensor(agent_state[:2], device=self.device, dtype=torch.float64)
-        agent_state_heading = torch.tensor(agent_state[-1], device=self.device, dtype=torch.float64)
+        agent_state_xy = torch.tensor(agent_state[:2], device=self.pose_device, dtype=torch.float64)
+        agent_state_heading = torch.tensor(agent_state[-1], device=self.pose_device, dtype=torch.float64)
 
         nearsest_idx = torch.argmin(torch.norm(digitaltwin_agent_state['translation'][:, :2] - agent_state_xy, dim=-1))
         log_trans = digitaltwin_agent_state['translation'][nearsest_idx]
@@ -410,7 +442,7 @@ class MTGSRenderEngine(BaseRenderer):
         heading_diff = agent_state_heading - log_rot_yaw
         cos_vals = torch.cos(heading_diff)
         sin_vals = torch.sin(heading_diff)
-        rot_matrix_diff = torch.zeros(3, 3, device=self.device, dtype=torch.float64)
+        rot_matrix_diff = torch.zeros(3, 3, device=self.pose_device, dtype=torch.float64)
         rot_matrix_diff[0, 0] = cos_vals
         rot_matrix_diff[0, 1] = -sin_vals
         rot_matrix_diff[1, 0] = sin_vals
@@ -422,7 +454,7 @@ class MTGSRenderEngine(BaseRenderer):
         new_rot_matrix = rot_matrix_diff @ log_rot_matrix
 
         if return_matrix:
-            agent2global = torch.zeros(4, 4, device=self.device, dtype=torch.float64)
+            agent2global = torch.zeros(4, 4, device=self.pose_device, dtype=torch.float64)
             agent2global[:3, :3] = new_rot_matrix
             agent2global[:3, 3] = new_trans
             agent2global[3, 3] = 1.0
@@ -436,6 +468,8 @@ class MTGSRenderEngine(BaseRenderer):
 class MTGSAssetManager:
 
     def __init__(self, asset_folder_path: Path, device: torch.device):
+        if str(device).split(':',1)[0] == 'npu':
+            import torch_npu
         self.asset_folder_path = asset_folder_path
         self.current_asset_id = None
         self.device = device
@@ -455,7 +489,10 @@ class MTGSAssetManager:
                 pass
             del self.background_asset
             self.background_asset = None
-            torch.cuda.empty_cache()
+            if torch.device(self.device).type == 'npu':
+                torch.npu.empty_cache()
+            else:
+                torch.cuda.empty_cache()
 
         self.current_asset_id = asset_id
         self.load_asset()
@@ -473,7 +510,12 @@ class MTGSAssetManager:
         # load background asset
         background_asset_path = self.asset_dir / 'background' / f'{self.current_asset_id}.ckpt'
         assert background_asset_path.exists(), f"asset {background_asset_path} not exist!"
-        self.background_asset = torch.load(background_asset_path, map_location=self.device)
+        if torch.device(self.device).type == 'npu':
+            # Official portable assets are trusted pickles, loaded on CPU first
+            # so FP64 geometry can be kept outside the NPU Gaussian payload.
+            self.background_asset = torch.load(background_asset_path, map_location='cpu', weights_only=False)
+        else:
+            self.background_asset = torch.load(background_asset_path, map_location=self.device)
 
         # road_height_map_path = self.asset_dir / 'road_height_map'
         # self.road_height_map = dict(

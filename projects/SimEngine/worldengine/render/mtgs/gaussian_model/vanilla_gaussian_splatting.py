@@ -4,11 +4,6 @@ import numpy as np
 import torch
 from torch.nn import Parameter, Module
 
-try:
-    from gsplat.cuda._wrapper import spherical_harmonics
-except ImportError:
-    print("Please install gsplat>=1.0.0")
-
 class VanillaPortableGaussianModel(torch.nn.Module):
     """Portable Gaussian Splatting model
 
@@ -30,6 +25,9 @@ class VanillaPortableGaussianModel(torch.nn.Module):
         self.eval()
         self.model_type = self.MODEL_TYPE
         self.model_name = model_name
+        self.sh_backend = kwargs.get('sh_backend', 'gsplat')
+        if self.sh_backend not in ('gsplat', 'torch-npu'):
+            raise ValueError('Unknown explicitly selected SH backend')
         self.config = self._update_default_config(asset.config)
         self._init_gauss_params()
         self.load_state_dict(asset.state_dict)
@@ -119,17 +117,27 @@ class VanillaPortableGaussianModel(torch.nn.Module):
 
     def get_opacity(self):
         return torch.sigmoid(self.gauss_params['opacities']).squeeze(-1)
+
+    def _evaluate_sh(self, directions, coefficients):
+        if self.sh_backend == 'torch-npu':
+            if directions.device.type != 'npu' or coefficients.device.type != 'npu':
+                raise ValueError('The NPU SH backend does not fall back to CPU or CUDA')
+            from worldengine.render.ascend.sh import spherical_harmonics
+        else:
+            from gsplat.cuda._wrapper import spherical_harmonics
+        return spherical_harmonics(self.sh_degree, directions, coefficients)
     
     def get_gaussian_rgbs(self, camera_to_worlds, device=None, **kwargs):
         device = device if device is not None else self.device
-        assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
+        if self.sh_backend == 'gsplat':
+            assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
         assert self.features_dc.dim() == 2, \
             "if Fourier embedding is used in models derived from `VanillaPortableGaussianModel`, a new `get_gaussian_rgbs` function must be implemented"
         colors = torch.cat((self.features_dc[:, None, :], self.features_rest), dim=1).to(device)
         if self.sh_degree > 0:
             viewdirs = self.means.detach().to(device) - camera_to_worlds[..., :3, 3].to(device)  # (N, 3)
             viewdirs = viewdirs / viewdirs.norm(dim=-1, keepdim=True)
-            rgbs = spherical_harmonics(self.sh_degree, viewdirs, colors)
+            rgbs = self._evaluate_sh(viewdirs, colors)
             rgbs = torch.clamp(rgbs + 0.5, 0.0, 1.0)
         else:
             rgbs = torch.sigmoid(colors[:, 0, :])

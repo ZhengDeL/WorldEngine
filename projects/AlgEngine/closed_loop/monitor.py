@@ -1,212 +1,93 @@
+"""Finite, deterministic monitor for complete published frame metadata."""
 import asyncio
-import os
-from pathlib import Path
-from typing import List, Set, Optional
-import logging
-import time
 from collections import deque
+import logging
+import math
+from pathlib import Path
+import re
+import time
 
 
 class AsyncFileMonitor:
-    def __init__(
-        self,
-        folder_path: str,
-        pattern: str = "{}_{}.pkl",
-        check_interval: float = 0.5,
-        max_history: int = 4,
-        max_frame_per_scene: int = 12,
-        wait_for_files: bool = True,
-        max_wait_time: int = 60, 
-        logger: logging.Logger = None,
-        stop_file_path: str = None
-    ):
-        self.next_idx = 0
-        self.folder_path = Path(folder_path)
-        self.pattern = pattern
-        self.check_interval = check_interval
-        self.file_history = deque(maxlen=max_history)
-        self.max_history = max_history
-        self.max_frame_per_scene = max_frame_per_scene
-        self.prefix = None
-        self.his_prefix = [] # record the prefix of the files in the history
-        self.scene_idx = 0 # this idx helps to pick various *_0.pkl
-        self._running = False
-        self.wait_for_files = wait_for_files
-        self.max_wait_time = max_wait_time
-        self.logger = logger
-        self.stop_file_path = stop_file_path
+    def __init__(self,folder_path,pattern='{}_{}.pkl',check_interval=.1,max_history=4,
+                 max_frame_per_scene=12,wait_for_files=True,max_wait_time=60,logger=None,
+                 stop_file_path=None,cancellation_file=None,deadline_utc=None):
+        if not math.isfinite(max_wait_time) or max_wait_time<=0:raise ValueError('Finite positive frame wait timeout required')
+        if not math.isfinite(check_interval) or check_interval<=0:raise ValueError('Positive polling interval required')
+        if max_history<1 or max_frame_per_scene<max_history:raise ValueError('Invalid frame/history limits')
+        self.folder_path=Path(folder_path);self.pattern=pattern;self.check_interval=check_interval
+        self.max_history=max_history;self.max_frame_per_scene=max_frame_per_scene
+        self.wait_for_files=wait_for_files;self.max_wait_time=max_wait_time
+        self.logger=logger or logging.getLogger(__name__);self.stop_file_path=stop_file_path
+        self.cancellation_file=cancellation_file;self.deadline_utc=deadline_utc
+        self.file_history=deque(maxlen=max_history);self.his_prefix=[];self.scene_idx=0
+        self.prefix=None;self.next_idx=0;self._running=False
         self._initialize_queue()
 
-    def _wait_for_sufficient_files(self) -> bool:
-        """Wait until there are enough files with the same prefix"""
-        start_time = time.time()
-        while time.time() - start_time < self.max_wait_time:
-            # Find all files in the directory
-            if self.stop_file_path is not None and os.path.exists(self.stop_file_path):
-                self.logger.info(f"Stop signal file detected during file waiting")
-                return "stop_iteration"
+    def _check_cancel(self):
+        from simengine_ascend.file_protocol import check_stop
+        check_stop(self.cancellation_file,self.deadline_utc)
 
-            all_files = list(self.folder_path.glob("*.pkl"))
-            if not all_files:
-                time.sleep(1)
-                continue
+    def _completed(self):return bool(self.stop_file_path and Path(self.stop_file_path).exists())
 
-            # Group files by prefix
-            prefix_groups = {}
-            for file in all_files:
-                filename = file.name
-                if "_" in filename and filename.endswith(".pkl"):
-                    parts = filename.split("_")
-                    if len(parts) >= 2:
-                        prefix = "_".join(parts[:-1])
-                        frame_idx = parts[-1].split(".")[0]
-                        frame_idx = int(frame_idx)
-                        if prefix not in prefix_groups:
-                            prefix_groups[prefix] = []
-                        prefix_groups[prefix].append((frame_idx, str(file)))
-
-            # Find prefix with enough consecutive files
-            for prefix, files in prefix_groups.items():
-                # Skip if this prefix is already in history
-                if prefix in self.his_prefix:
-                    continue
-
-                files.sort(key=lambda x: x[0])  # Sort by frame index
-                frame_indices = [f[0] for f in files]
-
-                # Check if we have consecutive files from 0 to max_history-1
-                expected_indices = set(range(self.max_history))
-                available_indices = set(frame_indices)
-
-                if expected_indices.issubset(available_indices):
-                    self.prefix = prefix
-                    return True
-
-            time.sleep(1)
-
-        self.logger.warning(f"Timeout waiting for sufficient files after {self.max_wait_time} seconds")
-        return False
+    def _wait_for_sufficient_files(self):
+        end=time.monotonic()+self.max_wait_time
+        while True:
+            self._check_cancel()
+            if self._completed():return 'stop_iteration'
+            groups={}
+            for path in sorted(self.folder_path.glob('*.pkl')):
+                match=re.fullmatch(r'(.+)_(\d+)\.pkl',path.name)
+                if not match:continue
+                if path.is_symlink() or not path.is_file():raise ValueError('Unsafe published frame metadata: '+str(path))
+                groups.setdefault(match.group(1),set()).add(int(match.group(2)))
+            for prefix,indices in groups.items():
+                if prefix not in self.his_prefix and set(range(self.max_history)).issubset(indices):
+                    self.prefix=prefix;return True
+            remaining=end-time.monotonic()
+            if remaining<=0:raise TimeoutError('Timed out waiting for an initial consecutive frame queue in '+str(self.folder_path))
+            time.sleep(min(self.check_interval,remaining))
 
     def _initialize_queue(self):
-        """initialize the file queue, fill in the order of the sequence"""
-        try:
-            if self.wait_for_files:
-                wait_result = self._wait_for_sufficient_files()
-                if wait_result == "stop_iteration":
-                    return False
-                elif not wait_result:
-                    raise RuntimeError("Insufficient files for initialization")
+        if self.wait_for_files and self._wait_for_sufficient_files()=='stop_iteration':return False
+        if self.prefix is None:raise ValueError('Scene prefix was not selected')
+        paths=[self.folder_path/self.pattern.format(self.prefix,index) for index in range(self.max_history)]
+        if not all(path.is_file() and not path.is_symlink() for path in paths):raise ValueError('Initial frame queue is incomplete')
+        self.file_history=deque(map(str,paths),maxlen=self.max_history)
+        self.next_idx=self.max_history;self.his_prefix.append(self.prefix)
+        return True
 
-            # Clear existing history
-            self.file_history.clear()
-
-            # Add files in correct order
-            for i in range(self.max_history):
-                pattern = self.pattern.format(self.prefix, i)
-                matching_files = list(self.folder_path.glob(pattern))
-                if matching_files:
-                    file_path = str(matching_files[0])
-                    if file_path not in self.file_history:  # Avoid duplicates
-                        self.file_history.append(file_path)
-                else:
-                    self.logger.warning(f"Expected file not found: {pattern}")
-
-            # Verify we have the right number of files
-            if len(self.file_history) != self.max_history:
-                self.logger.warning(f"Queue initialization incomplete. Expected {self.max_history}, got {len(self.file_history)}")
-
-            self.next_idx = len(self.file_history)
-            self.his_prefix.append(self.prefix)
-            self.logger.info(f"Initialized queue with {len(self.file_history)} files for {self.prefix}")
-            return True
-        except Exception as e:
-            self.logger.error(f"Error initializing queue: {e}")
-            raise e
-
-    def _reinitialize_queue(self, force_reinitialize: bool = False):
-        """In case of the frame pkl is up to limit, reinitialize the queue"""
-        if self.stop_file_path is not None and os.path.exists(self.stop_file_path):
-            self.logger.info(f"Stop signal file detected by monitor: ({self.stop_file_path})")
-            return False
-            
-        if not self.file_history:
-            return True
-
-        last_file_in_history = list(self.file_history)[-1]
-        try:
-            frame_idx = int(last_file_in_history.split("/")[-1].split("_")[-1].split(".")[0])
-            if frame_idx == self.max_frame_per_scene - 1 or force_reinitialize:
-                self.scene_idx += 1
-                self.prefix = None
-                self.file_history = deque(maxlen=self.max_history)
-                self.logger.info("Reinitializing queue for new scene...")
-                initialize_flag = self._initialize_queue()
-                return initialize_flag
-        except (ValueError, IndexError) as e:
-            self.logger.error(f"Error parsing frame index from {last_file_in_history}: {e}")
-            if force_reinitialize:
-                self.prefix = None
-                self.file_history = deque(maxlen=self.max_history)
-                initialize_flag = self._initialize_queue()
-                return initialize_flag
+    def _reinitialize_queue(self,force_reinitialize=False):
+        self._check_cancel()
+        if self._completed():return False
+        if not self.file_history:return self._initialize_queue()
+        if self.next_idx>=self.max_frame_per_scene or force_reinitialize:
+            self.scene_idx+=1;self.file_history.clear();self.prefix=None
+            return self._initialize_queue()
         return False
 
-    def get_current_queue(self) -> List[str]:
-        """Get next idx matching file in the current directory"""
-        try:
-            if self.next_idx >= len(self.file_history):
-                pattern = self.pattern.format(self.prefix, self.next_idx)
-                matching_files = list(self.folder_path.glob(pattern))
-                if matching_files:
-                    new_file = str(matching_files[0])
-                    # Check if this file is already in history to avoid duplicates
-                    if new_file not in self.file_history:
-                        self.file_history.append(new_file)
-                        self.next_idx += 1
-                    else:
-                        raise RuntimeError(f"File already in queue: {new_file}")
-                    return list(self.file_history)
-                else:
-                    return []
-            else:
-                return list(self.file_history)
-        except Exception as e:
-            self.logger.error(f"Error scanning directory: {e}")
-            return []
+    def get_current_queue(self):
+        self._check_cancel()
+        if self.prefix is None:return []
+        path=self.folder_path/self.pattern.format(self.prefix,self.next_idx)
+        if not path.exists():return []
+        if path.is_symlink() or not path.is_file():raise ValueError('Unsafe next frame metadata: '+str(path))
+        self.file_history.append(str(path));self.next_idx+=1
+        return list(self.file_history)
 
-    def get_file_queue(self) -> List[str]:
-        """Get the file queue"""
-        return list(self.file_history[-self.max_history:])
+    def get_file_queue(self):return list(self.file_history)
 
-    def update_history(self, new_file: str):
-        """Update file history records"""
-        if new_file not in self.file_history:  # Avoid duplicates
-            self.file_history.append(new_file)
-            if len(self.file_history) > self.max_history:
-                self.file_history.popleft()
+    def update_history(self,new_file):
+        if new_file not in self.file_history:self.file_history.append(new_file)
 
-    async def monitor(self, callback=None):
-        """Asynchronously monitor file changes"""
-        self._running = True
-        self.logger.info(f"Started monitoring {self.folder_path}")
-
+    async def monitor(self,callback=None):
+        self._running=True
         while self._running:
-            try:
-                current_queue = self.file_history
-                next_queue = self.get_current_queue()
+            queue=self.get_current_queue()
+            if queue and callback is not None:callback(queue)
+            await asyncio.sleep(self.check_interval)
 
-                await asyncio.sleep(self.check_interval)
-
-            except Exception as e:
-                self.logger.error(f"Error during monitoring: {e}")
-                await asyncio.sleep(1)  # Wait longer after an error before retrying
-
-    def stop(self):
-        """Stop monitoring"""
-        self._running = False
-        self.logger.info("Stopping monitor...")
+    def stop(self):self._running=False
 
     @property
-    def latest_file(self) -> Optional[str]:
-        """Get the latest file"""
-        return self.file_history[-1] if self.file_history else None
+    def latest_file(self):return self.file_history[-1] if self.file_history else None

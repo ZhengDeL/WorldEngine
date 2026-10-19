@@ -1,0 +1,1158 @@
+{
+  "schema_version": 1,
+  "test_date_local": "2026-10-20",
+  "result": "pass_CPU_fixtures_only",
+  "exit_code": 0,
+  "environment": "Linux ARM64 CPU-only container, runc, no network or NPU device mounts",
+  "tests_passed": 136,
+  "tests_skipped": 0,
+  "groups": [
+    {
+      "name": "renderer_contract_and_validation",
+      "tests_passed": 79,
+      "command": "python -m unittest discover -s projects/SimEngine/worldengine/render/ascend/tests -p \"test_*.py\" -v"
+    },
+    {
+      "name": "simulation_entry_protocol_and_owned_process",
+      "tests_passed": 21,
+      "command": "python -m unittest -v simengine_ascend.test_owned_process simengine_ascend.test_run_simulation simengine_ascend.test_closed_loop_protocol"
+    },
+    {
+      "name": "builder_and_official_preparation",
+      "tests_passed": 26,
+      "command": "python -m unittest discover -s tools/simengine_ascend/tests -p \"test_*.py\" -v"
+    },
+    {
+      "name": "official_scene_capture_tool",
+      "tests_passed": 10,
+      "command": "python tools/simengine_ascend/test_capture_scene.py -v"
+    }
+  ],
+  "input_origin": "temporary synthetic fixtures and short-lived owned local processes; no official scene rendering",
+  "source_inventory_files": 223,
+  "source_inventory_sha256": "c0cdc6d4ed60a87794e59eee32de44b6bf8b3e1acddb1e32249e1353f77569b7",
+  "tested_source_files": [
+    {
+      "path": "projects/AlgEngine/closed_loop/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/AlgEngine/closed_loop/monitor.py",
+      "bytes": 4772,
+      "sha256": "6d0b6b71e491fe232b9da3320894e3899ac511364ea6dad21f5f2f246ea48710"
+    },
+    {
+      "path": "projects/AlgEngine/closed_loop/post_processor.py",
+      "bytes": 1588,
+      "sha256": "515dba86aa48b83707708c0aa3ce40ad89d23ad1ae3ac99e07d491c205a57fa3"
+    },
+    {
+      "path": "projects/AlgEngine/closed_loop/sim_test.py",
+      "bytes": 14330,
+      "sha256": "b1424251cebf6ae477d3ba4ee119be1ad6ec2ecb531fa55ce4da13568853075c"
+    },
+    {
+      "path": "projects/SimEngine/scripts/export_simulation_data.py",
+      "bytes": 2300,
+      "sha256": "b6fd18a8b69aac97b5f8d1b99f5b4aa189613b3e4b85ea8e08b2065d49ac9d22"
+    },
+    {
+      "path": "projects/SimEngine/scripts/merge_simulation_results.py",
+      "bytes": 4650,
+      "sha256": "90c8add2480031115076d4a4b8ce1ad5aab2b0a2d7324118b295336e3d6aae56"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/base_class/__init__.py",
+      "bytes": 44,
+      "sha256": "865488302da929c87ce1b18d108a6a50bac76f2b3a560048dc32fbd43c0b8662"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/base_class/base_runnable.py",
+      "bytes": 4238,
+      "sha256": "62645a490abf883ee28fbaa22c0947edf1541ff6d08017cab35d34fac5b9abeb"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/base_class/config.py",
+      "bytes": 10191,
+      "sha256": "3ee339e93cd82c79288c21c296d7dd6700335182b33514cd0ebc7d8fca970755"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/base_class/configurable.py",
+      "bytes": 1210,
+      "sha256": "b0126806e42028cd516108392ea2671629d1751a6ff3560bb1f61a2d40379a71"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/base_class/nameable.py",
+      "bytes": 877,
+      "sha256": "2bcc1d8d8aa8b7780131339661aabb3835b7e46fd00bc134b9c58b2d6182e86f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/common/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/common/constants.py",
+      "bytes": 84,
+      "sha256": "fcf67b18b3d7b18004df9542f27f3175b9a5875896d1166fa5f4b22caadb62a6"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/common/dataclasses.py",
+      "bytes": 7205,
+      "sha256": "c67f08e8f553fca908c11bd4e12d020d656878f0b512d6dd060678ff50da4f77"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/common/maps/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/common/randomizable.py",
+      "bytes": 908,
+      "sha256": "d4c0e19f1ac4fcaadf660e0036bd11c007072e5fdb3fc790a2b8533157bcbf5e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/__init__.py",
+      "bytes": 8,
+      "sha256": "00ed1facc0b32574772870d058fbbe5a75055189ee2a240a41b1ef7cf45f8267"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/autonomous_agent.py",
+      "bytes": 4245,
+      "sha256": "356bd5344b99a8a3b6aba9c571540d73a05f3bb16eb41d4a56d0677435d778a7"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/base_agent.py",
+      "bytes": 10827,
+      "sha256": "7d88aa297d1e48c15de52e58e728280760293c81aceb54815d6cd20cc719044b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/client/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/client/base_client.py",
+      "bytes": 244,
+      "sha256": "82defb082afa3fedc424d35b9993c9557fd8ee60bdd99944b5958cb93736b3b9"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/client/build_client.py",
+      "bytes": 538,
+      "sha256": "76e9064592fa2eb527086ab866307d1bad65da835315b38af12753ca85b37068"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/client/navformer_client.py",
+      "bytes": 22211,
+      "sha256": "e666c504d4081ee5276618b075b85ffad37ed16998dfb52e06b4de3e8a783b70"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/abstract_controller.py",
+      "bytes": 391,
+      "sha256": "0fa93a58c6e88536e08133081619f1d8c7b689ecf42bb6860c5e8d030d7df535"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/build_controller.py",
+      "bytes": 781,
+      "sha256": "451629d0bf5853c035cc705c67f2dbb649f7285193579bef4255ecb68b2840bd"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/controller_utils.py",
+      "bytes": 330,
+      "sha256": "bcd3d54373baed762bc3e67985ce19ef83d4eb441289547e51caf1941dfa9faf"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/log_play_controller.py",
+      "bytes": 1063,
+      "sha256": "e213b8db85197945c4bf0a6580387016c099c3326182099b778df156a2fa05af"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/motion_model/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/motion_model/abstract_motion_model.py",
+      "bytes": 319,
+      "sha256": "d2a4ae2dd19e86acfa0553171dc64fec3790724828b22640189b9c202eb1b125"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/motion_model/build_motion_model.py",
+      "bytes": 434,
+      "sha256": "a39941f346b858942a4b967e2afed9292210d02b3c261937ea3bdd31806bda9f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/motion_model/kinematic_bicycle.py",
+      "bytes": 3854,
+      "sha256": "e7cbaebdb3539cdbd43d951ded2a9ccdc3848910f1418350a1ca7ff46084bd56"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/pid_controller.py",
+      "bytes": 2850,
+      "sha256": "6b88b43494b5430b14b481aede111aa16755ef750fa303f8a3eb9334ec817e6e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/tracker/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/tracker/abstract_tracker.py",
+      "bytes": 222,
+      "sha256": "e6bcbbf0d6d9e2a2ed3d3e11ba2fdb95842201d66108d9601f10b868f8bbd4de"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/tracker/build_tracker.py",
+      "bytes": 344,
+      "sha256": "20a61b61f792f047b630873d14f4d25bbec78b46813f49a31bb10a6b673b2a36"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/tracker/lqr_tracker.py",
+      "bytes": 18942,
+      "sha256": "27ab738b88d1ba4accc205a1e6c4a6b92e2230eef13a48c10bb34933c5e6faa5"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/tracker/tracker_utils.py",
+      "bytes": 13089,
+      "sha256": "b85e54e20252fac7a8a8b4ee6b26c65a1ad7b96075fbbad16d2b0dba416c0c27"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/controller/two_stage_controller.py",
+      "bytes": 1859,
+      "sha256": "33a39034ba7bf90126bb8359d4a62dd722d20bef6ab9cd738e0ca0d13d5753bd"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/ego_agent.py",
+      "bytes": 4742,
+      "sha256": "925e8a5445aa79f405e8a3ae26c7f44fbc2d81f8e5adcf1b2a3ae5f6fc6e0667"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/navigation/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/navigation/build_navigation.py",
+      "bytes": 945,
+      "sha256": "9993913e19d795d1f561bb2803bf5ecb06aa1ba1dcbb41ef74f49cc368c6d599"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/navigation/ego_lane_navigation.py",
+      "bytes": 9581,
+      "sha256": "d7613685794f40720da6dceb84e1c6339affb9cd859156c37b6571557dba18cc"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/navigation/idm_navigation.py",
+      "bytes": 6572,
+      "sha256": "6393c8475d542540ba3bba1ebe4b319b855fcbacf96da515e25a68774c470381"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/navigation/trajectory_navigation.py",
+      "bytes": 8550,
+      "sha256": "1a87d5cd155d49e6e22bc973e075faa7d87748ae719bc35a65a50a7a29ba390b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/base_observation.py",
+      "bytes": 927,
+      "sha256": "71796ecf1693d5d1b90ed6a02cb3d728b6a13eae8a20627d5ac743cf2db17886"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/build_observations.py",
+      "bytes": 398,
+      "sha256": "7a361620fe0dc87db05923643b55bcbbe19134a23c28ab305905df9941d9fd31"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/ego_state_observation.py",
+      "bytes": 4677,
+      "sha256": "2f2774aea8f41dc07beaed30248e4964c20ef35ef3bd35760460475e83542b40"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/image_observation.py",
+      "bytes": 2571,
+      "sha256": "bf5ae05edba87de15b3e693c68a5665f06fc35780c06cb155f9c171d3381f8c3"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/observations/state_observation.py",
+      "bytes": 3130,
+      "sha256": "957407cf68d6dc460d1056a28439bb641f9c3ac2933224254b43fc3b5c2ec96e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/planner/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/planner/outside_planner.py",
+      "bytes": 597,
+      "sha256": "df84a6b070128ed4798efc4489c4f806291ae258d89cecb01c624cb6a6adb6e1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/base_policy.py",
+      "bytes": 1927,
+      "sha256": "1ca6c56b4acbae0a605368e6d0577a68d2f56debc7bc76f5965bfce669099180"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/build_policy.py",
+      "bytes": 1232,
+      "sha256": "0a68f1b4774aa9e5d0e351fb39f6e9787e5186adda208031f70b20cfe7977b00"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/dbg_ego_policy.py",
+      "bytes": 2189,
+      "sha256": "3b090736444c06c6f9225fd4bd2e788a709296e2d6977d9a32418376b3ea938c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/env_input_policy.py",
+      "bytes": 916,
+      "sha256": "947d7c4bd65273ece5b4bff0000c17a5c35a28873ae69b50e2ac3c9726c62432"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/human_policy.py",
+      "bytes": 4336,
+      "sha256": "9895ebac0f573b017f884a881607747b481c867b8f42b76fb7adfee10bd1f7ae"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/idm_policy.py",
+      "bytes": 19183,
+      "sha256": "59e6c4f5cd366d68b16dbcc02f35c4103bb0d445c2ac22d28ca6eb77ec362f95"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/log_policy.py",
+      "bytes": 375,
+      "sha256": "757df0736c1d7ef970e68fff24789ba06463ea4e2fa9ffb196e566af800ff78e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/abstract_pdm_closed_planner.py",
+      "bytes": 13222,
+      "sha256": "5ac10317b7f942c29aefb1eea9fe1a93e25d7dd14cdcb9dba09ac2a16efb50d6"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/abstract_pdm_planner.py",
+      "bytes": 7530,
+      "sha256": "a0a336aa9f48b5c1a0d24494d2cdd99d43780ea46768f5c070d53cd92506a48b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/observation/pdm_object_manager.py",
+      "bytes": 8764,
+      "sha256": "fefdc92495a3790e2b9ef39909e98645d4c329b2d51b7b42106eb9ab4b9eccd9"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/observation/pdm_observation.py",
+      "bytes": 16863,
+      "sha256": "ec072618f432fc53298309602a62598d4a35a62dcb97ad857e08b353c24e2b4e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/observation/pdm_observation_utils.py",
+      "bytes": 1658,
+      "sha256": "7c59cfb8fd1d317a6e867456e16b6e2eaf02f3f3eb7b0b90013a045ffba85950"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/observation/pdm_occupancy_map.py",
+      "bytes": 8508,
+      "sha256": "cd9b4e5b943e8c042cfbaba5ef01849a3ba1802b3223c4558443be591c6b358a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/pdm_closed_planner.py",
+      "bytes": 3272,
+      "sha256": "5522aa60fe4d0b2f07c5ea3a8e3b48ea54272e01b1436e27d7cf1492fb912507"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/proposal/batch_idm_policy.py",
+      "bytes": 7727,
+      "sha256": "daec12780b3019f51f899fa9df04660c898efeae282e53b7b7bc40e7fe3f90dd"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/proposal/pdm_generator.py",
+      "bytes": 18553,
+      "sha256": "bfc4b38c54ff628dd9ffd85d964145ebd516e077cc48626d7434d580cd8f0a69"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/proposal/pdm_proposal.py",
+      "bytes": 3119,
+      "sha256": "c2bfc36c15071eb20a29fccc2c1feb4376ad44a9c3af31bdc5058ddd50c71953"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/scoring/pdm_comfort_metrics.py",
+      "bytes": 13235,
+      "sha256": "a2000be540e4495425fec37fb8cfbcfc11cf52d5f174b7da33f20831805f0876"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/scoring/pdm_scorer.py",
+      "bytes": 35268,
+      "sha256": "55b696a6b0e5efeabf11f32a8de0064d50b7869e2d63eae37983158c9d7cb025"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/scoring/pdm_scorer_utils.py",
+      "bytes": 2360,
+      "sha256": "cc1e6443f51aa3fbd01f74f3f667ac8153b4456757ff53b503bb9dc0fd3a34ab"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/batch_kinematic_bicycle.py",
+      "bytes": 7680,
+      "sha256": "5951fecbb2bd71bf5d781f6a81d34e5fcb0299590408d6397c2abf96288d79a0"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/batch_lqr.py",
+      "bytes": 22221,
+      "sha256": "f39d2c98ee23ad51e964bb47dc750c3c369dae89c54ef620157dd9f85daa1f09"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/batch_lqr_utils.py",
+      "bytes": 11812,
+      "sha256": "dcbda8965fea54140672925c1ba0bb7a4ea0f393b9932af69784c0b694a41a25"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/pdm_simulator.py",
+      "bytes": 3786,
+      "sha256": "377e21fe2b0adf83e1bcf5617e1df9c71137e1f42c216f2b486ebdc8ba8f5536"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/torch_kinematic_bicycle.py",
+      "bytes": 8309,
+      "sha256": "7659e4c49a8077dfa514b54ce443fea4c141cab25cdca3ccfbabadc4e62130d7"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/torch_lqr.py",
+      "bytes": 23824,
+      "sha256": "7aca7d87e48952843c4f700d0b7d75c660a137501754a0acfc17a88013d6a181"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/torch_lqr_utils.py",
+      "bytes": 11226,
+      "sha256": "9cdd74c6073bfaa7901c44d3ac30b6e65f5fc04de48ba692aa3b7b3db86add73"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/simulation/torch_simulator.py",
+      "bytes": 4292,
+      "sha256": "2a4e216b3bef09c3b29cb5ac728706d2aa86b37252ed455c83fee6f4e813c11a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/WE2pdm_utils.py",
+      "bytes": 14431,
+      "sha256": "802612b3e4be06ffad2a97955d0cb9202935949a3e57ad2855812edced6b3524"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/graph_search/bfs_roadblock.py",
+      "bytes": 5413,
+      "sha256": "009182a7131124d1088e10e550d29bfc9ae34762ad326970f51c2a340ffe2435"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/graph_search/dijkstra.py",
+      "bytes": 6122,
+      "sha256": "87484e9057d49f97d955c08e62f899e7f4e1d49027be6f47635b643be34bc293"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_array_representation.py",
+      "bytes": 8049,
+      "sha256": "c44ef59d14f6fac8f695932891a9453b15685365688df87e634e04421ccbc3c0"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_emergency_brake.py",
+      "bytes": 5602,
+      "sha256": "a08dd8412686929f9d2efb5f59dc15f378b5f254691c7e6be0f70445b86088e5"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_enums.py",
+      "bytes": 3577,
+      "sha256": "6b05c278c1956568b17a0af31e1df6a745c7b6038146a755fa32f1cb603fe86e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_feature_utils.py",
+      "bytes": 4630,
+      "sha256": "17d26843bfa17234507f76bbee9380dab9365e42d7ea19f858db650f76ae6de2"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_geometry_utils.py",
+      "bytes": 3407,
+      "sha256": "b2d7d548eed0962d9a8dda8aa10999e2799cfde3bba5a033991dc7879dd244a4"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/pdm_path.py",
+      "bytes": 3684,
+      "sha256": "c613ef4bacf901f8d07bdf16a26e90ac8288d6bc1f24a7cd72b0c58e55ad9276"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_planner/utils/route_utils.py",
+      "bytes": 9926,
+      "sha256": "695e37a939fe01ad292172d74ca2281936f9490ef9caac27faf4cd373907fa71"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/pdm_policy.py",
+      "bytes": 5712,
+      "sha256": "50303cf4d53cf1a0b8918db9f91d4449a368f07ae572e8017a1ea50c4a0c0406"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/policy/trajectory_policy.py",
+      "bytes": 1518,
+      "sha256": "90273bc6bf965366d2dde1a66c5cea914ff9fde10d02b531f8edbc74696a4c65"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/utils/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/utils/state_enums.py",
+      "bytes": 3606,
+      "sha256": "7416a31a477a79e7a68d578cad6984486b9efb4c8db79b00754f7c16aa93f784"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/vehicle_model/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/vehicle_model/build_vehicle.py",
+      "bytes": 568,
+      "sha256": "472125c8f8aeb3627e383ea26800bbb4c25b738ed5c19f587f023e48bcefa037"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/vehicle_model/pacifica_vehicle.py",
+      "bytes": 4357,
+      "sha256": "55328457e2f4bdff6394703dffe7fe73ad9cadcdd296ded1f01248b93b39f08c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/agents/vehicle_model/vehicle_utils.py",
+      "bytes": 6863,
+      "sha256": "faac3e68ac4b6655e3c50b13ca1fd534f25fd55bb72c7ffc2d473e829439f532"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/__init__.py",
+      "bytes": 44,
+      "sha256": "66d456a6fe17ad7c954a85cd0ac7d069db2cdf7cf718b677c65b60e5d740f2f8"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/base_map.py",
+      "bytes": 12395,
+      "sha256": "799ded6d2b1c4df76c2678db52b1176c71a7e629c9a3abb26fea04b38a22a048"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/blocks/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/blocks/base_block.py",
+      "bytes": 1310,
+      "sha256": "829f326993636147e5a09b166909e99a68e4ad93798dc16a078ea81928148fa1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/blocks/scenario_block.py",
+      "bytes": 2215,
+      "sha256": "80c621e4f6b457504f08c3d18b470ce3b97f5185e5ac616332135f7670c5ab2a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/geometry_utils.py",
+      "bytes": 3743,
+      "sha256": "0a7f2112a65919236602f2d6ec3ce2f2d5723a220b42617829a1a82f83f3c796"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/lanes/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/lanes/base_center_lane.py",
+      "bytes": 8683,
+      "sha256": "be5cf356fdd4b5410788c872e97fbbb578320df2ee54d7e85ec52fdc03914319"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/lanes/base_lane.py",
+      "bytes": 4403,
+      "sha256": "e6266509fd5b0e7edb6b594b819d23830ac243aa9490932db20f0eb18029c15f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/lanes/center_lane.py",
+      "bytes": 5817,
+      "sha256": "d1974a0c5c0496c6aec96c9d412129ff638b697b2c7de388149bbecfd1aa3db7"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/lanes/scenario_lane.py",
+      "bytes": 2464,
+      "sha256": "d163e7f5e099c52c8c036e2ee1fa1c2f555eadf4d4372452e7da7fe02553e8d6"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/map_constants.py",
+      "bytes": 3537,
+      "sha256": "61d6e378b7d4f3b159ab3cbeb3bfea9495ba18b7cc82c673b66e5b532f36d184"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/road_networks/base_road_network.py",
+      "bytes": 3004,
+      "sha256": "92ae3b605e199a9706b41b1a6f193a098469b0ea509e5b2b4b6edd12815863ab"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/road_networks/edge_road_network.py",
+      "bytes": 5714,
+      "sha256": "477a1d187015fc9e9a1b7da4005633e0c68738a2d036cb6f4a7eb302eb9331ed"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/maps/scenario_map.py",
+      "bytes": 4173,
+      "sha256": "d0c0d95cc8deaee59da4d96cf10d375f631618b3bd98b2fcac3f806e026af892"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/components/parameter_space.py",
+      "bytes": 17380,
+      "sha256": "f9f6ae4251137d31453858355e8f7d68d354ea7737a3b6cbe6eb9e386ee0802c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/common/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/common/default_common.yaml",
+      "bytes": 2264,
+      "sha256": "3973fe7720749cee7d20dbe736ea268130c1a99abeeb81e45c3a77806b619f7f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/common/renderer/mtgs.yaml",
+      "bytes": 198,
+      "sha256": "5b28df9daa4807c0b078f8d30681cf10e4ec6784dff6d70c004e0c18d87bdf38"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/common/worker/ray_distributed.yaml",
+      "bytes": 628,
+      "sha256": "6d304b73b39b4bc6f0dd60f56180699be33c0c729cb26bd0614cde616b1041a1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/common/worker/ray_distributed_no_torch.yaml",
+      "bytes": 644,
+      "sha256": "0e2fb932d4e0131974686ed637152459b960f7a7859972d06599d8af21c06f1b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/configs/default_runner.yaml",
+      "bytes": 5484,
+      "sha256": "74335fa7fd17c206265b4d3174b68f3820e200169baddb9c2b16584c76463a20"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/engine/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/engine/base_engine.py",
+      "bytes": 6825,
+      "sha256": "c4121a1574b635aa5c0e5a8d4d69f86691fc5db9fc6fdea104959ccd2fe95974"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/engine/engine_utils.py",
+      "bytes": 2005,
+      "sha256": "739a4168f15968def3615fa21fc5f7a0cf5185d39d641972d9fcffc72441e682"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/envs/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/envs/base_env.py",
+      "bytes": 14317,
+      "sha256": "fc57169c2d1ce89043ae75ef8be493428266f0c0eb30753f7a0a7c65ffaac6c1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/envs/build_env.py",
+      "bytes": 763,
+      "sha256": "b99ac0685f643879a462e7e4be95825692f2126a6950c6e0d45997dc8eab2821"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/__init__.py",
+      "bytes": 39,
+      "sha256": "9a1f3db15e313f093989a2b6062696a4a8571c010473183ce4f3ecb654a73086"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/agent_manager.py",
+      "bytes": 14484,
+      "sha256": "ab1eb9e874b94baf41c9f68282ad350961beebd7a338652916c34a447f4849c1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/base_manager.py",
+      "bytes": 2282,
+      "sha256": "b4aced31f255e2df32b597cf32a80ee0ec6ce517de439cd7615da3d695f190f5"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/data_manager.py",
+      "bytes": 13437,
+      "sha256": "2f301f53bc32f8816a4bac32927fc5b4b1031e27a262c93d96f31daf706204e5"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/dense_reward_manager.py",
+      "bytes": 30386,
+      "sha256": "193b88b91fa1c35c2b93bd809993c8ad7a9393eba6565cb9486a65342efeb537"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/map_manager.py",
+      "bytes": 2880,
+      "sha256": "31101e527211bc23a9701b47a07f42197c4fc6e433c0743aefcdbe0a0fcd3e76"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/metric_manager.py",
+      "bytes": 19995,
+      "sha256": "776780f36dd742eb58a03031928b44641afae660ee58574fc191a6becee4622f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/render_manager.py",
+      "bytes": 3342,
+      "sha256": "0bd0f679046a88f5b02562bd9496aaec7d47e2063a568629ca2fe1c25b60905c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/manager/scenario_manager.py",
+      "bytes": 5969,
+      "sha256": "f287db42cd40680cbb3647118ec54958b0cc3d2826ba73e6452ac23314f4799d"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/__init__.py",
+      "bytes": 58,
+      "sha256": "8bc10b52680ff6b52dd2fd1b1ba420b804e6165ceba0e2010f90757aed8195eb"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/cann.py",
+      "bytes": 14143,
+      "sha256": "7e363252314758b51ba35615b18b0dea483cd7f4ad473b4de26869870b8f3f9c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/capture.py",
+      "bytes": 10703,
+      "sha256": "15733f97921c04e645e1f2d2e3c75a106883fdb3cd848c76b1b58ff977617ca0"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/manifest.py",
+      "bytes": 4889,
+      "sha256": "56b1723e858bd2efc1d3ba02137fc5d8b1944f1b1789d4219c34f71180aed643"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/patches/LICENSE.cann",
+      "bytes": 5277,
+      "sha256": "0d4e3b4d4ba1672b7d44aaf3d6db8559175083517e4768b9ddb34c5476a8fa7a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/patches/apply_compat_patch.py",
+      "bytes": 3192,
+      "sha256": "a293b12f7056758e898d661d08325a6aeb7aa195b47c05f3b707dad8208b5c5e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/patches/calc_render_mtgs_compat.cpp",
+      "bytes": 8574,
+      "sha256": "ab6255cc6df3f588d2c32b863bd51e52600ee01163aea1e5cb567f7ca6ef3fab"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/real_validation.py",
+      "bytes": 10449,
+      "sha256": "bc705597292f5bec5cbbb669c5fb791ced680583aa05b04f3c6be304680e370f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/sh.py",
+      "bytes": 2799,
+      "sha256": "b95514d8120412d8f256a0c57f013e8ca6557887c8b67d26218cd3db0719d3c1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/diagnose_cann.py",
+      "bytes": 10012,
+      "sha256": "6a74a33feb9bf49d8810e4e8b07261ac0dec4b4cc372b0d7f900c84c1a4173eb"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/numpy_oracle.py",
+      "bytes": 6112,
+      "sha256": "f36b59ee02502afe9544c671e8b21979139cf85770a0a285195f3458720228cf"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/probe_cann.py",
+      "bytes": 13586,
+      "sha256": "a408f9b9885241b6e3a7375a9d0e3569ac333af78d8e09ecaf54d7da3ddd75a8"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/sampled_oracle.py",
+      "bytes": 15732,
+      "sha256": "0ed5e71de83b1ccfc74573aae6b60b51d61b042ee8aa03f151a3f3ea773071b3"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_capture.py",
+      "bytes": 4726,
+      "sha256": "9a3f29f3579ca67a304a43a23472645e00136c20c236c437e78fdb92539a7443"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_contract_math.py",
+      "bytes": 3818,
+      "sha256": "81758b937295182a1934d42816a85bb452c0cf5511b0f9afb3a8848c32b3c9af"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_device_guard.py",
+      "bytes": 2317,
+      "sha256": "954bbf16b39a3e20c6483202837a06a8c7d4b53039c69949aac17b8dc6279116"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_manifest.py",
+      "bytes": 4513,
+      "sha256": "09ab125118136628e6e2eb387dfe939a8d94c49d8b4eaa5bf8af5537b9e32cbd"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_real_validation.py",
+      "bytes": 7343,
+      "sha256": "e37e3cee98b1625f2bd3e2a0b8a01088106dd16a732901fbd2c7529d6c07edb2"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_sampled_oracle.py",
+      "bytes": 12262,
+      "sha256": "c3cb9b1368cb939f94c612e2f2e2dffeb71b05894004708cbfc0e940ec4d6117"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/test_torch_contract.py",
+      "bytes": 9349,
+      "sha256": "6ce816db61d5803b004b32bad6af1d149ee6622c1df72b0d5d430f734c0cc396"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/validate_real_input.py",
+      "bytes": 11220,
+      "sha256": "98f0825c3e5883b5b7b897de5a8a664eadc432801c8401d3d30f12f564444df6"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/base_renderer.py",
+      "bytes": 761,
+      "sha256": "d099dcd71c918797245be18b1ea88c09e70099943d8031e2aee061c6b7e54893"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/__init__.py",
+      "bytes": 34,
+      "sha256": "1c27b44e288207427fa0da02978b607bb5b552cf44c9705d7a6e515449a90552"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/gaussian_model/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/gaussian_model/rigid_object.py",
+      "bytes": 7414,
+      "sha256": "8aca36357968943033b32a0ce9523905a1ea87a3131493286c5a77ba7a057d6a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/gaussian_model/rigid_object_mirrored.py",
+      "bytes": 3425,
+      "sha256": "0d730edda44c3156b3f447af027de4b24b9ba9b43cf76a074fad1874ca8df779"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/gaussian_model/vanilla_gaussian_splatting.py",
+      "bytes": 6377,
+      "sha256": "e04f152ef34702442503d102f917671750cbf0d52d20493280c05f8a864c504c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/mtgs.py",
+      "bytes": 22754,
+      "sha256": "88291359aa85b29c59a5362dcf5610ca0bc5b19c6da9df5ffefa98ddd8f573b4"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/utils/gaussian_utils.py",
+      "bytes": 5931,
+      "sha256": "38e94a2da6bfc8406113d48f7c93f49334357c95771e28e53e2518eed34d8f27"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/utils/geometry_utils.py",
+      "bytes": 5711,
+      "sha256": "56a949ff29a45e4436db808e182e8751089fb81bcd71908e33802dadd4a9ca5a"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/mtgs/utils/portable_utils.py",
+      "bytes": 2308,
+      "sha256": "77b3e2bc3f423e686268ad8bafd20215495f18bba0f39daccec09235a24bd048"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/builders/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/builders/env_builder.py",
+      "bytes": 2758,
+      "sha256": "e8933a4fdf1178a60cb665d4461c9d7c853a1c257acd0e0d1f7fcdec419e537b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/builders/worker_pool_builder.py",
+      "bytes": 1194,
+      "sha256": "a424da9a1346345261cce0e6ed2875b9e9d099e8d8c3d5214074edb702d924ab"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/executor.py",
+      "bytes": 5455,
+      "sha256": "d56b05883fab9429ae5014094594e9f40d055d8c7ba6b9ce1e72ce3ed6015d46"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/run_simulation.py",
+      "bytes": 997,
+      "sha256": "874332c574667db517e5fe164f2317ea28a78cc4f84a7c179b332a627271066f"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/runner/utils.py",
+      "bytes": 2140,
+      "sha256": "a0dd474a65434b276318f3558f130bf46081367848f8063b489c41cd23878705"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/scenario/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/scenario/scenarios/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/scenario/scenarios/parse_scenario_state.py",
+      "bytes": 2099,
+      "sha256": "cef6d0a240e48f2ae0f745ccd73754ebd561f43a4686484f64d507b2c572aa6d"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/scenario/scenarios/scenario_description.py",
+      "bytes": 28459,
+      "sha256": "79b325c26f3c94753ded2fa8f69325e7c5428d69d542659a429001ce26500eef"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/__init__.py",
+      "bytes": 229,
+      "sha256": "d8678c1f2b9c5947b3c9e7aac5982357b75541c31c314b53e554fa01be2d0690"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/agent_utils.py",
+      "bytes": 16062,
+      "sha256": "54965fa8f30e4d9259e3ead4c48afea9f3823b86155cfd476b368b8a3839c470"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/config.py",
+      "bytes": 2631,
+      "sha256": "6d524398e9cc91606a682a93670ed03aefc3af76e2d2e090ef9169af8f799df3"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/__init__.py",
+      "bytes": 770,
+      "sha256": "8af6b120f14543d2524eb9fab5ef47e14941da5be7d8f24aa701f2922c96eda3"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/nuplan/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/nuplan/digitaltwin_config.py",
+      "bytes": 3477,
+      "sha256": "73bcccc102c0da90f1fe9617ee1f72cb12b83aa3a65b8165e1eb33e22098bd61"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/nuplan/digitaltwin_nuplan_converter_navsim_filter.py",
+      "bytes": 15002,
+      "sha256": "808861249fad5a6ff1cbf0a0f46708332cbde993b5b17f441ea27adb473a55aa"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/nuplan/nuplan_type_mapping.py",
+      "bytes": 1549,
+      "sha256": "4253eb8821772f259b6ef5bc5315081c12abd2f92c409be7f2ad978e0feac032"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/dataset_utils/nuplan/nuplan_utils.py",
+      "bytes": 23778,
+      "sha256": "53ba072f04e48103b0b32a8a538c0495379399b620f2ecf501bbeaca35540c20"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/easydict.py",
+      "bytes": 3136,
+      "sha256": "3f346df25b143f30bb10c27d89c5007763b8a98cdb0daf7a120ca74fb9cbbc84"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/geometry_utils.py",
+      "bytes": 6785,
+      "sha256": "cc5af7751729842da2263e7c9c51a2599898a42260cfc979d23307ba1f1a4c96"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/math_utils.py",
+      "bytes": 4222,
+      "sha256": "61cbbcafe58d0fc1c1126d956abbc46a1178efff64f294090ace9773074a6a00"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/process_utils.py",
+      "bytes": 1398,
+      "sha256": "1401ac8117902f5e1665f3318871dec2d31346569b5e895d1424eb468e0f6f9b"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/ray_execution.py",
+      "bytes": 4854,
+      "sha256": "f74e98fd06b4e5afab4e9a170721e2de32ecc78917f105f7e39b14d773027095"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_parallel.py",
+      "bytes": 2091,
+      "sha256": "6872f1df990bc3b6d2c6a9330b255ce5c0a3a128a50f773d0c429f9252e64319"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_pool.py",
+      "bytes": 5905,
+      "sha256": "ab3733e2d774e1af0f381fb336a5e795a8c8a84c6c2a1e86f552be70b8f551c4"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_ray.py",
+      "bytes": 6797,
+      "sha256": "2ba71f54c9ce584d7c4c3ade39eff1b44ca083be39a66c455e598fd45b50b289"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_ray_no_torch.py",
+      "bytes": 6745,
+      "sha256": "dda6a7047ce5380a2884f59631aa595b25ae8d961a2496fdeb4a3b68bc443a11"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_sequential.py",
+      "bytes": 1386,
+      "sha256": "691d4c9a62f8825653d178648e2d6b8c19bc0c7c43eecfa785e50a3acf3a124e"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/multithreading/worker_utils.py",
+      "bytes": 1422,
+      "sha256": "f30fb757f6429b9b957d7ea769c7131178b825fb6926442bbecf175125dab178"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/random_utils.py",
+      "bytes": 3576,
+      "sha256": "69d9e4e09d864234fb5c37d7dbedd5dfaf7b5edaaed53aed67320e598e399164"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/type.py",
+      "bytes": 8456,
+      "sha256": "5525ce786a9ea087385eadfc7b6fb0ec1bb791b5d9ffddc61bd62f9d7fa137fb"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/utils/utils.py",
+      "bytes": 2583,
+      "sha256": "b1866f554d3992898037be6759ad13c7158ec964fa16d38f925d98c9d2808483"
+    },
+    {
+      "path": "simengine_ascend/__init__.py",
+      "bytes": 75,
+      "sha256": "24fb947250b7369ed5fca7989aaf751b64071aeb5fa8dcefc70dd93a46d35871"
+    },
+    {
+      "path": "simengine_ascend/closed_loop_runtime.py",
+      "bytes": 7725,
+      "sha256": "2a1df4bbbcee669910f3d97fcbc5d9eb3f45dc77e88cb69c23cd07ee3fa89204"
+    },
+    {
+      "path": "simengine_ascend/file_protocol.py",
+      "bytes": 3707,
+      "sha256": "8fbbdfe7a44efda8b87ae89658b89f372f56eea36f798872d62e9412491e3916"
+    },
+    {
+      "path": "simengine_ascend/launch_closed_loop.py",
+      "bytes": 11354,
+      "sha256": "3854a5371a0cc1bf6586d02535ca1f471d62007ebfd35c7ee0f612b91d899675"
+    },
+    {
+      "path": "simengine_ascend/owned_process.py",
+      "bytes": 2456,
+      "sha256": "1510b2ff54fa9eb3026fb5155c230e6e4af8194a5b0ff3a779fb9e5a15d1454c"
+    },
+    {
+      "path": "simengine_ascend/run_simulation.py",
+      "bytes": 16589,
+      "sha256": "b8db9aab7777377e6e66df2851b19cb3f2facf9dbe4aae1790f66141dc5a5b11"
+    },
+    {
+      "path": "simengine_ascend/test_closed_loop_protocol.py",
+      "bytes": 8097,
+      "sha256": "badd00ca5c0b98832c3b24611a3d759a4f78469d08afa29abe4ad92564386f1f"
+    },
+    {
+      "path": "simengine_ascend/test_owned_process.py",
+      "bytes": 6130,
+      "sha256": "ec6b0be66ef862a7eb4288dda67c9200be06e23062524a629ef174b232bbac43"
+    },
+    {
+      "path": "simengine_ascend/test_run_simulation.py",
+      "bytes": 7308,
+      "sha256": "2a4e6034219c21fbf06909edf1d6ee94fcb89faf3e8c48728b4b5fcc1f20a08a"
+    },
+    {
+      "path": "tools/simengine_ascend/build_backend.py",
+      "bytes": 24461,
+      "sha256": "c377cd8b162fae43f2f3d751b10f6a9704bfb5db0dfeabea99163d507d53e19d"
+    },
+    {
+      "path": "tools/simengine_ascend/capture_scene.py",
+      "bytes": 24478,
+      "sha256": "c31a45650fbde3197789668d51c0990b60751f18576a585ae71aecc4538e9ff7"
+    },
+    {
+      "path": "tools/simengine_ascend/official_scene_assets.lock.json",
+      "bytes": 1696,
+      "sha256": "59b52b8557ba2953503967781a570a91fc282e44cd1289c537e2bda463250125"
+    },
+    {
+      "path": "tools/simengine_ascend/prepare_scene.py",
+      "bytes": 25915,
+      "sha256": "45919fe4a80594cd280b75b1e4e2d54229958ac45a39c51a8db735054fe2bbc2"
+    },
+    {
+      "path": "tools/simengine_ascend/test_capture_scene.py",
+      "bytes": 13350,
+      "sha256": "ce8d5b44e8f3fdb42a80974990d2b8518990f8f14bb5dc0c53eb2e6c12068877"
+    },
+    {
+      "path": "tools/simengine_ascend/tests/test_build_backend.py",
+      "bytes": 12549,
+      "sha256": "632d67ed512c07ba560b0538f035140987f9a9aa2e0ee113de95e7bfb6c57c09"
+    },
+    {
+      "path": "tools/simengine_ascend/tests/test_prepare_scene.py",
+      "bytes": 9786,
+      "sha256": "d834fb325beaa42c8f06e6d98ef76e998640b60d16914630e4765afefff2e380"
+    }
+  ],
+  "acceptance": {
+    "CPU_contract_and_process_checks": true,
+    "NPU_device_validation": false,
+    "official_scene_execution": false,
+    "GPU_parity": false,
+    "performance": false
+  }
+}

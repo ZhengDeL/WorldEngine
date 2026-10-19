@@ -2,10 +2,9 @@ from typing import Dict, List
 from pathlib import Path
 import numpy as np
 import os
-import time
 import scipy.spatial.transform
-import pickle
 import logging
+import sys
 from pyquaternion import Quaternion
 
 from nuplan.common.actor_state.ego_state import EgoState
@@ -22,6 +21,13 @@ from worldengine.scenario.scenarios.scenario_description import (
     ScenarioDescription as SD,
 )
 from worldengine.components.agents.client.base_client import BaseClient
+
+# The shared protocol is CPU-only. Importing it does not import torch_npu or
+# replace the renderer/GPU process's algorithm modules.
+_REPOSITORY_ROOT = Path(__file__).resolve().parents[6]
+if str(_REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPOSITORY_ROOT))
+from simengine_ascend.file_protocol import atomic_pickle, wait_numpy
 
 logger = logging.getLogger(__name__)
 
@@ -90,16 +96,12 @@ class NAVFormerClient(BaseClient):
             self.config["planner_data_path"], f"{prefix}_{step + 1}.npy"
         )
 
-        # Start waiting NAVFormer output
-        while not os.path.exists(traj_file_path):
-            time.sleep(0.2)
-
-        while True:
-            try:
-                ego_traj = np.load(traj_file_path)
-                break
-            except Exception:    # in case the file is not ready yet
-                time.sleep(0.1)
+        ego_traj = wait_numpy(
+            traj_file_path,
+            timeout_seconds=float(self.config.get('planner_wait_timeout_seconds', 120)),
+            stop_file=self.config.get('planner_stop_file'),
+            deadline_utc=self.config.get('planner_deadline_utc'),
+        )
 
         ego_traj = np.concatenate([np.zeros((1, 3)), ego_traj], axis=0)
         ego_heading = ego_traj[:, 2]
@@ -171,10 +173,10 @@ class NAVFormerClient(BaseClient):
         filename = frame_data["log_token"] + "_" + str(step) + ".pkl"
         filepath = self.data_folder / filename
         filepath.parent.mkdir(parents=True, exist_ok=True)
-        with open(filepath, "wb") as f:
-            pickle.dump(
-                self.episode_data_processed[step], f, protocol=pickle.HIGHEST_PROTOCOL
-            )
+        record = self.episode_data_processed[step]
+        if not isinstance(record, dict):
+            raise ValueError('Cannot publish a nonconsecutive/invalid processed frame')
+        atomic_pickle(filepath, record)
 
     @property
     def engine(self):

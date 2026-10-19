@@ -2,11 +2,6 @@ import logging
 
 import torch
 from torch.nn import Parameter
-try:
-    from gsplat.cuda._wrapper import spherical_harmonics
-except ImportError:
-    print("Please install gsplat>=1.0.0")
-
 from worldengine.render.mtgs.utils.gaussian_utils import quat_mult, quat_to_rotmat, interpolate_quats, IDFT
 from worldengine.render.mtgs.gaussian_model.vanilla_gaussian_splatting import VanillaPortableGaussianModel
 logger = logging.getLogger(__name__)
@@ -90,13 +85,14 @@ class RigidPortableSubModel(VanillaPortableGaussianModel):
 
     def get_gaussian_rgbs(self, camera_to_worlds, timestamp, device=None):
         device = device if device is not None else self.device
-        assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
+        if self.sh_backend == 'gsplat':
+            assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
         true_features_dc = self.get_true_features_dc(timestamp, None)
         colors = torch.cat((true_features_dc[:, None, :], self.features_rest), dim=1).to(device)
         if self.sh_degree > 0:
             viewdirs = self.global_means.detach().to(device) - camera_to_worlds[..., :3, 3].to(device)  # (N, 3)
             viewdirs = viewdirs / viewdirs.norm(dim=-1, keepdim=True)
-            rgbs = spherical_harmonics(self.sh_degree, viewdirs, colors)
+            rgbs = self._evaluate_sh(viewdirs, colors)
             rgbs = torch.clamp(rgbs + 0.5, 0.0, 1.0)
         else:
             rgbs = torch.sigmoid(colors[:, 0, :])
@@ -107,7 +103,8 @@ class RigidPortableSubModel(VanillaPortableGaussianModel):
         return torch.sigmoid(self.gauss_params['opacities']).squeeze(-1)
 
     def _get_log_pose_from_timestamp(self, timestamp):
-        self.log_timestamps = self.log_timestamps.to(self.device)
+        pose_device = 'cpu' if self.sh_backend == 'torch-npu' else self.device
+        self.log_timestamps = self.log_timestamps.to(pose_device)
         relative_timestamp = timestamp - self.log_start_time
 
         diffs = relative_timestamp - self.log_timestamps
@@ -141,6 +138,11 @@ class RigidPortableSubModel(VanillaPortableGaussianModel):
                                         trans=trans,
                                         timestamp=timestamp,
                                     )
+        if self.sh_backend == 'torch-npu':
+            # Preserve FP64 log interpolation on CPU; only the resulting pose
+            # enters Gaussian rendering, explicitly as FP32 on this NPU.
+            quat = quat.to(device=self.device, dtype=torch.float32)
+            trans = trans.to(device=self.device, dtype=torch.float32)
 
         return {
             "means": self.get_means(global_trans=trans, global_quat=quat),

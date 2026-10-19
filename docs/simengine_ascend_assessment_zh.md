@@ -1,186 +1,151 @@
-# SimEngine 昇腾 910C 适配评估
+# SimEngine 昇腾 910C 适配与验证
 
 [English](simengine_ascend_assessment.md)
 
-评估日期：2026-10-19。WorldEngine 基线为 `3eded7e8ac64e5bed817860765089b5914ab698f`，SimEngine 目录树为 `8eedf247a89ce5b022209e4cf0f3988cc2a10a2f`。本分支目前提供代码和依赖评估，尚未交付 SimEngine NPU 运行后端。
+更新日期：2026 年 10 月 20 日。
 
-**原仓 SimEngine 不能直接在纯 NPU 环境完整运行。CANN 已有面向 Atlas A2/A3 的高斯渲染算子库，存在可验证的迁移路径，但这些算子与原仓 `gsplat==1.4.0` 的接口和渲染语义尚未证明兼容。** 本次没有执行 SimEngine NPU 渲染、闭环或 GPU/NPU 性能测试，速度差距、设备最低数量及完整可用性均未实测。
+本分支已实现 MTGS 的 NPU 前向渲染兼容层，并在一枚 910C 芯片上通过 20 组小规模合成输入数值检查。仓库提供后端构建、官方单场景准备、真实输入捕获与验证、场景回放和闭环规划器接入工具。**当前设备结果覆盖小规模 FP32 渲染；官方真实场景原分辨率运行、完整闭环和 GPU 对照仍待验证。**
 
-## 评估范围与证据
+WorldEngine 上游基线为 `3eded7e8ac64e5bed817860765089b5914ab698f`，原渲染接口来自 `gsplat==1.4.0`。本分支使用固定 CANN gauss-splat 提交 `8c0445ebcca91514fce3a7050241f41ed132c340` 及显式前向补丁，保持原 MTGS 的投影、颜色合成和深度语义。
 
-评估覆盖场景加载、车辆与交通行为、MTGS 图像渲染、AlgEngine 闭环客户端、NR/R 测试、带奖励 rollout、Ray 调度和合成数据导出。依据是固定基线的源码、原项目文档，以及下列项目的维护者源码。源码事实、候选能力和待验证判断在下文分别说明。
+## 实测结果与边界
 
-SimEngine 的默认渲染器是 MTGS。源码没有导入 CARLA 或启动 Unreal 服务；`CARLA` 仅出现在历史注释中，因此不能用 CARLA 的硬件要求判断本项目是否可迁移。这里的渲染是计算型高斯光栅化，核心依赖是 CUDA 扩展。[渲染器配置](../projects/SimEngine/worldengine/configs/common/renderer/mtgs.yaml#L1)、[渲染入口](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L14)。
+服务器有 **8 张 910C 物理卡，每张双芯，共 16 个可见芯片**。本轮小规模检查只使用一枚，设备名为 `Ascend910_9362`，容器内映射为 `npu:0`。原仓八路脚本面向 8 张 GPU；本分支尚无 16 芯片 SimEngine 扩展结果，不能由设备数量推出吞吐倍率。
 
-AlgEngine 的既有 NPU 结果不等于 SimEngine 验收。原闭环脚本另行启动 `projects/AlgEngine/closed_loop/sim_test.py`，该入口仍使用 `model.cuda()` 和 `MMDataParallel`，必须单独适配和测试。[模型加载](../projects/AlgEngine/closed_loop/sim_test.py#L274)。
-
-| 功能 | 固定基线的实现 | NPU 迁移判断与验收要求 |
-| --- | --- | --- |
-| 场景加载、车辆动力学、日志回放、IDM 与地图 | Python、NumPy、SciPy、nuPlan；[运行入口](../projects/SimEngine/worldengine/runner/run_simulation.py#L16)、[环境构建](../projects/SimEngine/worldengine/envs/base_env.py#L327) | 可保留 CPU 执行；仍需验证 ARM64 依赖、场景终止、R/NR 行为与确定性 |
-| MTGS 静态背景、天空和动态刚体 | `Vanilla`、`Rigid`、`MirroredRigid` 高斯模型；[类型映射](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L31) | 张量变换可迁移；CUDA 球谐和光栅化必须替换，不能只改设备字符串 |
-| 球谐颜色 | 三种模型直接调用 `gsplat.cuda._wrapper.spherical_harmonics`；[基础模型](../projects/SimEngine/worldengine/render/mtgs/gaussian_model/vanilla_gaussian_splatting.py#L123) | CANN 有同类算子；需核对维度、阶数、方向、截断及逐相机结果 |
-| 多相机 RGB、可选深度 | [MTGS 实际调用](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L300) | 需要兼容层，保留抗锯齿、alpha、深度定义和原分辨率 |
-| 几何与位姿 | 多处使用设备侧 FP64；[标定](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L128)、[位姿](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L395) | 必须实测目标算子与 dtype。可先保留 CPU FP64 几何、向 NPU 传 FP32 渲染输入，不能静默降精度后声称等价 |
-| AlgEngine 闭环推理 | 独立进程读帧 PKL、写规划 NPY；[客户端](../projects/SimEngine/worldengine/components/agents/client/navformer_client.py#L81) | 需要 NPU 模型入口、精度/MSDA 设置、原子文件协议与超时；离线推理通过不能替代闭环测试 |
-| 稠密奖励与候选轨迹评分 | 8192 轨迹词表；CUDA `TorchSimulator` 或 CPU `PDMSimulator`；[分支](../projects/SimEngine/worldengine/manager/dense_reward_manager.py#L275) | 原代码已有 CPU 路径，可作为初始方案；NPU 加速路径涉及 FP64/LQR，另行验证。保留奖励定义及候选顺序 |
-| Ray 场景并行 | `torch.cuda.device_count()`、`num_gpus`、`ray.get_gpu_ids()`；[资源发现](../projects/SimEngine/worldengine/utils/multithreading/worker_ray.py#L49)、[场景分片](../projects/SimEngine/worldengine/runner/builders/env_builder.py#L23) | 需改为 NPU 资源、芯片可见性和一致的 worker ID；Ray 2.48 本身已有 NPU 管理器，不能直接将 `num_gpus` 当作 NPU 资源 |
-| 测试、rollout、导出 | [测试脚本](../projects/SimEngine/scripts/run_ray_distributed_testing.sh#L1)、[rollout](../projects/SimEngine/scripts/run_ray_distributed_rollout.sh#L1)、[导出](../projects/SimEngine/scripts/export_simulation_data.py#L1) | 原脚本固定八路 CUDA，带清理与进程组终止；需要受控 NPU 启动器、退出码和产物检查。导出文件存在不代表奖励、图像及元数据均有效 |
-
-关闭渲染不能作为完整迁移方案。环境明确要求启用 DataManager 时必须启用 RenderManager；仅运行 CPU 车辆状态，不会得到供视觉规划和训练使用的图像。[约束](../projects/SimEngine/worldengine/envs/base_env.py#L336)。
-
-## 候选后端及版本条件
-
-优先候选是 CANN 的 [gauss-splat](https://gitcode.com/cann/gauss-splat)。维护者 README 声明支持 Atlas A2/A3，提供球谐、投影、筛选、排序、渲染前后向等算子，要求 CANN 8.5 及以上、配套 PyTorch 2.7.1 及以上。README 中的 `torch_npu v7.3.0` 是插件发布线表述，不能直接与 Python wheel 的 `2.7.1.post8` 做版本大小比较。**CANN 9.1、现有 Torch-NPU wheel 与候选仓某个 tag 的编译及运行 ABI 尚待核对，未做兼容实测。**
-
-较早的官方 [3DGS 实践](https://gitcode.com/cann/cann-recipes-spatial-intelligence/blob/master/algorithms/gaussian_splatting/README.md) 使用 `meta_gauss_render`，文档配置为 A2、CANN 8.2.RC1、PyTorch 2.1.0、Torch-NPU 2.1.0.post12。[SLARM 维护者](https://github.com/kevinchiu19/SLARM#installation) 另有 PyTorch 2.1/910C 使用记录。这些是技术可行性的依据，不是 WorldEngine 或当前软件栈的兼容证明。
-
-[Ray 2.48 的固定版本源码](https://github.com/ray-project/ray/blob/ray-2.48.0/python/ray/_private/accelerators/npu.py) 已定义 `NPU` 资源和 `ASCEND_RT_VISIBLE_DEVICES`。基础 NPU 调度不要求先升级到新版 Ray 插件，但 WorldEngine 自己的资源发现、分片数和 worker 路径仍需适配。
-
-原 WorldEngine 环境使用 Python 3.9、PyTorch 2.0.1/CUDA 11.8、gsplat 1.4.0，并把重建训练交给外部 MTGS。NPU 试验应使用独立环境和镜像，保留原 GPU 环境；不要在现有 AlgEngine 环境中直接替换依赖。[原环境说明](installation.md#environment-1-simengine-simengine)。切换到较新 PyTorch 后，还应检查场景 `.ckpt` 的序列化格式及 `torch.load` 默认行为，避免把反序列化问题误认为渲染算子问题。
-
-以下是 2026-10-19 获取的 canonical CANN `master` 小文本快照。SHA256 标识本次读取的完整文件内容，不是 Git commit，也不代表其后 `master` 不再变化。构建时必须另选配套 tag/commit 并记录实际指纹。
-
-| 源码 | 本次内容 SHA256 |
+| 项目 | 本轮证据 |
 | --- | --- |
-| [README.md](https://raw.gitcode.com/cann/gauss-splat/raw/master/README.md) | `8c640465d0c978b8d22b5b736cff4944226b037074c28e6d7778cef2a5f17483` |
-| [ops/rendering.py](https://raw.gitcode.com/cann/gauss-splat/raw/master/gauss_splat/ops/rendering.py) | `bb4b4b2ea3115c28ce68fce8327dede71effad7c94aaae33b5fdd331bfd59294` |
-| [ops/projection_three_dims_gaussian_fused.py](https://raw.gitcode.com/cann/gauss-splat/raw/master/gauss_splat/ops/projection_three_dims_gaussian_fused.py) | `a8020eb1bd1c7eebc68d6802f20b45e514ee71af7c0cdfa0806426434a84a281` |
-| [ops/calc_render.py](https://raw.gitcode.com/cann/gauss-splat/raw/master/gauss_splat/ops/calc_render.py) | `55538ed671be7cefcee77ba3089956cb7a0a217ffa43e53cd3e12c5a55a431cc` |
-| [build.sh](https://raw.gitcode.com/cann/gauss-splat/raw/master/build.sh) | `126616ed2406a29a8df77b3c9dc71a713a3554b9dec92e9c7d68b91f40d6c700` |
+| 软件环境 | Python 3.10、PyTorch `2.7.1+cpu`、Torch-NPU `2.7.1.post8`、CANN Toolkit 9.1.0；每次构建与探针另记运行库指纹 |
+| 公开后端构建 | 新建隔离 venv 与输出目录，使用 `build_backend.py` 完成 wheel 构建、安装及实际 native/pyACL 导入；CPU 阶段通过 |
+| NPU 数值检查 | 20 项通过，覆盖投影、协方差非整块尾部、像素中心、裁剪、遮挡、alpha、期望深度、空图、逐相机颜色、抗锯齿、旋转和 0–4 阶 SH |
+| 输入范围 | 最多 256 个 Gaussian、8 个相机、每相机 4096 像素；主要为 64×64，另有 71×37 非方形图像；tile 16/32 |
+| RGB 最大绝对差 | `1.2237711302e-6` |
+| alpha 最大绝对差 | `1.5866665948e-6` |
+| 期望深度最大绝对差 | `2.5749206546e-5` |
+| CPU 检查 | Linux CPU 环境中 136 项通过、无跳过：渲染/门禁 79、入口/进程 21、构建/准备 26、场景捕获 10；使用合成 fixture |
 
-## 与原 gsplat 调用的接口差距
+RGB/alpha 门限为 `atol=3e-4, rtol=1e-3`，期望深度为 `atol=2e-3, rtol=1e-3`，SH 为 `atol=3e-5, rtol=3e-5`。比较对象是独立 NumPy 参考实现。本轮没有可用 GPU，未执行 CUDA gsplat 对照，也没有可发布的速度、成本或能耗百分比。
 
-下表比较原 [MTGS 调用](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L338) 与上述 CANN 实现。候选的低层能力有助于实现兼容层，但高层 `Rasterizer` 不是可直接替换的 `gsplat.rendering.rasterization`。
+[数值结果与测试源码指纹](validation/simengine_npu_forward_20261020.json)保存了当前源码、公开工具构建的 wheel、实际加载的 native/kernel 身份，以及输入范围、20 项通过用例和 18 组图像误差记录。[CPU 检查记录](validation/simengine_cpu_checks_20261020.json)给出四组测试命令和实际源码清单。新环境生成的 wheel 或改动后的适配代码都必须重跑探针，生成自己的 manifest；公开摘要不能代替本机运行时 manifest，也不能授权更大的输入。
 
-| 参数或语义 | WorldEngine 原合同 | CANN 取样源码与所需工作 |
+| 功能 | 本分支实现 | 当前验收范围 |
 | --- | --- | --- |
-| 高斯参数 | 世界坐标 means；已归一化 quats；`exp(scales)`；`sigmoid(opacities)` | 高层入口接收 log-scales/logit-opacities 并再次激活。直接传原值会重复激活；应明确转换或使用接收已激活值的低层投影 |
-| 颜色 | 每相机 `C×N×3` 已计算 RGB，包含动态刚体/Fourier/镜像处理 | 高层要求 `sh0/shN` 系数，内部强制计算 SH。不能把 RGB 冒充 SH；其 `sh_degree=None` 验证分支也不构成可用 RGB 通路，需要实际桥接 |
-| SH | 按相机与对象计算；degree 0 使用 sigmoid；正阶数为 SH 后 `+0.5` 并截断到 `[0,1]` | 候选有逐相机 SH 和 0–4 阶算子；高层 degree 0 仍走 SH，并只做下界截断。需保留原分支与上界截断 |
-| 相机 | 已算好的 world-to-camera、`C×3×3` 内参 | 候选公开入口收 camera-to-world 再求逆；矩阵方向必须一致，避免二次反转 |
-| 近远裁剪 | `near=0.01`、`far=1e10`、`radius_clip=0` | 候选高层写死 near=0.2；低层投影支持 near/far 参数，需要显式传入原值 |
-| 抗锯齿 | 默认 `antialiased`，遵循 gsplat 的协方差/opacity 补偿 | 候选高层没有此参数，投影默认 `calc_compensations=False`；低层提供补偿选项，仍需逐输出对照 |
-| tile / packed | tile 16、`packed=False` | 候选默认 tile 32、压缩投影结果。tile 16、排序及有效高斯映射需要测试，不能因可传参数就认定等价 |
-| RGB、alpha 与背景 | 返回 RGB/可选深度通道及独立 alpha；原代码据此合成背景 | 候选高层返回 RGB 和深度，没有 alpha。低层额外返回累积状态，可研究导出 alpha，但必须核对其定义、裁剪和终止规则 |
-| `RGB+ED` | 深度为归一化期望深度，空像素按原规则处理 | 候选低层文档定义的是加权深度和；高层虽接受 mode 字符串，却没有相应输出模式分支。不能把 D 直接当 ED，需要 alpha 归一化及空像素验证 |
-| 动态场景 | 背景、天空、多动态 actor，含镜像与时间变化 SH | 先保留 MTGS 对象变换，再向后端传组合高斯和各相机颜色；单个静态点云通过不代表动态场景通过 |
-| 梯度 | SimEngine `render()` 为 `@torch.no_grad()`；传入 `absgrad=True` | 渲染 pilot 可先验证前向；这不覆盖外部 MTGS 训练、反向或重建收敛 |
-| 图像导出 | FP32 渲染后转 uint8、RGB→BGR、OpenCV 畸变重映射 | 保留原操作顺序和元数据，不用降分辨率或省相机来宣称同配置性能 |
+| NPU 渲染 | CANN 投影/前向 kernel、Torch-NPU 稳定排序、RGB/alpha/期望深度、SH 及 MTGS 接入 | 小规模 FP32 前向通过；真实资产完整输入待验 |
+| 几何与动态对象 | 保留背景、天空、刚体、镜像与时序变换；必要的 FP64 位姿在 CPU 计算 | 代码已接入，真实动态场景待验 |
+| 官方输入准备 | 完整 SHA、真实 scene→asset 映射、安全提取、原值单场景派生 | 工具测试通过；真实资产须完成下载、完整 SHA 和准备步骤 |
+| 单节点回放 | 原 Hydra runner、BaseEnv、DataManager、报告检查与截止控制 | 已提供 CPU 命令/进程测试，官方场景 NPU 回放待验 |
+| VADv2/HydraMDP 闭环 | 独立 AlgEngine 规划进程、帧/轨迹协议、FP32/BF16 显式入口 | 已提供协议测试；本轮无真实闭环结果，渲染仍为 FP32 |
+| R/NR、奖励及导出 | 原策略、CPU PDM/稠密评分分支及输出检查入口 | 需要真实场景、地图、规划器与对应产物验收 |
 
-原 gsplat 的 CUDA 构建与算子来源可直接查看其固定 [v1.4.0 backend](https://github.com/nerfstudio-project/gsplat/blob/v1.4.0/gsplat/cuda/_backend.py) 和 [rendering.py](https://github.com/nerfstudio-project/gsplat/blob/v1.4.0/gsplat/rendering.py)。
+## 环境与后端构建
 
-## 两条部署候选
+使用独立 Linux/ARM64 环境，先准备配套 CANN、PyTorch、Torch-NPU、编译器及原 SimEngine 依赖。本轮从既有镜像创建隔离 venv；这不构成任意干净容器的部署结果。上游 pyproject 仍声明 CUDA/PyTorch 2.0.1，不能直接用其锁文件覆盖 NPU 栈。
 
-**全 NPU 计算方案**：CPU 保留场景、地图、文件协议及必要的 FP64 几何，NPU 承担高斯渲染和规划模型。需要完成上述渲染合同、闭环客户端与调度适配。CPU 主机仍是运行组成部分；“全 NPU”指不依赖 NVIDIA GPU。目前未验证。
+原环境还会导入 nuPlan、Hydra、OpenCV、SciPy、Pillow 和 Ray 2.48.0。`SINGLE_NODE` 不启动 Ray worker，但原代码仍导入 Ray。依赖能否导入和 kernel 能否运行需要分别检查。
 
-**GPU 渲染 + NPU 规划方案**：保留原 MTGS/gsplat CUDA 渲染，在独立 NPU 进程运行规划模型，通过原帧/轨迹文件接口连接。代码结构允许这种分工，但当前客户端、路径共享、同步、退出行为及性能都未测。GPU 仍是必要资源，不能称为纯 NPU SimEngine。跨主机时还需验证共享文件系统与传输时间。
-
-## 单场景最小输入
-
-先选择一个公开来源的真实场景，保留标识、时间戳、标定及所需 actor，不需要下载全部 WorldEngine 资产。
-
-| 输入 | 最低验证范围 |
-| --- | --- |
-| 场景描述 | `all_scenarios.pkl` 中一个原始场景，保留完整 history/future、相机标定、地图及轨迹元数据；派生子集记录源文件 SHA 和所选 ID |
-| MTGS 场景资产 | 与 `digitaltwin_asset_id` 对应的 `<asset-root>/<id>/background/<id>.ckpt`，其中包含该场景实际使用的背景、天空、刚体和镜像模型；[加载位置](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L471) |
-| 地图 | 对应地区的 nuPlan 地图与地图版本 JSON；闭环指标/奖励需要实际地图数据 |
-| 规划模型 | 与配置匹配的 VADv2 或 HydraMDP 官方 checkpoint；仅做渲染算子 pilot 不需要规划权重 |
-| 轨迹词表 | 奖励/规划使用 `test_8192_kmeans.npy`，保留 8192 个候选及其顺序 |
-| 输出空间 | 原分辨率各相机图像、逐帧元数据、轨迹、奖励及报告；容量按所选场景实测 |
-
-2026-10-19 对固定 WorldEngine 数据版本 `d0e88d858533ca407a3387a26577c083aa7b3617` 的文件元数据查询显示：`navtest_failures/all_scenarios.pkl` 为 **911,923,264 B**；其资产发布为三包，分别为 **30,904,422,680 B、29,680,462,746 B、27,886,330,535 B**。这只是发布粒度，尚未下载正文、检查包内索引或确认一个场景位于哪一包，不能把任一包称为已验证 mini。[场景清单](https://huggingface.co/api/datasets/OpenDriveLab/WorldEngine/tree/d0e88d858533ca407a3387a26577c083aa7b3617/data/sim_engine/scenarios/original/navtest_failures?recursive=false&limit=1000)、[资产清单](https://huggingface.co/api/datasets/OpenDriveLab/WorldEngine/tree/d0e88d858533ca407a3387a26577c083aa7b3617/data/sim_engine/assets/navtest_failures/assets?recursive=false&limit=1000)。
-
-AlgEngine 的 NAVTRAIN 相机包不能替代这些 Gaussian 场景 `.ckpt`。已有预构建场景和资产时，渲染 pilot 不需要重新执行整个 MTGS 重建流程；若要自己制作资产，还需外部 [MTGS](https://github.com/OpenDriveLab/MTGS) 的数据、重建训练与导出，属于额外验收范围。
-
-## 可执行的研究预检
-
-以下操作是待执行的研究流程，不是本分支已有的 SimEngine NPU 启动命令。设备操作应在指定独立环境内执行，保留每条命令的退出码和版本输出。
-
-先记录基线与候选。`CANN_GAUSS_COMMIT` 必须是已核对 CANN/插件配套关系的实际提交，不能填 `master`：
+[工具指南](../tools/simengine_ascend/README.md#build-the-pinned-cann-backend)列出了完整前提与产物。下列变量均为实际部署值；`DEADLINE_UTC` 是本次作业的明确 UTC 截止时间。
 
 ```bash
-git rev-parse HEAD
-git status --short
-npu-smi info
-python -m pip freeze
-python -m pip check
-
-WORKDIR=/path/to/isolated-simengine-research
-: "${CANN_GAUSS_COMMIT:?Select a compatible fixed gauss-splat commit}"
-git clone https://gitcode.com/cann/gauss-splat.git "$WORKDIR/gauss-splat"
-git -C "$WORKDIR/gauss-splat" checkout --detach "$CANN_GAUSS_COMMIT"
-git -C "$WORKDIR/gauss-splat" rev-parse HEAD
+CANN_ROOT=/usr/local/Ascend/cann-9.1.0
+source "$CANN_ROOT/set_env.sh"
+cd "$SIM_ROOT"
+"$CONTROL_PYTHON" tools/simengine_ascend/build_backend.py \
+  --source "$CANN_SOURCE" --output "$NEW_BUILD" \
+  --python "$SIM_PYTHON" --jobs 8 --install \
+  --cann-root "$CANN_ROOT" \
+  --cann-python-path "$CANN_ROOT/python/site-packages" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file "$STOP_FILE"
 ```
 
-在已有配套 PyTorch/Torch-NPU 的独立构建环境中加载 CANN，按维护者依赖准备编译环境。README 提供 `build.sh --python=<version>` 和 `pip install . --no-build-isolation` 两种方法；需有编译器、CMake、ACL/CANN 头文件及算子开发环境，不能仅安装上游 CUDA gsplat wheel。
+`CANN_SOURCE` 必须是固定提交的干净 Git 检出，`SIM_PYTHON` 属于已有隔离 venv，输出目录必须全新。builder 只复制 tracked 文件，在副本应用兼容补丁，限制构建并行为 1–16，只编译 `ascend910_93`，关闭原库测试程序，并修正 venv 中 Torch-NPU 头文件定位。
+
+示例路径来自本轮安装。其他机器应替换为实际 SDK 路径，并确保 `set_env.sh`、`--cann-root` 与 pyACL 目录属于同一套 SDK。旧的 `ascend-toolkit` 链接若指向另一版本，会在安装预检时因 pyACL 路径不匹配被拒绝。
+
+构建使用 `pip wheel --no-build-isolation --no-deps`。默认不安装；`--install` 从源码目录之外用确切 wheel 路径强制安装，并检查实际导入位置。工具阻止继承的 pip 全局目标配置，只保留经 SDK 根验证的 CANN Python 路径。`build_receipt.json` 记录源码、补丁、wheel、安装模块的 SHA、命令和版本。构建或导入成功只代表相应阶段完成。
+
+[公开工具构建实测](validation/simengine_public_backend_build_20261020.json)记录了本轮新建环境的成功结果和 wheel/extension SHA。随后设备探针使用相同 extension SHA，通过当前源码的小规模检查。构建记录与数值记录分别保留，便于核对二进制身份与各阶段结果。
+
+## 小规模 NPU 检查
+
+先隔离一枚授权使用的芯片，记录宿主机与进程的映射。`npu:0` 指可见设备编号，不代表宿主机芯片 0。设备/runtime 卡住时仍需容器或作业级截止控制。
 
 ```bash
-source /usr/local/Ascend/ascend-toolkit/set_env.sh
-cd "$WORKDIR/gauss-splat"
-python -m pip install numpy==1.23 decorator sympy scipy attrs cloudpickle \
-  psutil synr==0.5.0 tornado cmake pyyaml expecttest protobuf
-python -m pip install . --no-build-isolation
-python -m pip check
-cd "$WORKDIR"
-python -c 'import acl, torch, torch_npu, gauss_splat.gsplat_c; print(torch.__version__, torch_npu.__version__, torch.npu.is_available())'
+cd "$SIM_ROOT"
+export PYTHONPATH="$SIM_ROOT/projects/SimEngine:${PYTHONPATH:-}"
+"$SIM_PYTHON" projects/SimEngine/worldengine/render/ascend/tests/probe_cann.py \
+  --device npu:0 --output "$NEW_PROBE" \
+  --deadline-utc "$DEADLINE_UTC"
 ```
 
-构建/导入通过后，可用一枚空闲逻辑 NPU 执行下面的最小前向探针。它使用合成的 256 个高斯、单相机和 64×64 图像，不下载模型或场景。**该探针尚未实测；即使通过，也只证明候选后端的这一调用可用，不证明原 MTGS 兼容。**
+同时核对退出码、`device_validation.json` 中的 `result=pass`、所需用例和 `validated_manifest.json`。manifest 绑定运行库、适配源码、参考实现、兼容 kernel 与输入上限。探针计时含验证操作，不作为性能验收。不能手工放大 manifest 的 Gaussian、相机或像素上限。
+
+## 官方单场景输入
+
+最小候选为官方 `all_scenarios.pkl` 与 `navtest_failures/assets/part003.tar.gz`，共 **28,798,253,799 B（28.80 GB）**。单场景验证无需全部 5 TB。固定 HF/魔搭来源、尺寸和完整 SHA 见[官方资产锁](../tools/simengine_ascend/official_scene_assets.lock.json)及[下载说明](../tools/simengine_ascend/README.md#inputs)。
+
+本轮对场景索引完成整文件 SHA 核验，实际读出 288 个原始场景。其中一个场景映射到 part003 首个已确认资产：
+
+```text
+2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4
+```
+
+该场景对应 Boston 地图。包头确认背景 checkpoint 解压尺寸为 336,430,727 B；包头和索引均不能替代完整资产包 SHA 或 checkpoint 内部检查。
 
 ```bash
-ASCEND_RT_VISIBLE_DEVICES=0 python - <<'PY'
-import torch
-import torch_npu
-import gauss_splat
-
-torch.npu.set_device(0)
-device = 'npu:0'
-n = 256
-means = torch.zeros(n, 3, device=device)
-means[:, 2] = 2.0
-quats = torch.zeros(n, 4, device=device)
-quats[:, 0] = 1.0
-splats = dict(means=means, quats=quats,
-              scales=torch.full((n, 3), -3.0, device=device),
-              opacities=torch.zeros(n, device=device),
-              sh0=torch.zeros(n, 1, 3, device=device),
-              shN=torch.zeros(n, 15, 3, device=device))
-pose = torch.eye(4, device=device)[None]
-intrinsics = torch.tensor([[64., 0., 32.], [0., 64., 32.],
-                           [0., 0., 1.]], device=device)[None]
-with torch.no_grad():
-    rgb, depth, info = gauss_splat.Rasterizer().rasterization(
-        cam=(pose, intrinsics, 'RGB'), size=(64, 64), tile_size=32,
-        active_sh_degree=0, splats=splats, camera_model='pinhole')
-torch.npu.synchronize()
-assert rgb.shape == (1, 64, 64, 3)
-assert depth.shape == (1, 64, 64, 1)
-assert torch.isfinite(rgb).all() and torch.isfinite(depth).all()
-print({'rgb': list(rgb.shape), 'depth': list(depth.shape),
-       'rgb_max': float(rgb.max()), 'meta_keys': sorted(info)})
-PY
+"$SIM_PYTHON" tools/simengine_ascend/prepare_scene.py \
+  --scenario-pkl "$INPUTS/all_scenarios.pkl" \
+  --asset-archive "$INPUTS/part003.tar.gz" --output "$PREPARED" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file "$STOP_FILE"
 ```
 
-随后才实现独立渲染兼容层，使用同一份原始 gsplat 1.4.0 输入和完整输出对照 SH、投影、排序、RGB、alpha、ED。覆盖单/多相机、near/far 边界、遮挡、空像素、抗锯齿、镜像及动态 actor。完成真实单场景后，再接两种规划模型，验证 R/NR、奖励 rollout、恢复和导出产物。原脚本的 `simulation_completed.flag` 及进程退出码不能单独作为成功依据，应核对每个 `RunnerReport.succeeded`、实际帧数、有限值、轨迹和奖励覆盖。
+工具验证两个完整官方文件后，才读取 pickle、匹配真实资产并提取目标完整目录。`scene.pkl` 保留原字典值，不删帧、改相机或替换图像。`prepare_receipt.json` 记录源、派生文件及每个资产的 SHA。可加 `--inspect-checkpoint` 做独立 CPU 清点；需要 PyTorch 和 checkpoint 所用项目依赖，不执行渲染。
 
-## 设备与性能验收
+## 真实输入捕获与验证
 
-算子 pilot 从 **1 个逻辑 NPU** 开始。首次闭环建议渲染与规划各用一个独立逻辑芯片，先隔离内存和执行问题；两进程共用一芯片是否可行、最低 HBM/CPU 内存、16 芯片扩展能力均需实测。原文档的 8 GB 最低/24 GB 推荐 GPU 与 32/64 GB 主存要求是 GPU 指南，不能直接换算为 NPU 容量。
+准备完成后，使用原 BaseEnv.reset 和 MTGS 拼装首帧完整输入。捕获保留全部 Gaussian、相机、原分辨率和 RGB+ED 设置，在光栅化调用前导出；捕获成功本身不代表图像或场景通过。
 
-应先通过输出质量门禁，再做三层同条件测量：
+```bash
+PREPARE_RECEIPT_SHA=$("$SIM_PYTHON" -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1],"rb").read()).hexdigest())' "$PREPARED/prepare_receipt.json")
+SOURCE_COMMIT=$(git -C "$SIM_ROOT" rev-parse HEAD)
+"$SIM_PYTHON" tools/simengine_ascend/capture_scene.py \
+  --prepared-dir "$PREPARED" --prepare-receipt-sha256 "$PREPARE_RECEIPT_SHA" \
+  --maps-root "$MAPS_ROOT" --small-manifest "$NEW_PROBE/validated_manifest.json" \
+  --device npu:0 --source-commit "$SOURCE_COMMIT" --reaction NR \
+  --output "$NEW_CAPTURE" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file "$STOP_FILE"
 
-| 层次 | 必须固定的输入与配置 | 报告内容 |
-| --- | --- | --- |
-| 算子 | 同一高斯、相机、dtype、clip、排序与抗锯齿设置 | 预热后同步耗时、峰值 HBM、完整输出误差；编译/冷启动单列 |
-| 八相机渲染 | 同一真实资产、动态 actor、时间戳、原分辨率与后处理 | 每个完整八相机帧的 p50/p95 延迟、帧/s、相机图像/s、内存及图像质量 |
-| 完整闭环 | 同一模型 checkpoint、场景集合、R/NR、奖励与导出范围 | 总 wall time、完成/异常场景数、规划轨迹、闭环指标、奖励完整性，以及 IO/通信时间 |
+"$SIM_PYTHON" projects/SimEngine/worldengine/render/ascend/tests/validate_real_input.py \
+  --capture "$NEW_CAPTURE/capture/capture.json" \
+  --small-manifest "$NEW_PROBE/validated_manifest.json" \
+  --device npu:0 --output "$NEW_REAL_CHECK" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file "$STOP_FILE"
+```
 
-保留原始日志、版本、源码和输入哈希。GPU 单卡、NPU 单芯片、NPU 双芯片物理卡及多进程配置分别标明；不能用 16 个 NPU 芯片与 8 张 GPU 的数量直接推出倍率。当前没有本框架的成对实测数据，因此没有可发布的快慢百分比或成本/能耗优势结论。
+提交号说明基线，捕获工具还会记录实际运行源码指纹。捕获重新核验派生场景和每个已提取资产；原 27.89 GB 压缩包的整文件核验由准备 receipt 关联，此阶段不重读原包。
 
-## 原仓已有的功能边界
+验证器执行完整前向、检查全部输出有限值，并对固定种子抽取的像素做独立 CPU 对照，默认每相机共 128 个采样像素，包含边角、中心和其余随机位置。通过后生成 `validated_real_manifest.json`。它限定输入和渲染参数，不能扩写为全部像素、整段场景或 GPU 等价验收。本轮尚未取得真实输入的设备结果。
 
-- `DeformableSubModel` 在原 [类型映射](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L36) 中为 `None`；不能把任意外部 MTGS 模型都视为当前可加载资产。
-- [渲染输出](../projects/SimEngine/worldengine/render/mtgs/mtgs.py#L380) 的 LiDAR 字段为空并标注 TODO。原数据目录中的 LiDAR 文件不代表运行时已实现 LiDAR 渲染。
-- 原 [README 路线图](../README.md#roadmap) 的 BWM integration 尚未完成。未发布的 BWM 生成能力及外部 MTGS 重建训练，不应计入已实现 SimEngine 的迁移验收。
+## 场景回放与规划闭环
 
-本分支应以单场景真实渲染和闭环证据逐步收敛适配范围；在对应门禁完成前，保持“研究/未验证”的状态。
+完整依赖、ID 列表生成和双进程命令见[中文运行指南](../simengine_ascend/README_zh.md)与[英文运行指南](../simengine_ascend/README.md)。先从准备 receipt 读取字典 key、派生 SHA，生成唯一预期场景 ID 列表。
+
+```bash
+cd "$SIM_ROOT"
+"$SIM_PYTHON" -m simengine_ascend.run_simulation \
+  --scene-pkl "$PREPARED/scene.pkl" --scene-sha256 "$SCENE_SHA256" \
+  --asset-root "$PREPARED/assets" --maps-root "$MAPS_ROOT" \
+  --validated-manifest "$NPU_MANIFEST" --device npu:0 \
+  --output "$NEW_REPLAY" --expected-scene-ids "$SCENE_IDS_JSON" \
+  --mode replay --reaction NR --deadline-utc "$DEADLINE_UTC"
+```
+
+真实场景需要适用的 manifest，入口不会扩大已验证范围。`replay` 回放原轨迹；`closed-loop` 另接 VADv2 或 HydraMDP 规划进程。两者使用各自环境和受控帧/轨迹目录。NPU 规划器复用固定的独立 AlgEngine 迁移仓，并核对实际源码、镜像及完整 checkpoint。FP32/BF16 入口详见闭环指南；当前 SimEngine 渲染只接受 FP32。
+
+`R` 选择原 IDM 策略，`NR` 回放其他车辆日志。PDM 指标、稠密奖励需显式开启，并提供真实地图和原轨迹词表。入口核验原 RunnerReport、准确场景 ID、完成标志和实际 JPEG 解码；相机/帧完整覆盖、车辆反馈和适用评分仍需单独验收。
+
+## 设备配置与后续验收
+
+当前单芯片结果支持继续真实输入验证，尚不能确定完整场景的最低 HBM、CPU 内存或最少设备数。首次规划闭环可分别给渲染和规划器分配一枚芯片，以便隔离资源问题；两者共用一枚芯片的容量尚未实测。
+
+后续补齐原尺寸首帧、完整场景 R/NR、两种规划模型、适用指标/奖励、导出覆盖及中断恢复。多芯片/Ray、长时间运行和性能另做验收。与原仓 8 GPU 比较时，固定同一资产、相机、分辨率、模型、dtype、指标范围及输出内容，分别报告物理卡数和芯片/进程数。
+
+外部 MTGS 重建训练、任意 deformable 模型、未实现的 BWM 生成功能和完整 LiDAR 渲染不在本轮前向结果中。原 DeformableSubModel 映射为 None，LiDAR 输出仍有上游 TODO，不能由相机渲染结果推定这些功能已完成。

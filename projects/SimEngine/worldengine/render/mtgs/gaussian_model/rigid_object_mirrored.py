@@ -1,9 +1,4 @@
 import torch
-try:
-    from gsplat.cuda._wrapper import spherical_harmonics
-except ImportError:
-    print("Please install gsplat>=1.0.0")
-
 from worldengine.render.mtgs.utils.gaussian_utils import quat_mult, quat_to_rotmat
 from worldengine.render.mtgs.gaussian_model.rigid_object import RigidPortableSubModel
 
@@ -63,7 +58,8 @@ class MirroredRigidPortableSubModel(RigidPortableSubModel):
 
     def get_gaussian_rgbs(self, camera_to_worlds, timestamp, device=None):
         device = device if device is not None else self.device
-        assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
+        if self.sh_backend == 'gsplat':
+            assert device != torch.device("cpu"), "`sphereical_harmonics` in `gsplat` only supports CUDA"
         true_features_dc = self.get_true_features_dc(timestamp, None)
         colors = torch.cat((true_features_dc[:, None, :], self.features_rest), dim=1).to(device)
         colors = colors.unsqueeze(0).repeat(2, 1, 1, 1)
@@ -72,7 +68,7 @@ class MirroredRigidPortableSubModel(RigidPortableSubModel):
         if self.sh_degree > 0:
             viewdirs = self.global_means.detach().to(device) - camera_to_worlds[..., :3, 3].to(device)  # (C, N, 3)
             viewdirs = viewdirs / viewdirs.norm(dim=-1, keepdim=True)
-            rgbs = spherical_harmonics(self.sh_degree, viewdirs, colors)
+            rgbs = self._evaluate_sh(viewdirs, colors)
             rgbs = torch.clamp(rgbs + 0.5, 0.0, 1.0)
         else:
             rgbs = torch.sigmoid(colors[:, 0, :])

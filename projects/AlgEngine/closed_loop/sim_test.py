@@ -1,304 +1,241 @@
-import os
+"""Original closed-loop planner with explicit CUDA/NPU runtime selection."""
 import argparse
-import warnings
-import time
-import pickle
 import asyncio
+import csv
+import io
+import json
 import logging
-import shutil
+import math
+import os
 from pathlib import Path
-import numpy as np
-import pandas as pd
-import torch
-from mmcv import Config, DictAction, ConfigDict
-from mmcv.cnn import fuse_conv_bn
-from mmcv.parallel import MMDataParallel
-from mmcv.runner import load_checkpoint, wrap_fp16_model
-from mmdet3d.datasets import build_dataset
-from mmdet3d_plugin.datasets.builder import build_dataloader
-from mmdet3d.models import build_model
-from mmdet.apis import set_random_seed
-from mmdet3d.utils.logger import get_root_logger
+import pickle
+import sys
+import time
 
+SIM_ROOT=Path(__file__).resolve().parents[3]
+ALG=SIM_ROOT/'projects/AlgEngine'
+sys.path[:0]=[str(SIM_ROOT),str(ALG)]
 from closed_loop.monitor import AsyncFileMonitor
-from closed_loop.post_processor import ScorePostProcessor
+from simengine_ascend.file_protocol import atomic_pickle,atomic_numpy,atomic_write,check_stop,validate_trajectory
+from simengine_ascend.closed_loop_runtime import ClosedLoopRuntime,file_sha
 
-warnings.filterwarnings("ignore")
-WORLDENGINE_ROOT = os.getenv('WORLDENGINE_ROOT', os.path.abspath('.'))
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description='MMDet test (and eval) a model')
-    parser.add_argument('config', help='test config file path')
-    parser.add_argument('checkpoint', help='checkpoint file')
-    parser.add_argument('--log-dir', type=str, default='', help='log directory')
-    parser.add_argument(
-        '--fuse-conv-bn',
-        action='store_true',
-        help='Whether to fuse conv and bn, this will slightly increase'
-        'the inference speed')
-    parser.add_argument('--seed', type=int, default=0, help='random seed')
-    parser.add_argument(
-        '--deterministic',
-        action='store_true',
-        help='whether to set deterministic options for CUDNN backend.')
-    parser.add_argument(
-        '--cfg-options',
-        nargs='+',
-        action=DictAction,
-        help='override some settings in the used config, the key-value pair '
-        'in xxx=yyy format will be merged into config file. If the value to '
-        'be overwritten is a list, it should be like key="[a,b]" or key=a,b '
-        'It also allows nested list/tuple values, e.g. key="[(a,b),(c,d)]" '
-        'Note that the quotation marks are necessary and that no white space '
-        'is allowed.')
-    args = parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('config');parser.add_argument('checkpoint')
+    parser.add_argument('--log-dir',default='');parser.add_argument('--seed',type=int,default=0)
+    parser.add_argument('--deterministic',action='store_true');parser.add_argument('--fuse-conv-bn',action='store_true')
+    parser.add_argument('--device',default='cuda:0',help='Explicit visible device, e.g. cuda:0 or npu:0')
+    parser.add_argument('--precision',choices=('fp32','bf16'),default=None,
+                        help='Required for NPU; omitted CUDA preserves the original config fp16 setting')
+    parser.add_argument('--algengine-root',type=Path)
+    parser.add_argument('--expected-algengine-source-sha256')
+    parser.add_argument('--algengine-commit');parser.add_argument('--expected-image-id')
+    parser.add_argument('--msda-backend',choices=('reference','cuda-compatible'),default='reference')
+    parser.add_argument('--wait-timeout',type=float,default=120)
+    parser.add_argument('--deadline-utc',default=os.environ.get('WORLDENGINE_CLOSED_LOOP_DEADLINE_UTC'))
+    parser.add_argument('--stop-file',default=os.environ.get('WORLDENGINE_CLOSED_LOOP_STOP_FILE'))
+    parser.add_argument('--max-predictions',type=int)
+    parser.add_argument('--cfg-options',nargs='+',default=[])
+    args=parser.parse_args()
+    if not math.isfinite(args.wait_timeout) or args.wait_timeout<=0:parser.error('--wait-timeout must be finite and positive')
+    if args.max_predictions is not None and args.max_predictions<1:parser.error('--max-predictions must be positive')
+    if args.device.startswith('npu:') and not args.deadline_utc:parser.error('NPU execution requires --deadline-utc')
     return args
 
-def merge_ann_files(cfg,ann_files_list, merged_index):
-    save_dir = cfg.sim.merged_ann_save_dir
-    os.makedirs(save_dir, exist_ok=True)
-    save_path = os.path.join(save_dir, f'merged_{merged_index}.pkl')
-    merged_data = {'infos': []}
 
-    for ann_path in ann_files_list:
-        with open(ann_path, 'rb') as f:
-            data = pickle.load(f)
-            merged_data['infos'].append(data)
+def merge_ann_files(cfg,ann_files_list,merged_index):
+    merged={'infos':[]}
+    for name in ann_files_list:
+        with open(name,'rb') as stream:record=pickle.load(stream)
+        if not isinstance(record,dict):raise ValueError('Published frame is not a metadata dictionary: '+str(name))
+        merged['infos'].append(record)
+    if len(merged['infos'])!=cfg.queue_length:raise ValueError('Incomplete original temporal frame queue')
+    path=Path(cfg.sim.merged_ann_save_dir)/('merged_%s.pkl'%merged_index)
+    atomic_pickle(path,merged)
+    return str(path)
 
-    with open(save_path, 'wb') as f:
-        pickle.dump(merged_data, f)
 
-    return save_path
+def clean_related_files(cfg,logger,owned_files):
+    if cfg.sim.get('clean_record_data',False):
+        raise ValueError('Planner does not own renderer records; recursive record deletion is unsupported')
+    if cfg.sim.get('clean_temp_files',False):
+        for path in owned_files:
+            if path.is_symlink():raise ValueError('Refusing cleanup of a replaced protocol symlink')
+            try:path.unlink()
+            except FileNotFoundError:pass
+        logger.info('Removed %d files created by this planner only',len(owned_files))
 
-def clean_related_files(cfg, logger):
-    clean_temp_files = getattr(cfg.sim, 'clean_temp_files', False)
-    clean_record_data = getattr(cfg.sim, 'clean_record_data', False)
-    frames_path = getattr(cfg.sim, 'monitored_folder', '')
-    plan_save_path = getattr(cfg.sim, 'plan_save_path', '')
-    merged_ann_save_dir = getattr(cfg.sim, 'merged_ann_save_dir', '')
 
-    logger.info("Cleaning related files...")
-    if clean_temp_files:
-        if frames_path and os.path.exists(frames_path):
-            for file in Path(frames_path).glob('*.pkl'):
-                file.unlink()
+def host_array(value,torch):
+    if torch.is_tensor(value):return value.detach().float().cpu().numpy()
+    import numpy as np
+    return np.asarray(value)
 
-        if plan_save_path and os.path.exists(plan_save_path):
-            for file in Path(plan_save_path).glob('*.npy'):
-                file.unlink()
 
-        if merged_ann_save_dir and os.path.exists(merged_ann_save_dir):
-            for file in Path(merged_ann_save_dir).glob('*.pkl'):
-                file.unlink()
+def model_inference(model,data_loader,torch):
+    for data in data_loader:
+        with torch.no_grad():result=model(return_loss=False,rescale=True,**data)
+        if not isinstance(result,list) or len(result)!=1:raise ValueError('Expected one closed-loop planning result')
+        return result[0]
+    raise ValueError('Closed-loop dataset produced no inference sample')
 
-    if clean_record_data:
-        data_root = getattr(cfg, 'data_root', '')
-        if data_root and os.path.exists(data_root):
-            for folder in os.listdir(data_root):
-                folder_path = os.path.join(data_root, folder)
-                if os.path.isdir(folder_path):
-                    shutil.rmtree(folder_path)
 
-async def run_inference_loop(model, cfg, logger):
-    """async run inference loop"""
-    MONITORED_FOLDER = cfg.sim.monitored_folder
-    logger.info(f"MONITORED_FOLDER: {MONITORED_FOLDER}")
-    stop_file_path = os.path.join(os.path.dirname(cfg.data_root.rstrip('/')), 'simulation_completed.flag')
-    logger.info(f"STOP_FILE_PATH: {stop_file_path}")
-
-    # initialize file monitor
-    file_monitor = AsyncFileMonitor(
-        folder_path=MONITORED_FOLDER,
-        check_interval=5,
-        max_history=cfg.queue_length,
-        max_frame_per_scene=12,
-        wait_for_files=True,
-        max_wait_time=99999,
-        logger=logger,
-        stop_file_path=stop_file_path
-    )
-
-    # Create csv file to save plan_idx
-    save_path = cfg.sim.plan_save_path
-    csv_path = os.path.join(save_path, 'plan_idx.csv')
-    if not os.path.exists(csv_path):
-        pd.DataFrame(columns=['prefix', 'step', 'plan_idx']).to_csv(csv_path, index=False)
-
+async def run_inference_loop(model,cfg,logger,runtime,args,report):
+    import numpy as np
+    from mmdet3d.datasets import build_dataset
+    from mmdet3d_plugin.datasets.builder import build_dataloader
+    from closed_loop.post_processor import ScorePostProcessor
+    from simengine_ascend.closed_loop_runtime import assert_module_origins
+    completion=Path(cfg.data_root.rstrip('/')).parent/'simulation_completed.flag'
+    report['completion_file']=str(completion)
+    monitor=AsyncFileMonitor(cfg.sim.monitored_folder,max_history=cfg.queue_length,
+                             max_frame_per_scene=cfg.sim.get('max_frame_per_scene',12),
+                             max_wait_time=args.wait_timeout,logger=logger,stop_file_path=str(completion),
+                             cancellation_file=args.stop_file,deadline_utc=args.deadline_utc)
+    save=Path(cfg.sim.plan_save_path);save.mkdir(parents=True,exist_ok=True)
+    csv_path=save/'plan_idx.csv';owned=set();rows=[]
+    if csv_path.exists():
+        with csv_path.open(newline='') as stream:
+            reader=csv.DictReader(stream)
+            if reader.fieldnames!=['prefix','step','plan_idx']:raise ValueError('Unexpected existing plan index CSV')
+            rows=list(reader)
+        if len({(row['prefix'],row['step']) for row in rows})!=len(rows):raise ValueError('Duplicate existing plan index rows')
+    current=list(monitor.file_history);scene_step=0
+    maximum=args.max_predictions or int(cfg.sim.maximum_step)
+    if maximum<1:raise ValueError('Maximum prediction count must be positive')
     try:
-        current_queue = list(file_monitor.file_history)
-
-        if len(set(current_queue)) != cfg.queue_length:
-            if os.path.exists(stop_file_path):
-                logger.info("Simulation already completed before inference started. Nothing to do.")
-                return
-            raise ValueError(f"Initial files: {current_queue} is not equal to queue_length: {cfg.queue_length}")
-
-        step = 0
-        scene_step = 0
-        force_reinitialize = False
-        MAX_STEP = cfg.sim.maximum_step
-
-        while step <= MAX_STEP:
-            retry_count = 0
-            logger.info(f"processing {os.path.basename(current_queue[-1])}")
-            ann_file = merge_ann_files(cfg, current_queue, scene_step + cfg.queue_length)
-            # model inference
-            cfg.data.test.ann_file = ann_file
-            cfg.data.test.pipeline[0].img_root = cfg.data_root + "sensor_blobs/"
-            dataset = build_dataset(cfg.data.test)
-            data_loader = build_dataloader(
-                dataset,
-                samples_per_gpu=1,
-                workers_per_gpu=1,
-                dist=False,
-                shuffle=False,
-                nonshuffler_sampler=cfg.data.nonshuffler_sampler,
-            )
-
-            result_list = model_inference(model, data_loader)
-            result = result_list[0] # TODO: need to save reward_dict, especially values
-            if 'value' in result.keys():
-                value = result['value']
-            else:
-                value = None
-
-            # post-processing
-            post_processor = ScorePostProcessor(
-                cfg.sim.post_process_path,
-                current_queue[-1],
-            )
-            plan_result, plan_idx = post_processor.process(result)
-
-            # save result
-            tmp_path = os.path.join(save_path, f'{file_monitor.prefix}_{cfg.queue_length + scene_step}_tmp.npy')
-            np.save(tmp_path, plan_result)
-            os.rename(tmp_path, os.path.join(save_path, f'{file_monitor.prefix}_{cfg.queue_length + scene_step}.npy'))
-
-            if value is not None:
-                np.save(
-                    os.path.join(save_path, f'value_{file_monitor.prefix}_{cfg.queue_length + scene_step}.npy'),
-                    value
-                )
-
-            # Save plan_idx to csv file
-            new_row = pd.DataFrame({
-                'prefix': [file_monitor.prefix],
-                'step': [cfg.queue_length + scene_step],
-                'plan_idx': [plan_idx]
-            })
-            new_row.to_csv(csv_path, mode='a', header=False, index=False)
-            logger.info(f"Saved traj at step {cfg.queue_length + scene_step}")
-
-            step += 1
-            scene_step += 1
-
-            reinit = file_monitor._reinitialize_queue(force_reinitialize=force_reinitialize)
-            if not reinit:
-                if os.path.exists(stop_file_path):
-                    logger.info(f"Stop signal file detected in sim_test: {stop_file_path}")
-                    logger.info("Exiting inference loop due to stop signal")
-                    break
-                update_queue = file_monitor.get_current_queue()
-                current_queue = list(update_queue)
-                while not update_queue:
-                    if retry_count < 300:
-                        update_queue = file_monitor.get_current_queue()
-                        current_queue = list(update_queue)
-                        retry_count += 1
-                        time.sleep(1)
-                    else:
-                        logger.info("Retry count exceeded, reinitializing queue")
-                        reinit = file_monitor._reinitialize_queue(force_reinitialize=True)
-                        current_queue = list(file_monitor.file_history)
-                        scene_step = 0
-                        break
-            else:
-                current_queue = list(file_monitor.file_history)
-                scene_step = 0
-
+        if len(current)!=cfg.queue_length:raise ValueError('Simulation completed without a full initial frame queue')
+        while report['predictions']<maximum:
+            check_stop(args.stop_file,args.deadline_utc)
+            ann=merge_ann_files(cfg,current,scene_step+cfg.queue_length);owned.add(Path(ann))
+            cfg.data.test.ann_file=ann
+            cfg.data.test.pipeline[0].img_root=cfg.data_root+'sensor_blobs/'
+            dataset=build_dataset(cfg.data.test)
+            loader=build_dataloader(dataset,samples_per_gpu=1,workers_per_gpu=0 if runtime.backend=='npu' else 1,
+                                    dist=False,shuffle=False,nonshuffler_sampler=cfg.data.nonshuffler_sampler)
+            if runtime.backend=='npu':assert_module_origins(runtime.root,require_plugin=True)
+            result=model_inference(model,loader,runtime.torch)
+            processor=ScorePostProcessor(cfg.sim.post_process_path,current[-1])
+            plan,index=processor.process(result)
+            plan=validate_trajectory(host_array(plan,runtime.torch))
+            if runtime.torch.is_tensor(index):index=index.item()
+            scalar=np.asarray(index)
+            if scalar.shape!=() or scalar.dtype.kind not in 'iu':
+                raise ValueError('Selected planning index must be an integer scalar')
+            index=int(scalar)
+            head=model.module.planning_head
+            generated=bool(getattr(head,'requires_online_pdm_scoring',False))
+            if generated:
+                if not 0<=index<int(head.num_anchors):raise ValueError('Invalid generated-trajectory anchor index')
+            elif not 0<=index<8192 or processor.traj.shape!=(8192,40,3) or not np.allclose(plan,processor.traj[index],atol=1e-6,rtol=1e-6):
+                raise ValueError('Published trajectory differs from its selected original vocabulary entry')
+            step=cfg.queue_length+scene_step;path=save/('%s_%s.npy'%(monitor.prefix,step))
+            if any(row['prefix']==monitor.prefix and str(row['step'])==str(step) for row in rows):
+                raise ValueError('Refusing duplicate scene/step publication')
+            if path.exists():raise ValueError('Refusing to replace an existing planning result: '+str(path))
+            atomic_numpy(path,plan,replace=False);owned.add(path)
+            if result.get('value') is not None:
+                value_path=save/('value_%s_%s.npy'%(monitor.prefix,step))
+                atomic_numpy(value_path,host_array(result['value'],runtime.torch),replace=False);owned.add(value_path)
+            rows.append(dict(prefix=monitor.prefix,step=step,plan_idx=index))
+            text=io.StringIO();writer=csv.DictWriter(text,fieldnames=['prefix','step','plan_idx']);writer.writeheader();writer.writerows(rows)
+            atomic_write(csv_path,lambda stream:stream.write(text.getvalue().encode()));owned.add(csv_path)
+            report['predictions']+=1
+            report['last_prediction']=dict(prefix=monitor.prefix,step=step,plan_idx=index,path=str(path),sha256=file_sha(path),
+                                           selection_space='generated_trajectory_anchor' if generated else 'original_8192_trajectory_vocabulary')
+            logger.info('Published finite selected trajectory %s',path.name)
+            if report['predictions']>=maximum or completion.exists():break
+            scene_step+=1
+            if monitor._reinitialize_queue():
+                current=list(monitor.file_history);scene_step=0;continue
+            until=time.monotonic()+args.wait_timeout
+            while True:
+                check_stop(args.stop_file,args.deadline_utc)
+                if completion.exists():return
+                current=monitor.get_current_queue()
+                if current:break
+                if time.monotonic()>=until:raise TimeoutError('Timed out waiting for next frame for '+str(monitor.prefix))
+                await asyncio.sleep(.1)
     finally:
-        file_monitor.stop()
-        clean_related_files(cfg, logger)
-        logger.info("Inference loop finished")
+        monitor.stop()
+        clean_related_files(cfg,logger,owned)
+
 
 def main():
-    args = parse_args()
-
-    cfg = Config.fromfile(args.config)
-    if args.log_dir:
-        time_postfix = time.strftime("%Y-%m-%d_%H-%M-%S")
-        log_file = os.path.join(args.log_dir, f'mmdet_client_{time_postfix}.log')
-        logger = get_root_logger(log_level=logging.INFO, name="mmdet", log_file=log_file)
-    else:
-        logger = get_root_logger(log_level=logging.INFO, name="mmdet")
-
+    args=parse_args();check_stop(args.stop_file,args.deadline_utc)
+    runtime=ClosedLoopRuntime(args,SIM_ROOT).prepare()
+    from mmcv import Config,ConfigDict,DictAction
+    from mmcv.cnn import fuse_conv_bn
+    from mmcv.runner import load_checkpoint,wrap_fp16_model
+    from mmdet.apis import set_random_seed
+    import mmdet3d.models as models
+    cfg=Config.fromfile(args.config,import_custom_modules=False)
     if 'sim' not in cfg:
-        logger.info("Setting Simulation Config")
-        # set sim config
-        sim_cfg = ConfigDict(dict(
-            max_wait_time=50,
-            maximum_step=100000000,
-            post_process_path=os.path.join(WORLDENGINE_ROOT, "data/alg_engine/test_8192_kmeans.npy"),
-            plan_save_path='',
-            merged_ann_save_dir = '',
-            monitored_folder = ''
-        ))
-        cfg.sim = sim_cfg
-        cfg.data.test.type = "NavSimOpenSceneE2EClosedLoop"
-
-    if args.cfg_options is not None:
-        cfg.merge_from_dict(args.cfg_options)
-    # import modules from string list.
-    if cfg.get('custom_imports', None):
+        cfg.sim=ConfigDict(max_wait_time=120,maximum_step=100000000,
+            post_process_path=str(runtime.root/'data/alg_engine/test_8192_kmeans.npy'),
+            plan_save_path='',merged_ann_save_dir='',monitored_folder='')
+    cfg.data.test.type='NavSimOpenSceneE2EClosedLoop'
+    if args.cfg_options:
+        action=DictAction(option_strings=[],dest='cfg_options');namespace=argparse.Namespace()
+        action(argparse.ArgumentParser(),namespace,args.cfg_options)
+        cfg.merge_from_dict(namespace.cfg_options)
+    if cfg.data.test.type!='NavSimOpenSceneE2EClosedLoop':
+        raise ValueError('Closed-loop inference requires the original closed-loop dataset')
+    for key in ('plan_save_path','merged_ann_save_dir','monitored_folder'):
+        if not cfg.sim.get(key):raise ValueError('Missing explicit simulation path sim.'+key)
+        Path(cfg.sim[key]).mkdir(parents=True,exist_ok=True)
+    if cfg.sim.get('clean_record_data',False):raise ValueError('Recursive renderer record cleanup is unsupported')
+    if cfg.get('custom_imports'):
         from mmcv.utils import import_modules_from_strings
-        import_modules_from_strings(**cfg['custom_imports'])
-
-    # set cudnn_benchmark
-    if cfg.get('cudnn_benchmark', False):
-        torch.backends.cudnn.benchmark = True
-
-    cfg.model.pretrained = None
-    if isinstance(cfg.data.test, dict):
-        cfg.data.test.test_mode = True
-
-    # set random seeds
-    if args.seed is not None:
-        set_random_seed(args.seed, deterministic=args.deterministic)
-
-    # build the model and load checkpoint
-    cfg.model.train_cfg = None
-    if hasattr(cfg.model, 'img_backbone'):
-        # let SyncBatchNorm switch into BatchNorm
-        cfg.model.img_backbone.norm_cfg = dict(type='BN', requires_grad=True)
-    model = build_model(cfg.model, test_cfg=cfg.get('test_cfg'))
-
-    fp16_cfg = cfg.get('fp16', None)
-    if fp16_cfg is not None:
-        wrap_fp16_model(model)
-
-    load_checkpoint(model, args.checkpoint, map_location='cpu')
-    if args.fuse_conv_bn:
-        model = fuse_conv_bn(model)
-
-    model = MMDataParallel(
-        model.cuda(),
-        device_ids=[0])  # single gpu mode
-    model.eval()
-
-    # After the model is ready, run the asynchronous inference loop
+        import_modules_from_strings(**cfg.custom_imports)
+    if runtime.backend=='npu':
+        from simengine_ascend.closed_loop_runtime import assert_module_origins
+        assert_module_origins(runtime.root,require_plugin=True)
+        cfg.pop('fp16',None)
+    elif args.precision=='fp32':cfg.pop('fp16',None)
+    if cfg.get('cudnn_benchmark',False) and runtime.backend=='cuda':runtime.torch.backends.cudnn.benchmark=True
+    cfg.model.pretrained=None;cfg.model.train_cfg=None;cfg.data.test.test_mode=True
+    if cfg.model.get('img_backbone'):cfg.model.img_backbone.norm_cfg=dict(type='BN',requires_grad=True)
+    set_random_seed(args.seed,deterministic=args.deterministic)
+    logger=logging.getLogger('worldengine.closed_loop');logger.setLevel(logging.INFO)
+    logger.addHandler(logging.StreamHandler())
+    if args.log_dir:
+        Path(args.log_dir).mkdir(parents=True,exist_ok=True)
+        logger.addHandler(logging.FileHandler(Path(args.log_dir)/'closed_loop_planner.log'))
+    checkpoint=Path(args.checkpoint).resolve(strict=True)
+    report=dict(result='running',predictions=0,device=args.device,config=str(Path(args.config).resolve()),
+                config_sha256=file_sha(args.config),checkpoint=str(checkpoint),checkpoint_sha256=file_sha(checkpoint),
+                started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),real_closed_loop_quality_accepted=False)
+    report_path=Path(cfg.sim.plan_save_path)/'closed_loop_planner_report.json'
+    def publish():atomic_write(report_path,lambda stream:stream.write(json.dumps(report,indent=2,allow_nan=False).encode()))
+    publish()
     try:
-        asyncio.run(run_inference_loop(model, cfg, logger))
-    except KeyboardInterrupt:
-        logger.info("Inference stopped by user")
-    except Exception as e:
-        raise e
+        with runtime.precision_context():
+            model=models.build_model(cfg.model,test_cfg=cfg.get('test_cfg'))
+            if runtime.backend=='npu':
+                saved=runtime.torch.load(checkpoint,map_location='cpu',weights_only=False)
+                weights=saved.get('state_dict',saved)
+                revised={key.removeprefix('module.'):value for key,value in weights.items()}
+                if len(revised)!=len(weights):raise ValueError('Checkpoint prefix rewrite collides')
+                model.load_state_dict(revised,strict=True)
+                report['checkpoint_strict_state_dict']=True
+                del saved,weights,revised
+            else:
+                if cfg.get('fp16') is not None:wrap_fp16_model(model)
+                load_checkpoint(model,str(checkpoint),map_location='cpu',strict=True)
+                report['checkpoint_strict_state_dict']=True
+            if args.fuse_conv_bn:model=fuse_conv_bn(model)
+            model=runtime.wrap(model)
+            asyncio.run(run_inference_loop(model,cfg,logger,runtime,args,report))
+        if report['predictions']<1:raise ValueError('No real model prediction was produced')
+        report.update(result='completed_configured_closed_loop_planner_run',runtime=runtime.finish())
+    except BaseException as error:
+        report.update(result='planner_error_or_interrupted',error_type=type(error).__name__,error=str(error),runtime=runtime.provenance)
+        raise
+    finally:
+        report['completed_utc']=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())
+        publish()
 
-def model_inference(model, data_loader):
-    for _, data in enumerate(data_loader):
-        with torch.no_grad():
-            result = model(return_loss=False, rescale=True, **data)
-            return result
 
-if __name__ == '__main__':
-    main()
+if __name__=='__main__':main()

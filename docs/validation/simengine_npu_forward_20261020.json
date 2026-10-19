@@ -1,0 +1,606 @@
+{
+  "schema_version": 1,
+  "test_date_local": "2026-10-20",
+  "evidence_stage": "public_built_backend_final_adapter_small_forward",
+  "scope": "20 small synthetic forward cases against an independent NumPy reference; no official-scene, GPU or performance acceptance",
+  "result": "pass",
+  "canonical_CANN_commit": "8c0445ebcca91514fce3a7050241f41ed132c340",
+  "contract": "mtgs-gsplat14-forward-v1",
+  "hardware": {
+    "reported_device_name": "Ascend910_9362",
+    "physical_NPU_cards_in_server": 8,
+    "visible_chips_in_server": 16,
+    "chips_used_in_this_probe": 1,
+    "selected_host_chip": 15,
+    "container_logical_device": 0
+  },
+  "environment": {
+    "python": "3.10",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "CANN_toolkit": "9.1.0",
+    "acl_reported_version": "1.17.0"
+  },
+  "tested_limits": {
+    "max_gaussians": 256,
+    "max_cameras": 8,
+    "max_pixels_per_camera": 4096,
+    "observed_image_shapes_width_height": [
+      [
+        64,
+        64
+      ],
+      [
+        71,
+        37
+      ]
+    ],
+    "render_dtype": "float32"
+  },
+  "comparison_tolerances": {
+    "rgb": {
+      "atol": 0.0003,
+      "rtol": 0.001
+    },
+    "alpha": {
+      "atol": 0.0003,
+      "rtol": 0.001
+    },
+    "expected_depth": {
+      "atol": 0.002,
+      "rtol": 0.001
+    },
+    "SH": {
+      "atol": 3e-05,
+      "rtol": 3e-05
+    }
+  },
+  "maximum_observed_absolute_difference": {
+    "rgb": 1.223771130209883e-06,
+    "alpha": 1.5866665947772418e-06,
+    "expected_depth": 2.5749206545633285e-05
+  },
+  "passed_cases": [
+    "pixel_center",
+    "covariance_tail_1",
+    "covariance_tail_2",
+    "covariance_tail_3",
+    "covariance_tail_7",
+    "covariance_nonmultiple_of_eight",
+    "alpha_threshold",
+    "exclusive_transmittance",
+    "empty_tiles",
+    "zero_gaussians",
+    "tile32_nonsquare_partial_tiles",
+    "depth_expected",
+    "per_camera_rgb",
+    "near_far_radius",
+    "radius_clip",
+    "antialias_projection",
+    "offcenter_projection",
+    "rotated_gaussians_and_cameras",
+    "sh_degree_0_4",
+    "bounded_multi_camera_scene"
+  ],
+  "measurement_records": [
+    {
+      "case": "pixel_center",
+      "gaussians": 1,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 2.187682612841968e-08,
+      "alpha_max_abs": 4.2246393494593804e-08,
+      "expected_depth_max_abs": 1.2159347539064669e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "covariance_tail_1",
+      "gaussians": 1,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 6.695799864564478e-08,
+      "alpha_max_abs": 9.513094734181493e-08,
+      "expected_depth_max_abs": 9.53674315296027e-06,
+      "performance_acceptance": false
+    },
+    {
+      "case": "covariance_tail_2",
+      "gaussians": 2,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 6.695799864564478e-08,
+      "alpha_max_abs": 9.513094734181493e-08,
+      "expected_depth_max_abs": 9.536743160509786e-06,
+      "performance_acceptance": false
+    },
+    {
+      "case": "covariance_tail_3",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 8.57599747883242e-08,
+      "alpha_max_abs": 9.513094734181493e-08,
+      "expected_depth_max_abs": 9.536743160509786e-06,
+      "performance_acceptance": false
+    },
+    {
+      "case": "covariance_tail_7",
+      "gaussians": 7,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 2.0565938296801534e-07,
+      "alpha_max_abs": 2.2657882192689272e-07,
+      "expected_depth_max_abs": 1.2638016084309811e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "alpha_threshold",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 7.914997910557497e-11,
+      "alpha_max_abs": 1.906086721792377e-08,
+      "expected_depth_max_abs": 1.3351440415476645e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "exclusive_transmittance",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 8.896675429692635e-08,
+      "alpha_max_abs": 1.1777897779285951e-07,
+      "expected_depth_max_abs": 7.045653571680077e-07,
+      "performance_acceptance": false
+    },
+    {
+      "case": "empty_tiles",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 0.0,
+      "alpha_max_abs": 0.0,
+      "expected_depth_max_abs": 0.0,
+      "performance_acceptance": false
+    },
+    {
+      "case": "zero_gaussians",
+      "gaussians": 0,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 0.0,
+      "alpha_max_abs": 0.0,
+      "expected_depth_max_abs": 0.0,
+      "performance_acceptance": false
+    },
+    {
+      "case": "tile32_nonsquare_partial_tiles",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 2627,
+      "width": 71,
+      "height": 37,
+      "tile_size": 32,
+      "rgb_max_abs": 3.3961042161800847e-07,
+      "alpha_max_abs": 3.4146796668022006e-07,
+      "expected_depth_max_abs": 1.6927719113102313e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "depth_expected",
+      "gaussians": 2,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 5.66404683155497e-08,
+      "alpha_max_abs": 7.307161820069297e-08,
+      "expected_depth_max_abs": 1.2159347539064669e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "per_camera_rgb",
+      "gaussians": 1,
+      "cameras": 2,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 1.9008456975111443e-08,
+      "alpha_max_abs": 4.8810779418317907e-08,
+      "expected_depth_max_abs": 1.2516975394838425e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "near_far_radius",
+      "gaussians": 6,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 7.132565549294867e-08,
+      "alpha_max_abs": 1.0681076589857952e-07,
+      "expected_depth_max_abs": 7.361224929613996e-08,
+      "performance_acceptance": false
+    },
+    {
+      "case": "radius_clip",
+      "gaussians": 2,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 0.0,
+      "alpha_max_abs": 0.0,
+      "expected_depth_max_abs": 0.0,
+      "performance_acceptance": false
+    },
+    {
+      "case": "antialias_projection",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 5.379356427526183e-07,
+      "alpha_max_abs": 5.17749777051435e-07,
+      "expected_depth_max_abs": 1.8596649154822842e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "offcenter_projection",
+      "gaussians": 3,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 1.6717837758584153e-07,
+      "alpha_max_abs": 1.9698069997353684e-07,
+      "expected_depth_max_abs": 2.026557925827177e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "rotated_gaussians_and_cameras",
+      "gaussians": 2,
+      "cameras": 1,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 5.63901624950347e-07,
+      "alpha_max_abs": 5.937039473380423e-07,
+      "expected_depth_max_abs": 1.735956145587636e-05,
+      "performance_acceptance": false
+    },
+    {
+      "case": "bounded_multi_camera_scene",
+      "gaussians": 256,
+      "cameras": 8,
+      "pixels": 4096,
+      "width": 64,
+      "height": 64,
+      "tile_size": 16,
+      "rgb_max_abs": 1.223771130209883e-06,
+      "alpha_max_abs": 1.5866665947772418e-06,
+      "expected_depth_max_abs": 2.5749206545633285e-05,
+      "performance_acceptance": false
+    }
+  ],
+  "tested_source_files": [
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/cann.py",
+      "bytes": 14143,
+      "sha256": "7e363252314758b51ba35615b18b0dea483cd7f4ad473b4de26869870b8f3f9c"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/sh.py",
+      "bytes": 2799,
+      "sha256": "b95514d8120412d8f256a0c57f013e8ca6557887c8b67d26218cd3db0719d3c1"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/manifest.py",
+      "bytes": 4889,
+      "sha256": "56b1723e858bd2efc1d3ba02137fc5d8b1944f1b1789d4219c34f71180aed643"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/probe_cann.py",
+      "bytes": 13586,
+      "sha256": "a408f9b9885241b6e3a7375a9d0e3569ac333af78d8e09ecaf54d7da3ddd75a8"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/tests/numpy_oracle.py",
+      "bytes": 6112,
+      "sha256": "f36b59ee02502afe9544c671e8b21979139cf85770a0a285195f3458720228cf"
+    },
+    {
+      "path": "projects/SimEngine/worldengine/render/ascend/patches/calc_render_mtgs_compat.cpp",
+      "bytes": 8574,
+      "sha256": "ab6255cc6df3f588d2c32b863bd51e52600ee01163aea1e5cb567f7ca6ef3fab"
+    }
+  ],
+  "source_bundle_manifest_sha256": "c0cdc6d4ed60a87794e59eee32de44b6bf8b3e1acddb1e32249e1353f77569b7",
+  "acceptance": {
+    "small_forward_reference": true,
+    "complete_official_scene": false,
+    "planner_closed_loop": false,
+    "GPU_parity": false,
+    "performance": false
+  },
+  "reuse_rule": "A newly built wheel or changed adapter must rerun the probe and generate a new manifest; this report cannot authorize a different binary, source or shape envelope.",
+  "started_utc": "2026-10-19T17:43:47.794491+00:00",
+  "completed_utc": "2026-10-19T17:43:54.563469+00:00",
+  "original_proof_sha256": {
+    "device_validation.json": "8653a886cbb2fdf33fcd761ad65e7b5528b2b5c75e5de71cb78aeb029b12d403",
+    "build_manifest.json": "393c44516b5fb86ccd46583cbcb8f31df5d38b8878f76fec6d8b9e194feeec7d",
+    "validated_manifest.json": "3c7a1f6ef8fd4065c37701fbd400ae8692cc115008203baf4c6656b9244da9ba"
+  },
+  "tested_runtime_files": [
+    {
+      "role": "python_extension",
+      "package_relative_path": "gsplat_c.cpython-310-aarch64-linux-gnu.so",
+      "sha256": "b1ffcd80ff186bb14b78e8f4149c482b6dc6590917f04b4ccc1a689eb03ca459"
+    },
+    {
+      "role": "operator_api",
+      "package_relative_path": "packages/vendors/customize/op_api/lib/libcust_opapi.so",
+      "sha256": "a41a6484c4451fce03b94113cc00c9742d373313a107ee33987a3c17c8dbfa55"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-calc_render_bwd_var_clip_gsids.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-calc_render_fwd_double_clip_gsids.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-flash_gaussian_build_mask.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-fully_fused_projection_bwd.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-gaussian_filter.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-gaussian_sort.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-projection_three_dims_gaussian_forward.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-quat_scales_to_covars.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-spherical_harmonics_bwd.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/config/ascend910_93/aic-ascend910_93-ops-info-spherical_harmonics_forward.json",
+      "sha256": "bd117a1b5dd7c131448f74f834893fbd6ec62908b8ac79763d29b4956c8346be"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/calc_render_bwd_var_clip_gsids/CalcRenderBwdVarClipGsids_1475efe783da044907d2c7812df1f990.json",
+      "sha256": "f2081189c044b5596570d7bf3a2e08cbd4f441f5c831ec2c98980f30ebe95dab"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/calc_render_bwd_var_clip_gsids/CalcRenderBwdVarClipGsids_1475efe783da044907d2c7812df1f990.o",
+      "sha256": "05d46dace60fc6e012ebdec9bbea5adc630a39478956ec1882d19fd5e21f47e9"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/calc_render_fwd_double_clip_gsids/CalcRenderFwdDoubleClipGsids_1c6ca8d630a504c1c2178ff0ce9ec3a2.json",
+      "sha256": "357fbccc1ee20125a5b09b9e5ff573e062fe9860048176b505bf651694de2ec2"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/calc_render_fwd_double_clip_gsids/CalcRenderFwdDoubleClipGsids_1c6ca8d630a504c1c2178ff0ce9ec3a2.o",
+      "sha256": "1c405e806a1217123d877c3d055cf0fd7ae2a48a8f5f7e7d051304e34eafde37"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/flash_gaussian_build_mask/FlashGaussianBuildMask_f69d024f0cd42dad324e4df4a46b5fc2.json",
+      "sha256": "a36de38cdd8bc9b00dca10d54dfe1bf29e0ad70beddf962c89f510d5c0d269af"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/flash_gaussian_build_mask/FlashGaussianBuildMask_f69d024f0cd42dad324e4df4a46b5fc2.o",
+      "sha256": "06dc6b26d74e583effbb5f5780bf29cdd2c29aef8c442dd5c1d6c794fb081ecb"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/fully_fused_projection_bwd/FullyFusedProjectionBwd_13199c12dc7ab01c3c73e429255bde28.json",
+      "sha256": "c112c09c8937d8e7c1741cab64f743b0184605ef82fa3d43302ed233d7647d07"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/fully_fused_projection_bwd/FullyFusedProjectionBwd_13199c12dc7ab01c3c73e429255bde28.o",
+      "sha256": "bfa84ee83759aa72d87979f2baec6e0d8e2d234126e6ef25c0af81c0a1962513"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/gaussian_filter/GaussianFilter_ce56ed746517355b747809e82dda13e0.json",
+      "sha256": "05a489959049267157cad498bf026455e765b0ef6a0d7171f5206eebaeaf2f49"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/gaussian_filter/GaussianFilter_ce56ed746517355b747809e82dda13e0.o",
+      "sha256": "2a7af7f4964591ab6c8f552755467827e9b9a20affe9c545afa4aba2c1000316"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/gaussian_sort/GaussianSort_018dcca01aa135d0a9f7b9c322c27436.json",
+      "sha256": "cc5eacb95b0d3579a0c4e389dfba77ae788afaee7e86256e0490eb335209152e"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/gaussian_sort/GaussianSort_018dcca01aa135d0a9f7b9c322c27436.o",
+      "sha256": "840bc3fa09341cbcc873343cd6af63be52dcfe80544c9f195e095e9a36818999"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/projection_three_dims_gaussian_forward/ProjectionThreeDimsGaussianForward_4fe07edc6753b41fbc0ea8eaeced88dc.json",
+      "sha256": "ab65c5bdc44fa93dfd5bda2d95f4a3df2100cf3d7c1826c4b671da67040fdc39"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/projection_three_dims_gaussian_forward/ProjectionThreeDimsGaussianForward_4fe07edc6753b41fbc0ea8eaeced88dc.o",
+      "sha256": "bb62d5f3d7d716068cf8c8ce2dff6760780843caa1b9eb015f9076b688c2a3bd"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/quat_scales_to_covars/QuatScalesToCovars_342a37551ac7d48ab069110bc4b1b2c2.json",
+      "sha256": "04d1df8c8461074e42101bd80e518e3bf73b589dce69ee9bb1daa70dd8ba58ff"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/quat_scales_to_covars/QuatScalesToCovars_342a37551ac7d48ab069110bc4b1b2c2.o",
+      "sha256": "c5bca03a2a53fa529c19bffdf8459bfefb051db0959f24d76e2e86965639a6c8"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/spherical_harmonics_bwd/SphericalHarmonicsBwd_4d62b3ab222a05e6515c23ea6630f916.json",
+      "sha256": "886d4d8a8eb35e67ba727f1c3bdbc5d05b6b3fc7b917fb6c281e09b4246581e4"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/spherical_harmonics_bwd/SphericalHarmonicsBwd_4d62b3ab222a05e6515c23ea6630f916.o",
+      "sha256": "4a1c768e8635506052fb761929375f7ed72140e3d5d270bbeeef4ebea37e1ee9"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/spherical_harmonics_forward/SphericalHarmonicsForward_ae6baef9f082707c8ddcf2e8b4abbad0.json",
+      "sha256": "74f5c7c83bf964108031458b51e970c16ae3c2cfdf854a66ccbbba97637455a3"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/ascend910_93/spherical_harmonics_forward/SphericalHarmonicsForward_ae6baef9f082707c8ddcf2e8b4abbad0.o",
+      "sha256": "7a4142f71c8974dc660a5c029c560c09fe2fa6487a0a80634f68a1689181a409"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/binary_info_config.json",
+      "sha256": "0ffd28a25e25b1271fc33e65700cbfb3b3091f54bd2c997369de93859993e362"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/calc_render_bwd_var_clip_gsids.json",
+      "sha256": "aca0a8da85f41daf442079bc309b576aac455960386c6f25dff432847b8ab09e"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/calc_render_fwd_double_clip_gsids.json",
+      "sha256": "f665cc667ac575635b1f8eaf6bccfbf4f301562c00a3df52a256d052153d1b1a"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/flash_gaussian_build_mask.json",
+      "sha256": "431ed822183c9b1b82986c7a01bef95220858afc53bbbddd263c326e0e9e7073"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/fully_fused_projection_bwd.json",
+      "sha256": "fe27a0b942a30252bdb498e2b021f461df617a7b303a3c830a45d0508f4116d2"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/gaussian_filter.json",
+      "sha256": "7d24f24465a75cd3a32c28012d29d046883acc516201e22f200f663d6cd68dd2"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/gaussian_sort.json",
+      "sha256": "2fb893f8573d57f2dd0f6d9341ea67d70c614e2138f9b5c8d4b0e2ec1a07d53a"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/projection_three_dims_gaussian_forward.json",
+      "sha256": "644b43a9d18cd6e665030569d81e04cb2fd9f5cb866f2370ca5a683ef787da10"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/quat_scales_to_covars.json",
+      "sha256": "084bd5288f38f25369c9306ccf49c38a61b01136765adaba31b65941c79d5a4a"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/spherical_harmonics_bwd.json",
+      "sha256": "6fb8f92fd82f8c7a392e677c29f1ddc0a5cb0c9258c0b8437b2a593cd9d66754"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/kernel/config/ascend910_93/spherical_harmonics_forward.json",
+      "sha256": "fdea42d42766af873a88ae44f4d128b0160dc1ee0ff6f40fac1752fed7f34c99"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/op_info_cfg/ai_core/npu_supported_ops.json",
+      "sha256": "93bdb2094b5d558575384fd14ed705c8aa7548b00dbe114b68beee11a5bb1e62"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/op_tiling/lib/linux/aarch64/libcust_opmaster_rt2.0.so",
+      "sha256": "510a2d17e22ef9191eb6a40210f950839a7332ef0b6c1783fd5277311498c931"
+    },
+    {
+      "role": "operator_kernel",
+      "package_relative_path": "packages/vendors/customize/op_impl/ai_core/tbe/op_tiling/liboptiling.so",
+      "sha256": "510a2d17e22ef9191eb6a40210f950839a7332ef0b6c1783fd5277311498c931"
+    }
+  ],
+  "tested_wheel": {
+    "name": "gauss_splat-1.0.0-cp310-cp310-linux_aarch64.whl",
+    "sha256": "da4a3f719da22081f43605e6d7949bf922776af0514f0db1e4bcfc6d1d1a11c8"
+  },
+  "public_summary_is_runtime_manifest": false
+}

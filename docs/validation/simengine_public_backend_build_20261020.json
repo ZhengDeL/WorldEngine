@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "test_date_local": "2026-10-20",
+  "result": "pass_wheel_build_and_install_import_only",
+  "build_exit_code": 0,
+  "scope": "Public build_backend.py in a fresh isolated venv and output directory; wheel build, forced installation and real native import only",
+  "canonical_CANN_commit": "8c0445ebcca91514fce3a7050241f41ed132c340",
+  "builder_sha256": "c377cd8b162fae43f2f3d751b10f6a9704bfb5db0dfeabea99163d507d53e19d",
+  "wheel": {
+    "name": "gauss_splat-1.0.0-cp310-cp310-linux_aarch64.whl",
+    "size": 845536,
+    "sha256": "da4a3f719da22081f43605e6d7949bf922776af0514f0db1e4bcfc6d1d1a11c8"
+  },
+  "installed_extension": {
+    "name": "gsplat_c.cpython-310-aarch64-linux-gnu.so",
+    "sha256": "b1ffcd80ff186bb14b78e8f4149c482b6dc6590917f04b4ccc1a689eb03ca459"
+  },
+  "pyACL_sha256": "34303ba302bde3cd44dd5bd7bc01fb216cbc5123e7db797a9834c9fa58e3f185",
+  "contract": "mtgs-gsplat14-forward-v1",
+  "versions": {
+    "python": "3.10.21 (main, Aug 27 2026, 14:36:29) [GCC 14.3.0]",
+    "packages": {
+      "pip": "23.0.1",
+      "setuptools": "79.0.1",
+      "wheel": "0.48.0",
+      "torch": "2.7.1+cpu",
+      "torch-npu": "2.7.1.post8",
+      "numpy": "1.23.5"
+    },
+    "CANN_toolkit": "9.1.0"
+  },
+  "installation": {
+    "fresh_venv": true,
+    "fresh_build_output": true,
+    "global_installation": false,
+    "selected_venv_native_import_checked": true,
+    "same_CANN_SDK_root_for_environment_and_pyACL": true
+  },
+  "device_validation_passed": false,
+  "acceptance": {
+    "CPU_wheel_build": true,
+    "isolated_install_and_import": true,
+    "NPU_numerical_validation": false,
+    "official_scene": false,
+    "GPU_parity": false,
+    "performance": false
+  },
+  "note": "Run the independent NPU probe after installation. This build result does not create or authorize a device-validation manifest."
+}

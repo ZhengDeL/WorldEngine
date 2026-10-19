@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "repository": "OpenDriveLab/WorldEngine",
+  "huggingface_revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+  "modelscope_revision": "092ac5f3f3f828698c207b0ad75ca258c9f07ad2",
+  "files": {
+    "scenario": {
+      "path": "data/sim_engine/scenarios/original/navtest_failures/all_scenarios.pkl",
+      "size": 911923264,
+      "sha256": "27203d52454f2538e6a70e95136b85ee8df35822f7707dc0091b4943ca7ad41d"
+    },
+    "assets": {
+      "path": "data/sim_engine/assets/navtest_failures/assets/part003.tar.gz",
+      "size": 27886330535,
+      "sha256": "102d16b9f608ac8f2314aef2ba3e1907cee9db7e2a3d094b1833b4ff60de0d05"
+    }
+  },
+  "default_asset_id": "2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4",
+  "archive_prefix": "navtest_failures/assets",
+  "evidence": {
+    "huggingface_tree": "https://huggingface.co/api/datasets/OpenDriveLab/WorldEngine/tree/d0e88d858533ca407a3387a26577c083aa7b3617/data/sim_engine/assets/navtest_failures/assets?recursive=false&limit=1000",
+    "modelscope_tree": "https://www.modelscope.cn/api/v1/datasets/OpenDriveLab/WorldEngine/repo/tree?Revision=092ac5f3f3f828698c207b0ad75ca258c9f07ad2&Root=data/sim_engine/assets/navtest_failures/assets&Recursive=false&PageNumber=1&PageSize=1000",
+    "scenario_tree": "https://huggingface.co/api/datasets/OpenDriveLab/WorldEngine/tree/d0e88d858533ca407a3387a26577c083aa7b3617/data/sim_engine/scenarios/original/navtest_failures?recursive=false&limit=1000",
+    "default_member": "navtest_failures/assets/2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4/background/2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4.ckpt",
+    "default_member_declared_size": 336430727
+  }
+}

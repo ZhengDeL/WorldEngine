@@ -22,9 +22,11 @@
 </div>
 
 
-## Ascend SimEngine assessment
+## Ascend 910C SimEngine
 
-This branch evaluates SimEngine on Ascend 910C. It currently contains a source and dependency assessment; an NPU renderer and closed-loop validation have not been delivered. See the [assessment](docs/simengine_ascend_assessment.md) / [中文评估](docs/simengine_ascend_assessment_zh.md) for the rendering API gaps, required inputs and validation plan.
+This branch implements an inference-only NPU renderer, official scene preparation tools and controlled replay/planner integration. Twenty small FP32 forward cases passed on one 910C chip against an independent NumPy reference. Real official scenes, complete planner feedback and GPU comparisons remain pending; no NPU performance advantage is claimed.
+
+See [setup and validation](docs/simengine_ascend_assessment.md) / [中文部署与验证](docs/simengine_ascend_assessment_zh.md), [backend and asset tools](tools/simengine_ascend/README.md), and [runtime commands](simengine_ascend/README.md) / [中文运行命令](simengine_ascend/README_zh.md). The server has 8 physical NPU cards with 16 chips; the recorded small probe uses one chip. Upstream benchmark figures below describe the original project and are not NPU measurements.
 
 ## Table of Contents
 - [Highlights](#highlights)
@@ -146,8 +148,8 @@ WorldEngine consists of two tightly coupled subsystems:
 
 | Module | Function | Core Technology |
 |--------|----------|----------------|
-| **[SimEngine](docs/WE_simulation.md)** | Closed-loop simulation with ego & agents | Hydra, Ray, rendering |
-| **[AlgEngine](docs/AlgEngine.md)** | End-to-end model training & evaluation | MMDetection3D, UniAD/VADv2/HydraMDP |
+| **[SimEngine](docs/simengine_usage.md)** | Closed-loop simulation with ego & agents | Hydra, Ray, rendering |
+| **[AlgEngine](docs/algengine_usage.md)** | End-to-end model training & evaluation | MMDetection3D, UniAD/VADv2/HydraMDP |
 
 
 ## Roadmap
