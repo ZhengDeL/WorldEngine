@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-20",
+  "result": "pass_two_tested_single_chip_full_input_FP32_first4_cases",
+  "scope": "Single-chip full-NAVTRAIN-input capacity observation: four optimizer updates per model",
+  "source_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+  "source_python_files": 245,
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "MSDA_backend": "cuda-compatible",
+  "collected_utc": "2026-10-20T03:41:56.210230+00:00",
+  "cases": {
+    "vadv2": {
+      "result": "pass_tested_single_chip_full_input_first4",
+      "profile": "e2e_vadv2_100pct",
+      "precision": "fp32",
+      "task": "imitation training; policy gradient disabled",
+      "rank_count": 1,
+      "host_chip_ids": [
+        12
+      ],
+      "container_logical_chip": 0,
+      "batch_per_rank": 1,
+      "workers_per_rank": 0,
+      "configured_horizon_updates": 8,
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_this_run": 4,
+      "complete_NAVTRAIN_loader_anchors": 103288,
+      "formal_initializer": {
+        "path": "alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+        "bytes": 434885463,
+        "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+      },
+      "checkpoint": {
+        "name": "iter_4.pth",
+        "bytes": 434904787,
+        "sha256": "f222e9f8b7bb3cda0758717cc77a44db7d1a4ca1a4f669142e2537582ec19dd3"
+      },
+      "runtime_report_sha256": "15669ba47262a58485c56b6ccf722e3d003b05323963d3c1fc6aea9f0e1e021a",
+      "terminal_case_receipt_sha256": "359338a0756d131668fb74433463469af611a62457d94037afb1141d80602dbf",
+      "container_id": "90aab6e17ac161f1363a11734af56eb08407a27cc1018626560fb1e7916888d7",
+      "container_exit_code": 0,
+      "OOMKilled": false,
+      "raw_losses_finite": true,
+      "runtime_final_checks_passed": true,
+      "peak_rss_bytes": 54424686592,
+      "peak_NPU_allocated_bytes": 14007517184,
+      "peak_NPU_reserved_bytes": 21273509888,
+      "train_seconds": 221.1721053919755,
+      "container_memory_limit": "192g",
+      "container_CPU_limit": 16,
+      "owned_container_cleanup": "already_stopped"
+    },
+    "hydramdp": {
+      "result": "pass_tested_single_chip_full_input_first4",
+      "profile": "e2e_hydramdp_100pct",
+      "precision": "fp32",
+      "task": "imitation training; policy gradient disabled",
+      "rank_count": 1,
+      "host_chip_ids": [
+        12
+      ],
+      "container_logical_chip": 0,
+      "batch_per_rank": 1,
+      "workers_per_rank": 0,
+      "configured_horizon_updates": 8,
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_this_run": 4,
+      "complete_NAVTRAIN_loader_anchors": 103288,
+      "formal_initializer": {
+        "path": "alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth",
+        "bytes": 450763271,
+        "sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+      },
+      "checkpoint": {
+        "name": "iter_4.pth",
+        "bytes": 450782723,
+        "sha256": "9bfec2756f1df74447d8cf58a8536f79698c3539d52d3d064252a99e0a31757e"
+      },
+      "runtime_report_sha256": "3dc56ca93398acb5dd905eae34588e993aaa2c79b8b3127ba191b786ab2a9c3a",
+      "terminal_case_receipt_sha256": "b0d9132003193fc746965fcf37aaf2cde08b3144bf62c69dc23dec9edae8fb5b",
+      "container_id": "8b6db46738983994f6f1b0c80981d1aeade3df8793c1a10d703445f397f88f36",
+      "container_exit_code": 0,
+      "OOMKilled": false,
+      "raw_losses_finite": true,
+      "runtime_final_checks_passed": true,
+      "peak_rss_bytes": 54532198400,
+      "peak_NPU_allocated_bytes": 14035448320,
+      "peak_NPU_reserved_bytes": 21271412736,
+      "train_seconds": 210.84916516696103,
+      "container_memory_limit": "192g",
+      "container_CPU_limit": 16,
+      "owned_container_cleanup": "already_stopped"
+    }
+  },
+  "evidence": {
+    "frozen_bundle_sha256": "f837f38f02a2192cf4bc724aee9f2cc77eff096f845fe6a6ca1f76bfdaa5a928",
+    "terminal_summary_sha256": "0f4c720829620b5506521016b1d3c43fc3427f0442c3f7e1d9b6231c05ceb609",
+    "watchdog_status_sha256": "1bc3c686548785efe5185aef7e766161910c203afbb97ee8a5b1bbc2d5a7b993",
+    "watchdog_result": "exact_owned_cleanup_complete",
+    "actual_exit": 0,
+    "watchdog_exit": 0,
+    "runtime_evidence_scope": "Terminal reviewed controller summaries bound to per-rank runtime and whole-checkpoint SHA256"
+  },
+  "acceptance": {
+    "tested_single_chip_FP32_batch1_first4_capacity": true,
+    "minimum_complete_training_device_count_proven": false,
+    "single_chip_BF16_capacity": false,
+    "single_chip_resume": false,
+    "complete_epoch_or_convergence": false,
+    "throughput_or_speedup_benchmark": false
+  },
+  "boundaries": [
+    "One logical chip was used from a dual-chip physical NPU card; this is not a whole-card throughput measurement.",
+    "The complete 103288-anchor loader was available; each model executed four updates only.",
+    "RSS is a single training process high-water mark, not a container or host total peak and not a minimum RAM requirement.",
+    "NPU allocated and reserved memory are allocator measurements, not total device HBM usage.",
+    "The 192g/16CPU limits are tested allocations, not minimum resource requirements.",
+    "Shared-host timings are observations; no GPU or parallel scaling comparison is claimed.",
+    "Single-chip BF16, single-chip resume and full epochs were not measured by these capacity cases."
+  ]
+}

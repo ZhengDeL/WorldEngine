@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-20",
+  "result": "pass_complete_original_NAVTEST_inputs_and_required_JPEG_decode_CPU_only",
+  "scope": "Exactly original NAVTEST12146 eval-only inputs and required current+3history eight-camera JPEGs; no model/scoring/training",
+  "original_report_sha256": "0d89913d74eac8e5627719dab03d7ba8b354cda6b09d29433e8adf3f19dc6586",
+  "completed_utc": "2026-10-20T03:30:12.280080+00:00",
+  "source_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+  "source_python_files": 245,
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "worker_sha256": "aad3c0875a015dd4c51204dcf2534a080f03ef6c4bdb51534189c44c8ec5ca79",
+  "helpers_sha256": "1e1e9292a8d65d0263bd2ad33c5b3cb75eebb7c0f5ce64f16c71281ff35882ad",
+  "input_files": {
+    "alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl": {
+      "bytes": 848516627,
+      "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+    },
+    "alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl": {
+      "bytes": 2791314758,
+      "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+    },
+    "alg_engine/test_8192_kmeans.npy": {
+      "bytes": 3932288,
+      "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+    }
+  },
+  "configurations": [
+    {
+      "path": "worldengine/e2e_vadv2_100pct.py",
+      "sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "dataset": {
+        "type": "NavSimOpenSceneE2E",
+        "queue_length": 4,
+        "history_frame_num": 3,
+        "load_interval": 1,
+        "test_mode": true,
+        "ann_basename": "nuplan_openscene_navtest.pkl"
+      }
+    },
+    {
+      "path": "hydramdp/e2e_hydramdp_100pct.py",
+      "sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "dataset": {
+        "type": "NavSimOpenSceneE2E",
+        "queue_length": 4,
+        "history_frame_num": 3,
+        "load_interval": 1,
+        "test_mode": true,
+        "ann_basename": "nuplan_openscene_navtest.pkl"
+      }
+    }
+  ],
+  "filter": "projects/AlgEngine/configs/navsim_splits/navtest_split/navtest.yaml",
+  "filter_canonical_LF_sha256": "61284edf5003c0291f843ce9817c822ba306609a62d54544223adae3fc7fc9cd",
+  "coverage": {
+    "anchors": 12146,
+    "logs": 136,
+    "queue_length": 4,
+    "camera_channels": 8,
+    "unique_input_frames": 17872,
+    "required_JPEGs": 142976,
+    "decoded_JPEGs": 142976,
+    "passed_JPEGs": 142976,
+    "failed_JPEGs": 0,
+    "reused_decodes": 0,
+    "total_decoded_file_bytes": 30491135031,
+    "decoded_modes": {
+      "RGB": 142976
+    },
+    "decoded_geometries": {
+      "1920x1080": 142976
+    },
+    "missing_annotation_tokens": 0,
+    "missing_camera_files": 0,
+    "missing_PDM_tokens": 0,
+    "invalid_PDM_rows": 0
+  },
+  "checks": [
+    "Original eval-only test dataset configuration, exact NAVTEST anchors and official log-name mapping",
+    "Current frame plus three same-log history frames; all eight camera channels",
+    "Whole annotation/PDM/vocabulary SHA256 before and after inspection",
+    "Per-file content SHA256, Pillow verify, reopen and full JPEG decode",
+    "Original 8192-candidate PDM shapes and finite values"
+  ],
+  "image_audit_sha256": "18a9caefdd52cd65fc56fe8e5f21d410e270fa6cc93c4464067999c7c6562075",
+  "image_content_ledger_complete": true,
+  "CPU_inspector_peak_rss_bytes": 5393596416,
+  "CPU_inspector_peak_rss_scope": "CPU input inspector only; neither model-evaluation memory nor a minimum RAM requirement",
+  "no_accelerator_execution": true,
+  "accelerator_before": {
+    "device_nodes": [],
+    "CUDA_initialized": false,
+    "NPU_initialized": false
+  },
+  "accelerator_after": {
+    "device_nodes": [],
+    "CUDA_initialized": false,
+    "NPU_initialized": false
+  },
+  "archive_extraction": {
+    "official_archives": 32,
+    "receipt_sha256": "5a64f76a1d33272cdc345f244aaeb0362e0fe901f73ca51c528162f1411d25c7"
+  },
+  "acceptance": {
+    "complete_NAVTEST_eval_input_coverage_and_JPEG_decode": true,
+    "shared_input_evidence_for_six_evaluation_cases": true,
+    "six_full_model_inferences": false,
+    "six_full_official_NAVSIM_scores": false,
+    "model_quality": false,
+    "GPU_parity": false,
+    "convergence": false
+  },
+  "boundaries": [
+    "This CPU audit does not execute a model or generate official metric-cache payloads.",
+    "The six complete model inference and official scoring cases require separate runtime and score evidence.",
+    "NAVSIM metric-cache coverage and finite payload validation are separate from label PDM validation."
+  ]
+}

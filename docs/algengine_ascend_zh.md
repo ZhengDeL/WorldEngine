@@ -14,6 +14,7 @@ WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimE
 | 选择性下载官方数据和权重 | `ascend/tools/download_algengine_assets.py` |
 | 固定官方数据子集 | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README_zh.md)；原 NAVTEST-only mini 路径在第3节保留 |
 | 完整 NAVTRAIN 输入的 CPU 检查 | `ascend/tools/verify_navtrain_inputs.py`；见[完整输入检查](#完整-navtrain-输入的-cpu-检查) |
+| 完整输入短周期训练 | [4 rank、FP32/BF16、8 次更新及自身 4→8 恢复](#完整输入短周期训练) |
 | 按原配置训练 | `ascend/run_container.py --config ...` |
 | NPU 训练与评价脚本 | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
 | 完整断点续训 | 原训练参数，加 `--resume ...` 和新输出目录 |
@@ -434,6 +435,53 @@ docker run --rm --runtime runc --network none --memory 128g --cpus 8 \
 
 [10 月 20 日完整数据结果](../ascend/results/full-navtrain-inputs-20261020.json)覆盖 103,288 个锚点和 1,219,960 张所需 JPEG，实际使用的是原私有检查器，其 SHA-256 为 `453d8e893ccef3720b4323e12e6c862f0fdee5020b85384c3ef37e1b3c31ab0b`，原报告 SHA-256 为 `882d5a98a5476b7ae135cd9b33a3c37f6c65fa7d3ef3d5a7c36d6d7bfdf72284`。公开 CLI 保留检查算法，目前只完成 14 项本地合成 CPU 夹具，尚未重复全量运行。新增截止控制、CPU 门禁和显式图像尺寸门禁，不计作新的全量数据或 NPU 训练验收。夹具命令为 `python -m unittest discover -s ascend/tools -p test_verify_navtrain_inputs.py -v`。
 
+### 完整输入短周期训练
+
+[10 月 20 日实测](../ascend/results/full-navtrain-short8-20261020.json)使用完整的 103,288 个 NAVTRAIN 锚点 loader 及[检查通过的 1,219,960 张 JPEG](../ascend/results/full-navtrain-inputs-20261020.json)。VADv2、HydraMDP 分别完成 FP32 和 BF16 模仿训练，每组 4 rank、8 次优化器更新，并精确恢复自身第 4 次更新的模型和优化器状态。32 份 rank 报告、128 条逐 rank 更新记录均通过。各组实际使用同一组 32 个当前锚点、128 个历史／当前输入帧，不代表完整 epoch 或收敛。两个 `e2e_*_100pct` 配置均未启用 HydraMDP 策略梯度微调。
+
+服务器为 8 张双芯片物理 NPU 卡、16 个芯片；本次使用物理卡 0–1 的芯片 0–3。实测运行源码为 `0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922`／245 个 Python 文件，镜像为 `sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48`。配置中的 split YAML 在 runtime 哈希前按 AlgEngine 目录解析；旧源码合同的 checkpoint 不能跨此次源码变更恢复完整状态，应初始化新训练后使用自身断点。
+
+下面一次执行一个 `MODEL`／`PRECISION` 组合，其余组合使用新输出重复。`DATA` 指完整数据根目录，不传 `--mini-prepared`。512g／32 CPU 是本次 4 rank 实测分配，不是最低资源要求。原 optimizer 和 LR 选项保留，horizon 显式设为 8 次更新；此时 500 次更新的 warmup 尚未结束。
+
+```bash
+MODEL=vadv2                         # or hydramdp
+PRECISION=fp32                      # or bf16; keep unchanged on resume
+DEVICES=0,1,2,3                     # verify actual host ownership/mapping
+case "$MODEL" in
+  vadv2) CONFIG=projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py
+         BASE="$VAD_BASE_100" ;;
+  hydramdp) CONFIG=projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py
+            BASE="$HYDRA_BASE_100" ;;
+  *) exit 2 ;;
+esac
+FULL_RUN="$RUNS/${MODEL}_${PRECISION}_fullinput"
+
+python3 ascend/run_container.py --devices "$DEVICES" \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "$CONFIG" --data-root "$DATA" --checkpoint "$BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --stop-after 4 --upstream-schedule \
+  --checkpoint-interval 4 --check-interval 1 --batch-size 1 --workers 0 \
+  --precision "$PRECISION" --msda-backend cuda-compatible \
+  --memory 512g --cpus 32 --output "${FULL_RUN}_first4"
+
+python3 ascend/run_container.py --devices "$DEVICES" \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "$CONFIG" --data-root "$DATA" --checkpoint "$BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --upstream-schedule \
+  --checkpoint-interval 4 --check-interval 1 --batch-size 1 --workers 0 \
+  --precision "$PRECISION" --msda-backend cuda-compatible \
+  --resume "${FULL_RUN}_first4/latest.pth" \
+  --memory 512g --cpus 32 --output "${FULL_RUN}_resume8"
+```
+
+两条命令均须退出 0。逐 rank 核对 0→4／4→8、各 4 次更新、原始 loss 有限、所监控参数更新并同步；恢复阶段均须报告 `pass_exact_saved_state_restore`。`--check-interval 1` 对每次更新已存在的梯度执行有限值门禁。同步检查只覆盖一个规划参数，使用 `atol=1e-6, rtol=1e-5`，不代表完整模型逐位对照。独立 CPU 检查确认 8 份 checkpoint 保存的模型和 Adam Tensor 均有限；恢复数量分别为 VADv2 889／777、HydraMDP 909／837。精确保存状态恢复与连续 8 步／中断后 4+4 步的数值重放等价分别验收。
+
+BF16 记录到 Conv2d／Linear 的真实 BF16 激活，主参数、已有梯度和 Adam 状态保持 FP32；MSDA、几何、规划 loss 和归一化在 FP32 区域执行。训练结束时的命名元数据覆盖 VADv2／HydraMDP 的 730／750 个参数，其中 259／279 个有梯度记录，各有 310 个可训练参数未记录到梯度。保存的优化器参数组、状态 ID 和 schema 与 FP32 覆盖一致；这说明成员关系和 dtype，不是完整梯度值对照。
+
+独立[单芯片 FP32 实测](../ascend/results/single-chip-capacity-20261020.json)对两模型各运行 4 次更新，batch=1、workers=0，分配 192g／16 CPU。单进程峰值 RSS 为 50.69／50.79 GiB；NPU allocator 峰值 allocated 为 13.05／13.07 GiB、reserved 为 19.81／19.81 GiB。复现该范围时只执行上面的第一条命令，选择一个可用宿主芯片，设置 `PRECISION=fp32`、`--memory 192g --cpus 16` 并换新输出。该实测不覆盖单芯片 BF16、续训、完整 epoch、最低内存或吞吐；进程 RSS 与 allocator reserved 也不代表主机总内存或设备 HBM 总占用。
+
+[完整 NAVTEST 输入检查](../ascend/results/full-navtest-inputs-20261020.json)另行通过 12,146 个锚点、136 个日志和 142,976 张所需 JPEG，包含前三帧历史和 8 路相机。该输入证据可供六组评价复用；完整模型推理、官方 metric-cache 校验与官方评分仍分别提供结果。同机并行作业的时间记录不作为性能基准。
+
 ### 训练与评价 preflight
 
 完整训练前先检查标注、当前／历史图片、PDM、词表、地图及独立 NAVTEST 评分 cache。`CACHE` 必须覆盖配置所需的 NAVTEST token，包含官方 NAVSIM payload 和 `metadata/*.csv` 索引。`alg_engine/pdms_cache/` 下的标签 PDM 是另一类输入，不能替代这个独立评分 cache。
@@ -494,7 +542,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
   --output "$RUNS/vad50_full"
 ```
 
-不传 `--steps`、`--epochs`，保留原配置八个 epoch、optimizer 和 LR horizon。迁移入口的 `--validate` 每个 epoch 执行评价。100% 训练将配置改为 `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`，初始化使用 `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`，并换新输出目录。原 50% filter 为 50,000 个锚点，完整 split 为 103,288；完整图像训练及收敛尚未完成。
+不传 `--steps`、`--epochs`，保留原配置八个 epoch、optimizer 和 LR horizon。迁移入口的 `--validate` 每个 epoch 执行评价。100% 训练将配置改为 `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`，初始化使用 `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`，并换新输出目录。原 50% filter 为 50,000 个锚点，完整 split 为 103,288；完整输入下的 8 次更新训练已完成，见上方记录；完整 epoch 训练及收敛仍待验收。
 
 单独的[同步候选步骤](../ascend/execution/README_zh.md)只允许两个已测规划配置和八次更新，不用于完整 epoch 训练。后续四组独立重复已完成，其中两组通过原容差，两组超出原容差；同步设置尚不能作为通用修复。
 

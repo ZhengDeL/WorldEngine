@@ -14,6 +14,7 @@ WorldEngine contains **AlgEngine**, for model training and evaluation, and **Sim
 | Download selected official assets | `ascend/tools/download_algengine_assets.py` |
 | Prepare the fixed official-data subset | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README.md); the alternative NAVTEST-only mini remains in section 3 |
 | Audit complete NAVTRAIN inputs on CPU | `ascend/tools/verify_navtrain_inputs.py`; see [full-input checks](#cpu-audit-of-complete-navtrain-inputs) |
+| Reproduce full-input short training | [Four-rank FP32/BF16, eight updates and own 4→8 resume](#full-input-short-training) |
 | Train a published configuration | `ascend/run_container.py --config ...` |
 | Original-style shell frontends | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`, `e2e_dist_eval_npu.sh` |
 | Resume complete training state | The same training arguments plus `--resume ...` and a new output directory |
@@ -432,6 +433,53 @@ The deadline is mandatory, timezone-aware UTC and must be in the future; it has 
 
 The [October 20 full-data result](../ascend/results/full-navtrain-inputs-20261020.json) covers 103,288 anchors and 1,219,960 required JPEGs. That actual run used the original private worker SHA256 `453d8e893ccef3720b4323e12e6c862f0fdee5020b85384c3ef37e1b3c31ab0b`; its raw report SHA256 is `882d5a98a5476b7ae135cd9b33a3c37f6c65fa7d3ef3d5a7c36d6d7bfdf72284`. The public CLI retains the inspection algorithms and has passed 14 local synthetic CPU fixtures; a complete-data run of this CLI has not been repeated. Its deadline/CPU guards and explicit image-dimension gate must not be presented as new full-data or NPU training acceptance. Run `python -m unittest discover -s ascend/tools -p test_verify_navtrain_inputs.py -v` for those fixtures.
 
+### Full-input short training
+
+The [October 20 measurement](../ascend/results/full-navtrain-short8-20261020.json) used the complete 103,288-anchor NAVTRAIN loader and the [audited 1,219,960 JPEGs](../ascend/results/full-navtrain-inputs-20261020.json). VADv2 and HydraMDP each completed FP32 and BF16 imitation training on four ranks, with eight optimizer updates and exact restoration of their own update-4 model/optimizer state. All 32 rank reports and 128 per-rank update records passed. Each case consumed the same 32 distinct current anchors, with 128 history/current input frames; this does not establish a complete epoch or convergence. HydraMDP policy-gradient fine-tuning was not enabled in these `e2e_*_100pct` cases.
+
+The host has eight dual-chip physical NPU cards and 16 chips. These jobs used host chips 0–3 on physical cards 0–1. Source `0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922` / 245 Python files and image `sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48` identify the measured runtime. Configured split YAML paths are resolved against AlgEngine before runtime hashing; checkpoints from an earlier source contract require a new training initialization rather than full-state restoration across that source change.
+
+Set `MODEL` and `PRECISION` for one case below; repeat with fresh outputs for the other combinations. `DATA` is the complete dataset root, not a prepared mini. The 512g / 32-CPU limits reproduce the four-rank allocation and are not minimum resource requirements. The original optimizer and LR options are retained with an explicit eight-update horizon; the 500-update warmup is therefore unfinished.
+
+```bash
+MODEL=vadv2                         # or hydramdp
+PRECISION=fp32                      # or bf16; keep unchanged on resume
+DEVICES=0,1,2,3                     # verify actual host ownership/mapping
+case "$MODEL" in
+  vadv2) CONFIG=projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py
+         BASE="$VAD_BASE_100" ;;
+  hydramdp) CONFIG=projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py
+            BASE="$HYDRA_BASE_100" ;;
+  *) exit 2 ;;
+esac
+FULL_RUN="$RUNS/${MODEL}_${PRECISION}_fullinput"
+
+python3 ascend/run_container.py --devices "$DEVICES" \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "$CONFIG" --data-root "$DATA" --checkpoint "$BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --stop-after 4 --upstream-schedule \
+  --checkpoint-interval 4 --check-interval 1 --batch-size 1 --workers 0 \
+  --precision "$PRECISION" --msda-backend cuda-compatible \
+  --memory 512g --cpus 32 --output "${FULL_RUN}_first4"
+
+python3 ascend/run_container.py --devices "$DEVICES" \
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID" \
+  --config "$CONFIG" --data-root "$DATA" --checkpoint "$BASE" --vocab "$VOCAB" \
+  --runtime --steps 8 --upstream-schedule \
+  --checkpoint-interval 4 --check-interval 1 --batch-size 1 --workers 0 \
+  --precision "$PRECISION" --msda-backend cuda-compatible \
+  --resume "${FULL_RUN}_first4/latest.pth" \
+  --memory 512g --cpus 32 --output "${FULL_RUN}_resume8"
+```
+
+Require both commands to exit 0, every rank to report 0→4 / 4→8 with four updates, finite raw losses and an updated/synchronized monitored parameter, and every resume rank to report `pass_exact_saved_state_restore`. With `--check-interval 1`, all gradients present at each update pass the finite-value gate. Synchronization checks one monitored parameter with `atol=1e-6, rtol=1e-5`; it does not compare the complete model bitwise. Independent CPU inspection found all eight saved model and Adam payloads finite. Restored model/Adam Tensor counts were 889/777 for VADv2 and 909/837 for HydraMDP. Exact saved-state restoration is separate from continuous-eight-versus-four-plus-four numerical replay equivalence.
+
+BF16 recorded actual Conv2d/Linear BF16 activations, FP32 masters and present gradients/Adam states, and FP32 MSDA/geometry/planning-loss/normalization regions. Training-end metadata covered 730/750 named parameters and 259/279 gradient-bearing parameters for VADv2/HydraMDP; 310 trainable parameters per model had no gradient record. Saved optimizer group/state-ID/schema coverage matched FP32. This is membership/dtype evidence, not a comparison of complete gradient values.
+
+The separate [single-chip FP32 measurement](../ascend/results/single-chip-capacity-20261020.json) ran each model for four updates with batch 1, workers 0, a 192g limit and 16 CPUs. Single-process peak RSS was 50.69/50.79 GiB; NPU allocator peaks were 13.05/13.07 GiB allocated and 19.81/19.81 GiB reserved. To reproduce that scope, use only the first command with one available host chip, `PRECISION=fp32`, `--memory 192g --cpus 16` and fresh outputs. Single-chip BF16, resume, complete epochs, minimum RAM and throughput were not measured by those cases. Neither single-process RSS nor allocator reservations represent total host RAM or total device HBM consumption.
+
+The [complete NAVTEST input audit](../ascend/results/full-navtest-inputs-20261020.json) independently passed 12,146 anchors, 136 logs and all 142,976 required JPEGs, including three history frames and eight cameras. This input audit can be shared by the six evaluation cases; complete model inference, official metric-cache validation and official scoring require their own evidence. Co-running job times are observations rather than a performance benchmark.
+
 ### Training and evaluation preflight
 
 First validate full annotations, current/history images, PDM entries, vocabulary, maps and the independent NAVTEST metric cache. `CACHE` must contain official NAVSIM cache payloads covering the configured NAVTEST tokens and their `metadata/*.csv` index. The label PDM cache under `alg_engine/pdms_cache/` is a different input and cannot substitute for this cache.
@@ -492,7 +540,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
   --output "$RUNS/vad50_full"
 ```
 
-Omitting `--steps` and `--epochs` keeps the original eight-epoch horizon, optimizer and LR schedule. The migration's `--validate` runs evaluation each epoch. For 100%, change the config to `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`, initialize with `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`, and select a fresh output. The 50% filter has 50,000 anchors; the full official split has 103,288. Full-image training and convergence have not yet completed in this migration.
+Omitting `--steps` and `--epochs` keeps the original eight-epoch horizon, optimizer and LR schedule. The migration's `--validate` runs evaluation each epoch. For 100%, change the config to `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`, initialize with `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`, and select a fresh output. The 50% filter has 50,000 anchors; the full official split has 103,288. Full-input eight-update training has completed as recorded above; complete-epoch training and convergence remain unaccepted.
 
 Do not apply the separate synchronous eight-update wrapper to a full epoch run. Its [documented protocol](../ascend/execution/README.md) is deliberately limited to the two measured planning configs and eight updates. Four independent repeated pairs completed; two were within the original tolerance and two were outside it. These settings are not an accepted general repair.
 

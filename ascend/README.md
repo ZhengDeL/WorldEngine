@@ -48,7 +48,10 @@ The complete 5 TB publication is not needed for this workflow.
 | --- | --- | --- |
 | Dependency environment | Public combined image passed application, selected SDK-tool and original-CANN-source CPU checks; both unfiltered `pip check` commands exited 0 | CPU checks do not establish cold-cache NPU model or all optional SDK-tool acceptance |
 | NAVTRAIN139 / NAVTEST22 | Public CLI rebuilt the fixed subset from six original inputs; all 1832 JPEGs passed SHA/decode checks; all six derived metadata files matched the prior subset by complete values, order and bytes | One training log and one evaluation log; full NAVTRAIN convergence and full NAVTEST quality remain unverified |
-| Full NAVTRAIN inputs, October 20 | CPU coverage, per-file content hashes and decoding passed for [103,288 anchors and all 1,219,960 required JPEGs](results/full-navtrain-inputs-20261020.json); no missing annotations, history images or PDM rows | Input validation only. The inspector's 51.99 GB peak RSS is not a training RAM budget; full training and convergence remain unverified |
+| Full NAVTRAIN inputs, October 20 | CPU coverage, per-file content hashes and decoding passed for [103,288 anchors and all 1,219,960 required JPEGs](results/full-navtrain-inputs-20261020.json); no missing annotations, history images or PDM rows | Input audit. The inspector's 51.99 GB peak RSS is not a training RAM budget; model results are recorded separately below |
+| Full-input VADv2 / HydraMDP, FP32 / BF16, October 20 | [All four cases completed eight updates and exact own 4→8 restoration](results/full-navtrain-short8-20261020.json), using four ranks on two physical cards. All 32 rank reports passed; all eight saved model/Adam payloads were finite | The complete loader was available, but each case consumed the same 32 current anchors. No complete epoch, convergence, full-checkpoint GPU comparison or strict replay-equivalence acceptance |
+| Single-chip FP32 capacity, October 20 | [Both original 100% imitation planners completed four updates](results/single-chip-capacity-20261020.json) with batch 1, complete NAVTRAIN inputs and clean owned-container termination | Tested allocation: 192g RAM / 16 CPUs. Single-process peak RSS was 50.69 / 50.79 GiB; this is not a minimum RAM/device requirement, BF16 capacity or throughput benchmark |
+| Full NAVTEST inputs, October 20 | [12,146 anchors, 136 logs and all 142,976 required JPEGs](results/full-navtest-inputs-20261020.json) passed independent CPU input, content-hash and full-decode checks | Shared input evidence for six evaluation cases; their complete model inference and official NAVSIM scoring remain separate acceptance items |
 | CUDA-compatible MSDA | [Normal MX/MMCV entries and MMCV raw-L4 layout](results/npu-cuda-msda-20261017.json) meet the original CUDA tolerances; separate CPU32 negatives are retained. Fresh CUDA export-to-NPU reproduction also completed | FP32/C32, measured shapes and first-order gradients |
 | CUDA-compatible VADv2 / HydraMDP, FP32, October 18 | [Sixteen-rank same-prefix two-update control](results/cuda-compatible-fp32-strict16-resume2-20261018.json): model / all tensor pairs 889 / 1698 and 909 / 1778, all `torch.equal`, maximum tensor and loss differences 0 | Same continuous prefix, 32 actual current anchors; no independent-initialization, longer-run or quality claim |
 | CUDA-compatible VADv2 / HydraMDP, FP32 / BF16 | [Two updates, exact own-state restoration, DDP4 inference and official scoring](results/cuda-compatible-navtrain139-short2-20261017.json), four ranks per group | Eight actual training anchors; the same 22 evaluation anchors across all groups. No convergence, quality-equivalence or 16-rank strict-replay claim |
@@ -74,6 +77,8 @@ the original full-data path and rare-log fine-tuning. Official published weights
 initialize a new run; they are not migration resume checkpoints.
 
 ## Run, save and resume
+
+The [full-input short-training workflow](../docs/algengine_ascend.md#full-input-short-training) reproduces the October 20 four-rank parameters with fresh outputs. Both `e2e_*_100pct` cases are imitation training; this measurement does not enable HydraMDP policy-gradient fine-tuning. The server has eight dual-chip physical NPU cards and 16 chips; this matrix used four chips on two cards. Source `0488bfb7…` / 245 Python files and the image ID above identify the measured runtime.
 
 The [CUDA-compatible guide](MSDA_CUDA.md#training-own-checkpoint-resume-and-inference) provides the measured four-rank/two-update chain for both models and precisions, including independent official scoring.
 
@@ -108,7 +113,7 @@ metrics on the same 22 anchors.
 The [original CUDA baseline](CUDA_BASELINE.md) records full MSDA gradients and
 eight-GPU short training/resume controls, including completed comparisons outside
 the unchanged numerical gates. It does not resolve NPU training reproducibility.
-Complete NAVTRAIN image training/convergence, full independent NAVTEST,
+Complete-epoch NAVTRAIN training and convergence, full independent NAVTEST,
 paired GPU/NPU training validation, broader cross-precision quality validation, repeated numerical reproducibility and multi-node scaling
 remain separate acceptance items. See the [validation report](FULL_ALGENGINE.md).
 

@@ -58,8 +58,10 @@
     "behavior": "Resolve configured NAVTRAIN/NAVTEST and rare-case YAML files against projects/AlgEngine before runtime hashing; preserve absolute paths and ordered rare filters",
     "CPU_regression_cases": 12,
     "Linux_CPU_regression_passed": true,
-    "NPU_training_with_repair_accepted": false,
-    "resume_boundary": "Existing checkpoints with the old source contract cannot be used for full-state restoration into the repaired source; initialize a new run and resume its own checkpoints"
+    "NPU_training_with_repair_accepted": true,
+    "resume_boundary": "Existing checkpoints with the old source contract cannot be used for full-state restoration into the repaired source; initialize a new run and resume its own checkpoints",
+    "NPU_training_acceptance_scope": "Both original e2e100pct imitation planners, FP32/BF16, four ranks, eight updates and exact own4-to8 restoration; no full epoch or convergence",
+    "NPU_training_report": "ascend/results/full-navtrain-short8-20261020.json"
   },
   "acceptance": {
     "NAVTRAIN_input_coverage": true,

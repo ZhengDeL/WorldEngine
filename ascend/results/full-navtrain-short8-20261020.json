@@ -1,0 +1,880 @@
+{
+  "schema_version": 1,
+  "scope": "Full NAVTRAIN inputs, bounded training and exact saved-state restoration",
+  "snapshot_collected_utc": "2026-10-20T03:38:01.223260+00:00",
+  "snapshot_sha256": "a48137495492625916a11d7522402ad576b751f8548592c3840af217523316d9",
+  "runtime_source_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+  "runtime_source_Python_files": 245,
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "framework_versions": {
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "torch_npu_git_version": "a783f11e456f27d7451a1ea745f1556823357c95"
+  },
+  "dataset": {
+    "name": "official NAVTRAIN",
+    "loader_anchors": 103288,
+    "required_JPEG_files": 1219960,
+    "full_input_CPU_QC_sha256": "882d5a98a5476b7ae135cd9b33a3c37f6c65fa7d3ef3d5a7c36d6d7bfdf72284",
+    "full_input_CPU_QC_reused": true,
+    "hashes": {
+      "annotation": "ccfdf2484c147c05246fe0bb3dbd51f8cc14b8d70e8f3df09f10057febf1c92b",
+      "filter": "a4b66adcb33836dc6ef0afd69d049c42aa9579e23721b6c26e8b9582e45d9a93",
+      "pdm": "6258895288d276bd4f57550400ec599df2ad0a6f2f10d5661c6589e9991834ca",
+      "vocab": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+    },
+    "training_consumed_all_anchors": false,
+    "actual_training_current_anchors": "see per-case JSONL counts",
+    "union_unique_current_training_anchors": 32,
+    "all_completed_case_current_anchor_sets_identical": true
+  },
+  "topology": {
+    "server_physical_NPU_cards": 8,
+    "server_NPU_chips": 16,
+    "training_NPU_chips": 4,
+    "training_physical_NPU_cards": 2,
+    "training_host_chip_ids": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "training_host_physical_card_ids": [
+      0,
+      1
+    ]
+  },
+  "models": {
+    "VADv2": {
+      "named_parameters": 730,
+      "model_state_tensors": 889,
+      "Adam_state_tensors_on_resume": 777
+    },
+    "HydraMDP": {
+      "named_parameters": 750,
+      "model_state_tensors": 909,
+      "Adam_state_tensors_on_resume": 837
+    }
+  },
+  "cases": {
+    "vadv2_fp32": {
+      "result": "verified_8_updates_with_own_4_to_8_resume",
+      "completed_phases": [
+        "vadv2_fp32_first4_fix20",
+        "vadv2_fp32_resume8_fix20"
+      ],
+      "global_updates_verified": 8,
+      "original_profile": "e2e_vadv2_100pct",
+      "ranks": 4,
+      "batch_per_rank": 1,
+      "independent_raw_gradient_value_comparison": false,
+      "full_convergence_accepted": false,
+      "actual_current_anchor_occurrences": 32,
+      "actual_unique_current_anchors": 32,
+      "actual_input_frame_occurrences": 128,
+      "actual_unique_input_frames": 128
+    },
+    "vadv2_bf16": {
+      "result": "verified_8_updates_with_own_4_to_8_resume",
+      "completed_phases": [
+        "vadv2_bf16_first4_fix20",
+        "vadv2_bf16_resume8_fix20"
+      ],
+      "global_updates_verified": 8,
+      "original_profile": "e2e_vadv2_100pct",
+      "ranks": 4,
+      "batch_per_rank": 1,
+      "independent_raw_gradient_value_comparison": false,
+      "full_convergence_accepted": false,
+      "actual_current_anchor_occurrences": 32,
+      "actual_unique_current_anchors": 32,
+      "actual_input_frame_occurrences": 128,
+      "actual_unique_input_frames": 128
+    },
+    "hydramdp_fp32": {
+      "result": "verified_8_updates_with_own_4_to_8_resume",
+      "completed_phases": [
+        "hydramdp_fp32_first4_fix20",
+        "hydramdp_fp32_resume8_fix20"
+      ],
+      "global_updates_verified": 8,
+      "original_profile": "e2e_hydramdp_100pct",
+      "ranks": 4,
+      "batch_per_rank": 1,
+      "independent_raw_gradient_value_comparison": false,
+      "full_convergence_accepted": false,
+      "actual_current_anchor_occurrences": 32,
+      "actual_unique_current_anchors": 32,
+      "actual_input_frame_occurrences": 128,
+      "actual_unique_input_frames": 128
+    },
+    "hydramdp_bf16": {
+      "result": "verified_8_updates_with_own_4_to_8_resume",
+      "completed_phases": [
+        "hydramdp_bf16_first4_fix20",
+        "hydramdp_bf16_resume8_fix20"
+      ],
+      "global_updates_verified": 8,
+      "original_profile": "e2e_hydramdp_100pct",
+      "ranks": 4,
+      "batch_per_rank": 1,
+      "independent_raw_gradient_value_comparison": false,
+      "full_convergence_accepted": false,
+      "actual_current_anchor_occurrences": 32,
+      "actual_unique_current_anchors": 32,
+      "actual_input_frame_occurrences": 128,
+      "actual_unique_input_frames": 128
+    }
+  },
+  "phases": {
+    "vadv2_fp32_first4_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "98ee583c886afb66e2553c34a51f720070f264875c82d7ff3468ebd2afaec1da",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_4.pth",
+        "bytes": 434949837,
+        "sha256": "f333262a31445ffeacb61800f7bc2526b3ff8c355a8d12a8ffe3f73c253a5915",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "4": 259
+        }
+      },
+      "rank_report_sha256": {
+        "0": "4e93a977b2386cfbe3d78d85bd46f57f667b4755b486c6bf724d52b0e5b7a41f",
+        "1": "7c23cb84cac6d8e492456abb566f7a5d09e31ff500074728e72c1aabe423fa78",
+        "2": "fafaade3a0f54684d141e3c64e77bcf56d9d655e9b91fdf2107e5e744a272a86",
+        "3": "b36408254deafa646599d5d7900fb6c038c2180559a3bd3cdd872070b6873ff5"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": null,
+      "bf16": null,
+      "max_per_rank_RSS_GiB": 50.78817367553711,
+      "max_per_rank_NPU_allocated_GiB": 13.05781888961792,
+      "max_per_rank_NPU_reserved_GiB": 19.818359375,
+      "slowest_rank_train_seconds": 219.712383673992,
+      "controller_stage_seconds": 391.54853,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "974d75e842447bca31e8ebe28a3ea82d3141443fa75b01e5f88bc02aff1026ce",
+          "1": "e15f4ea5cd937b29f0da54a70042e6201710983a98e1d2a172519a3ccf58c942",
+          "2": "66643185ca42310c03c1a3ac8a3417edae403c8c8dc4cd2c6206a7f13d7bd308",
+          "3": "26885c47f6a4ed33f430d8294c9b54b05e0a0ec78a31e43d10916b5a0e6f558a"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "ffc62f3e67ae5b90",
+          "eb7c71efcc735ee3",
+          "24b2e94af0f75ec8",
+          "c5f53160aef357ab",
+          "7655d12be3095434",
+          "31725a16b3755d16",
+          "773b254c6af8531b",
+          "c95a91ae0a605857",
+          "489d8c30ac7f5517",
+          "7ff1645f988b5327",
+          "ebad92c8a20f5b45",
+          "e35075b54e5e5121",
+          "ca8a758725355e10",
+          "73b25139ea235401",
+          "cd3eba9cc27c5a44",
+          "89d34ccd63965c72"
+        ],
+        "step_seconds_min": 51.242948655970395,
+        "step_seconds_max": 59.63946943101473,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "vadv2_fp32_resume8_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 4,
+      "final_iter": 8,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "94f55d2cb0b1fe2d1350e97da1837edc258585e0e98bda79c910a2fddd8cd4b1",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_8.pth",
+        "bytes": 434949901,
+        "sha256": "e50eea38e42e1073f872f3221029c8fa24b352ed34f78839e9de6b78a68081ab",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "8": 259
+        }
+      },
+      "rank_report_sha256": {
+        "0": "e0292d5d472716631959a800ed82e9c5bc10c44e8a25dc8d6792ba5cdc1de395",
+        "1": "7d116bea93f7658b32876373faadfee0e3478783206011db3800745151f8b8a5",
+        "2": "9a4c6b4ea873a3591b6f59cae810ce073d7a4ab66ecf9417f76228d7f4eab2a2",
+        "3": "dacb4b4bafa7de01f691872151c9fb4163d4bdb794b44712ede360f3c6281d12"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": {
+        "result": "pass_exact_saved_state_restore",
+        "model_tensors": 889,
+        "optimizer_tensors": 777
+      },
+      "bf16": null,
+      "max_per_rank_RSS_GiB": 50.77043914794922,
+      "max_per_rank_NPU_allocated_GiB": 13.046919822692871,
+      "max_per_rank_NPU_reserved_GiB": 19.91015625,
+      "slowest_rank_train_seconds": 222.13604039419442,
+      "controller_stage_seconds": 386.552124,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "b38d0790efcd20478b4a0a7fdbbd964d3481e4c9d4d5a41ec9eeed73ab828b89",
+          "1": "32f714ab9238d3bb3fc5ae360d9e4b678a5eef87146e448be002727adf26611b",
+          "2": "3e0d17430186e57d84818a744479b3ff586daaa614a32ab22d8988ce44fde167",
+          "3": "6779e3523c03cf4696699ff01bbf0c0b5390aa5423411416ab83fdc860d464eb"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "9d61df4e0e9d5346",
+          "af026d48e40b5349",
+          "566902793ddb527f",
+          "154686b0933b5dc9",
+          "4de9903f1e2f5683",
+          "294e41595a09571a",
+          "596460317cb85705",
+          "f993ab1ae45a59df",
+          "85c69c34a310562d",
+          "bb22dd65cf5b51dd",
+          "648263ea980157a9",
+          "bf1b1294205058c3",
+          "b2bc8ba6cf275a0e",
+          "7aef1a6f2ece5ed9",
+          "34f15346d14a5977",
+          "3bda589cc46a5a1a"
+        ],
+        "step_seconds_min": 51.596905243815854,
+        "step_seconds_max": 60.67513277498074,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "vadv2_bf16_first4_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "9424ab8e9a14c2180947139aa481c645f97a83244cd91eec31b86ef287ac96bd",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_4.pth",
+        "bytes": 434952013,
+        "sha256": "e6b986990541021cc22827cd663d1a6f42669ec5e6e1b205fdcf961e2ffd710e",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "4": 259
+        }
+      },
+      "rank_report_sha256": {
+        "0": "129b9908bcda3e5f52864052431bebfa4c30ce62f605f5db9b1178b76908d9b6",
+        "1": "216cc14e3a3cf4f65e310da03540c3ea38aada998cac31e71cba07aab83afb60",
+        "2": "51e0ebe240ca3a2b16012e2c582c8039c3ccaced9abb86ee950bfeaec15d7853",
+        "3": "f30bf96da15d7071ca9af9d7211bdb72ca0fce460b413b058b125b82b8b42b5b"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": null,
+      "bf16": {
+        "named_parameters": 730,
+        "trainable_parameters": 569,
+        "frozen_parameters": 161,
+        "optimizer_group_parameters": 730,
+        "present_gradient_parameters": 259,
+        "present_Adam_state_parameters": 259,
+        "trainable_parameters_without_gradient_record": 310,
+        "observer_scope": "Training-end named shape/dtype/membership metadata; no gradient tensor values compared",
+        "observed_activation_dtypes": {
+          "Conv2d": "torch.bfloat16",
+          "Linear": "torch.bfloat16"
+        },
+        "master_and_present_gradient_dtype": "torch.float32",
+        "Adam_state_dtype": "torch.float32",
+        "MSDA_forward_calls": 540,
+        "MSDA_backward_calls": 60,
+        "FP32_islands": [
+          "MSDA",
+          "planning loss",
+          "geometry",
+          "normalization"
+        ]
+      },
+      "max_per_rank_RSS_GiB": 50.67365264892578,
+      "max_per_rank_NPU_allocated_GiB": 11.644197463989258,
+      "max_per_rank_NPU_reserved_GiB": 15.865234375,
+      "slowest_rank_train_seconds": 215.5556141079869,
+      "controller_stage_seconds": 368.535862,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "8b08b44d3c0e0fff74a3f7ec63cbdae0d68c4fa3cfa0c5a098af6a0a591e3e3d",
+          "1": "3c2c78401a60c4e67295b019c6da08a030b9727995fba1816d4ea24c91cbc418",
+          "2": "90aa24457e25f468dc74e1fc4f16160a6d7f2c6cbdfc5bb8cf69c1235dc53bbf",
+          "3": "c82d1784689825cced6a40213d4dcc2e899bff314d4ce79b33fb85cea55fbcd6"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "ffc62f3e67ae5b90",
+          "eb7c71efcc735ee3",
+          "24b2e94af0f75ec8",
+          "c5f53160aef357ab",
+          "7655d12be3095434",
+          "31725a16b3755d16",
+          "773b254c6af8531b",
+          "c95a91ae0a605857",
+          "489d8c30ac7f5517",
+          "7ff1645f988b5327",
+          "ebad92c8a20f5b45",
+          "e35075b54e5e5121",
+          "ca8a758725355e10",
+          "73b25139ea235401",
+          "cd3eba9cc27c5a44",
+          "89d34ccd63965c72"
+        ],
+        "step_seconds_min": 51.92374371411279,
+        "step_seconds_max": 54.04399628401734,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "vadv2_bf16_resume8_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 4,
+      "final_iter": 8,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "20f6d3f8feeef0708865b94a07aa13f292e63eb56d4b404123d6e99081d625d3",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_8.pth",
+        "bytes": 434952013,
+        "sha256": "43c53df7b578fbeb3f7747b615bbb0a6bb501dd7fc546470efeb9d376f016234",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "8": 259
+        }
+      },
+      "rank_report_sha256": {
+        "0": "94cefd097481e952f30d546e942a0339dca7a2b1673d1bf8e82eb86efd232aff",
+        "1": "0e0fa92b4a9471d070bbc732104958c24a45227cc2ffd9cbb435e44a1434eacf",
+        "2": "a4e5f88397cef64a39f9938559b356760ab7830b107d0714a72f7f519e63314a",
+        "3": "9227e2bd7ab714fc54db43ab0ac0190024e75a025acdc88265747a5074c653d8"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": {
+        "result": "pass_exact_saved_state_restore",
+        "model_tensors": 889,
+        "optimizer_tensors": 777
+      },
+      "bf16": {
+        "named_parameters": 730,
+        "trainable_parameters": 569,
+        "frozen_parameters": 161,
+        "optimizer_group_parameters": 730,
+        "present_gradient_parameters": 259,
+        "present_Adam_state_parameters": 259,
+        "trainable_parameters_without_gradient_record": 310,
+        "observer_scope": "Training-end named shape/dtype/membership metadata; no gradient tensor values compared",
+        "observed_activation_dtypes": {
+          "Conv2d": "torch.bfloat16",
+          "Linear": "torch.bfloat16"
+        },
+        "master_and_present_gradient_dtype": "torch.float32",
+        "Adam_state_dtype": "torch.float32",
+        "MSDA_forward_calls": 540,
+        "MSDA_backward_calls": 60,
+        "FP32_islands": [
+          "MSDA",
+          "planning loss",
+          "geometry",
+          "normalization"
+        ]
+      },
+      "max_per_rank_RSS_GiB": 50.749366760253906,
+      "max_per_rank_NPU_allocated_GiB": 11.627144813537598,
+      "max_per_rank_NPU_reserved_GiB": 15.96875,
+      "slowest_rank_train_seconds": 222.32814882416278,
+      "controller_stage_seconds": 380.535082,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "caa0611d21c8900a13c0a5ba5bc16271d81b9b1759f6163e73847ac63df2b960",
+          "1": "9dce3332be92cbeef9a681e1cbdbaf9fd09ec5ec738439b48477cc1b270d9c8c",
+          "2": "667b79dd5d02d93cb4cca3e5fdb0a60021b68e9344ed4aa86f9bc293029801e1",
+          "3": "38d30b7edbaa4df21bce33a2a912dee4c8933889c150ab5f55ec3311f9bacec4"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "9d61df4e0e9d5346",
+          "af026d48e40b5349",
+          "566902793ddb527f",
+          "154686b0933b5dc9",
+          "4de9903f1e2f5683",
+          "294e41595a09571a",
+          "596460317cb85705",
+          "f993ab1ae45a59df",
+          "85c69c34a310562d",
+          "bb22dd65cf5b51dd",
+          "648263ea980157a9",
+          "bf1b1294205058c3",
+          "b2bc8ba6cf275a0e",
+          "7aef1a6f2ece5ed9",
+          "34f15346d14a5977",
+          "3bda589cc46a5a1a"
+        ],
+        "step_seconds_min": 53.070820176042616,
+        "step_seconds_max": 55.661443626042455,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "hydramdp_fp32_first4_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "c7feba6135992a064f44f91d0ceadb3dfb504d09669c044598a6ffc84688ed2f",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_4.pth",
+        "bytes": 450828029,
+        "sha256": "f922c1789cd4aaddafa180155237a2bb31334b9c176161c6cae09f44ecd1a9fe",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "4": 279
+        }
+      },
+      "rank_report_sha256": {
+        "0": "e7e09b36e159099c314871a9ac7a9442ab78b51a428c9776dcc75d2047ab4b3f",
+        "1": "cf8ee7a1f1f4e485b8717a521717b7c658f50f7302f4abd1c0203b48c9575cb5",
+        "2": "8ad8bf7979bc58c847abc9392bc007d8101f3b4c3f4e97d22b96ac55f682a67a",
+        "3": "8c5b40652304db6e9023a109b19a1034e1c8acf14ed8ba41974504617d0d122e"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": null,
+      "bf16": null,
+      "max_per_rank_RSS_GiB": 50.796913146972656,
+      "max_per_rank_NPU_allocated_GiB": 13.090213298797607,
+      "max_per_rank_NPU_reserved_GiB": 19.810546875,
+      "slowest_rank_train_seconds": 219.88759339880198,
+      "controller_stage_seconds": 408.546591,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "f1cdbae95b0728966e722c7c246ba5c164b0b9864ae09ca2cd01f26a83922bea",
+          "1": "3373a9cd8222616ecc3ab06cd4a9f0c9fb3e51daed0cac9bd6e6d076ff32d28d",
+          "2": "f34a876fbf6f8842954aa70154bf44e252cb8f1eb81239a23c98a342f9bf87c0",
+          "3": "a8992828e0c7248a60f947387f4f11cd14031673a02c651c7c28207e4f9920ea"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "ffc62f3e67ae5b90",
+          "eb7c71efcc735ee3",
+          "24b2e94af0f75ec8",
+          "c5f53160aef357ab",
+          "7655d12be3095434",
+          "31725a16b3755d16",
+          "773b254c6af8531b",
+          "c95a91ae0a605857",
+          "489d8c30ac7f5517",
+          "7ff1645f988b5327",
+          "ebad92c8a20f5b45",
+          "e35075b54e5e5121",
+          "ca8a758725355e10",
+          "73b25139ea235401",
+          "cd3eba9cc27c5a44",
+          "89d34ccd63965c72"
+        ],
+        "step_seconds_min": 52.19997869292274,
+        "step_seconds_max": 56.330170538974926,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "hydramdp_fp32_resume8_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 4,
+      "final_iter": 8,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "97585c5dc9168ef632ee09040643e98c8ea267a0acd1a4dcf2588e56dc010e9c",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_8.pth",
+        "bytes": 450828093,
+        "sha256": "0ff718b81b9fde53ed12c26a97af355a4150cfe1fc16c1c81f3177ad4381ab62",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "8": 279
+        }
+      },
+      "rank_report_sha256": {
+        "0": "f5018268f6787c3f2eecf4c531c5f2854f2de45e6a7b04b793edd2d7659afedf",
+        "1": "ccd501df79212f44b561aef9e7ef8a7b8d80ff68db643ca0b0ee9adf8ed4d9bf",
+        "2": "70a024fb3e85325fc9f3bd7dddeece1b317bd677b096dc0d46e5ff6b550bbe6e",
+        "3": "6b58f0852cc1a75507d19245cb97955abec752eb4c20f09e521fa0a35b455600"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": {
+        "result": "pass_exact_saved_state_restore",
+        "model_tensors": 909,
+        "optimizer_tensors": 837
+      },
+      "bf16": null,
+      "max_per_rank_RSS_GiB": 50.798561096191406,
+      "max_per_rank_NPU_allocated_GiB": 13.074156761169434,
+      "max_per_rank_NPU_reserved_GiB": 19.986328125,
+      "slowest_rank_train_seconds": 217.56072620907798,
+      "controller_stage_seconds": 405.559184,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "02d1bc7c86ebe56cc44a35a1a27c3a0953520f418c242ec9bde63937347750c8",
+          "1": "c404ee2133f01d72ba18f0cd4761216e1efe3f9c87c65d0e83fc3030830a004e",
+          "2": "4784ccb77e15604ba6ebdd3dc84f5f3ce0f23c98ac3a2af34b4f9b279b7a49b9",
+          "3": "cde288c589892aa2dcf872a244b89d882d8198f3aba3e038acc4a2acb58d8033"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "9d61df4e0e9d5346",
+          "af026d48e40b5349",
+          "566902793ddb527f",
+          "154686b0933b5dc9",
+          "4de9903f1e2f5683",
+          "294e41595a09571a",
+          "596460317cb85705",
+          "f993ab1ae45a59df",
+          "85c69c34a310562d",
+          "bb22dd65cf5b51dd",
+          "648263ea980157a9",
+          "bf1b1294205058c3",
+          "b2bc8ba6cf275a0e",
+          "7aef1a6f2ece5ed9",
+          "34f15346d14a5977",
+          "3bda589cc46a5a1a"
+        ],
+        "step_seconds_min": 51.19594974303618,
+        "step_seconds_max": 58.63658090704121,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "hydramdp_bf16_first4_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 0,
+      "final_iter": 4,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "cda04bba7b263ae5ddc81f4f62d8314678c5d8c5e6bad99926279cf71a803576",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_4.pth",
+        "bytes": 450830141,
+        "sha256": "81e87330516313530352b681e7240c0c1ea49486a147b7343d97f5b8c40b0733",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "4": 279
+        }
+      },
+      "rank_report_sha256": {
+        "0": "0297b5bdd693d8e2bd642ad48cca07eb271f02c5624d6b180e2d40807879c732",
+        "1": "7c9a5035d394c8b3e7d3ba16516b2b8e990c15179acd226f822e8b72c5902c17",
+        "2": "a924c66b8ac1f12b4d4c160f875ec4afa1e91dd7b13005e2947ed95138ff2910",
+        "3": "acc6687bfaaaf6df4a3b22573481c24d3b34739c7dba96d615f2d2e078bce5c3"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": null,
+      "bf16": {
+        "named_parameters": 750,
+        "trainable_parameters": 589,
+        "frozen_parameters": 161,
+        "optimizer_group_parameters": 750,
+        "present_gradient_parameters": 279,
+        "present_Adam_state_parameters": 279,
+        "trainable_parameters_without_gradient_record": 310,
+        "observer_scope": "Training-end named shape/dtype/membership metadata; no gradient tensor values compared",
+        "observed_activation_dtypes": {
+          "Conv2d": "torch.bfloat16",
+          "Linear": "torch.bfloat16"
+        },
+        "master_and_present_gradient_dtype": "torch.float32",
+        "Adam_state_dtype": "torch.float32",
+        "MSDA_forward_calls": 540,
+        "MSDA_backward_calls": 60,
+        "FP32_islands": [
+          "MSDA",
+          "planning loss",
+          "geometry",
+          "normalization"
+        ]
+      },
+      "max_per_rank_RSS_GiB": 50.728816986083984,
+      "max_per_rank_NPU_allocated_GiB": 11.676698207855225,
+      "max_per_rank_NPU_reserved_GiB": 16.12109375,
+      "slowest_rank_train_seconds": 224.47242155391723,
+      "controller_stage_seconds": 391.564713,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "0f210384a95570d0856f19a5449500a19cbcd4e3adabc13e41279a82fa353f53",
+          "1": "39a4706204db7d62417dbf4a7ecf40887725c17397948e6ec0febeff50029eb0",
+          "2": "a372a06ded6af1a60f00eff8b80e3179cff1b27555708b05c23b1951391a4b5c",
+          "3": "4242cb7b9eb96327510f50457f686ef80170ab162116c451d52d5b98696a43e5"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "ffc62f3e67ae5b90",
+          "eb7c71efcc735ee3",
+          "24b2e94af0f75ec8",
+          "c5f53160aef357ab",
+          "7655d12be3095434",
+          "31725a16b3755d16",
+          "773b254c6af8531b",
+          "c95a91ae0a605857",
+          "489d8c30ac7f5517",
+          "7ff1645f988b5327",
+          "ebad92c8a20f5b45",
+          "e35075b54e5e5121",
+          "ca8a758725355e10",
+          "73b25139ea235401",
+          "cd3eba9cc27c5a44",
+          "89d34ccd63965c72"
+        ],
+        "step_seconds_min": 52.72956348513253,
+        "step_seconds_max": 56.08425124082714,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    },
+    "hydramdp_bf16_resume8_fix20": {
+      "result": "verified_bounded_training_phase",
+      "initial_iter": 4,
+      "final_iter": 8,
+      "updates_per_rank": 4,
+      "rank_reports": 4,
+      "container_id": "aade46429a65fafb5a19b5239062bd59af6243458e445985555ed7ffee11a387",
+      "container_exit_code": 0,
+      "container_OOMKilled": false,
+      "checkpoint": {
+        "filename": "iter_8.pth",
+        "bytes": 450830205,
+        "sha256": "8eba01f836e47ef8be3bc2df43be931c941127f82d6e18e3f72235a938947a42",
+        "payload_finiteness": "pass_all_saved_model_and_Adam_tensors_CPU",
+        "Adam_step_histogram": {
+          "8": 279
+        }
+      },
+      "rank_report_sha256": {
+        "0": "fd98696c50bca062281208eac68af5a2c21e6eabacea019478a877263c2c0dad",
+        "1": "c2814c0220b44b62103d794ced4dc6f291bc79aa30400dea8fc43bdd2884a0fe",
+        "2": "98605ccd0c69bb044061b8a0be2bef1ee6227e29519b92af2f731f49df541249",
+        "3": "feb1d51b21dca0d92557b739e7cd16d05a88ab326a2fa71678d53115b5dc2b3b"
+      },
+      "all_rank_losses_finite": true,
+      "present_gradient_finite_gate_every_update": true,
+      "watched_parameter_updated_and_synchronized": true,
+      "synchronization_scope": "one monitored planning parameter; allclose atol=1e-6 rtol=1e-5",
+      "restoration": {
+        "result": "pass_exact_saved_state_restore",
+        "model_tensors": 909,
+        "optimizer_tensors": 837
+      },
+      "bf16": {
+        "named_parameters": 750,
+        "trainable_parameters": 589,
+        "frozen_parameters": 161,
+        "optimizer_group_parameters": 750,
+        "present_gradient_parameters": 279,
+        "present_Adam_state_parameters": 279,
+        "trainable_parameters_without_gradient_record": 310,
+        "observer_scope": "Training-end named shape/dtype/membership metadata; no gradient tensor values compared",
+        "observed_activation_dtypes": {
+          "Conv2d": "torch.bfloat16",
+          "Linear": "torch.bfloat16"
+        },
+        "master_and_present_gradient_dtype": "torch.float32",
+        "Adam_state_dtype": "torch.float32",
+        "MSDA_forward_calls": 540,
+        "MSDA_backward_calls": 60,
+        "FP32_islands": [
+          "MSDA",
+          "planning loss",
+          "geometry",
+          "normalization"
+        ]
+      },
+      "max_per_rank_RSS_GiB": 50.796390533447266,
+      "max_per_rank_NPU_allocated_GiB": 11.658246517181396,
+      "max_per_rank_NPU_reserved_GiB": 16.017578125,
+      "slowest_rank_train_seconds": 221.2672594129108,
+      "controller_stage_seconds": 415.577475,
+      "actual_training_inputs": {
+        "rank_log_sha256": {
+          "0": "b6914ac421d4a6be1e7aa82c6e8e9f6b0c046e03789a18e033c79a5856a3804e",
+          "1": "3eaa31880feab0a7b0454aeb1d6c765b4549fb3c5311700db68157467f849ed4",
+          "2": "aab0262d9f6e9042ed56c008ee09f71d0b90bbb06dbfa8269f503502a28c2d2d",
+          "3": "86f1dbebd8c29fcf4c1026ab1e63cbf184e1409542658b0552054eda95568a7b"
+        },
+        "rank_update_rows": 16,
+        "current_anchor_occurrences": 16,
+        "unique_current_anchors": 16,
+        "input_frame_occurrences": 64,
+        "unique_input_frames": 64,
+        "current_anchors_in_rank_then_update_order": [
+          "9d61df4e0e9d5346",
+          "af026d48e40b5349",
+          "566902793ddb527f",
+          "154686b0933b5dc9",
+          "4de9903f1e2f5683",
+          "294e41595a09571a",
+          "596460317cb85705",
+          "f993ab1ae45a59df",
+          "85c69c34a310562d",
+          "bb22dd65cf5b51dd",
+          "648263ea980157a9",
+          "bf1b1294205058c3",
+          "b2bc8ba6cf275a0e",
+          "7aef1a6f2ece5ed9",
+          "34f15346d14a5977",
+          "3bda589cc46a5a1a"
+        ],
+        "step_seconds_min": 51.91840719920583,
+        "step_seconds_max": 57.537804836872965,
+        "current_anchor_rule": "Original union2one metadata insertion order 0..3; tokens[-1] current, tokens[0:3] history"
+      }
+    }
+  },
+  "checkpoint_CPU_inspection": {
+    "result": "pass_saved_tensor_finiteness_and_matched_optimizer_state_coverage",
+    "sha256": "2edace081045e6fc50790b5a55782d07adb15e0a813e443dd1d446459bf1e583",
+    "CPU_only": true,
+    "checkpoints": 8,
+    "all_saved_model_and_Adam_tensors_finite": true,
+    "FP32_BF16_saved_optimizer_group_state_ID_and_schema_coverage_matched": true,
+    "gradient_values_compared": false
+  },
+  "NAVTEST_input_CPU_QC": {
+    "result": "pass_complete_original_NAVTEST_inputs_and_required_JPEG_decode_CPU_only",
+    "sha256": "0d89913d74eac8e5627719dab03d7ba8b354cda6b09d29433e8adf3f19dc6586",
+    "anchors": 12146,
+    "logs": 136,
+    "required_JPEGs": 142976,
+    "decoded_JPEGs": 142976,
+    "decode_failed": 0,
+    "input_history_frames": 4,
+    "cameras": 8,
+    "input_files": {
+      "alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl": {
+        "bytes": 848516627,
+        "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+      },
+      "alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl": {
+        "bytes": 2791314758,
+        "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+      },
+      "alg_engine/test_8192_kmeans.npy": {
+        "bytes": 3932288,
+        "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+      }
+    },
+    "image_content_ledger_sha256": "18a9caefdd52cd65fc56fe8e5f21d410e270fa6cc93c4464067999c7c6562075",
+    "shared_by_six_evaluation_cases": true,
+    "models_evaluated": false,
+    "official_scores_complete": false
+  },
+  "boundaries": [
+    "Each completed case covers eight optimizer updates, not a complete epoch or convergence.",
+    "The complete loader has 103288 anchors; bounded jobs do not consume the complete split.",
+    "Exact saved state restoration is not an uninterrupted-8-versus-4+4 numerical equivalence test.",
+    "Finite gradient gate covers gradients present at each update; some trainable parameters have no gradients for this task.",
+    "Named BF16 coverage describes membership and dtype, not gradient-value or GPU/NPU equality.",
+    "Watched parameter synchronization is an allclose check on one parameter, not bitwise equality of the entire model.",
+    "Whole checkpoint SHA establishes file identity. CPU payload inspection establishes saved-state finiteness, not gradient-value parity.",
+    "Peak RSS is a maximum for one rank. It is neither total host peak RAM nor a minimum RAM requirement.",
+    "Jobs shared the host with other work. Recorded times are observations, not performance benchmarks.",
+    "Full NAVTEST scoring, model-quality acceptance, GPU comparison of these newly trained checkpoints and full convergence are separate, unfinished acceptance items."
+  ],
+  "recorded_date": "2026-10-20",
+  "result": "pass_full_NAVTRAIN_input_short_training_FP32_BF16_and_own_resume",
+  "training_task": "Original e2e100pct imitation-training configurations; policy gradient disabled in both cases",
+  "acceptance": {
+    "complete_NAVTRAIN_input_availability": true,
+    "four_rank_FP32_BF16_eight_update_training": true,
+    "exact_own_saved_state_restoration": true,
+    "all_eight_saved_model_and_Adam_payloads_finite": true,
+    "complete_epoch_training": false,
+    "NAVTRAIN_convergence": false,
+    "new_checkpoint_GPU_NPU_comparison": false,
+    "full_NAVTEST_inference_and_scoring": false,
+    "performance_benchmark": false
+  },
+  "related_results": [
+    "full-navtrain-inputs-20261020.json",
+    "full-navtest-inputs-20261020.json",
+    "single-chip-capacity-20261020.json"
+  ],
+  "official_initializers": {
+    "vadv2": {
+      "path": "alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth",
+      "bytes": 434885463,
+      "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+    },
+    "hydramdp": {
+      "path": "alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth",
+      "bytes": 450763271,
+      "sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04"
+    }
+  }
+}

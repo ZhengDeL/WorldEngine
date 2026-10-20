@@ -37,7 +37,10 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 | --- | --- | --- |
 | 依赖环境 | 公开组合镜像的应用、所选 SDK 工具、原 CANN 重加载三项 CPU 检查通过；两个未过滤的 `pip check` 均退出0 | CPU通过不代表冷缓存 NPU 业务或全部可选 SDK 工具已验收 |
 | NAVTRAIN139 / NAVTEST22 | 公开 CLI 从六个官方原文件重建；1832张 JPEG 完整 SHA/解码通过；六份派生元信息完整值、顺序及字节均与原子集一致 | 一个训练日志、一个评价日志；完整 NAVTRAIN 收敛和完整 NAVTEST 质量待验收 |
-| 完整 NAVTRAIN 输入：10月20日 | [103,288 个锚点和 1,219,960 张所需 JPEG](results/full-navtrain-inputs-20261020.json)完成 CPU 覆盖、逐文件内容哈希和解码检查；标注、历史图像及 PDM 无缺项 | 仅输入检查；检查器峰值 RSS 51.99 GB 不能作为训练内存预算，完整训练与收敛仍待验证 |
+| 完整 NAVTRAIN 输入：10 月 20 日 | [103,288 个锚点和 1,219,960 张所需 JPEG](results/full-navtrain-inputs-20261020.json)完成 CPU 覆盖、逐文件内容哈希和解码检查；标注、历史图像及 PDM 无缺项 | 输入检查；检查器峰值 RSS 51.99 GB 不能作为训练内存预算，模型结果单列如下 |
+| 完整输入 VADv2／HydraMDP，FP32／BF16：10 月 20 日 | [四组均完成 8 次更新及精确自身 4→8 恢复](results/full-navtrain-short8-20261020.json)，使用 2 张物理卡的 4 个芯片／rank；32 份 rank 报告通过，8 份 checkpoint 保存的模型与 Adam Tensor 均为有限值 | 完整 loader 可用，各组实际使用同一组 32 个当前锚点；不代表完整 epoch、收敛、新检查点 GPU 对照或严格重放等价验收 |
+| 单芯片 FP32 容量：10 月 20 日 | [两类原 100% 模仿训练配置均完成 4 次更新](results/single-chip-capacity-20261020.json)，batch=1、完整 NAVTRAIN 输入，自有容器正常结束 | 实测分配 192g 内存／16 CPU；单进程峰值 RSS 分别为 50.69／50.79 GiB，不是最低内存或设备数，也不代表 BF16 容量与吞吐基准 |
+| 完整 NAVTEST 输入：10 月 20 日 | [12,146 个锚点、136 个日志及 142,976 张所需 JPEG](results/full-navtest-inputs-20261020.json)完成独立 CPU 输入、内容哈希和完整解码检查 | 输入证据供六组评价复用；六组完整模型推理及官方 NAVSIM 评分另行验收 |
 | CUDA-compatible MSDA | [MX/MMCV常规入口及MMCV raw-L4布局](results/npu-cuda-msda-20261017.json)满足原CUDA容差；独立CPU32超差结果保留；新CUDA金样导出到NPU的工具复现已完成 | FP32/C32、已测形状与一阶梯度 |
 | CUDA-compatible VADv2／HydraMDP，FP32，10 月 18 日 | [16 rank 同前缀两步对照](results/cuda-compatible-fp32-strict16-resume2-20261018.json)：模型／全部张量对 889／1698、909／1778，均满足 `torch.equal`，最大张量差和 loss 差为 0 | 共享连续前缀，实际 32 个当前锚点；不代表独立初始化、更长训练或质量验收 |
 | CUDA-compatible VADv2／HydraMDP，FP32／BF16 | [2次更新、精确自身状态恢复、DDP4推理及官方评分](results/cuda-compatible-navtrain139-short2-20261017.json)，每组4rank | 实际8个训练锚点；四组复用同22评价锚点。不代表收敛、质量等价或16rank严格重放通过 |
@@ -51,6 +54,8 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 
 ## 数据、权重与运行入口
 
+[完整输入短周期训练](../docs/algengine_ascend_zh.md#完整输入短周期训练)给出 10 月 20 日实测的 4 rank 参数，复现时使用新输出。两个 `e2e_*_100pct` 都是模仿训练配置，本轮没有启用 HydraMDP 策略梯度微调。服务器为 8 张双芯片物理卡、16 个芯片，本次矩阵使用其中 2 张物理卡的 4 个芯片。实测运行源码为 `0488bfb7…`／245 个 Python 文件，镜像 ID 沿用上文记录。
+
 [CUDA-compatible指南](MSDA_CUDA_zh.md#训练自身检查点恢复与推理)给出两模型、两精度已测的4rank／2次更新命令，包含独立官方评分。
 
 [主指南](../docs/algengine_ascend_zh.md#推荐流程navtrain139--navtest22)给出两条独立调度路径：八次更新的短周期闭环在自身第4次更新处中断，原生八个 epoch 路径在第4个 epoch 处中断；各自继续断点恢复、独立推理和官方 CPU 评分。两条路径均可选择 FP32/BF16。恢复要求源码、镜像、精度、数据/filter、world size、batch和调度合同相同，workers为0，输出使用新目录。官方发布权重用于初始化新训练，不能作为迁移后的完整恢复断点。
@@ -63,6 +68,6 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 
 早期 `cc91…`/243文件源码、post8/3fef镜像的16 rank同步基座对照共四组，两组在原容差内、两组超限；默认执行环境的已完成对照也有超出原数值容差的结果。同步设置尚不能作为通用数值修复。2026-10-14公开镜像的 LoRA 实测见[独立记录](results/actual-public-reproduction-16chip-20261014.json)；当时镜像的16项依赖提示不代表本次修复镜像的 CPU 结果。
 
-八小时感知训练属于较早的 `858f9d…`/post6环境，不能归到当前镜像。[官方100权重GPU／NPU FP32对照](results/gpu-npu-official100-eval22-20261016.json)中，两模型在同22锚点的选择轨迹和七项逐token官方指标一致。[原CUDA基线](CUDA_BASELINE_zh.md)补充完整MSDA梯度及八GPU短周期训练、恢复对照；完整比较中仍有数值超出原门槛，不构成历史八步重放差异已解决的证据。完整NAVTRAIN图像训练与收敛、完整独立NAVTEST、成对GPU／NPU训练验证、更广范围的跨精度质量验证、重复数值复现和多机扩展仍需单独验收，详见[验证报告](VALIDATION_zh.md)。
+八小时感知训练属于较早的 `858f9d…`/post6环境，不能归到当前镜像。[官方100权重GPU／NPU FP32对照](results/gpu-npu-official100-eval22-20261016.json)中，两模型在同22锚点的选择轨迹和七项逐token官方指标一致。[原CUDA基线](CUDA_BASELINE_zh.md)补充完整MSDA梯度及八GPU短周期训练、恢复对照；完整比较中仍有数值超出原门槛，不构成历史八步重放差异已解决的证据。完整 epoch 训练与 NAVTRAIN 收敛、完整独立 NAVTEST、成对 GPU／NPU 训练验证、更广范围的跨精度质量验证、重复数值复现和多机扩展仍需单独验收，详见[验证报告](VALIDATION_zh.md)。
 
 提交问题时请提供源码提交/指纹、镜像 ID、配置、精度、逻辑芯片映射、数据 split、命令、`launch.json`、各 rank runtime文件及比较报告，并移除凭据与私有数据路径。
