@@ -1,0 +1,957 @@
+{
+  "schema_version": 1,
+  "test_date_local": "2026-10-20",
+  "evidence_stage": "official_real_scene_original_resolution_forward_and_bounded_replay",
+  "result": "pass_for_recorded_forward_and_bounded_replay_checks",
+  "scope": "One official initial frame: complete Gaussian set and all cameras; full-output finite checks and 1,024 independently referenced pixels; original configured 12-frame NR/R replay windows.",
+  "public_summary_is_runtime_manifest": false,
+  "upstream_WorldEngine_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+  "canonical_CANN_commit": "8c0445ebcca91514fce3a7050241f41ed132c340",
+  "contract": "mtgs-gsplat14-forward-v1",
+  "hardware": {
+    "chips_per_physical_card": 2,
+    "device_name": "Ascend910_9362",
+    "multi_chip_scaling_measured": false,
+    "physical_cards_in_server": 8,
+    "visible_chips_in_server": 16,
+    "chips_used_per_NPU_stage": 1
+  },
+  "environment": {
+    "python": "3.10",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "CANN_toolkit": "9.1.0",
+    "acl_reported_version": "1.17.0"
+  },
+  "official_inputs": {
+    "publisher": "OpenDriveLab/WorldEngine",
+    "huggingface_revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+    "modelscope_revision": "092ac5f3f3f828698c207b0ad75ca258c9f07ad2",
+    "files": [
+      {
+        "path": "data/sim_engine/scenarios/original/navtest_failures/all_scenarios.pkl",
+        "size": 911923264,
+        "sha256": "27203d52454f2538e6a70e95136b85ee8df35822f7707dc0091b4943ca7ad41d"
+      },
+      {
+        "path": "data/sim_engine/assets/navtest_failures/assets/part003.tar.gz",
+        "size": 27886330535,
+        "sha256": "102d16b9f608ac8f2314aef2ba3e1907cee9db7e2a3d094b1833b4ff60de0d05"
+      }
+    ],
+    "complete_original_files_verified": true,
+    "asset_lock_sha256": "59b52b8557ba2953503967781a570a91fc282e44cd1289c537e2bda463250125"
+  },
+  "scene": {
+    "official_scene_id": "2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4",
+    "derived_scene_sha256": "8b2d308365eb88060b30c35db1e3ba13622ddf827e3c43ba91200174ca40d27e",
+    "original_log_length": 24,
+    "configured_replay_frames": 12,
+    "original_full_log_accepted": false,
+    "camera_names": [
+      "CAM_B0",
+      "CAM_F0",
+      "CAM_L0",
+      "CAM_L1",
+      "CAM_L2",
+      "CAM_R0",
+      "CAM_R1",
+      "CAM_R2"
+    ],
+    "initial_frame_timestamp_us": 1632929928299917.0,
+    "frame_scope": "original BaseEnv.reset initial frame",
+    "configured_replay_simulation_time_span_seconds": 5.5
+  },
+  "checkpoint": {
+    "sha256": "9402f77ad4f6275c449d4eccb588b20940a331c496124812a947313501f524fb",
+    "submodel_counts": {
+      "VanillaGaussianSplattingModel": 1,
+      "SkyboxGaussianSplattingModel": 1,
+      "MirroredRigidSubModel": 17
+    },
+    "raw_gaussians": 1425076,
+    "assembled_gaussians": 1550733,
+    "assembly": "Original MTGS mirroring and transforms; no Gaussian sampling or truncation."
+  },
+  "input_shape": {
+    "gaussians": 1550733,
+    "cameras": 8
+  },
+  "render": {
+    "width": 1920,
+    "height": 1080,
+    "tile_size": 16,
+    "near_plane": 0.01,
+    "far_plane": 10000000000.0,
+    "render_mode": "RGB+ED",
+    "rasterize_mode": "antialiased",
+    "radius_clip": 0.0,
+    "eps2d": 0.3
+  },
+  "forward": {
+    "result": "pass",
+    "all_forward_outputs_finite": true,
+    "full_output_shapes": {
+      "rgb": [
+        8,
+        1080,
+        1920,
+        4
+      ],
+      "alpha": [
+        8,
+        1080,
+        1920,
+        1
+      ],
+      "radii": [
+        8,
+        1550733
+      ]
+    },
+    "reference_pixel_count": 1024,
+    "sampling": {
+      "seed": 20261020,
+      "requested_pixels_per_camera": 128,
+      "selection": "uniform fixed seed plus corners and center, independent of NPU outputs"
+    },
+    "all_gaussians_projected_per_camera": true,
+    "gaussian_subsampling": false,
+    "candidate_truncation": false,
+    "full_pixel_reference_comparison": false,
+    "measurements": {
+      "rgb_max_absolute_difference": 6.817280495396982e-06,
+      "alpha_max_absolute_difference": 5.391173548363604e-06,
+      "expected_depth_max_absolute_difference": 0.009725774409673704,
+      "rgb_atol": 0.0003,
+      "rgb_rtol": 0.001,
+      "alpha_atol": 0.0003,
+      "alpha_rtol": 0.001,
+      "expected_depth_atol": 0.002,
+      "expected_depth_rtol": 0.001
+    },
+    "worst_expected_depth_absolute_error_sample": {
+      "sample_coordinate_camera_y_x": [
+        7,
+        166,
+        1435
+      ],
+      "absolute_difference": 0.009725774409673704,
+      "reference_depth_m": 491.5412996162153,
+      "NPU_depth_m": 491.551025390625,
+      "allowed_absolute_difference": 0.49354129961621535
+    }
+  },
+  "replays": {
+    "NR": {
+      "mode": "replay",
+      "actual_exit": 0,
+      "unique_successful_scenes": 1,
+      "configured_window": {
+        "num_history": 4,
+        "num_future": 8,
+        "frames": 12
+      },
+      "decoded_jpegs": 96,
+      "JPEG_total_bytes": 32505062,
+      "JPEG_inventory_sha256": "8c09b93c236d135c0f73dd010a55b8ca7ff5b8f53ab7cc77e2a57b5b0d3e4b66",
+      "strict_camera_frame_coverage": "pass_by_independent_CPU_inventory",
+      "original_full_log_accepted": false,
+      "planner_feedback": false,
+      "pdm_metrics_enabled": false,
+      "dense_rewards_enabled": false,
+      "simulation_time_span_seconds": 5.5,
+      "original_log_length": 24
+    },
+    "R": {
+      "mode": "replay",
+      "actual_exit": 0,
+      "unique_successful_scenes": 1,
+      "configured_window": {
+        "num_history": 4,
+        "num_future": 8,
+        "frames": 12
+      },
+      "decoded_jpegs": 96,
+      "JPEG_total_bytes": 32525255,
+      "JPEG_inventory_sha256": "c6cc313ff125a77b1ca36f99a2e9ac773d0015599d99244a4d431b89fcaa63bb",
+      "strict_camera_frame_coverage": "pass_by_independent_CPU_inventory",
+      "original_full_log_accepted": false,
+      "planner_feedback": false,
+      "pdm_metrics_enabled": false,
+      "dense_rewards_enabled": false,
+      "simulation_time_span_seconds": 5.5,
+      "original_log_length": 24
+    }
+  },
+  "source_identity": {
+    "source_bundle_manifest_sha256": "c0cdc6d4ed60a87794e59eee32de44b6bf8b3e1acddb1e32249e1353f77569b7",
+    "simulation_runtime": {
+      "sha256": "bc0d37fd2e874fea0467c259cb4031b77b1cad2dbfd79825a449505f8624a04e",
+      "files": 208
+    },
+    "capture_runtime_sha256": "62edd517c8a1d074c16e949be304a85cfa84faff42b857c34c199ade22592946",
+    "capture_runtime_files": 211,
+    "fingerprint_scope_note": "The original 223-file source bundle, 208-file simulation runtime and 211-file capture runtime have separate inventories. The public CPU auditor snapshot adds three separately hashed tool files without changing those original 223 files.",
+    "tested_source_files": [
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/cann.py",
+        "sha256": "7e363252314758b51ba35615b18b0dea483cd7f4ad473b4de26869870b8f3f9c"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/sh.py",
+        "sha256": "b95514d8120412d8f256a0c57f013e8ca6557887c8b67d26218cd3db0719d3c1"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/manifest.py",
+        "sha256": "56b1723e858bd2efc1d3ba02137fc5d8b1944f1b1789d4219c34f71180aed643"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/tests/probe_cann.py",
+        "sha256": "a408f9b9885241b6e3a7375a9d0e3569ac333af78d8e09ecaf54d7da3ddd75a8"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/tests/numpy_oracle.py",
+        "sha256": "f36b59ee02502afe9544c671e8b21979139cf85770a0a285195f3458720228cf"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/capture.py",
+        "sha256": "15733f97921c04e645e1f2d2e3c75a106883fdb3cd848c76b1b58ff977617ca0"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/real_validation.py",
+        "sha256": "bc705597292f5bec5cbbb669c5fb791ced680583aa05b04f3c6be304680e370f"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/tests/validate_real_input.py",
+        "sha256": "98f0825c3e5883b5b7b897de5a8a664eadc432801c8401d3d30f12f564444df6"
+      },
+      {
+        "path": "projects/SimEngine/worldengine/render/ascend/tests/sampled_oracle.py",
+        "sha256": "0ed5e71de83b1ccfc74573aae6b60b51d61b042ee8aa03f151a3f3ea773071b3"
+      },
+      {
+        "path": "tools/simengine_ascend/capture_scene.py",
+        "sha256": "c31a45650fbde3197789668d51c0990b60751f18576a585ae71aecc4538e9ff7"
+      },
+      {
+        "path": "tools/simengine_ascend/prepare_scene.py",
+        "sha256": "45919fe4a80594cd280b75b1e4e2d54229958ac45a39c51a8db735054fe2bbc2"
+      },
+      {
+        "path": "tools/simengine_ascend/official_scene_assets.lock.json",
+        "sha256": "59b52b8557ba2953503967781a570a91fc282e44cd1289c537e2bda463250125"
+      }
+    ],
+    "compatibility_kernel_sha256": "ab6255cc6df3f588d2c32b863bd51e52600ee01163aea1e5cb567f7ca6ef3fab",
+    "public_audit_tools_extension": {
+      "original_bundle_files": 223,
+      "original_bundle_files_unchanged": 223,
+      "additional_tools_files": 3,
+      "auditor_snapshot_files": 226,
+      "added_files": [
+        {
+          "path": "simengine_ascend/tools/__init__.py",
+          "bytes": 61,
+          "sha256": "bdb6a7e71cde1f776f710eb997bdfedc8f09d8948a30efc8fd9bedc5d0dd41f5"
+        },
+        {
+          "path": "simengine_ascend/tools/audit_replay.py",
+          "bytes": 21750,
+          "sha256": "389efb37ef8d73b2f0008a5e5d5db7b25a30b19fcc248173c0a71011f3144e77"
+        },
+        {
+          "path": "simengine_ascend/tools/tests/test_audit_replay.py",
+          "bytes": 11784,
+          "sha256": "132d1f7a879f617f6477c39013012d4cf6031c29ca659dc68082d3faa0c8f0a8"
+        }
+      ],
+      "scope": "The public CPU audit adds only these three tool files; the 208-file simulation runtime and 211-file capture runtime identities remain unchanged."
+    }
+  },
+  "original_proof_sha256": {
+    "prepared/prepare_receipt.json": "ac246caf243f2e1a679c4159dbd92ecb1cfe84f4197fc023295909d7943414fc",
+    "prepared/checkpoint_inventory.json": "78cac0537959fcff06e725703f176f51cf622b3bd502db5caa06467880be06a5",
+    "capture_job/capture/capture.json": "28e09bf9184126cf92f3c63f917673233f5bbf3c8fd48169f1e230720ddcd8c0",
+    "capture_job/capture_report.json": "c8bc7810a6857a4dcf0f20f7c91036a8d540dab22f38dc0c731294294215f9b2",
+    "real_validation/real_input_validation.json": "c7ba3939145609ac24e7bbdad006cdbf35c87b991c1b4697208fafdfb6d09cb5",
+    "real_validation/validated_real_manifest.json": "eb2cac9c7a02d74c0cc0ca60cdbbac2b11605bcc90486445f759b62483d7e46a",
+    "replay_NR/simulation_launch_report.json": "352d53a78f3f49cc5dbf290cc2c688298db7c7e1d48a0aed25c6cdb7103ebb77",
+    "replay_NR/runner_report_20261019_203253.json": "e956e2226884ea4d5230d1b01b0d68e42e4e8f520070ce65bad9588f7a636dca",
+    "replay_R/simulation_launch_report.json": "0edf8b4131f41163ce7e6687ca021d494e5d6c4207ca49eecead8469f8888d8e",
+    "replay_R/runner_report_20261019_204113.json": "67c7aed86beca4c3488c64ef9feb3ca511f929bad8b37b454a3d4bb8587474bb"
+  },
+  "linked_small_proof": {
+    "public_summary": "simengine_npu_forward_20261020.json",
+    "validated_manifest_sha256": "3c7a1f6ef8fd4065c37701fbd400ae8692cc115008203baf4c6656b9244da9ba"
+  },
+  "acceptance": {
+    "original_resolution_initial_forward_finite": true,
+    "sampled_NumPy_reference": true,
+    "bounded_NR_R_replay": true,
+    "strict_camera_frame_coverage": true,
+    "original_full_log": false,
+    "planner_closed_loop": false,
+    "GPU_parity": false,
+    "full_pixel_reference": false,
+    "PDM_or_dense_scores": false,
+    "performance": false,
+    "multi_chip_scaling": false
+  },
+  "pending": [
+    "VADv2 and HydraMDP FP32/BF16 planner-in-the-loop execution",
+    "Original full-log time-span, multi-scene quality and applicable scoring",
+    "GPU parity, sustained stability, performance and multi-chip scaling"
+  ],
+  "reuse_rule": "Regenerate small and real manifests for the exact local source/runtime/input contract. This portable result omits internal paths and is not a runtime authorization file.",
+  "started_utc": "2026-10-19T20:31:19.675095+00:00",
+  "completed_utc": "2026-10-20T02:28:55.782015+00:00",
+  "strict_replay_coverage": {
+    "result": "pass_two_configured_replay_windows_coverage",
+    "execution": "Public CPU auditor executed on the server against both existing NPU replay outputs; no accelerator API execution in this audit.",
+    "original_report_sha256": "0a07f96a20e4171664a9082f6b560579b7db0d7e005f91cfa0492755ac797987",
+    "auditor_filename": "simengine_ascend/tools/audit_replay.py",
+    "auditor_sha256": "389efb37ef8d73b2f0008a5e5d5db7b25a30b19fcc248173c0a71011f3144e77",
+    "started_utc": "2026-10-20T02:36:32.197692+00:00",
+    "completed_utc": "2026-10-20T02:36:33.920865+00:00",
+    "phases": {
+      "NR": {
+        "result": "pass_configured_replay_window_coverage",
+        "source": {
+          "sha256": "bc0d37fd2e874fea0467c259cb4031b77b1cad2dbfd79825a449505f8624a04e",
+          "files": 208
+        },
+        "configured_window_frames": 12,
+        "frame_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "original_log_length": 24,
+        "original_frame_metadata_count": 24,
+        "simulation_time_span_seconds": 5.5,
+        "time_scope": "Timestamp span from exported frame0 to11; not wall time or performance.",
+        "num_history": 4,
+        "num_future": 8,
+        "original_policies": {
+          "distributed_mode": "SINGLE_NODE",
+          "exit_on_failure": true,
+          "enable_resume": false,
+          "with_render_manager": true,
+          "with_data_manager": true,
+          "use_planner_actions": false,
+          "ego_policy": "trajectory_policy",
+          "ego_controller": "log_play_controller",
+          "agent_policy": "trajectory_policy",
+          "agent_navigation": "trajectory_navigation"
+        },
+        "original_camera_dimensions": {
+          "CAM_B0": [
+            1920,
+            1080
+          ],
+          "CAM_F0": [
+            1920,
+            1080
+          ],
+          "CAM_L0": [
+            1920,
+            1080
+          ],
+          "CAM_L1": [
+            1920,
+            1080
+          ],
+          "CAM_L2": [
+            1920,
+            1080
+          ],
+          "CAM_R0": [
+            1920,
+            1080
+          ],
+          "CAM_R1": [
+            1920,
+            1080
+          ],
+          "CAM_R2": [
+            1920,
+            1080
+          ]
+        },
+        "hydra_config_sha256": "4e788c732467688c5d703342c6e1c0097217a7bfa82299403ad156e3b97c4957",
+        "metadata_identity": {
+          "bytes": 131485,
+          "sha256": "160bb01a0f6e41a9f6474052844451bf6ab806bdbdeafc1985bfaa83b4381467"
+        },
+        "completion_flag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_sha256": "9498208a388ec474d18a2e68ad6f51e212e5a5744057354e4554c3df44e08cab",
+        "logged_updates": 11,
+        "final_episode_step": 11,
+        "frame_inventory": [
+          {
+            "frame_idx": 0,
+            "token": "fc23e4b0446e56c2-000",
+            "timestamp": 1632929928299917,
+            "sample_prev": null,
+            "sample_next": "a108255911135761-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 1,
+            "token": "a108255911135761-000",
+            "timestamp": 1632929928799917,
+            "sample_prev": "fc23e4b0446e56c2-000",
+            "sample_next": "efa80e78fce1525d-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 2,
+            "token": "efa80e78fce1525d-000",
+            "timestamp": 1632929929299917,
+            "sample_prev": "a108255911135761-000",
+            "sample_next": "6326d00e52115da4-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 3,
+            "token": "6326d00e52115da4-000",
+            "timestamp": 1632929929799917,
+            "sample_prev": "efa80e78fce1525d-000",
+            "sample_next": "3e96578a903d59d8-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 4,
+            "token": "3e96578a903d59d8-000",
+            "timestamp": 1632929930299917,
+            "sample_prev": "6326d00e52115da4-000",
+            "sample_next": "ba8af38306035c11-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 5,
+            "token": "ba8af38306035c11-000",
+            "timestamp": 1632929930799917,
+            "sample_prev": "3e96578a903d59d8-000",
+            "sample_next": "62108a4000e85dae-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 6,
+            "token": "62108a4000e85dae-000",
+            "timestamp": 1632929931299917,
+            "sample_prev": "ba8af38306035c11-000",
+            "sample_next": "9bc49827b0e45268-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 7,
+            "token": "9bc49827b0e45268-000",
+            "timestamp": 1632929931799917,
+            "sample_prev": "62108a4000e85dae-000",
+            "sample_next": "382456bd4c5b585b-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 8,
+            "token": "382456bd4c5b585b-000",
+            "timestamp": 1632929932299917,
+            "sample_prev": "9bc49827b0e45268-000",
+            "sample_next": "679eabe94ca7533d-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 9,
+            "token": "679eabe94ca7533d-000",
+            "timestamp": 1632929932799917,
+            "sample_prev": "382456bd4c5b585b-000",
+            "sample_next": "eba2b9d63f5b5ae8-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 10,
+            "token": "eba2b9d63f5b5ae8-000",
+            "timestamp": 1632929933299917,
+            "sample_prev": "679eabe94ca7533d-000",
+            "sample_next": "1774308b2ce65a6b-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 11,
+            "token": "1774308b2ce65a6b-000",
+            "timestamp": 1632929933799917,
+            "sample_prev": "eba2b9d63f5b5ae8-000",
+            "sample_next": null,
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          }
+        ],
+        "JPEG_inventory": {
+          "decoded_jpegs": 96,
+          "total_bytes": 32505062,
+          "inventory_sha256": "8c09b93c236d135c0f73dd010a55b8ca7ff5b8f53ab7cc77e2a57b5b0d3e4b66"
+        },
+        "acceptance": {
+          "configured_window_camera_frame_coverage": true,
+          "GPU_parity": false,
+          "reference_image_quality": false,
+          "planner_feedback": false,
+          "scores": false,
+          "performance": false
+        }
+      },
+      "R": {
+        "result": "pass_configured_replay_window_coverage",
+        "source": {
+          "sha256": "bc0d37fd2e874fea0467c259cb4031b77b1cad2dbfd79825a449505f8624a04e",
+          "files": 208
+        },
+        "configured_window_frames": 12,
+        "frame_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "original_log_length": 24,
+        "original_frame_metadata_count": 24,
+        "simulation_time_span_seconds": 5.5,
+        "time_scope": "Timestamp span from exported frame0 to11; not wall time or performance.",
+        "num_history": 4,
+        "num_future": 8,
+        "original_policies": {
+          "distributed_mode": "SINGLE_NODE",
+          "exit_on_failure": true,
+          "enable_resume": false,
+          "with_render_manager": true,
+          "with_data_manager": true,
+          "use_planner_actions": false,
+          "ego_policy": "trajectory_policy",
+          "ego_controller": "log_play_controller",
+          "agent_policy": "idm_policy",
+          "agent_navigation": "idm_navigation"
+        },
+        "original_camera_dimensions": {
+          "CAM_B0": [
+            1920,
+            1080
+          ],
+          "CAM_F0": [
+            1920,
+            1080
+          ],
+          "CAM_L0": [
+            1920,
+            1080
+          ],
+          "CAM_L1": [
+            1920,
+            1080
+          ],
+          "CAM_L2": [
+            1920,
+            1080
+          ],
+          "CAM_R0": [
+            1920,
+            1080
+          ],
+          "CAM_R1": [
+            1920,
+            1080
+          ],
+          "CAM_R2": [
+            1920,
+            1080
+          ]
+        },
+        "hydra_config_sha256": "be2d09c7cd55ab70f415c965202d78c637f82242f9496a3fca3ac2fa1f4ec76c",
+        "metadata_identity": {
+          "bytes": 131618,
+          "sha256": "fd349e53592492136efe7a50e462bc9c3afa642876cdd9c35fc3690a6b0fe770"
+        },
+        "completion_flag_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "log_sha256": "72748fdf94f2ee5d6b838454ba1068bf1fd2313eabde677f6ccab227263a6862",
+        "logged_updates": 11,
+        "final_episode_step": 11,
+        "frame_inventory": [
+          {
+            "frame_idx": 0,
+            "token": "fc23e4b0446e56c2-000",
+            "timestamp": 1632929928299917,
+            "sample_prev": null,
+            "sample_next": "a108255911135761-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 1,
+            "token": "a108255911135761-000",
+            "timestamp": 1632929928799917,
+            "sample_prev": "fc23e4b0446e56c2-000",
+            "sample_next": "efa80e78fce1525d-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 2,
+            "token": "efa80e78fce1525d-000",
+            "timestamp": 1632929929299917,
+            "sample_prev": "a108255911135761-000",
+            "sample_next": "6326d00e52115da4-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 3,
+            "token": "6326d00e52115da4-000",
+            "timestamp": 1632929929799917,
+            "sample_prev": "efa80e78fce1525d-000",
+            "sample_next": "3e96578a903d59d8-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 4,
+            "token": "3e96578a903d59d8-000",
+            "timestamp": 1632929930299917,
+            "sample_prev": "6326d00e52115da4-000",
+            "sample_next": "ba8af38306035c11-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 5,
+            "token": "ba8af38306035c11-000",
+            "timestamp": 1632929930799917,
+            "sample_prev": "3e96578a903d59d8-000",
+            "sample_next": "62108a4000e85dae-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 6,
+            "token": "62108a4000e85dae-000",
+            "timestamp": 1632929931299917,
+            "sample_prev": "ba8af38306035c11-000",
+            "sample_next": "9bc49827b0e45268-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 7,
+            "token": "9bc49827b0e45268-000",
+            "timestamp": 1632929931799917,
+            "sample_prev": "62108a4000e85dae-000",
+            "sample_next": "382456bd4c5b585b-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 8,
+            "token": "382456bd4c5b585b-000",
+            "timestamp": 1632929932299917,
+            "sample_prev": "9bc49827b0e45268-000",
+            "sample_next": "679eabe94ca7533d-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 9,
+            "token": "679eabe94ca7533d-000",
+            "timestamp": 1632929932799917,
+            "sample_prev": "382456bd4c5b585b-000",
+            "sample_next": "eba2b9d63f5b5ae8-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 10,
+            "token": "eba2b9d63f5b5ae8-000",
+            "timestamp": 1632929933299917,
+            "sample_prev": "679eabe94ca7533d-000",
+            "sample_next": "1774308b2ce65a6b-000",
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          },
+          {
+            "frame_idx": 11,
+            "token": "1774308b2ce65a6b-000",
+            "timestamp": 1632929933799917,
+            "sample_prev": "eba2b9d63f5b5ae8-000",
+            "sample_next": null,
+            "camera_names": [
+              "CAM_B0",
+              "CAM_F0",
+              "CAM_L0",
+              "CAM_L1",
+              "CAM_L2",
+              "CAM_R0",
+              "CAM_R1",
+              "CAM_R2"
+            ]
+          }
+        ],
+        "JPEG_inventory": {
+          "decoded_jpegs": 96,
+          "total_bytes": 32525255,
+          "inventory_sha256": "c6cc313ff125a77b1ca36f99a2e9ac773d0015599d99244a4d431b89fcaa63bb"
+        },
+        "acceptance": {
+          "configured_window_camera_frame_coverage": true,
+          "GPU_parity": false,
+          "reference_image_quality": false,
+          "planner_feedback": false,
+          "scores": false,
+          "performance": false
+        }
+      }
+    },
+    "historical_proofs": [
+      {
+        "original_report_sha256": "054c82199f5768a85d5d0131da031c3ba454e8c9b152e9564a9be2a6d622ce37",
+        "auditor_filename": "audit_real_scene_coverage.py",
+        "auditor_sha256": "53c99629137182cd5987379286bfbe5c029fa9842a0131c2b60ac7536cc3c6a2",
+        "scope": "Earlier private CPU auditor; both NR/R phase objects exactly match the later public auditor result."
+      },
+      {
+        "original_report_sha256": "7e9649c8dca81c90c1012d6c57b5fc05ca3358344e0eb2b43a89943250ee017f",
+        "auditor_filename": "simengine_ascend/tools/audit_replay.py",
+        "auditor_sha256": "389efb37ef8d73b2f0008a5e5d5db7b25a30b19fcc248173c0a71011f3144e77",
+        "scope": "Earlier public CPU audit before package initializer LF normalization; both phase objects are identical."
+      }
+    ],
+    "public_CLI_validation": {
+      "result": "pass_real_two_windows_and_11_Linux_CPU_fixtures",
+      "CPU_fixture_cases": 11,
+      "CPU_fixture_passed": 11,
+      "accelerator_execution": false,
+      "original_execution_receipt_sha256": "b552538ecdabbddd5149c6d7622d6c49535464967b62a3cf8aefb8a5c2c2d0e7"
+    }
+  },
+  "observed_runtime_notes": [
+    {
+      "operator": "ArgSort",
+      "reported_dtype_scope": [
+        "int32",
+        "int64"
+      ],
+      "reported_execution": "AiCpu",
+      "source": "Original NR/R runtime logs, identified by their recorded SHA256 values.",
+      "performance_acceptance": false
+    }
+  ]
+}

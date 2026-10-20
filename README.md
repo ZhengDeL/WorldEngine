@@ -24,9 +24,9 @@
 
 ## Ascend 910C SimEngine
 
-This branch implements an inference-only NPU renderer, official scene preparation tools and controlled replay/planner integration. Twenty small FP32 forward cases passed on one 910C chip against an independent NumPy reference. Real official scenes, complete planner feedback and GPU comparisons remain pending; no NPU performance advantage is claimed.
+This branch provides an inference-only NPU renderer, official asset preparation and controlled replay/planner integration. One 910C chip rendered an official MTGS initial frame using all 1,550,733 Gaussians and eight 1920×1080 cameras. All outputs were finite, and 1,024 sampled pixels passed an independent NumPy comparison. Original configured 12-frame NR/R replay windows also completed, each producing 96 decoded JPEGs. The public CPU auditor verified all 12 frames and eight cameras in both replay windows, spanning 5.5 seconds of simulation time. Complete original-log coverage, planner feedback and GPU parity remain separate acceptance items. No NPU performance advantage is claimed.
 
-See [setup and validation](docs/simengine_ascend_assessment.md) / [中文部署与验证](docs/simengine_ascend_assessment_zh.md), [backend and asset tools](tools/simengine_ascend/README.md), and [runtime commands](simengine_ascend/README.md) / [中文运行命令](simengine_ascend/README_zh.md). The server has 8 physical NPU cards with 16 chips; the recorded small probe uses one chip. Upstream benchmark figures below describe the original project and are not NPU measurements.
+See [setup and validation](docs/simengine_ascend_assessment.md) / [中文部署与验证](docs/simengine_ascend_assessment_zh.md), [backend and asset tools](tools/simengine_ascend/README.md), and [runtime commands](simengine_ascend/README.md) / [中文运行命令](simengine_ascend/README_zh.md). The server has 8 physical NPU cards with 16 chips; the small probe and real-scene stages each used one chip. [Recorded real-scene scope](docs/validation/simengine_real_scene_20261020.json) includes exact input and source/proof hashes. Upstream benchmark figures below describe the original project and are not NPU measurements.
 
 ## Table of Contents
 - [Highlights](#highlights)

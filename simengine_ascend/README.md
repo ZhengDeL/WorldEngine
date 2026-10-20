@@ -3,10 +3,14 @@
 [中文说明](README_zh.md)
 
 Start with the [environment, build and validation guide](../docs/simengine_ascend_assessment.md).
-The current device result is 20 small FP32 renderer cases on one 910C chip.
-The official-scene commands below are provided for the next acceptance stage;
-they have not completed a real-scene NPU replay or planner feedback run.
-Small-probe manifests do not authorize larger real inputs. The server's
+Device evidence now includes 20 small FP32 cases and one official MTGS scene on
+one 910C chip: all 1,550,733 Gaussians, eight 1920×1080 cameras, full-output finite
+checks and 1,024 sampled pixels against NumPy. The original configured 12-frame
+NR/R replay windows completed and each saved 96 decodable JPEGs. Independent
+CPU inventory verified frames 0–11 and all eight cameras, spanning 5.5 seconds of
+simulation time. Complete original-log coverage and model-in-the-loop feedback
+remain unvalidated. See the [bounded real-scene result](../docs/validation/simengine_real_scene_20261020.json).
+Small-probe manifests alone do not authorize larger real inputs. The server's
 8 physical NPU cards contain 16 chips; this integration has no sixteen-chip
 scaling result or GPU comparison.
 
@@ -61,6 +65,15 @@ Set these deployment values to existing absolute paths: `SIM_ROOT`,
 loaded with a strict state-dictionary check. `DEADLINE_UTC` must be an explicit
 future time with timezone, for example the approved job cutoff in ISO 8601.
 
+Use matching official full 100pct configurations and complete checkpoints for the two published planners:
+
+| Planner | `CFG`, relative to `ALG_ROOT` | `CHECKPOINT`, relative to `ALG_ROOT` |
+| --- | --- | --- |
+| VADv2 | `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py` | `data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth` |
+| HydraMDP | `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py` | `data/alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth` |
+
+Both use the original `data/alg_engine/test_8192_kmeans.npy` vocabulary. The closed-loop dataset consumes genuine rendered JPEGs and four consecutive published metadata records; its upstream inference PDM placeholders do not constitute metric scores. Training annotations, full training PDM and the earlier 139-sample subset are not substituted for these inputs. The command allows 600 seconds for initial/following frame queues because a real full-resolution startup can exceed the old 120-second default. The absolute job cutoff still applies.
+
 Run the planner with its adapted AlgEngine directory as the working directory:
 
 ```bash
@@ -72,14 +85,17 @@ WORLDENGINE_IMAGE_ID="$IMAGE_ID" "$ALG_PYTHON" \
   --algengine-commit 972e1d9592860cef6520e0b39d7e4e9ab55a510a \
   --expected-algengine-source-sha256 40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b \
   --expected-image-id "$IMAGE_ID" \
-  --msda-backend reference --wait-timeout 120 \
+  --msda-backend reference --wait-timeout 600 \
   --deadline-utc "$DEADLINE_UTC" --stop-file "$RUN_ROOT/STOP" \
   --cfg-options \
     sim.monitored_folder="$RUN_ROOT/frames" \
     sim.plan_save_path="$RUN_ROOT/plan_traj" \
     sim.merged_ann_save_dir="$RUN_ROOT/merged_ann_files" \
     sim.clean_temp_files=False sim.clean_record_data=False \
-    data_root="$RUN_ROOT/WE_output/openscene_format/"
+    data_root="$RUN_ROOT/WE_output/openscene_format/" \
+    data.test.data_root="$RUN_ROOT/WE_output/openscene_format/" \
+    data.test.queue_length=4 \
+    model.planning_head.vocab_path="$ALG_ROOT/data/alg_engine/test_8192_kmeans.npy"
 ```
 
 `--precision bf16` uses the external adapter's native NPU autocast, FP32
@@ -200,9 +216,15 @@ seconds for termination before killing remaining group members. On Linux it
 retains an exited leader with `WNOWAIT` until group cleanup, so cleanup also
 handles descendants left behind after the leader exits. Optional
 detached processes still require the dedicated container/job cutoff described
-below. This entrypoint has local CPU command/image/process fixtures; it has not
-yet completed an official real-scene run. Its results are separate from the
-earlier renderer kernel probe and planner protocol tests.
+below. This entrypoint has CPU command/image/process fixtures and completed
+the recorded official NR/R replay windows. Each original RunnerReport contained
+one successful selected scene and each run saved 96 decoded JPEGs. These
+12-frame configured windows do not cover the original scene's `log_length=24`.
+An independent CPU audit matched all 12 frame identities, timestamps, previous/next
+links and all 96 expected camera JPEGs, including dimensions, full decoding and
+hashes, against the original inputs. Its 5.5-second interval is simulation time,
+not runtime or a performance result. This audit is separate from the wrapper
+checks and does not establish planner feedback or GPU parity.
 
 ```bash
 python -m simengine_ascend.test_run_simulation
@@ -278,6 +300,8 @@ cleanup deletes exact files created by this planner and does not delete renderer
 records or glob shared frame directories.
 
 ## Reports and validation scope
+
+The public CPU replay auditor passed 11 Linux CPU fixtures and actually verified both recorded NR/R windows. It checks the exact frame/image inventory independently of the wrapper. Its [command and input contract](../docs/simengine_ascend_assessment.md#audit-a-replay-window) cover both NR/R sibling outputs, pinned preparation/source SHA256 values and a fresh report outside the inputs.
 
 `plan_traj/closed_loop_planner_report.json` records strict checkpoint loading,
 configuration/checkpoint hashes, actual prediction count, last trajectory

@@ -3,9 +3,13 @@
 [English](README.md)
 
 环境、后端构建、官方数据与验收顺序见[部署与验证指南](../docs/simengine_ascend_assessment_zh.md)。
-当前设备结果为单枚 910C 芯片上的 20 项小规模 FP32 渲染检查。
-下文给出了下一阶段的官方场景命令，尚无真实场景 NPU 回放或规划反馈结果；
-小规模 manifest 不能授权更大的真实输入。服务器有 8 张 NPU 物理卡、16 个芯片，
+设备结果已覆盖 20 项小规模 FP32 检查，以及一段官方 MTGS 场景的原尺寸首帧。
+单枚 910C 芯片完成了全部 1,550,733 个 Gaussian、8 个 1920×1080 相机的前向有限值检查，
+并通过 1,024 个采样像素的独立 NumPy 对照。原配置的 12 帧 NR/R 回放窗口均已结束，
+每次生成并解码 96 张 JPEG。独立 CPU 清点已核对 0–11 帧、8 个相机及对应文件，
+仿真时间跨度为 5.5 秒。原始完整日志时长和规划模型反馈仍待验收。
+详见[真实场景结果](../docs/validation/simengine_real_scene_20261020.json)。
+仅小规模 manifest 仍不能授权更大的真实输入。服务器有 8 张 NPU 物理卡、16 个芯片，
 本分支尚无 16 芯片扩展或 GPU 对照结果。
 
 此目录将 SimEngine 的逐帧文件协议接入可显式选择设备的 AlgEngine 规划器。
@@ -105,8 +109,12 @@ cd "$SIM_ROOT"
 子进程组，等待 3 秒后才对仍存活的自有组执行强制停止；独立分离的进程仍需专用容器或
 作业边界保护。日志保留在 `simulation.log`。
 
-新增入口目前仅通过本地 CPU 参数、JPEG 和进程夹具，尚未完成官方真实场景运行，
-不能合并记作先前的渲染 kernel 或规划协议验收结果。检查命令为
+该入口已通过 CPU 参数、JPEG 和进程夹具，并完成上述官方 NR/R 回放。
+每次原始 RunnerReport 均记录一个选定场景成功结束，96 张输出 JPEG 均可解码。
+这里的 12 帧来自原 runner 配置；原始场景的 log_length 为 24，不能按完整日志验收。
+另一次独立 CPU 审计已核对 12 帧身份、时间戳、前后帧关联及 96 张相机 JPEG 的
+路径、尺寸、完整解码和哈希。5.5 秒是仿真时间跨度，不是运行耗时。该审计独立于入口
+原有检查，回放结果仍不代表规划反馈或 GPU 对齐。检查命令为
 `python -m simengine_ascend.test_run_simulation`。
 
 英文说明提供了完整规划器命令和双进程启动格式。运行前需落实以下路径：
@@ -116,6 +124,15 @@ cd "$SIM_ROOT"
 - 模型配置、与配置匹配的完整 checkpoint、原始轨迹词表。
 - 场景文件、渲染资产，以及本次作业独占的新输出目录。
 - 设备映射、实际镜像 ID，以及带时区的绝对截止时间。
+
+正式规划模型应使用匹配的官方完整配置与权重。以下路径均相对于外部 AlgEngine 根目录：
+
+| 模型 | 配置 | 完整 checkpoint |
+| --- | --- | --- |
+| VADv2 | `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py` | `data/alg_engine/ckpts/vadv2/e2e_vadv2_100pct_ep8.pth` |
+| HydraMDP | `projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py` | `data/alg_engine/ckpts/hydramdp/e2e_hydramdp_100pct_ep8.pth` |
+
+两者均使用原始 `data/alg_engine/test_8192_kmeans.npy` 轨迹词表。闭环专用数据集读取真实渲染 JPEG 和连续四帧元数据，不用训练标注或此前 139 样本小集替代输入；上游闭环推理使用的零值 PDM 占位数组不代表评分结果。英文命令显式设置 `--wait-timeout 600`，用于等待真实原尺寸场景的初始及后续帧，绝对截止时间仍生效。
 
 checkpoint 使用严格参数检查。单独的 LoRA 增量权重需要先按对应模型的正式流程
 合并为完整权重，不能直接作为完整 checkpoint 传入。
@@ -157,6 +174,8 @@ leader PID，清理其原进程组后再回收；leader 已退出时仍会清理
 清理只处理当前规划器创建的具体文件，保留渲染记录和帧输入。
 
 ## 结果与验收
+
+公开 CPU 审计工具已通过 11 项 Linux CPU 夹具，并实际核验了本轮 NR/R 两个窗口；帧与图像清单检查独立于回放入口。[复核命令和输入约束](../docs/simengine_ascend_assessment_zh.md#复核回放窗口)说明 NR/R 输出的目录结构、固定的准备/源码 SHA-256，以及只读输入目录之外的新报告文件。
 
 `plan_traj/closed_loop_planner_report.json` 记录实际预测次数、严格加载结果、
 输入配置和权重哈希、最后轨迹的索引和哈希、源码来源、精度状态及设备映射。
