@@ -33,12 +33,40 @@ def assert_module_origins(root,require_plugin=False):
     for name,module in list(sys.modules.items()):
         package=name.split('.')[0]
         if package not in expected:continue
+        boundary=expected[package].resolve(strict=True)
+        if not boundary.is_relative_to(root):
+            raise RuntimeError('Adaptation package escapes the selected checkout: '+name)
+        spec=getattr(module,'__spec__',None)
         filename=getattr(module,'__file__',None)
+        module_paths=getattr(module,'__path__',None)
+        spec_paths=getattr(spec,'submodule_search_locations',None)
+        locations=None
+        if module_paths is not None or spec_paths is not None:
+            if module_paths is None or spec_paths is None or getattr(spec,'name',None)!=name:
+                raise RuntimeError('Adaptation package has inconsistent search-path metadata: '+name)
+            try:
+                locations=[Path(value).resolve(strict=True) for value in module_paths]
+                declared=[Path(value).resolve(strict=True) for value in spec_paths]
+            except (OSError,TypeError,ValueError) as error:
+                raise RuntimeError('Adaptation package has invalid search paths: '+name) from error
+            if (not locations or locations!=declared or len(set(locations))!=len(locations)
+                    or any(not path.is_dir() or not path.is_relative_to(boundary) for path in locations)):
+                raise RuntimeError('A CUDA/foreign package search path shadows the selected adaptation: '+name)
         if filename is None:
-            raise RuntimeError('Adaptation module has no auditable file origin: '+name)
-        path=Path(filename).resolve()
-        if not path.is_relative_to(expected[package]):
+            # PEP 420 namespace packages have no __file__.  Audit both import
+            # search-path views instead of treating their missing file as an
+            # exemption from the selected checkout's source boundary.
+            namespace_dir=expected[package].joinpath(*name.split('.')[1:]).resolve(strict=True)
+            if (spec is None or getattr(spec,'origin',None) is not None
+                    or getattr(spec,'has_location',True) or locations!=[namespace_dir]):
+                raise RuntimeError('Adaptation module has no auditable namespace origin: '+name)
+            loaded[name]=dict(kind='namespace_package',search_locations=[str(path) for path in locations])
+            continue
+        path=Path(filename).resolve(strict=True)
+        if not path.is_relative_to(boundary):
             raise RuntimeError('A CUDA/foreign module shadows the selected adaptation: '+name+' '+str(path))
+        if locations is not None and locations!=[path.parent]:
+            raise RuntimeError('Adaptation package search path differs from its file origin: '+name)
         loaded[name]=str(path)
     if require_plugin and 'mmdet3d_plugin' not in loaded:
         raise RuntimeError('The selected adapted planning plugin was not imported')
