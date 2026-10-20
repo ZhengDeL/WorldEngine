@@ -37,6 +37,7 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 | --- | --- | --- |
 | 依赖环境 | 公开组合镜像的应用、所选 SDK 工具、原 CANN 重加载三项 CPU 检查通过；两个未过滤的 `pip check` 均退出0 | CPU通过不代表冷缓存 NPU 业务或全部可选 SDK 工具已验收 |
 | NAVTRAIN139 / NAVTEST22 | 公开 CLI 从六个官方原文件重建；1832张 JPEG 完整 SHA/解码通过；六份派生元信息完整值、顺序及字节均与原子集一致 | 一个训练日志、一个评价日志；完整 NAVTRAIN 收敛和完整 NAVTEST 质量待验收 |
+| 完整 NAVTRAIN 输入：10月20日 | [103,288 个锚点和 1,219,960 张所需 JPEG](results/full-navtrain-inputs-20261020.json)完成 CPU 覆盖、逐文件内容哈希和解码检查；标注、历史图像及 PDM 无缺项 | 仅输入检查；检查器峰值 RSS 51.99 GB 不能作为训练内存预算，完整训练与收敛仍待验证 |
 | CUDA-compatible MSDA | [MX/MMCV常规入口及MMCV raw-L4布局](results/npu-cuda-msda-20261017.json)满足原CUDA容差；独立CPU32超差结果保留；新CUDA金样导出到NPU的工具复现已完成 | FP32/C32、已测形状与一阶梯度 |
 | CUDA-compatible VADv2／HydraMDP，FP32，10 月 18 日 | [16 rank 同前缀两步对照](results/cuda-compatible-fp32-strict16-resume2-20261018.json)：模型／全部张量对 889／1698、909／1778，均满足 `torch.equal`，最大张量差和 loss 差为 0 | 共享连续前缀，实际 32 个当前锚点；不代表独立初始化、更长训练或质量验收 |
 | CUDA-compatible VADv2／HydraMDP，FP32／BF16 | [2次更新、精确自身状态恢复、DDP4推理及官方评分](results/cuda-compatible-navtrain139-short2-20261017.json)，每组4rank | 实际8个训练锚点；四组复用同22评价锚点。不代表收敛、质量等价或16rank严格重放通过 |

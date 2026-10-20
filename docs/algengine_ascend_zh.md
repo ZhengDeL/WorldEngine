@@ -13,6 +13,7 @@ WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimE
 | 构建运行环境 | [公开父镜像](../ascend/docker/README_zh.md)，再构建[应用与编译工具依赖环境](../ascend/docker/dependency_repair/README_zh.md) |
 | 选择性下载官方数据和权重 | `ascend/tools/download_algengine_assets.py` |
 | 固定官方数据子集 | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README_zh.md)；原 NAVTEST-only mini 路径在第3节保留 |
+| 完整 NAVTRAIN 输入的 CPU 检查 | `ascend/tools/verify_navtrain_inputs.py`；见[完整输入检查](#完整-navtrain-输入的-cpu-检查) |
 | 按原配置训练 | `ascend/run_container.py --config ...` |
 | NPU 训练与评价脚本 | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`、`e2e_dist_eval_npu.sh` |
 | 完整断点续训 | 原训练参数，加 `--resume ...` 和新输出目录 |
@@ -405,6 +406,35 @@ bash projects/AlgEngine/scripts/e2e_dist_train_npu.sh \
 该前端调用同一 NPU launcher，在单台服务器使用指定数量的芯片，不会把 16 芯片解释成两台 8 GPU 服务器。实际芯片不是从 0 连续编号时，设置 `DEVICE_IDS`。完整数据训练应取消 `MINI_PREPARED`，改为导出 `DATA_ROOT="$DATA"`；两者只能选一个。
 
 ## 4. 按原 NAVTRAIN 50%／100% 配置训练
+
+### 完整 NAVTRAIN 输入的 CPU 检查
+
+[`verify_navtrain_inputs.py`](../ascend/tools/verify_navtrain_inputs.py)仅检查原始 NAVTRAIN 100% split。它复用所选源码的原 `inspect_phase`，核对全部锚点、当前帧与前三帧历史、8 个相机，以及各 PDM 数组的 8192 项形状和有限值。标注、PDM、词表整文件按官方锁定值校验；每张所需 JPEG 均计算内容 SHA-256，再执行 verify、重新打开和完整解码。公开 CLI 还要求原始 1920×1080 RGB JPEG。该工具不加载模型，也不检查 NAVTEST、地图或独立评分 cache；评价输入仍需执行下方 preflight。
+
+输出目录必须全新，并放在源码和数据目录之外。以下容器仅使用 CPU，没有任何加速器设备挂载，镜像 ID 沿用第 1 节的核验值。环境需有 `preflight.py` 使用的 MMCV、NumPy、PyYAML，以及解码所需的 Pillow。
+
+```bash
+: "${DEADLINE_UTC:?Set a future UTC cutoff, including Z or +00:00}"
+QC_DIR="$WORK/navtrain100_inputs"
+mkdir "$QC_DIR"
+
+docker run --rm --runtime runc --network none --memory 128g --cpus 8 \
+  -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
+  -v "$SOURCE:/source:ro" -v "$DATA:/data:ro" -v "$QC_DIR:/output:rw" -w /source \
+  "$IMAGE_ID" /opt/conda/envs/bevformer/bin/python ascend/tools/verify_navtrain_inputs.py \
+    --source /source --data-root /data \
+    --config projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py \
+    --decode-workers 4 --output /output/navtrain100.json \
+    --deadline-utc "$DEADLINE_UTC" --stop-file /output/STOP
+```
+
+同时检查退出码与 `navtrain100.json`。通过条件包括 `actual_exit=0`、`result=pass_complete_original_NAVTRAIN_inputs_and_required_JPEG_decode_CPU_only`、错误列表为空、请求与选中锚点一致、标注/图像/PDM 无缺失或无效项，以及 `decoded=decode_passed=unique_required_JPEGs`、`decode_failed=0`。完成的 `navtrain100.json.images.jsonl` 逐文件记录相对路径、内容 SHA-256 和解码结果；报告还保存该清单的摘要、源码/配置/filter/资产身份，以及前后内存和设备状态。残留 `.part` 或中断/拒绝报告不能作为完整覆盖结果。
+
+截止时间必填，必须为未来的显式 UTC 时间，不再限制到某个固定日期。创建 `$QC_DIR/STOP` 可请求协同停止。4 个解码 worker 最多排队 8 个 future。容器的 128g 限额用于输入检查；此前检查器峰值 RSS 约 51.99 GB 仅作参考，不能作为训练内存预算。
+
+[10 月 20 日完整数据结果](../ascend/results/full-navtrain-inputs-20261020.json)覆盖 103,288 个锚点和 1,219,960 张所需 JPEG，实际使用的是原私有检查器，其 SHA-256 为 `453d8e893ccef3720b4323e12e6c862f0fdee5020b85384c3ef37e1b3c31ab0b`，原报告 SHA-256 为 `882d5a98a5476b7ae135cd9b33a3c37f6c65fa7d3ef3d5a7c36d6d7bfdf72284`。公开 CLI 保留检查算法，目前只完成 14 项本地合成 CPU 夹具，尚未重复全量运行。新增截止控制、CPU 门禁和显式图像尺寸门禁，不计作新的全量数据或 NPU 训练验收。夹具命令为 `python -m unittest discover -s ascend/tools -p test_verify_navtrain_inputs.py -v`。
+
+### 训练与评价 preflight
 
 完整训练前先检查标注、当前／历史图片、PDM、词表、地图及独立 NAVTEST 评分 cache。`CACHE` 必须覆盖配置所需的 NAVTEST token，包含官方 NAVSIM payload 和 `metadata/*.csv` 索引。`alg_engine/pdms_cache/` 下的标签 PDM 是另一类输入，不能替代这个独立评分 cache。
 

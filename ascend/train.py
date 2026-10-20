@@ -25,6 +25,34 @@ PROFILES = {
 
 
 
+def _resolve_dataset_filter_paths(cfg, alg_root):
+    """Resolve configured filters before runtime hashing or changing cwd."""
+    alg_root = Path(alg_root).resolve(strict=True)
+
+    def resolved_file(value, field):
+        if not isinstance(value, (str, Path)):
+            raise TypeError('%s must contain a file path' % field)
+        if isinstance(value, str) and not value.strip():
+            raise ValueError('%s must not be empty' % field)
+        path = Path(value)
+        path = (path if path.is_absolute() else alg_root / path).resolve(strict=True)
+        if not path.is_file():
+            raise FileNotFoundError('%s is not a regular file: %s' % (field, path))
+        return str(path)
+
+    for phase in ('train', 'val', 'test'):
+        dataset = cfg.data[phase]
+        if dataset.get('nav_filter_path') is not None:
+            dataset['nav_filter_path'] = resolved_file(dataset['nav_filter_path'], phase+'.nav_filter_path')
+        rare = dataset.get('finetune_yaml')
+        if rare is not None:
+            if isinstance(rare, (str, Path)):
+                rare = [rare]
+            elif not isinstance(rare, (list, tuple)):
+                raise TypeError('%s.finetune_yaml must be a path or path list' % phase)
+            dataset['finetune_yaml'] = [resolved_file(value, phase+'.finetune_yaml') for value in rare]
+
+
 def _validate_stop_options(args, parser):
     """Reject stop settings that the selected runner cannot honor."""
     import math
@@ -229,6 +257,7 @@ def main():
         cfg.data.train.synthetic_root=str(root)
     for phase in ('train','val','test'):
         cfg.data[phase].strict_pdm=needs_pdm
+    _resolve_dataset_filter_paths(cfg, ALG)
     if cfg.get('evaluation', {}).get('pipeline'):
         cfg.evaluation.pipeline[0].img_root = cfg.data.test.pipeline[0].img_root
     if args.steps is not None:
@@ -270,7 +299,7 @@ def main():
                         torch_version=str(torch.__version__),torch_npu_version=torch_npu.__version__,
                         torch_npu_git_version=getattr(getattr(torch_npu,'version',None),'git_version',None),
                         deterministic=args.deterministic,
-                        rare_filters=[digest(x) for x in cfg.data.train.get('finetune_yaml',[])])
+                        rare_filters=[digest(x) for x in (cfg.data.train.get('finetune_yaml') or [])])
         cfg.runner.type='AscendIterRunner' if args.steps else 'AscendEpochRunner'
         cfg.runner.resume_contract=contract
         cfg.optimizer_config=dict(grad_clip=dict(max_norm=35,norm_type=2))

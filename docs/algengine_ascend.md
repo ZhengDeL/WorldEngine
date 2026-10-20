@@ -13,6 +13,7 @@ WorldEngine contains **AlgEngine**, for model training and evaluation, and **Sim
 | Build the runtime | [Public parent recipe](../ascend/docker/README.md), then [dependency environment](../ascend/docker/dependency_repair/README.md) |
 | Download selected official assets | `ascend/tools/download_algengine_assets.py` |
 | Prepare the fixed official-data subset | [NAVTRAIN139 / NAVTEST22](../ascend/data_tools/navtrain139/README.md); the alternative NAVTEST-only mini remains in section 3 |
+| Audit complete NAVTRAIN inputs on CPU | `ascend/tools/verify_navtrain_inputs.py`; see [full-input checks](#cpu-audit-of-complete-navtrain-inputs) |
 | Train a published configuration | `ascend/run_container.py --config ...` |
 | Original-style shell frontends | `projects/AlgEngine/scripts/e2e_dist_train_npu.sh`, `e2e_dist_eval_npu.sh` |
 | Resume complete training state | The same training arguments plus `--resume ...` and a new output directory |
@@ -403,6 +404,35 @@ bash projects/AlgEngine/scripts/e2e_dist_train_npu.sh \
 The frontend runs on the same single host and uses the NPU launcher. Sixteen chips are not interpreted as two eight-GPU nodes. Set `DEVICE_IDS` if the desired host chip IDs differ from the first `num_chips` IDs. For full data, unset `MINI_PREPARED` and export `DATA_ROOT="$DATA"`; `DATA_ROOT` and `MINI_PREPARED` are mutually exclusive.
 
 ## 4. Train on the original 50% or 100% NAVTRAIN split
+
+### CPU audit of complete NAVTRAIN inputs
+
+[`verify_navtrain_inputs.py`](../ascend/tools/verify_navtrain_inputs.py) checks only the original 100% NAVTRAIN split. It reuses the checkout's original `inspect_phase` for all selected anchors, current plus three history frames, eight camera channels and finite 8192-entry PDM arrays. It verifies the complete annotation/PDM/vocabulary files against the publisher lock, then hashes, verifies, reopens and fully decodes every unique referenced JPEG. The public CLI also requires original 1920×1080 RGB JPEGs. It neither loads a model nor checks NAVTEST, maps or metric-cache coverage; keep the broader preflight below for evaluation inputs.
+
+Use a new output directory outside the source/data roots and a CPU-only container. This command deliberately exposes no accelerator devices and uses the verified image ID from section 1. The installed environment needs MMCV/NumPy/PyYAML for `preflight.py` and Pillow for decoding.
+
+```bash
+: "${DEADLINE_UTC:?Set a future UTC cutoff, including Z or +00:00}"
+QC_DIR="$WORK/navtrain100_inputs"
+mkdir "$QC_DIR"
+
+docker run --rm --runtime runc --network none --memory 128g --cpus 8 \
+  -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
+  -v "$SOURCE:/source:ro" -v "$DATA:/data:ro" -v "$QC_DIR:/output:rw" -w /source \
+  "$IMAGE_ID" /opt/conda/envs/bevformer/bin/python ascend/tools/verify_navtrain_inputs.py \
+    --source /source --data-root /data \
+    --config projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py \
+    --decode-workers 4 --output /output/navtrain100.json \
+    --deadline-utc "$DEADLINE_UTC" --stop-file /output/STOP
+```
+
+Inspect the process exit code and `navtrain100.json`. Acceptance requires `actual_exit=0`, `result=pass_complete_original_NAVTRAIN_inputs_and_required_JPEG_decode_CPU_only`, an empty error list, matching requested/selected counts, zero missing/invalid annotation/image/PDM entries, and `decoded=decode_passed=unique_required_JPEGs` with `decode_failed=0`. The completed `navtrain100.json.images.jsonl` records every relative path, content SHA256 and decode result; the JSON also binds its digest, source/config/filter/asset identities and before/after memory/device states. A `.part` ledger or an interrupted/rejected report is not complete coverage.
+
+The deadline is mandatory, timezone-aware UTC and must be in the future; it has no project-specific calendar cap. Create `$QC_DIR/STOP` to request a cooperative stop. Four decode workers keep at most eight futures queued. The 128g container limit is an input-inspection setting. The earlier inspector peaked at approximately 51.99 GB RSS, which is a reference measurement rather than a training RAM budget.
+
+The [October 20 full-data result](../ascend/results/full-navtrain-inputs-20261020.json) covers 103,288 anchors and 1,219,960 required JPEGs. That actual run used the original private worker SHA256 `453d8e893ccef3720b4323e12e6c862f0fdee5020b85384c3ef37e1b3c31ab0b`; its raw report SHA256 is `882d5a98a5476b7ae135cd9b33a3c37f6c65fa7d3ef3d5a7c36d6d7bfdf72284`. The public CLI retains the inspection algorithms and has passed 14 local synthetic CPU fixtures; a complete-data run of this CLI has not been repeated. Its deadline/CPU guards and explicit image-dimension gate must not be presented as new full-data or NPU training acceptance. Run `python -m unittest discover -s ascend/tools -p test_verify_navtrain_inputs.py -v` for those fixtures.
+
+### Training and evaluation preflight
 
 First validate full annotations, current/history images, PDM entries, vocabulary, maps and the independent NAVTEST metric cache. `CACHE` must contain official NAVSIM cache payloads covering the configured NAVTEST tokens and their `metadata/*.csv` index. The label PDM cache under `alg_engine/pdms_cache/` is a different input and cannot substitute for this cache.
 
