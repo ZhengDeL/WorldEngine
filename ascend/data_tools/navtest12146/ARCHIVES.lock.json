@@ -1,0 +1,202 @@
+{
+  "dataset": "OpenDriveLab/OpenScene",
+  "huggingface_revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+  "modelscope_revision": "9439af9e240a950dd0b6862ce3bc34233c5d8690",
+  "member_prefix": "openscene-v1.1/sensor_blobs/test",
+  "archive_count": 32,
+  "total_bytes": 127882665618,
+  "files": [
+    {
+      "file": "openscene_sensor_test_camera_0.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_0.tgz",
+      "bytes": 3684746149,
+      "sha256": "fd8e8b7a52dc48f25ce5d4d0fd05e5771c1fcbf87df20691912b3b51cf8998c9"
+    },
+    {
+      "file": "openscene_sensor_test_camera_1.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_1.tgz",
+      "bytes": 3370355258,
+      "sha256": "9ad4064370c510c4d157a678d6f9ef98ffa0e9d44a3cf880d77fc1773f78c734"
+    },
+    {
+      "file": "openscene_sensor_test_camera_2.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_2.tgz",
+      "bytes": 3626083094,
+      "sha256": "820027919f132a8e0f67aac61d66bcbe59f0fdb2d55e5a8523830fafcbb8df54"
+    },
+    {
+      "file": "openscene_sensor_test_camera_3.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_3.tgz",
+      "bytes": 8642383588,
+      "sha256": "78558917eb6710cc571121bb85fa269e9aeeb6401d9b9d5fb22d6a19008074b4"
+    },
+    {
+      "file": "openscene_sensor_test_camera_4.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_4.tgz",
+      "bytes": 5459880010,
+      "sha256": "e9a901b93fa37ed4efbdfe8fb5ae1bb82989235b912cca208595b7e290f2580e"
+    },
+    {
+      "file": "openscene_sensor_test_camera_5.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_5.tgz",
+      "bytes": 5654176410,
+      "sha256": "0573da0557f7575afc902357a81c974a9560dba8959ee85fb4ed7c11d90afa93"
+    },
+    {
+      "file": "openscene_sensor_test_camera_6.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_6.tgz",
+      "bytes": 6213453844,
+      "sha256": "f38cb7566c3a979508b60320ffcd94c2a42633dab50ff46260aa43cd64641f35"
+    },
+    {
+      "file": "openscene_sensor_test_camera_7.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_7.tgz",
+      "bytes": 3361021387,
+      "sha256": "59ebb3f65f63499f9da3b26d9c430e5d6253e9d7bc5f4b1bcf86b3d9a911e5eb"
+    },
+    {
+      "file": "openscene_sensor_test_camera_8.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_8.tgz",
+      "bytes": 2737174084,
+      "sha256": "9f026e4a78d7ff73e1389b84c568d9af17b802d2df5fd4e2fe91a7412299e543"
+    },
+    {
+      "file": "openscene_sensor_test_camera_9.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_9.tgz",
+      "bytes": 3668289945,
+      "sha256": "5113f4bfb1f4ea235c41879e59ad523ae09784662de7a1030b8cdd5e1a0c8bdf"
+    },
+    {
+      "file": "openscene_sensor_test_camera_10.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_10.tgz",
+      "bytes": 4163706067,
+      "sha256": "918e9d698173056d54e73c97625cbffb89bf3b81627cbbb139850753a44491d7"
+    },
+    {
+      "file": "openscene_sensor_test_camera_11.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_11.tgz",
+      "bytes": 4335721652,
+      "sha256": "880c50e61c6a60870260b464ae4359a32998dfe7f90efe46e40ce34dc34ee8ec"
+    },
+    {
+      "file": "openscene_sensor_test_camera_12.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_12.tgz",
+      "bytes": 3293538547,
+      "sha256": "405d964e3a1e8c5b7a3b020d5b16c7aa86095784fbe551277fd2172b55d17a5e"
+    },
+    {
+      "file": "openscene_sensor_test_camera_13.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_13.tgz",
+      "bytes": 3190680624,
+      "sha256": "0a6d3ad333940da3d93788d86a97966cad075dace309fd2c1c23a91ba9e4c4b9"
+    },
+    {
+      "file": "openscene_sensor_test_camera_14.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_14.tgz",
+      "bytes": 5727484174,
+      "sha256": "b10787ea10b6a6876e9f7e05d23bb9f1df66e4bb202c4bec3cb8c8a5d38efce5"
+    },
+    {
+      "file": "openscene_sensor_test_camera_15.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_15.tgz",
+      "bytes": 2333261608,
+      "sha256": "95aee422d6129bc51ef4f99b6e1049b2d86d0e0b33587fa925259949fdcbb5ef"
+    },
+    {
+      "file": "openscene_sensor_test_camera_16.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_16.tgz",
+      "bytes": 3245595071,
+      "sha256": "269b6a3bdce8126ee422b4661418d3ebb3d50528defaf135a1366bcc41ff3096"
+    },
+    {
+      "file": "openscene_sensor_test_camera_17.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_17.tgz",
+      "bytes": 3752496368,
+      "sha256": "ce430b5ab0679cddf596ae8d2c8b41c945677016e835bc41b08ac079166773d3"
+    },
+    {
+      "file": "openscene_sensor_test_camera_18.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_18.tgz",
+      "bytes": 4301359960,
+      "sha256": "5816fb5216c2e07844ee80a0dd072ae88f60d454659709ba08c0943523f0bf5c"
+    },
+    {
+      "file": "openscene_sensor_test_camera_19.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_19.tgz",
+      "bytes": 2062047425,
+      "sha256": "c13da2ba74d77c85a847b0a5767b524ce793d7f45021cc520c3aa46c45860c16"
+    },
+    {
+      "file": "openscene_sensor_test_camera_20.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_20.tgz",
+      "bytes": 8611642334,
+      "sha256": "7e28641f24ae96b7398a71afa5e144348e6b741f1d096fb76349490ed79e5832"
+    },
+    {
+      "file": "openscene_sensor_test_camera_21.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_21.tgz",
+      "bytes": 3229214091,
+      "sha256": "89fa3ad24a4e26d7767c91afa89adc2091e8ebaec864cb9f06c1aeaafb029f71"
+    },
+    {
+      "file": "openscene_sensor_test_camera_22.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_22.tgz",
+      "bytes": 3930542795,
+      "sha256": "07ca5eeadfa1fd823c8795fb71e99dd96f95f9c7c910888a7bd319ee7ff7e2e8"
+    },
+    {
+      "file": "openscene_sensor_test_camera_23.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_23.tgz",
+      "bytes": 2703126184,
+      "sha256": "3044d9c1d453984ffff8bf60ccea6a18c21787127138304a71bc148cc752ce9f"
+    },
+    {
+      "file": "openscene_sensor_test_camera_24.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_24.tgz",
+      "bytes": 5514880549,
+      "sha256": "7073eee2cab714da5bd213cf3d875fa71b20452bc6ae414ec5b4990303665d4b"
+    },
+    {
+      "file": "openscene_sensor_test_camera_25.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_25.tgz",
+      "bytes": 2119074450,
+      "sha256": "ed3c301fea5c95731cd2ea1146bca5f8157ecb6dd4e6edb24ea1b927d57bdebb"
+    },
+    {
+      "file": "openscene_sensor_test_camera_26.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_26.tgz",
+      "bytes": 3777609783,
+      "sha256": "7f48e0934e7d79276c142b463e7eaa812d83f5a5b61819e20150a3d2759cccea"
+    },
+    {
+      "file": "openscene_sensor_test_camera_27.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_27.tgz",
+      "bytes": 2879193968,
+      "sha256": "4f5c3af2e109d3b0279164b39ef1f247cea6f1030639b4c6003ba62cb4bc8ee5"
+    },
+    {
+      "file": "openscene_sensor_test_camera_28.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_28.tgz",
+      "bytes": 3788614736,
+      "sha256": "77279f8b5fe68a3e538d45d19091a06f891a4cdeb018047db1ef78349546ff96"
+    },
+    {
+      "file": "openscene_sensor_test_camera_29.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_29.tgz",
+      "bytes": 2410521159,
+      "sha256": "d60b46a46318cf34254b48905b862fb2fc43d4f25d1e6aa43f105fd562242361"
+    },
+    {
+      "file": "openscene_sensor_test_camera_30.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_30.tgz",
+      "bytes": 1629921998,
+      "sha256": "67a9c6ca0cb7ed650e93e2790425f8676f4749125e72f6f9f9f003eedfc36c57"
+    },
+    {
+      "file": "openscene_sensor_test_camera_31.tgz",
+      "url": "https://www.modelscope.cn/datasets/OpenDriveLab/OpenScene/resolve/9439af9e240a950dd0b6862ce3bc34233c5d8690/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_31.tgz",
+      "bytes": 4464868306,
+      "sha256": "037b398a105be48ac09b77d56ac875748b8dfdbaa3cf62ebd431efebcff67626"
+    }
+  ]
+}

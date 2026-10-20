@@ -1,0 +1,418 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-20",
+  "evidence_as_of_utc": "2026-10-20T06:54:29.899742+00:00",
+  "result": "pass_bounded_FP32_official_NAVTEST22_journal_interruption_and_positive_position_recovery",
+  "public_summary_is_runtime_manifest": false,
+  "scope": "AlgEngine vocabulary-planning inference progress only; VADv2 and HydraMDP FP32, official22-anchor selection, one node/world16.",
+  "accepted_precisions": [
+    "fp32"
+  ],
+  "other_precision_followup_deferred": true,
+  "performance_optimization_deferred": true,
+  "hardware": {
+    "platform": "Ascend 910C / Atlas 800I A3",
+    "nodes": 1,
+    "physical_cards_used": 8,
+    "logical_NPU_chips_used": 16,
+    "world_size": 16,
+    "batch_per_rank": 1,
+    "data_loader_workers": 0,
+    "host_chip_mount_order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "container_logical_chips": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "device_count_is_not_GPU_equivalence": true
+  },
+  "runtime": {
+    "source_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "source_python_files": 245,
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "precision_mode": "fp32",
+    "msda_backend": "cuda-compatible",
+    "deterministic": false,
+    "journal_schema": 2,
+    "result_digest_format": "typed-result-v1",
+    "additional_instrumentation": true,
+    "wrapper_sha256": "ad9d6429929305cb9054aab9df78b3ea9425ce7caa9af2de695ac42a350afe46",
+    "journal_core_sha256": "f92e2fe35f428be30851c272921c450582e5b2c5846297b415385e13f8dfe4c4",
+    "host_supervisor_sha256": "a8c12919bd35fd3202be9b55564aca283f41e46476866da57d7b4c59ea23907c",
+    "base_helpers_sha256": "6311862d96c2a5f68e34a03f4fde04af405fea75f5d2049c0b23c9fae090a18c",
+    "original_controller_sha256": "586fd8673fcafb030fb4fbb822a9c1925c07b1f86e5a139e058bd3e12ef03909",
+    "four_route_auditor_sha256": "fcb3c383edf730d2729ff951106a51866dae445102cabe7eb41e97b6c8ca53a8",
+    "positive_position_auditor_sha256": "58ee1d5fe96ee58c4fc9c7e54ea389f0b0191208c8e4d68acdafce6d58eaf7ec"
+  },
+  "data": {
+    "origin": "Official WorldEngine NAVTEST annotation/images/PDM/vocabulary; ordered first22 tokens of the full official filter.",
+    "separately_published_standard_mini": false,
+    "anchors": 22,
+    "world_size": 16,
+    "sampler_positions_per_rank": 2,
+    "padded_positions": 32,
+    "padding_positions": 10,
+    "original_output_rows": 22,
+    "current_plus_history_frames_per_anchor": 4,
+    "cameras_per_frame": 8,
+    "trajectory_shape": [
+      40,
+      3
+    ],
+    "vocabulary_entries": 8192,
+    "diagnostic_filter_sha256": "446bfb797dbd747ae79673036b14e0659459276275e04c04401624d0d87e2097",
+    "official_full_filter_sha256": "61284edf5003c0291f843ce9817c822ba306609a62d54544223adae3fc7fc9cd",
+    "input_QC_report_sha256": "0d89913d74eac8e5627719dab03d7ba8b354cda6b09d29433e8adf3f19dc6586",
+    "input_QC_scope": {
+      "anchors": 12146,
+      "logs": 136,
+      "required_JPEGs": 142976,
+      "geometry": [
+        1920,
+        1080
+      ],
+      "mode": "RGB",
+      "this_is_full_input_evidence_not_model_processed_count": true
+    },
+    "official_input_files": {
+      "alg_engine/merged_infos_navformer/nuplan_openscene_navtest.pkl": {
+        "bytes": 848516627,
+        "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+      },
+      "alg_engine/pdms_cache/pdm_8192_gt_cache_navtest.pkl": {
+        "bytes": 2791314758,
+        "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+      },
+      "alg_engine/test_8192_kmeans.npy": {
+        "bytes": 3932288,
+        "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+      }
+    }
+  },
+  "comparison": {
+    "ordered_final_outputs": "All fields, types, ndarray dtype/shape/raw bytes and scalar bits exact against the original uninstrumented baseline.",
+    "RNG": "Exact Python, NumPy, Torch CPU and NPU initial/per-step state comparison between the two journal routes; baseline has no per-step RNG trace.",
+    "padding": "Original DistributedSampler order/padding and MMDetection collector are preserved.",
+    "dtype": "FP32 mode; exact output dtype equality is tested. This is not a uniform dtype claim for every operation.",
+    "serialization": "No requirement that different pickle serializations of equal typed values be byte-identical; stored payload bytes and receipt chains retain whole SHA checks."
+  },
+  "profiles": [
+    {
+      "model": "VADv2",
+      "precision": "fp32",
+      "repository_config": "projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py",
+      "measured_filter_only_config_sha256": "f91fd0dd9760958bd2acb02f0d9d4027e335fd1f9493ad643d1451a02400d15c",
+      "checkpoint": {
+        "origin": "official_published_100_percent_planning_checkpoint",
+        "basename": "e2e_vadv2_100pct_ep8.pth",
+        "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+        "local_training_checkpoint_used": false
+      },
+      "four_routes": {
+        "result": "pass_exact_22_anchor_original_uninterrupted_and_resumed_journal_comparison",
+        "evidence_sha256": "3ebdd228c6b08e9773d3f8b1e1df4280149897458f8e06af1f209d58d499f89c",
+        "recorded_utc": "2026-10-20T06:02:54.401964+00:00",
+        "phases": [
+          {
+            "phase": "baseline_original",
+            "actual_container_id": "e939126d0393db1e5ca26fdfff8aeb9bac6395b814dda0669f2c13db11996e08",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": null,
+            "adopted_existing": true,
+            "outer_return_not_reaped": true,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_uninterrupted",
+            "actual_container_id": "5a25384e8b44532f8b30c39f1ca87321ee2a41956524a475a6c0e569596d5e6d",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": null,
+            "adopted_existing": true,
+            "outer_return_not_reaped": true,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_stop1",
+            "actual_container_id": "dd2607e493c038f10202a6163c0c8cc0c862a59deb90030fee336af20d89c61c",
+            "actual_container_exit": 1,
+            "expected_host_supervisor_return": 3,
+            "actual_host_supervisor_return": null,
+            "adopted_existing": true,
+            "outer_return_not_reaped": true,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_resume",
+            "actual_container_id": "5242abc52fdd5e6c2111b819d40f0bf9f7c20a063fb6889e0a1cd6063e094ced",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": null,
+            "adopted_existing": true,
+            "outer_return_not_reaped": true,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          }
+        ],
+        "ordered_output_all_fields_exact": true,
+        "initial_and_per_step_four_RNG_exact_between_journals": true,
+        "baseline_per_step_RNG_available": false,
+        "all_16_rank_checks_passed": true,
+        "steps_per_rank": 2,
+        "paused_prefix_unchanged": true,
+        "selected_file_hashes_verified": 283,
+        "CPU_audit_container_id": "a716f2bb06ffa8c427de9340ee7b323883e56eb30f436438ce69baf89dcb470f",
+        "CPU_audit_exit": 0,
+        "CPU_no_devices_runc_network_none": true
+      },
+      "positive_position": {
+        "result": "pass_positive_resume_position1_exact_original_outputs_and_unchanged_journal",
+        "evidence_sha256": "89463a238e344d15695c9e896ce40a72c96bfbb3eb9d42ad677c3db0f6c97e87",
+        "recorded_utc": "2026-10-20T06:45:36.803334+00:00",
+        "actual_NPU_container_id": "a83283e6e9f2d1d0d9be5bc88a159a8d97b624ace0e536e9d48e29b178ffb593",
+        "actual_NPU_container_exit": 0,
+        "actual_outer_supervisor_return": null,
+        "stopped": true,
+        "OOMKilled": false,
+        "exact_owned_cleanup_verified": true,
+        "CPU_audit_container_id": "518aa0e4c0f8642823d4796ad8f2586c083e89ce69a24d87ea697fe98c5424e3",
+        "CPU_audit_exit": 0,
+        "CPU_no_devices_runc_network_none": true,
+        "common_resume_step": 1,
+        "committed_before_per_rank": 2,
+        "committed_after_per_rank": 2,
+        "skipped_saved_positions_per_rank": 1,
+        "skipped_saved_positions_total": 16,
+        "forward_steps_per_rank": 1,
+        "replayed_exact_steps_per_rank": 1,
+        "new_committed_steps_per_rank": 0,
+        "all_rank_prefixes": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "final_ordered_outputs_all_fields_exact": true,
+        "all_prior_283_file_hashes_unchanged": true,
+        "control_sha256": "260b4f07546db62f28a8c38a93dca8fc37fd0507d3e4a98e7c6d60b81a1c1217",
+        "probe_plan_sha256": "9fc97cc04b2f0f0cdf0c62c988fce68ce8a7f6977447d543c0155ddb55079a2e",
+        "actual_identity_receipt_sha256": "afbe5e779785a80d770992a9a03755bbcda7567c86aac437e77b94bb927c0e5b"
+      }
+    },
+    {
+      "model": "HydraMDP",
+      "precision": "fp32",
+      "repository_config": "projects/AlgEngine/configs/hydramdp/e2e_hydramdp_100pct.py",
+      "measured_filter_only_config_sha256": "66d22c002e42af8dbc314d862684e85e3acdc377cc1d7d62cb439516d9d9aa1f",
+      "checkpoint": {
+        "origin": "official_published_100_percent_planning_checkpoint",
+        "basename": "e2e_hydramdp_100pct_ep8.pth",
+        "sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+        "local_training_checkpoint_used": false
+      },
+      "four_routes": {
+        "result": "pass_exact_22_anchor_original_uninterrupted_and_resumed_journal_comparison",
+        "evidence_sha256": "02ed2691d76fd6deec11598228d47ade8af58eb607960dcd4da23d25764cffcb",
+        "recorded_utc": "2026-10-20T06:11:24.587155+00:00",
+        "phases": [
+          {
+            "phase": "baseline_original",
+            "actual_container_id": "690c06cc08222277cbd21b3df31fe6a6943073256e2f4f38f6e04df938367bd8",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": 0,
+            "adopted_existing": false,
+            "outer_return_not_reaped": false,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_uninterrupted",
+            "actual_container_id": "904ef95be8ee5b3b66e7d3aedaf02830012f0980c21ca8fcd53ff841f17efc6b",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": 0,
+            "adopted_existing": false,
+            "outer_return_not_reaped": false,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_stop1",
+            "actual_container_id": "22c1b8bae0ab784fb522a6d96cabbc1db712466613f7a098324f3107f6bbdfb3",
+            "actual_container_exit": 1,
+            "expected_host_supervisor_return": 3,
+            "actual_host_supervisor_return": 3,
+            "adopted_existing": false,
+            "outer_return_not_reaped": false,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          },
+          {
+            "phase": "journal_resume",
+            "actual_container_id": "cb76b5efe9c863d85e0b15bf63694259bb383877a56deff10dae66052c20c2ce",
+            "actual_container_exit": 0,
+            "expected_host_supervisor_return": 0,
+            "actual_host_supervisor_return": 0,
+            "adopted_existing": false,
+            "outer_return_not_reaped": false,
+            "stopped": true,
+            "OOMKilled": false,
+            "exact_owned_cleanup_verified_by_frozen_auditor": true
+          }
+        ],
+        "ordered_output_all_fields_exact": true,
+        "initial_and_per_step_four_RNG_exact_between_journals": true,
+        "baseline_per_step_RNG_available": false,
+        "all_16_rank_checks_passed": true,
+        "steps_per_rank": 2,
+        "paused_prefix_unchanged": true,
+        "selected_file_hashes_verified": 283,
+        "CPU_audit_container_id": "fe2312d31aac536c76188e7077f96c9807da935de474b25beea2589010d552e0",
+        "CPU_audit_exit": 0,
+        "CPU_no_devices_runc_network_none": true
+      },
+      "positive_position": {
+        "result": "pass_positive_resume_position1_exact_original_outputs_and_unchanged_journal",
+        "evidence_sha256": "61557abd5d4258df4f8570f484df410e37d3455b340bdc561df9ef597f89f413",
+        "recorded_utc": "2026-10-20T06:50:01.990898+00:00",
+        "actual_NPU_container_id": "cb07c1e8a00b18dee80f9157cf377cfc6fd7a333b9ca3662951a0a66285f0ed8",
+        "actual_NPU_container_exit": 0,
+        "actual_outer_supervisor_return": 0,
+        "stopped": true,
+        "OOMKilled": false,
+        "exact_owned_cleanup_verified": true,
+        "CPU_audit_container_id": "31e547f031bc00513719460fbaf77411589711763fd2866dcf54e68b396460dc",
+        "CPU_audit_exit": 0,
+        "CPU_no_devices_runc_network_none": true,
+        "common_resume_step": 1,
+        "committed_before_per_rank": 2,
+        "committed_after_per_rank": 2,
+        "skipped_saved_positions_per_rank": 1,
+        "skipped_saved_positions_total": 16,
+        "forward_steps_per_rank": 1,
+        "replayed_exact_steps_per_rank": 1,
+        "new_committed_steps_per_rank": 0,
+        "all_rank_prefixes": [
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "final_ordered_outputs_all_fields_exact": true,
+        "all_prior_283_file_hashes_unchanged": true,
+        "control_sha256": "aaf8c2296c2e68a1747c8c35dda2c7bad104f840c099139f6d98d2f390f174bf",
+        "probe_plan_sha256": "073e373f614bb66cc1496178f6482a543432429560c2cc8e8a1e65a9cef6d53a",
+        "actual_identity_receipt_sha256": "28a778a0613bde7d1e82585128c7c4cf6c2e58b3ba89a4eece2e10a3e368838a"
+      }
+    }
+  ],
+  "full_NAVTEST": {
+    "status": "launched_acceptance_pending",
+    "model": "VADv2",
+    "precision": "fp32",
+    "anchors": 12146,
+    "world_size": 16,
+    "positions_per_rank": 760,
+    "padded_positions": 12160,
+    "padding_positions": 14,
+    "started_utc": "2026-10-20T06:54:29.899742+00:00",
+    "start_receipt_sha256": "3901d8ce0b8828d8f120a2157aaca98997caa6ae48861f8e5e4b2739e25141c9",
+    "plan_manifest_sha256": "1d36d1ab7fa3a2edc4d4d9f55f90d75972f2eedd3d2d21e2b8da054d745c30ec",
+    "plan_sha256": "51985284d74989ce90e04ce6062d99b82c4b475be4b32d40d90167fe3edc4765",
+    "complete_inference_accepted": false,
+    "official_scores_accepted": false,
+    "paired_full_baseline_and_resumed_comparison_accepted": false
+  },
+  "acceptance_exclusions": {
+    "full_NAVTEST_inference": false,
+    "official_NAVSIM_scores": false,
+    "training_checkpoint_recovery_proved_by_this_report": false,
+    "NAVTRAIN_convergence": false,
+    "GPU_NPU_parity": false,
+    "performance_or_long_duration_stability": false,
+    "other_precision_acceptance_transferred": false
+  },
+  "reproduction": {
+    "guide": "docs/algengine_journal.md",
+    "guide_zh": "docs/algengine_journal_zh.md",
+    "public_runtime_tools": [
+      "ascend/tools/journal_inference.py",
+      "ascend/tools/rank_journal.py"
+    ],
+    "runtime_requires_fresh_attempt_and_same_contract": true,
+    "host_controller_and_measurement_auditors_are_recorded_by_SHA_not_shipped_in_this_runtime_patch": true
+  },
+  "evidence": {
+    "raw_four_route_reports_are_local_operator_held": true,
+    "raw_positive_position_reports_are_local_operator_held": true,
+    "raw_deployment_paths_omitted": true,
+    "sequence_status_sha256": "7e87d78f0d5869a3e659b4ed8e65853df5b5252a51dc699355413eb559ede930",
+    "schema2_public_CPU27_receipt_sha256": "1cd9abe0356b6ea8530d1aedbcc3861af4fba982548604a9e324dc7946cd6c32"
+  }
+}

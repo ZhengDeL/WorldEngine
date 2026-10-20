@@ -6,6 +6,8 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 
 `ascend-910c-algengine` 分支提供 AlgEngine 的 NPU 训练、微调、断点恢复、推理和评价入口。SimEngine 保留原 GPU 仿真与渲染流程。
 
+当前 NPU 验证优先完成 FP32。下文保留历史其他精度记录，新推理 journal 结果不扩展那些记录的验收范围。
+
 ## 开始使用
 
 在 Linux ARM64 昇腾服务器按以下顺序操作：
@@ -26,8 +28,10 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 | [依赖环境](docker/dependency_repair/README_zh.md) | 公开 Docker 配方、应用/工具解释器分离、wheel 锁和 CPU 验收 |
 | [父镜像配方](docker/README_zh.md) | 官方 SDK 基座、post8 父镜像构建及离线转移 |
 | [NAVTRAIN139 / NAVTEST22](data_tools/navtrain139/README_zh.md) | 六个官方原始输入、固定子集筛选与 CPU 重建实测 |
+| [完整 NAVTEST CPU 输入检查](../docs/navtest_input_audit_zh.md) / [English](../docs/navtest_input_audit.md) | 公开 CLI、官方 32 包锁定清单、完整 JPEG 解码与[输入及账本实测记录](../docs/navtest_public_input_results_zh.md)（[JSON](results/full-navtest-public-inputs-20261020.json)） |
 | [验证报告](VALIDATION_zh.md) / [English](FULL_ALGENGINE.md) | 分版本模型结果、数值对照、资源需求与待验收项 |
 | [FP32 MSDA](MSDA_zh.md) | 实现、原前向/梯度门槛与复现方法 |
+| [规划推理断点续跑](../docs/algengine_journal_zh.md) / [English](../docs/algengine_journal.md) | 逐 rank journal、FP32 官方 22-anchor 恢复结果、五次运行复现与边界 |
 | [同步重放对照](execution/README_zh.md) | 历史八次更新 VAD/Hydra 专用对照 |
 | [SimScale 数据工具](data_tools/README_zh.md) | 真实小样本转换和两个合成配置的数据流程 |
 
@@ -40,6 +44,7 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 | 完整 NAVTRAIN 输入：10 月 20 日 | [103,288 个锚点和 1,219,960 张所需 JPEG](results/full-navtrain-inputs-20261020.json)完成 CPU 覆盖、逐文件内容哈希和解码检查；标注、历史图像及 PDM 无缺项 | 输入检查；检查器峰值 RSS 51.99 GB 不能作为训练内存预算，模型结果单列如下 |
 | 完整输入 VADv2／HydraMDP，FP32／BF16：10 月 20 日 | [四组均完成 8 次更新及精确自身 4→8 恢复](results/full-navtrain-short8-20261020.json)，使用 2 张物理卡的 4 个芯片／rank；32 份 rank 报告通过，8 份 checkpoint 保存的模型与 Adam Tensor 均为有限值 | 完整 loader 可用，各组实际使用同一组 32 个当前锚点；不代表完整 epoch、收敛、新检查点 GPU 对照或严格重放等价验收 |
 | 单芯片 FP32 容量：10 月 20 日 | [两类原 100% 模仿训练配置均完成 4 次更新](results/single-chip-capacity-20261020.json)，batch=1、完整 NAVTRAIN 输入，自有容器正常结束 | 实测分配 192g 内存／16 CPU；单进程峰值 RSS 分别为 50.69／50.79 GiB，不是最低内存或设备数，也不代表 BF16 容量与吞吐基准 |
+| FP32 推理 journal：10 月 20 日 | [VADv2／HydraMDP 均通过官方 22-anchor、16 rank 的四路线和第五次正位置恢复检查](results/fp32-navtest22-journal-recovery-20261020.json)。最终全部字段、两条 journal 的四源 RNG 一致；第五次每 rank 跳过 1 个已保存位置并重播 1 步 | 22 个 anchor、32 个含补齐位置，其中补齐 10 个；原基线没有逐步 RNG。完整 12,146-anchor 官方 VAD FP32 单独运行，尚未验收；不推导训练、GPU 或性能结论 |
 | 完整 NAVTEST 输入：10 月 20 日 | [12,146 个锚点、136 个日志及 142,976 张所需 JPEG](results/full-navtest-inputs-20261020.json)完成独立 CPU 输入、内容哈希和完整解码检查 | 输入证据供六组评价复用；六组完整模型推理及官方 NAVSIM 评分另行验收 |
 | CUDA-compatible MSDA | [MX/MMCV常规入口及MMCV raw-L4布局](results/npu-cuda-msda-20261017.json)满足原CUDA容差；独立CPU32超差结果保留；新CUDA金样导出到NPU的工具复现已完成 | FP32/C32、已测形状与一阶梯度 |
 | CUDA-compatible VADv2／HydraMDP，FP32，10 月 18 日 | [16 rank 同前缀两步对照](results/cuda-compatible-fp32-strict16-resume2-20261018.json)：模型／全部张量对 889／1698、909／1778，均满足 `torch.equal`，最大张量差和 loss 差为 0 | 共享连续前缀，实际 32 个当前锚点；不代表独立初始化、更长训练或质量验收 |
@@ -53,6 +58,8 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 2026-10-16实测修复镜像为 `sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48`。[构建记录](docker/dependency_repair/BUILD_VALIDATION.json)与[数据重建记录](data_tools/navtrain139/VALIDATION.json)列出实际输入和范围。重新构建的镜像、重新准备的数据都需要自身验证；文件同名不能替代断点兼容检查。
 
 ## 数据、权重与运行入口
+
+推理进度恢复使用 [schema2 journal 指南](../docs/algengine_journal_zh.md)。它记录逐 rank 的结果与 RNG，与模型／优化器训练 checkpoint 分别验收。本次 FP32 实测限定为两个原规划配置、官方 22 个 anchor 和 16 rank；完整推理及官方评分仍需满足各自的覆盖与缓存门槛。
 
 [完整输入短周期训练](../docs/algengine_ascend_zh.md#完整输入短周期训练)给出 10 月 20 日实测的 4 rank 参数，复现时使用新输出。两个 `e2e_*_100pct` 都是模仿训练配置，本轮没有启用 HydraMDP 策略梯度微调。服务器为 8 张双芯片物理卡、16 个芯片，本次矩阵使用其中 2 张物理卡的 4 个芯片。实测运行源码为 `0488bfb7…`／245 个 Python 文件，镜像 ID 沿用上文记录。
 

@@ -19,6 +19,8 @@
 
 The default MSDA backend is `reference`; select `--msda-backend cuda-compatible` for the optional [CUDA-compatible route](ascend/MSDA_CUDA.md).
 
+Full NAVTEST input validation: [CPU input guide](docs/navtest_input_audit.md) · [中文](docs/navtest_input_audit_zh.md) · [October 20 input and ledger record](docs/navtest_public_input_results.md) · [JSON](ascend/results/full-navtest-public-inputs-20261020.json).
+
 The `ascend-910c-algengine` branch adds NPU training, fine-tuning, complete
 checkpoint restoration, inference and evaluation entry points for AlgEngine.
 SimEngine retains its upstream GPU workflow.
@@ -31,6 +33,8 @@ SimEngine retains its upstream GPU workflow.
 The CUDA-compatible backend completed [VADv2 and HydraMDP in FP32/BF16](ascend/results/cuda-compatible-navtrain139-short2-20261017.json): two updates, full own-checkpoint restoration, DDP4 inference and independent official NAVSIM scoring. Each group used four logical NPUs. The configured official-data subset contains 139 training anchors; these runs consumed the same eight training anchors and evaluated the same 22 held-out anchors. See the [measured commands](ascend/MSDA_CUDA.md#training-own-checkpoint-resume-and-inference).
 
 The [October 18 FP32 control](ascend/results/cuda-compatible-fp32-strict16-resume2-20261018.json) additionally verified VADv2 and HydraMDP with 16 ranks × batch 1: continuous updates 0→2, then a fresh process resuming that same run’s update-1 checkpoint to update 2. All compared tensors satisfy `torch.equal`; maximum tensor and loss differences are zero. This same-prefix control uses 32 distinct current anchors from the configured 139 and adds no inference or scoring result. See the [source and checkpoint boundary](ascend/MSDA_CUDA.md#source-and-checkpoint-version-contract).
+
+The [October 20 FP32 inference-recovery result](ascend/results/fp32-navtest22-journal-recovery-20261020.json) covers VADv2 and HydraMDP on 22 official NAVTEST anchors and 16 ranks. Both completed original/uninterrupted/interrupted/resumed checks and a fifth position-1 recovery check: final output fields and two-journal RNG matched exactly, with saved prefixes unchanged. The original baseline has no per-step RNG trace. [English reproduction guide](docs/algengine_journal.md) / [中文](docs/algengine_journal_zh.md). Full 12,146-anchor official VAD FP32 inference was launched separately and is not accepted as complete in this result.
 
 The [validation report](ascend/FULL_ALGENGINE.md) retains earlier 16-rank/eight-update controls, completed numerical comparisons outside their original tolerances, BF16 gradient-coverage repairs and real-log fine-tuning results. Full NAVTRAIN convergence, full independent benchmark quality, untested synthetic inputs and general numerical reproducibility remain outside completed acceptance. Performance optimization is a separate workstream.
 
