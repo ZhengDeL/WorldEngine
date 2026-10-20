@@ -28,6 +28,7 @@ _REPOSITORY_ROOT = Path(__file__).resolve().parents[6]
 if str(_REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPOSITORY_ROOT))
 from simengine_ascend.file_protocol import atomic_pickle, wait_numpy
+from simengine_ascend.consumption_audit import ConsumptionAudit
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,7 @@ class NAVFormerClient(BaseClient):
         self.seq_index = []
         self.data_folder = Path(self.config["planner_client_folder"])
         self._traj_info = self.agent.object_track
+        self.consumption_audit = ConsumptionAudit.from_environment(self.agent, self.config)
 
     def get_trajectory(self, step: int):
         # for history frames, return log replay trajectory
@@ -96,12 +98,16 @@ class NAVFormerClient(BaseClient):
             self.config["planner_data_path"], f"{prefix}_{step + 1}.npy"
         )
 
-        ego_traj = wait_numpy(
-            traj_file_path,
-            timeout_seconds=float(self.config.get('planner_wait_timeout_seconds', 120)),
-            stop_file=self.config.get('planner_stop_file'),
-            deadline_utc=self.config.get('planner_deadline_utc'),
-        )
+        if self.consumption_audit is not None:
+            ego_traj, audited_read = self.consumption_audit.read_plan(
+                traj_file_path, float(self.config.get('planner_wait_timeout_seconds', 120)))
+        else:
+            ego_traj = wait_numpy(
+                traj_file_path,
+                timeout_seconds=float(self.config.get('planner_wait_timeout_seconds', 120)),
+                stop_file=self.config.get('planner_stop_file'),
+                deadline_utc=self.config.get('planner_deadline_utc'),
+            )
 
         ego_traj = np.concatenate([np.zeros((1, 3)), ego_traj], axis=0)
         ego_heading = ego_traj[:, 2]
@@ -156,12 +162,15 @@ class NAVFormerClient(BaseClient):
             local_angular_velocities, local_angular_velocities[-1]
         )
 
-        return Trajectory(
+        trajectory = Trajectory(
             waypoints=waypoints[::5],
             velocities=local_velocities[::5],
             headings=local_heading[::5],
             angular_velocities=local_angular_velocities[::5],
         )
+        if self.consumption_audit is not None:
+            self.consumption_audit.bind_plan(step, prefix, audited_read, trajectory)
+        return trajectory
 
     def process_frame(self, frame_data, step: int):
         frame_data = self._postprocess_frame_data(frame_data)
@@ -177,6 +186,8 @@ class NAVFormerClient(BaseClient):
         if not isinstance(record, dict):
             raise ValueError('Cannot publish a nonconsecutive/invalid processed frame')
         atomic_pickle(filepath, record)
+        if self.consumption_audit is not None:
+            self.consumption_audit.frame_published(step, filepath, record)
 
     @property
     def engine(self):

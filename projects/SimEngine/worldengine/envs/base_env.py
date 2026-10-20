@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Union, Tuple
 import traceback
+from contextlib import nullcontext
 
 from omegaconf import DictConfig
 
@@ -216,6 +217,14 @@ class BaseEnv:
 
         
     def step(self, actions):
+        audit = None
+        if self.config.use_planner_actions:
+            client = self.engine.managers['agent_manager'].ego_agent.client
+            audit = getattr(client, 'consumption_audit', None)
+        with audit.controlled_step(actions, self.engine) if audit is not None else nullcontext():
+            return self._step_original(actions)
+
+    def _step_original(self, actions):
         # prepare for stepping the simulation
         scene_manager_before_step_infos = self.engine.before_step(actions)
         # step all entities and the simulator

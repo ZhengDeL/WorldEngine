@@ -1,5 +1,5 @@
 """Reuse a separately pinned AlgEngine adaptation; never shadow it with CUDA code."""
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 import hashlib
 import os
 from pathlib import Path
@@ -82,6 +82,78 @@ def integration_identity(root):
     return {path.relative_to(root).as_posix():file_sha(path) for path in sorted(paths)}
 
 
+class Float32InferenceEvidence:
+    """Observe native outputs; never cast, copy or replace a computed Tensor."""
+    def __init__(self, model, torch, index):
+        self.model, self.torch, self.index = model, torch, index
+        self.handles, self.expected, self.observed = {}, set(), {}
+        self.before = self.parameters()
+        if (set(self.before['dtypes']) != {'torch.float32'}
+                or set(self.before['devices']) != {'npu:' + str(index)}):
+            raise RuntimeError('FP32 inference requires actual FP32 parameters on the selected NPU')
+        try:
+            self.install()
+        except BaseException:
+            self.close()
+            raise
+
+    def install(self):
+        model, torch = self.model, self.torch
+        for name, module in model.named_modules():
+            kind = 'Conv2d' if isinstance(module, torch.nn.Conv2d) else 'Linear' if isinstance(module, torch.nn.Linear) else None
+            if kind is None:
+                continue
+            self.expected.add(kind)
+            self.handles.setdefault(kind, [])
+            def observe(owner, args, output, name=name, kind=kind):
+                try:
+                    if not torch.is_tensor(output):
+                        raise RuntimeError('FP32 activation observer requires an original Tensor output')
+                    row = dict(module=name, class_name=type(owner).__module__ + '.' + type(owner).__qualname__,
+                               dtype=str(output.dtype), device=str(output.device), shape=list(output.shape),
+                               autocast_enabled=bool(torch.is_autocast_enabled('npu')),
+                               ambient_autocast_dtype=str(torch.get_autocast_dtype('npu')), training=bool(owner.training))
+                    if (row['dtype'] != 'torch.float32' or row['device'] != 'npu:' + str(self.index)
+                            or row['autocast_enabled'] or row['training']):
+                        raise RuntimeError('Actual FP32 inference activation/device/autocast contract differs')
+                    self.observed[kind] = row
+                    for handle in self.handles[kind]:
+                        handle.remove()
+                    self.handles[kind] = []
+                except BaseException:
+                    self.close()
+                    raise
+            self.handles[kind].append(module.register_forward_hook(observe))
+        if not self.expected:
+            self.close()
+            raise RuntimeError('No Conv2d/Linear exists to observe actual FP32 inference')
+
+    def parameters(self):
+        dtypes, devices = {}, {}
+        for value in self.model.parameters():
+            if value.is_floating_point():
+                dtype, device = str(value.dtype), str(value.device)
+                dtypes[dtype] = dtypes.get(dtype, 0) + 1
+                devices[device] = devices.get(device, 0) + 1
+        return dict(dtypes=dtypes, devices=devices)
+
+    def close(self):
+        for handles in self.handles.values():
+            for handle in handles:
+                handle.remove()
+            handles.clear()
+
+    def finish(self):
+        self.close()
+        if self.parameters() != self.before or set(self.observed) != self.expected:
+            raise RuntimeError('Actual FP32 inference evidence is incomplete or master parameters changed')
+        if self.torch.is_autocast_enabled('npu'):
+            raise RuntimeError('FP32 inference escaped into ambient autocast')
+        return dict(mode='fp32', master_parameters=self.before, expected_activation_kinds=sorted(self.expected),
+                    first_observed_fp32_activations=self.observed, ambient_autocast_enabled=False,
+                    observation_only=True, activation_values_copied_to_CPU=False)
+
+
 class ClosedLoopRuntime:
     def __init__(self,args,sim_root):
         self.args=args;self.sim_root=Path(sim_root).resolve()
@@ -90,6 +162,7 @@ class ClosedLoopRuntime:
         self.backend,self.index=match.group(1),int(match.group(2))
         self.root=self.sim_root
         self.evidence={}
+        self.fp32_evidence=None
         self.provenance=dict(device=args.device,precision=args.precision or 'original_config',backend=self.backend,
                              integration_files=integration_identity(self.sim_root),
                              host_device_mapping={name:os.environ.get(name) for name in
@@ -138,13 +211,23 @@ class ClosedLoopRuntime:
 
     def precision_context(self):
         if self.backend!='npu':return nullcontext()
+        if self.args.precision=='fp32':return self.fp32_context()
         from ascend.autocast import inference_precision
         return inference_precision(self.args.precision,self.evidence)
+
+    @contextmanager
+    def fp32_context(self):
+        try:
+            yield
+        finally:
+            if self.fp32_evidence is not None:self.fp32_evidence.close()
 
     def wrap(self,model):
         if self.backend=='npu':
             from mmcv.device.npu import NPUDataParallel
-            model=NPUDataParallel(model.to('npu:'+str(self.index)),device_ids=[self.index])
+            model=model.to('npu:'+str(self.index))
+            if self.args.precision=='fp32':self.fp32_evidence=Float32InferenceEvidence(model,self.torch,self.index)
+            model=NPUDataParallel(model,device_ids=[self.index])
         else:
             from mmcv.parallel import MMDataParallel
             model=MMDataParallel(model.cuda(self.index),device_ids=[self.index])
@@ -166,5 +249,6 @@ class ClosedLoopRuntime:
                     raise RuntimeError('Planner precision policy changed during execution: '+field)
             self.provenance.update(module_origins=assert_module_origins(self.root,require_plugin=True),
                                    precision_after=final,
-                                   bf16=self.evidence if self.args.precision=='bf16' else None)
+                                   bf16=self.evidence if self.args.precision=='bf16' else None,
+                                   fp32=self.fp32_evidence.finish() if self.fp32_evidence is not None else None)
         return self.provenance

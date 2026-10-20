@@ -79,11 +79,14 @@ class ProtocolTest(unittest.TestCase):
     def test_npu_requires_explicit_identity_and_rejects_shadow(self):
         args=SimpleNamespace(device='npu:0',precision=None)
         with self.assertRaises(ValueError):ClosedLoopRuntime(args,ROOT)
+        selected=self.root/'selected_alg'
+        (selected/'ascend').mkdir(parents=True)
+        (selected/'projects/AlgEngine/mmdet3d_plugin').mkdir(parents=True)
         fake=self.root/'foreign.py';fake.write_text('')
         previous=sys.modules.get('mmdet3d_plugin')
         sys.modules['mmdet3d_plugin']=SimpleNamespace(__file__=str(fake))
         try:
-            with self.assertRaises(RuntimeError):assert_module_origins(ROOT)
+            with self.assertRaises(RuntimeError):assert_module_origins(selected)
         finally:
             if previous is None:del sys.modules['mmdet3d_plugin']
             else:sys.modules['mmdet3d_plugin']=previous

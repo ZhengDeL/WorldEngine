@@ -1,0 +1,782 @@
+{
+  "schema_version": 1,
+  "test_date_local": "2026-10-20",
+  "result": "pass_eight_configured_real_closed_loop_control_windows",
+  "scope": "One official scene; VADv2/HydraMDP x FP32/BF16 x original R/NR policies; each configured window has 12 frames and eight applied controls.",
+  "public_summary_is_runtime_manifest": false,
+  "evidence_bundle_sha256": "428f037c7f22aecab1b1f90466e0ea12b6f64a928d987c3d406e75b963dc5af8",
+  "evidence_collected_utc": "2026-10-20T03:45:57.383504+00:00",
+  "simulator_runtime": {
+    "sha256": "90ad1a295420d87ad63391733f8f28124161b43d939964c55831b7a8e259a7d8",
+    "files": 211
+  },
+  "external_AlgEngine_runtime": {
+    "sha256": "40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b",
+    "python_files": 245,
+    "declared_commit": "972e1d9592860cef6520e0b39d7e4e9ab55a510a"
+  },
+  "CPU_auditor_sha256": "83c79ef344e995d3d440580e8db85fe8d792888eeafee0fe452b285d636758fe",
+  "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+  "hardware": {
+    "device_name": "Ascend910_9362",
+    "physical_cards_in_server": 8,
+    "chips_in_server": 16,
+    "chips_per_physical_card": 2,
+    "chips_per_case": 2,
+    "physical_cards_per_case": 1,
+    "planner_chips": 1,
+    "renderer_chips": 1,
+    "single_chip_planner_and_renderer_capacity_measured": false
+  },
+  "scene": {
+    "official_scene_id": "2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4",
+    "publisher": "OpenDriveLab/WorldEngine",
+    "original_log_length": 24,
+    "configured_frames": 12,
+    "history_frames": 4,
+    "consumed_controls": 8,
+    "consumed_control_indices": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "camera_count": 8,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "decoded_JPEGs_per_case": 96,
+    "simulation_time_span_seconds": 5.5,
+    "prepare_receipt_sha256": "ac246caf243f2e1a679c4159dbd92ecb1cfe84f4197fc023295909d7943414fc",
+    "derived_scene_sha256": "8b2d308365eb88060b30c35db1e3ba13622ddf827e3c43ba91200174ca40d27e",
+    "official_inputs": {
+      "publisher": "OpenDriveLab/WorldEngine",
+      "huggingface_revision": "d0e88d858533ca407a3387a26577c083aa7b3617",
+      "modelscope_revision": "092ac5f3f3f828698c207b0ad75ca258c9f07ad2",
+      "files": [
+        {
+          "path": "data/sim_engine/scenarios/original/navtest_failures/all_scenarios.pkl",
+          "size": 911923264,
+          "sha256": "27203d52454f2538e6a70e95136b85ee8df35822f7707dc0091b4943ca7ad41d"
+        },
+        {
+          "path": "data/sim_engine/assets/navtest_failures/assets/part003.tar.gz",
+          "size": 27886330535,
+          "sha256": "102d16b9f608ac8f2314aef2ba3e1907cee9db7e2a3d094b1833b4ff60de0d05"
+        }
+      ],
+      "complete_original_files_verified": true,
+      "asset_lock_sha256": "59b52b8557ba2953503967781a570a91fc282e44cd1289c537e2bda463250125"
+    }
+  },
+  "execution": {
+    "renderer_precision": "FP32",
+    "planner_precision": [
+      "FP32",
+      "BF16 native autocast with FP32 master parameters and geometry/MSDA islands"
+    ],
+    "planner_MSDA_backend": "reference",
+    "metric_manager_enabled": false,
+    "dense_reward_manager_enabled": false,
+    "Ray_workers_created": false,
+    "dtype_observation_scope": "First actual Conv2d and Linear outputs; not every layer or frame."
+  },
+  "accepted": {
+    "configured_eight_case_matrix": true,
+    "actual_model_policy_controller_consumption": true,
+    "strict_12frame_8camera_JPEG_coverage": true,
+    "exact_host_and_logical_device_mapping": true
+  },
+  "not_established": [
+    "Complete 24-frame source-log execution",
+    "Driving quality or safety improvement",
+    "PDM/PDMS or dense-reward scores",
+    "Dense full-image or GPU parity",
+    "Throughput, latency, speedup or long-duration stability",
+    "MTGS reconstruction training/backward",
+    "AlgEngine eight synthetic training configurations"
+  ],
+  "historical_evidence": {
+    "initial_frame_and_NR_R_replay": "simengine_real_scene_20261020.json",
+    "earlier_1ef363_four_case_diagnostic": "Retained as diagnostic history; host/plan mapping mismatch prevents acceptance. Not included in these eight accepted cases."
+  },
+  "cases": [
+    {
+      "model": "vadv2",
+      "planner_precision": "fp32",
+      "reaction": "NR",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        4,
+        5
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "audit_report_sha256": "9dc795c4ceb27aed1eb750576de3dc0d74dd65b0ea9edb9516411a613ca05144",
+      "launch_plan_sha256": "61a4ad7f3528f56561fff4d66da8730fd582687522e5694dd93712bf210dc7a8",
+      "launcher_report_sha256": "787b2eb56ca84a743f4c45d0daf2ac1ae4145bbdb9f8c1ab147bc9640733b166",
+      "planner_report_sha256": "c54952ca75104b99ecaeca591d4c8fc76511228c2272e8d301be5582f1696e07",
+      "simulation_report_sha256": "b9112e5d78daa040fa9bec8d7d39172f11c875d0d2c6baf61b9e1b0400104b80",
+      "image_inventory_sha256": "3d241c708e3634ad0c3bf5e6770887e701bab194556ea08d4189a4f13a24e6c8",
+      "consumption_session_sha256": "64e80eb8d84fab55dac99fa853d7a52139d5b86e437c223b525b90c8d5b1c904",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "ad3b5e1fd6853ad1e9712b464997873d6bf339691b6ebd5af160de26f4ab5d4d",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "56ac6c655549c2c64cc5afed904b9bfa74c587b69ac1f90268d3186afadfc1d6",
+          "plan_sha256": "91342e79005b117960adf26d21707a4aa451affdb7fab739253d456b9297bb98"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "9c65fccd1a2824da36374c414b91a9e48af3358ffda7f60527b5289a037022e6",
+          "plan_sha256": "e9cf2edb9e8f2ddea07eb51fee5046d5490831fe49097066489923ac0cdd4493"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "ad0f0e7fda16b7d1ca74693320e3f4ff3f9f5cc3d18a750234a49462904c154f",
+          "plan_sha256": "777db29f51bd63276666e4a00faf5b4b5f49c853144bb4ef042f03167b4da76c"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "dfe0613817ec47a8b894978616043fabdd4ffebffb6693e4e2cadd443fcf592e",
+          "plan_sha256": "b3377b60ac7379356844b5cb9aefdc024efc56b32b483ea4f4dfe07f04fc68ee"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "403b85164b8e9316e96a3151532ed2b0582dc4ff05d6fe7be683d67c744c2777",
+          "plan_sha256": "a2aec2c972907782f6e4a61e9f9edb639bc2322d17d34500f1b908dfa1cc7eea"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "0642bdf6e773b41242d33f237372e09a38059e41435ffb33296af62286e35b3d",
+          "plan_sha256": "148f0f70a3a9ee4171af4c19555c8ce690eaf5066a09fa4a1199cd1fd6cab1c0"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "02eb2ec5b08cae93037b53b975d543a58bbd9be8dfe482fc235c2f1776bd6366",
+          "plan_sha256": "9072e57ccf7c0133923953d5a080caf640152018b6e3d640871080343ff0ca2a"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.float32"
+    },
+    {
+      "model": "hydramdp",
+      "planner_precision": "fp32",
+      "reaction": "NR",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        6,
+        7
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "audit_report_sha256": "1be6ca6ec3d631d3851acd2030e7ed37cae11020de168caf782d18b6f39d1f10",
+      "launch_plan_sha256": "f908a66b309bf0bffc61c6e4878ed32ffab800e2b6d018f78eeee7c0278c000b",
+      "launcher_report_sha256": "1443de851e26b4b1caedbc709324daf7ae0d2f1ba1591c097e5d64ab1824dc69",
+      "planner_report_sha256": "538e5a859c7d7b22d66fdda93ccaaae171b8aad63d2dfafa5411bb30abe318bd",
+      "simulation_report_sha256": "d650cf79a5d9e90402263a41a24ae44781414807305b49ea75672718fedb744e",
+      "image_inventory_sha256": "559ac23807f1332154470d871db3b8f9b3d1e6138fccd2cf6f32292e573964b7",
+      "consumption_session_sha256": "874ff2b27d61f9a44ec9f25f88032deca432a12cb40e7d93d39395013aa6b5ae",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "a4fa06b4bad77c183b0f480586d9eb141da1b1b0f1259b8ced495cfe165e3193",
+          "plan_sha256": "35974afff0298c129f67d265f087054b9b6f2c2591d045967c4929e580e1b94c"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "b545677f2324bb4d6d03511f40b36cad526911c16638c706d2625657723bfbe4",
+          "plan_sha256": "5578cffb954b7bf6d959068d39af22443ac2c49c6b2bb0600827201f0267ed8b"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "f4a1bbcf6767f5c33ab730af270b5d47084bcf6a54c53671b190404a89e25428",
+          "plan_sha256": "83a6ccc32af9aa9f7d8d43ef6703473a95a18aa51008bb13a2867418a0d65918"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "d0585784d09845b472c3b8497d6d0a13750bde78dae07aa45b52156a354833cc",
+          "plan_sha256": "d9113988a4a970ccd469f4f9967fcac814ab4fa6bac9a2bb64e60ebfb7cf8296"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "617ea8996aabb7364c65b43c95d5627e058609af7e3f81122252c2a92495700a",
+          "plan_sha256": "bd39c95b365ed2321cbeb4ae175d97ebd3cd4c9fceb72ef832da63030ec3974f"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "36e779fd734d4869bc84487be02c68e719f41879ec378ecf87994467338606a4",
+          "plan_sha256": "4196abda7ae38565013f98d78e3ba718e0ccd211fbdca8d2629a4035dae6a421"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "404b76fa5823c1a9b300857d54563965696ef98cc0f04e47140cd1c96aee9e19",
+          "plan_sha256": "355c351d0cb43cb9576e4845bdc6964e73dfb44e32e571b7c0e83f9e3ae71e78"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "274f57e4b6aebd68b4d2a88dfcea3bd881c31b42be56c7fad95e81aaa9138035",
+          "plan_sha256": "7b3b2dd544ca565f4da83167ebab5f18707553518b82ed0f400c343f87b98082"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.float32"
+    },
+    {
+      "model": "vadv2",
+      "planner_precision": "bf16",
+      "reaction": "NR",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        8,
+        9
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "audit_report_sha256": "3eb95e4dab998ff9a0d683b8041524f92fe79fc41660e3dce189d126fa92c22e",
+      "launch_plan_sha256": "e24563e66d4ca369a7bb08ce405501de25f6e538cf3543811f65983b54120f5f",
+      "launcher_report_sha256": "91558d8e2284cca57cce73971a32b168dfdab53384bb71e74f815a944db93c59",
+      "planner_report_sha256": "6807f3cf95815b2f4d3e81108e327d0bf529bb343f134549c9c6b01ba5052776",
+      "simulation_report_sha256": "6a7a08677d96ebbb8c08946bf9be7e6d65ae07733be984451340cb426d3fa863",
+      "image_inventory_sha256": "3d241c708e3634ad0c3bf5e6770887e701bab194556ea08d4189a4f13a24e6c8",
+      "consumption_session_sha256": "15d06e510af93d5b4003f35113de69073096884acce52c05c47360ef354d600d",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "3eaf6480e2c638081b5035e061acd5023952505fe9d2e43635b260340bb4358b",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "2e996a0a43f0f6538faf97b9467b0a1f02b41ca08572eb86ab7bc0c11ae8c436",
+          "plan_sha256": "91342e79005b117960adf26d21707a4aa451affdb7fab739253d456b9297bb98"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "552842a89c9dd38224d5b0b1cc723e28c1617829e44167a049c25d36abbddbf4",
+          "plan_sha256": "e9cf2edb9e8f2ddea07eb51fee5046d5490831fe49097066489923ac0cdd4493"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "d052a3411e359913b328de87429da0b6334205797d9a880b7cd5cc4352ff69fb",
+          "plan_sha256": "777db29f51bd63276666e4a00faf5b4b5f49c853144bb4ef042f03167b4da76c"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "eb9651637d67e3345f268140b7b48a681aebb155280b12ac37a14404cf6ec56d",
+          "plan_sha256": "b3377b60ac7379356844b5cb9aefdc024efc56b32b483ea4f4dfe07f04fc68ee"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "c6994aa7bb724e26df1279426948710dd2375109fa8d01713bea9be505d402dd",
+          "plan_sha256": "a2aec2c972907782f6e4a61e9f9edb639bc2322d17d34500f1b908dfa1cc7eea"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "f7d59f157ba4b44898e9eb248e34521bf8776f923891344df385474b7a87e21d",
+          "plan_sha256": "148f0f70a3a9ee4171af4c19555c8ce690eaf5066a09fa4a1199cd1fd6cab1c0"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "cecf01962dbb40a8a88e0bd3d5f6b6f61a0dcf1fced7e649977ae7c9706a0545",
+          "plan_sha256": "9072e57ccf7c0133923953d5a080caf640152018b6e3d640871080343ff0ca2a"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.bfloat16"
+    },
+    {
+      "model": "hydramdp",
+      "planner_precision": "bf16",
+      "reaction": "NR",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        10,
+        11
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "audit_report_sha256": "164aa714dc8907c8cdab4fd16fc70137c8e4380c9d31a63c85a9499e8b146e3f",
+      "launch_plan_sha256": "1b66fe2c26697fe99c29b449805bfba7b7fef6df1d1e7c1fbffd75ee2801f60a",
+      "launcher_report_sha256": "74d6c296ba944c5cfe3cbe6f8d75215658a3591ad2a27236e7cf0d08a2a354fc",
+      "planner_report_sha256": "64b870687572707fe150514e4377d50c9f073ef8a6e8939aa2323960528b4ceb",
+      "simulation_report_sha256": "16fc7049fa989876b250e4a3f04cc075586d0748d85abc532ff35b156058d63e",
+      "image_inventory_sha256": "5160d27ba00c17a10203c194f78602de27e5c3667b194e0d2cccfedf41109684",
+      "consumption_session_sha256": "654175f3c33ecaae7f9c969925bc939aadfc8fe22f2dd5b4040488d3b1146568",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "dab1cf927eef2c8109285e9f555cf39e0acde60cd38037f01cc47755c1a0e680",
+          "plan_sha256": "35974afff0298c129f67d265f087054b9b6f2c2591d045967c4929e580e1b94c"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "b49f2552b8a76226d5ec705d57f66b287a56f4e48d2c5f56d6e9eca71ef430b2",
+          "plan_sha256": "5578cffb954b7bf6d959068d39af22443ac2c49c6b2bb0600827201f0267ed8b"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "69aa19b98fac5069d317df804f9adc3e850f688e7065485ec9f39a1eac5b0b95",
+          "plan_sha256": "d45e068d38480a61378aed1373b7231c6dfe505e6753d968510712e79c8b39e8"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "6e6561a6bd07f600d5a819b60aec539daabac6a15460338412bebbb76cf007b0",
+          "plan_sha256": "9888eb4a8770376b6624882e2bbc59faaf84069453b783c1df2332752346ef2e"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "f85c2e6c44cb49f653a2f86b9bec056f0836ef9189054ce047387e961a539ec9",
+          "plan_sha256": "ba767a4a5c2dc71c6363455acc931ab1d636a41266562bda628a9a30758934fb"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "18b657d8d7045658af7d5b7f9abbd81bba9d8e1a07297902170534460a7b19dd",
+          "plan_sha256": "fae8887931337e07da2ac27b7de487d5fe4c11450ba3c320bcf1c219ca57edec"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "3221c6b0e2a6aa42dce90feb06169fa4cadfe2a239af199d6403f0e7645fe1dc",
+          "plan_sha256": "1b6229e9ac5cd176848d42f0dc29c3b6da64193caf2792d4b94368888c201400"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "2991fa5e4fc48071d144583d6e8593b8527681f2f7892c58af2fe7580e90d412",
+          "plan_sha256": "c2b937969f960e7536c2cc7ed079f2b5b4e314f130c4f5f62c2023ac547b8534"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.bfloat16"
+    },
+    {
+      "model": "vadv2",
+      "planner_precision": "fp32",
+      "reaction": "R",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        4,
+        5
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "audit_report_sha256": "eee52b618a8f480ffe03dcef44bf8ea3c88a25c9a1f50b9a161ab2fab9346630",
+      "launch_plan_sha256": "82ee0475b31cd57b649fd8ee2835bd7c3ab61acf90eff7c308dd642b3a839f6f",
+      "launcher_report_sha256": "a0157911164f1019d2763cb0db4a40a0adb8057f30285d6be870cfb8d6b7b096",
+      "planner_report_sha256": "9b31a5f2f179c1815a58333b1dcb9f5248915d20d9ee0c7f006e05a78c52d333",
+      "simulation_report_sha256": "d981cc1575eeb516917b67756bf9cd26080d2739015492b94ced39af80f14019",
+      "image_inventory_sha256": "223969142adc942dc5d3e3a6b0a1bb8d0898a2f6c0987944c3ca2538afca70b8",
+      "consumption_session_sha256": "c0b87ac6ace70b454104c68946c0a866be238c6939ae5abe4728d738b5057614",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "8994591936e2d4484ccbb28c71b2cba09abed0e998bd116ab1486d055a7ebe71",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "655d7e61d936adc7d774d44758c0f75368aecd074fcd55a66e647152a46d9b14",
+          "plan_sha256": "91342e79005b117960adf26d21707a4aa451affdb7fab739253d456b9297bb98"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "569c8308f0f3d8c77f6f27ffb4893acd3b1a4e4421b7bad842214c10e5b4f9ae",
+          "plan_sha256": "e9cf2edb9e8f2ddea07eb51fee5046d5490831fe49097066489923ac0cdd4493"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "277268a6b1f1c8a08897b156a884dde5c94f02cb9197f06d59f350605e9740be",
+          "plan_sha256": "d9039497c98563f6ec318cfe442591aa249b65afca7f463ecad0d5acc0a909fe"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "c61951d2e7d3f345a435e4112230f012742c664e0f52dd92273be95ad07f1914",
+          "plan_sha256": "55751afc87cf3fc9d214c2d24114f9a58678ca150443cdd05f787afe5b720be8"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "25abaa3fcf1350e6fb20136fef161d8d26169a291d73c0a97c1b5bbe6d938453",
+          "plan_sha256": "0f5f02d8860d2e8f1272d9dd480de0e178bf236a2aaef5a34e07ec3e49f3b210"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "74bfac73a48e325bd3dd83192b1e89d145431a8c63a7754a2608e56ba96d1d6e",
+          "plan_sha256": "a409b37ead6502d8435a38e982f15000b9ff394732df6dbc8b16d289f0e9abf0"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "b969ced1af42a9fe710093f67cb8d6bfc49119e05dde7cdb753233c0ec91d333",
+          "plan_sha256": "e733104aa848d313eafce364b9b3934bfeea9bb1f7651ddea64b57758fb9a618"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.float32"
+    },
+    {
+      "model": "hydramdp",
+      "planner_precision": "fp32",
+      "reaction": "R",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        6,
+        7
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "audit_report_sha256": "12e819092ec0fa1eb0b087edfa62d2b38efb998485b9e684d8585aa61f37ff54",
+      "launch_plan_sha256": "ece4e9554827519a4606c4271e32607d39ab88438060588096e9e431512665c4",
+      "launcher_report_sha256": "7577f8ef6ad3d4723ece5e4be036829d3de39b5c43a2cc2e815304926a5dc043",
+      "planner_report_sha256": "0e0b0d3e5d2dc025d5f129534af909699934b1c02adb1bb75c8346ba4278435b",
+      "simulation_report_sha256": "ae35c6219cf3b95c53472d8e080f4f61f5a90d752d1e04af2a14325809c1dc5d",
+      "image_inventory_sha256": "febf89b51839365b2644a4c4558bade1834cf0b3fe4c7d559a34889d15b91f2e",
+      "consumption_session_sha256": "d8aa38084716a57df904bd92cdb567222d871f179f1d65dd8053642951648480",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "cac59d2e5dd34dda81434de04642456a549511c0804fb0123cfb0454689cf431",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "719adc3ad80cc08138b96ac2f137999a07f89ebc6211b31a94ddddde91c02ad6",
+          "plan_sha256": "059b43d97dce6fc994bd4e5217aa9f2f6040d2ba31c607ac4ebefc098eec71ae"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "2b67f7a4d968e52add05be861e7eabae85e5fb7527909f4323292905be9bdd3b",
+          "plan_sha256": "d9039497c98563f6ec318cfe442591aa249b65afca7f463ecad0d5acc0a909fe"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "5b7fba6010632293e7065fc6c66c8107bc7466ca291349a2b7ad42dd801e33b9",
+          "plan_sha256": "61e93f0ce7ad30b2d90f501b7bc7b9f821d353a97360b4dd1dd26cd7b0769c9d"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "4919591b8927902bb9678cd14f72491f3e97f0a9254a837688b717aa28603b6b",
+          "plan_sha256": "d5744bf57a4131b3ed41fcfa76f22bc7d4fdea3bbe168495f8f5048708475517"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "d5f58f22446623f2c1ac36f1ec239f8e340b3db4fc1b114f34b07ca355f9997d",
+          "plan_sha256": "bf7325298b51e4193daea3d65c0aad45dc24c7d22542ae67ff30a9af6068f85a"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "711c75972c600bee92934ec8ea55dfe855ec29a5527b09739a3cd8fb9817e10e",
+          "plan_sha256": "b3377b60ac7379356844b5cb9aefdc024efc56b32b483ea4f4dfe07f04fc68ee"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "a2c556065fda211d815160e3e7edf742b85559939eb1b0a572476f6d62227879",
+          "plan_sha256": "ff97ddedfb6f1df4b622692abfd6faa632716237d5d1437836405eee9baaaf9e"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.float32"
+    },
+    {
+      "model": "vadv2",
+      "planner_precision": "bf16",
+      "reaction": "R",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        8,
+        9
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "config_sha256": "f9719bb9b5f39b889d089e57615a1417a9287a3876628e5084915432a413d9b4",
+      "audit_report_sha256": "5b70a90a147efdcad8a3dc8a179ed090a1b203d5d4d54a96ac75233907a8b050",
+      "launch_plan_sha256": "a4f74a91be3b82e1368fb6f2a5ab1da041870afefa765970055107eff2d8d401",
+      "launcher_report_sha256": "f44a51b07b82ccd8bf80579b90bc18bb0c6c9ef5ba6225d9ff16941baeaccd52",
+      "planner_report_sha256": "cfd516cec0681605841a78ac648934a7001361d7022ecbd3e0797acfa3924d7a",
+      "simulation_report_sha256": "e874c8aae23477de392e15e4d38d19b8854cb3f53a713590918cb902e1290312",
+      "image_inventory_sha256": "223969142adc942dc5d3e3a6b0a1bb8d0898a2f6c0987944c3ca2538afca70b8",
+      "consumption_session_sha256": "9810f5c4f4682521c8571246d15f770cf32d1419c3e1089974c9b9dbaeec30f7",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "1d952e0c5f9c599ee333df011ac6e1278ac01c9e6f7f502622dfba8b371cca2d",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "00c7cd9964d7b72259e86f64c3139077cbc0cc73a0fe9a7db379fe8b7a716cd2",
+          "plan_sha256": "91342e79005b117960adf26d21707a4aa451affdb7fab739253d456b9297bb98"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "7342f7e1310e55a3897feab5079ae51126532a23e8667371d8a5c80c00df318e",
+          "plan_sha256": "e9cf2edb9e8f2ddea07eb51fee5046d5490831fe49097066489923ac0cdd4493"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "272db60729ad3e99185573bafb68f9bcaf4c0669f05cbb3cab23008985b06fda",
+          "plan_sha256": "d9039497c98563f6ec318cfe442591aa249b65afca7f463ecad0d5acc0a909fe"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "c795d43338689c6fa15997d9b8c28a3ac2850cb04049a15ed373f28973109b86",
+          "plan_sha256": "55751afc87cf3fc9d214c2d24114f9a58678ca150443cdd05f787afe5b720be8"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "fa6b36226df68c10c210ae0270d929ce8929cdfa5940b878b9a5b24bc82683e0",
+          "plan_sha256": "0f5f02d8860d2e8f1272d9dd480de0e178bf236a2aaef5a34e07ec3e49f3b210"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "b595f97c361c137680f5627445683875f003d9fc9936ac79e160a6ace57edc10",
+          "plan_sha256": "a409b37ead6502d8435a38e982f15000b9ff394732df6dbc8b16d289f0e9abf0"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "0371e3b26eb9099908b8519e0469ce47e6de8f162c23f7d823d646c71aa450e0",
+          "plan_sha256": "e733104aa848d313eafce364b9b3934bfeea9bb1f7651ddea64b57758fb9a618"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.bfloat16"
+    },
+    {
+      "model": "hydramdp",
+      "planner_precision": "bf16",
+      "reaction": "R",
+      "result": "pass_configured_control_window",
+      "host_chip_ids": [
+        10,
+        11
+      ],
+      "chips_used": 2,
+      "physical_cards_used": 1,
+      "planner_logical_device": "npu:0",
+      "renderer_logical_device": "npu:1",
+      "configured_frames": 12,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "decoded_jpegs": 96,
+      "simulation_time_span_seconds": 5.5,
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "config_sha256": "322d011a46b8282cc3f0027eff09f1d952cf2007848a9bc280d0ab7b9307b975",
+      "audit_report_sha256": "9439813c1a56a112f8e3f7851242197ae44f52b89a972afca8496b65d207c2ad",
+      "launch_plan_sha256": "2e3809cfc370a01fb761edbf765e68019ea2c14079928ca0e92bb5308f03181f",
+      "launcher_report_sha256": "61b1ff5b4578a0c997ecbadc617ccba52061a9d2db9b33360a28a169f5819361",
+      "planner_report_sha256": "a3163b784836ea36c341ea5f9167a7b876dad366c65791a303d3b8f6106f0278",
+      "simulation_report_sha256": "620c9bb3751e50e1a6dd4058aa81b2fc5e2869e61638ca3e18d9af5fc58f3215",
+      "image_inventory_sha256": "123e23cf9c066894b7dc325ced7d66996cf7c6670f82c6746bd31624dcad6320",
+      "consumption_session_sha256": "e4b0667cee4e1f2df039d8382653ae4ccbe40bc64a355232498abb5b2225c59e",
+      "controls": [
+        {
+          "control_index": 4,
+          "receipt_sha256": "c202f74f47a42bb8c3b5eb73cf309493b914c8915934b8bb271406f4a60196ac",
+          "plan_sha256": "e886fe753c6d344cbb7fed6d73471dffc1139494b103a2c5e57d101960541b01"
+        },
+        {
+          "control_index": 5,
+          "receipt_sha256": "4eed09b456347ce9e640e22acb24fc8c9e220c0813bbbba1f27303fcc655a464",
+          "plan_sha256": "5b40e2d26895852e04bfa00388013047139b72e82db6c9fdd40850fc6e90a8a8"
+        },
+        {
+          "control_index": 6,
+          "receipt_sha256": "fa7c388f4c976de8246d8ba68af4a9212ececcba87285166cc37c0c5caedf279",
+          "plan_sha256": "d9039497c98563f6ec318cfe442591aa249b65afca7f463ecad0d5acc0a909fe"
+        },
+        {
+          "control_index": 7,
+          "receipt_sha256": "bd22c656d667d04ad6eea44b34463b93d75565fcb081237c311411e2d8f988ed",
+          "plan_sha256": "61e93f0ce7ad30b2d90f501b7bc7b9f821d353a97360b4dd1dd26cd7b0769c9d"
+        },
+        {
+          "control_index": 8,
+          "receipt_sha256": "052f86c99af0edc66b798b9316206540029bac62b20e7dd4f8641f8611053f4a",
+          "plan_sha256": "d5744bf57a4131b3ed41fcfa76f22bc7d4fdea3bbe168495f8f5048708475517"
+        },
+        {
+          "control_index": 9,
+          "receipt_sha256": "b9dcffb85b5d6f39736efb13f36f1d70a069419f439cf38c183baa7ca3a180ad",
+          "plan_sha256": "bf7325298b51e4193daea3d65c0aad45dc24c7d22542ae67ff30a9af6068f85a"
+        },
+        {
+          "control_index": 10,
+          "receipt_sha256": "01e98f5d9f7faa36af2655a8832cda65f1fb97cedef62755300784ce0f9ae20b",
+          "plan_sha256": "b3377b60ac7379356844b5cb9aefdc024efc56b32b483ea4f4dfe07f04fc68ee"
+        },
+        {
+          "control_index": 11,
+          "receipt_sha256": "3642a7ecc2b539d24a68c773aa8c5d9561d60d6264cb82a9de7494de14a90c6c",
+          "plan_sha256": "ff97ddedfb6f1df4b622692abfd6faa632716237d5d1437836405eee9baaaf9e"
+        }
+      ],
+      "actual_container_exits": {
+        "NPU": 0,
+        "CPU_auditor": 0
+      },
+      "container_OOMKilled": false,
+      "representative_Conv2d_Linear_activation_dtype": "torch.bfloat16"
+    }
+  ]
+}

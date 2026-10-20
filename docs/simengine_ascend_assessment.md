@@ -4,13 +4,13 @@
 
 Updated: October 20, 2026.
 
-This branch implements an NPU forward-rendering adapter for MTGS. In addition to 20 small numerical cases, one 910C chip completed an official original-resolution initial frame: all 1,550,733 Gaussians and eight 1920×1080 cameras, finite complete outputs, and 1,024 sampled pixels checked against independent NumPy. The original configured 12-frame NR/R replay windows also completed, each producing 96 decoded JPEGs. **Exact 12-frame/eight-camera coverage is independently verified. Complete original-log coverage, model-in-the-loop feedback and GPU parity remain unvalidated.**
+This branch implements an NPU forward-rendering adapter for MTGS. In addition to 20 small numerical cases, one 910C chip completed an official original-resolution initial frame: all 1,550,733 Gaussians and eight 1920×1080 cameras, finite complete outputs, and 1,024 sampled pixels checked against independent NumPy. The original configured 12-frame NR/R replay windows also completed, each producing 96 decoded JPEGs. **Exact 12-frame/eight-camera replay coverage is independently verified. Subsequent VADv2/HydraMDP × FP32/BF16 × R/NR runs passed all eight configured closed-loop control windows, with eight model plans actually applied per case.** [Closed-loop evidence](validation/simengine_closed_loop_20261020.json) records the separate source and consumption hashes. Complete original-log coverage, driving quality and GPU parity remain unvalidated.
 
 The upstream WorldEngine baseline is `3eded7e8ac64e5bed817860765089b5914ab698f`; the original rendering contract comes from `gsplat==1.4.0`. The adapter uses CANN gauss-splat commit `8c0445ebcca91514fce3a7050241f41ed132c340` with an explicit inference-only compatibility patch. Its public high-level Rasterizer is not used as a drop-in replacement.
 
 ## Measured scope
 
-The server has **8 physical 910C cards, two chips per card, for 16 visible chips**. The small probe and real-scene stages each used one chip, reported as `Ascend910_9362` and mapped to `npu:0` inside the container. Upstream eight-way launch scripts target 8 GPUs. Sixteen-chip SimEngine scaling has not been measured, and those device counts do not imply a throughput ratio.
+The server has **8 physical 910C cards, two chips per card, for 16 visible chips**. The small probe, initial-frame and replay stages each used one chip, reported as `Ascend910_9362`. Each accepted planner-feedback case used two chips on one physical card, mapped to planner `npu:0` and renderer `npu:1`. Upstream eight-way launch scripts target 8 GPUs. Sixteen-chip SimEngine scaling has not been measured, and those device counts do not imply a throughput ratio.
 
 | Item | Recorded evidence |
 | --- | --- |
@@ -43,7 +43,7 @@ After whole-file verification of the official assets, original BaseEnv.reset/MTG
 
 The tolerances remain unchanged from the small probe. Depth uses `atol=2e-3, rtol=1e-3`, allowing approximately `0.49354 m` at the largest-error pixel. The real input did not receive a looser threshold. Numerical acceptance covers complete-output finiteness and sampled reference pixels, rather than a full-image pixelwise comparison. Original replay logs also record the integer ArgSort operation using an AiCPU path; performance is not accepted by this result.
 
-The original runner's `num_history=4, num_future=8` gives a configured 12-frame window. An independent CPU audit verified frame indices 0–11, original tokens, timestamps, previous/next links, all eight original cameras and exactly 96 JPEG paths, dimensions, decoded content and hashes per replay. The exported timestamp span is 5.5 seconds of simulation time, not wall time or a performance measurement. The selected original scene has `log_length=24`; complete original-log coverage is not established. VADv2/HydraMDP FP32/BF16 planner feedback needs its own actual reports and is not included here.
+The original runner's `num_history=4, num_future=8` gives a configured 12-frame window. An independent CPU audit verified frame indices 0–11, original tokens, timestamps, previous/next links, all eight original cameras and exactly 96 JPEG paths, dimensions, decoded content and hashes per replay. The exported timestamp span is 5.5 seconds of simulation time, not wall time or a performance measurement. The selected original scene has `log_length=24`; complete original-log coverage is not established. The subsequent eight-case planner-feedback matrix has its own [actual reports](validation/simengine_closed_loop_20261020.json). Each case independently verified all eight applied controls `4..11` and the same configured 12-frame/eight-camera coverage. The selected scene's original 24-frame span remains outside acceptance.
 
 The [portable result](validation/simengine_real_scene_20261020.json) retains input, runtime-source and original proof/report SHA256 values and links the [small numerical record](validation/simengine_npu_forward_20261020.json). Internal server paths are omitted. This result is not a runtime manifest.
 
@@ -53,7 +53,7 @@ The [portable result](validation/simengine_real_scene_20261020.json) retains inp
 | Geometry and actors | Background, sky, rigid, mirrored and temporal transforms; required FP64 poses remain on CPU | Real background, sky and 17 mirrored rigid submodels exercised; other asset types need their own tests |
 | Official input preparation | Whole-file hashes, exact scene-to-asset mapping, safe extraction, unchanged one-item derivation | Both complete official inputs and selected assets verified; 19 checkpoint submodels inventoried on CPU |
 | Single-node replay | Original Hydra runner, BaseEnv, DataManager, report checks and deadlines | Official NR/R windows each produced 96 decoded JPEGs; an independent CPU audit verified exact 12-frame/eight-camera coverage |
-| VADv2/HydraMDP planner feedback | Separate AlgEngine process, frame/trajectory protocol, explicit FP32/BF16 planner entry | Protocol tests provided; no real closed-loop result in this run; rendering remains FP32 |
+| VADv2/HydraMDP planner feedback | Separate AlgEngine process, frame/trajectory protocol, explicit FP32/BF16 planner entry | Both models × both precisions × R/NR: eight actual control windows passed independent consumption and 96-JPEG audits; rendering remains FP32 |
 | R/NR, rewards and export | Original policies, CPU PDM/dense scoring branches and output checks | NR/R configured windows executed; PDM and dense scoring were disabled in this run |
 
 ## Environment and backend build
@@ -160,7 +160,7 @@ cd "$SIM_ROOT"
 
 A real scene needs an applicable manifest; the wrapper does not enlarge the validated envelope. `replay` follows the logged ego trajectory. `closed-loop` connects a separate VADv2 or HydraMDP planner. The two processes use their own environments and controlled frame/trajectory directories. The NPU planner reuses a separately pinned AlgEngine adaptation and checks actual source, image identity and complete checkpoint. Planner FP32/BF16 commands are in the runtime guide; the renderer accepts FP32 only.
 
-`R` selects original IDM policies; `NR` replays other actors' logs. PDM metrics and dense rewards are opt-in and need real maps and the original trajectory vocabulary. The wrapper checks original RunnerReports, exact scene IDs, completion flags and actual JPEG decoding. The recorded NR/R windows passed a separate exact camera/frame inventory audit; vehicle feedback and applicable scores still require their own acceptance.
+`R` selects original IDM policies; `NR` replays other actors' logs. PDM metrics and dense rewards are opt-in and need real maps and the original trajectory vocabulary. The wrapper checks original RunnerReports, exact scene IDs, completion flags and actual JPEG decoding. The recorded NR/R replay windows and the subsequent eight planner-feedback cases passed independent camera/frame and actual-control consumption audits; applicable scores still require their own acceptance.
 
 ## Audit a replay window
 
@@ -186,8 +186,8 @@ Check exit code 0, `result=pass_two_configured_replay_windows_coverage`, each NR
 
 ## Device planning and remaining acceptance
 
-One chip completed this original-resolution initial frame and the NR/R configured windows. This does not determine minimum HBM, host RAM or device count for arbitrary complete scenes. Planner feedback uses one chip for rendering and one for the planner as a validation configuration; sharing one chip between both has not been measured.
+One chip completed this original-resolution initial frame and the NR/R configured windows. This does not determine minimum HBM, host RAM or device count for arbitrary complete scenes. The eight accepted planner-feedback cases each used one chip for rendering and one for the planner, on one physical card; sharing one chip between both has not been measured.
 
-Remaining work covers complete original-log time spans, both planners with FP32/BF16 feedback, applicable metrics/rewards and interruption recovery. Multi-chip/Ray execution, sustained runs and performance need separate acceptance. Any comparison with upstream 8 GPU execution must fix assets, cameras, resolution, model, dtype, score scope and output content, while reporting physical cards and chip/process counts separately.
+Remaining work covers complete original-log time spans, applicable metrics/rewards and interruption recovery. The accepted two-model/two-precision/R-NR control windows do not establish quality, cover all scene types or replace the AlgEngine synthetic-training matrix. Ray scaling across scenes and renderer processes, sustained runs and performance need separate acceptance. Any comparison with upstream 8 GPU execution must fix assets, cameras, resolution, model, dtype, score scope and output content, while reporting physical cards and chip/process counts separately.
 
 External MTGS reconstruction training, arbitrary deformable models, unfinished BWM generation and complete LiDAR rendering are outside this forward result. Upstream maps DeformableSubModel to None and retains a LiDAR-output TODO. Camera-rendering results cannot establish those capabilities.

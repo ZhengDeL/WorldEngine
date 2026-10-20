@@ -8,8 +8,14 @@ one 910C chip: all 1,550,733 Gaussians, eight 1920×1080 cameras, full-output fi
 checks and 1,024 sampled pixels against NumPy. The original configured 12-frame
 NR/R replay windows completed and each saved 96 decodable JPEGs. Independent
 CPU inventory verified frames 0–11 and all eight cameras, spanning 5.5 seconds of
-simulation time. Complete original-log coverage and model-in-the-loop feedback
-remain unvalidated. See the [bounded real-scene result](../docs/validation/simengine_real_scene_20261020.json).
+simulation time. These renderer/replay results are retained in the
+[bounded real-scene record](../docs/validation/simengine_real_scene_20261020.json).
+The subsequent VADv2/HydraMDP × FP32/BF16 × R/NR matrix passed all eight configured
+closed-loop control windows. Each run rendered 12 frames, decoded 96 JPEGs and
+applied eight model plans through the original policy and controller. See the
+[closed-loop evidence](../docs/validation/simengine_closed_loop_20261020.json).
+The selected source scene has 24 frames; this result covers the configured
+12-frame window, not the complete source log or driving quality.
 Small-probe manifests alone do not authorize larger real inputs. The server's
 8 physical NPU cards contain 16 chips; this integration has no sixteen-chip
 scaling result or GPU comparison.
@@ -102,8 +108,9 @@ WORLDENGINE_IMAGE_ID="$IMAGE_ID" "$ALG_PYTHON" \
 geometry islands and actual activation checks. It does not cast the model's
 parameters to BF16. The default MSDA backend is the adapted reference path;
 `--msda-backend cuda-compatible` is a separate explicitly selected experiment.
-Neither mode has a target-device closed-loop acceptance result from the local
-filesystem tests described below.
+The reference MSDA path is used by the eight accepted target-device control
+windows. The CUDA-compatible MSDA option is not part of this closed-loop result.
+The local filesystem fixtures described below remain CPU tests.
 
 The original CUDA command remains available by omitting the NPU arguments.
 With no `--precision`, CUDA keeps the configuration's original FP16 setting;
@@ -173,7 +180,8 @@ Use the same command with `--mode closed-loop` and add
 `--planner-client-folder /absolute/shared/frames`. Those directories must already
 exist. This mode follows the original testing script's `env_input_policy`,
 `navformer_client`, `trajectory_navigation` and `log_play_controller` settings.
-Start the separate AlgEngine planner with the command above and the same
+For the validated two-chip configuration, set the simulator to `--device npu:1`
+and keep the separate AlgEngine planner on `--device npu:0`, using the same
 directories. The default wait for a missing plan is bounded by the client
 protocol and the shared stop/deadline environment.
 
@@ -181,7 +189,7 @@ The `simulation` phase in a controlled launch plan can therefore use:
 
 ```json
 {
-  "argv": ["ABSOLUTE_SIM_PYTHON", "-m", "simengine_ascend.run_simulation", "--scene-pkl", "ABSOLUTE_PREPARED_SCENE", "--asset-root", "ABSOLUTE_PREPARED_ASSETS", "--maps-root", "ABSOLUTE_MAPS", "--validated-manifest", "ABSOLUTE_VALIDATED_MANIFEST", "--device", "npu:0", "--output", "{WE_output}", "--deadline-utc", "{deadline_utc}", "--stop-file", "{stop_file}", "--expected-scene-ids", "ABSOLUTE_EXPECTED_IDS_JSON", "--mode", "closed-loop", "--reaction", "NR", "--planner-data-path", "{plan_traj}", "--planner-client-folder", "{frames}"],
+  "argv": ["ABSOLUTE_SIM_PYTHON", "-m", "simengine_ascend.run_simulation", "--scene-pkl", "ABSOLUTE_PREPARED_SCENE", "--asset-root", "ABSOLUTE_PREPARED_ASSETS", "--maps-root", "ABSOLUTE_MAPS", "--validated-manifest", "ABSOLUTE_VALIDATED_MANIFEST", "--device", "npu:1", "--output", "{WE_output}", "--deadline-utc", "{deadline_utc}", "--stop-file", "{stop_file}", "--expected-scene-ids", "ABSOLUTE_EXPECTED_IDS_JSON", "--mode", "closed-loop", "--reaction", "NR", "--planner-data-path", "{plan_traj}", "--planner-client-folder", "{frames}"],
   "cwd": "{repo_root}"
 }
 ```
@@ -299,6 +307,124 @@ directories. Published trajectories use no-overwrite creation. Temporary-file
 cleanup deletes exact files created by this planner and does not delete renderer
 records or glob shared frame directories.
 
+## Audit a closed-loop control window
+
+Enable consumption evidence in the **simulation phase** of the reviewed launch
+plan before running a new job:
+
+```json
+"env": {"WORLDENGINE_CLOSED_LOOP_AUDIT_DIR": "{WE_output}/consumption_audit"}
+```
+
+Preserve the phase's other environment entries. The directory must be new and
+inside this job's `WE_output`; replay and GPU defaults do not enable this observer.
+The client records the exact NPY bytes parsed, the returned trajectory object,
+the original policy/controller execution and actual log-play state update. A
+successful consumption receipt is published only after the real successor frame
+and its eight camera files exist. Interrupted jobs retain their completed records.
+
+The public CPU auditor checks one official 12-frame window with four history
+frames. It requires all eight applied control indices `4..11`, four consecutive
+real model inputs per request, finite `40x3` plans matching the original vocabulary,
+an unbroken consumption-receipt chain, and the exact 96-camera-image matrix with
+complete JPEG decoding at the original dimensions. An additional published plan
+12 may exist; it is not counted as an applied control.
+
+Run in an isolated CPU container with **no NPU/GPU device mounts**, NumPy, Pillow
+and PyYAML. Mount the job, selected source, external AlgEngine and prepared assets
+read-only. Supply the original processes' absolute job path as
+`RECORDED_RUN_ROOT`; `RUN_ROOT` may be a different read-only CPU mount. The output
+must be a new JSON outside every input root, in an existing writable parent:
+
+```bash
+python -m simengine_ascend.tools.audit_closed_loop \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --expected-source-sha256 "$APPROVED_SIM_RUNTIME_SHA" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_CLOSED_LOOP_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+The two host chip indices are explicit, ordered, distinct values in `0..15`:
+planner first, renderer second. Their recorded plan/runtime mapping must agree
+with these independently supplied values; the logical devices remain `npu:0`
+and `npu:1`. Each phase's `env` overrides inherited container environment values:
+set `WORLDENGINE_HOST_DEVICE_IDS` in **both** phases to the actual comma-separated
+pair. Changing only the container environment does not replace a value already
+fixed in the plan. Use `--model hydramdp` for HydraMDP, `--precision bf16` for BF16 and
+`--reaction R` for the original IDM reaction policy/navigation. Both the wrapper
+reaction label and resolved Hydra policies, scene and exchange paths must match.
+
+This audit profile fixes the official 100% VADv2/HydraMDP checkpoints and original
+8192-entry vocabulary, external AlgEngine source
+`40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b`
+at commit `972e1d9592860cef6520e0b39d7e4e9ab55a510a`, and recorded image ID
+`sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48`.
+It verifies these reported identities and input files; the job owner must also
+verify the actual container image and device mounts. Other model/source/image
+profiles need a separate reviewed acceptance contract. Source SHA values use
+relative POSIX ordering and must identify the **snapshot actually executed**.
+The tools are outside the simulator's top-level runtime fingerprint; keep their
+own file SHA256 values in the delivery manifest and audit reports as well.
+When auditing an older snapshot that predates this public tool, start a fresh
+Python process with `python /absolute/path/to/audit_closed_loop.py` and the same
+arguments, while `--source-root` still selects the actual executed snapshot.
+This loads the CPU helpers from that selected snapshot without replacing its
+recorded files. The module form above assumes the tool and selected helpers are
+in the same checkout; a shadowed helper remains a rejected source mismatch.
+
+FP32 requires representative native Conv2d/Linear outputs on the selected NPU
+with FP32 parameters and autocast disabled. BF16 requires its actual BF16
+activations, FP32 master parameters and geometry islands, and restored autocast
+state. These observations do not constitute an all-layers/all-frames dtype trace.
+
+The audit accepts the configured control window. Full source-log coverage,
+driving quality, official scores, GPU equivalence, training convergence and
+performance remain separate checks. Actual R and NR runs have each passed for
+both models and planner precisions; the CPU fixtures separately check rejected
+configurations and damaged evidence. Run those fixtures with:
+
+```bash
+python -m unittest simengine_ascend.tools.tests.test_audit_closed_loop -v
+```
+
+## Validated closed-loop windows
+
+| Planner | Planner precision | NR | R |
+| --- | --- | --- | --- |
+| VADv2 | FP32 | Pass | Pass |
+| VADv2 | BF16 | Pass | Pass |
+| HydraMDP | FP32 | Pass | Pass |
+| HydraMDP | BF16 | Pass | Pass |
+
+Each entry is an actual NPU run followed by the public CPU auditor. The auditor
+verified controls `4..11`, their four-frame input queues, exact NPY content and
+vocabulary selection, policy/controller object identity, the applied sample-1
+vehicle state and the next rendered frame. It also verified the full 12 × 8
+camera/JPEG matrix. Both model checkpoints are official full 100pct weights.
+FP32 observations recorded actual FP32 Conv2d/Linear outputs with autocast off;
+BF16 observations recorded BF16 outputs with FP32 master weights and geometry/MSDA
+islands. These are representative activation observations, not an all-layer trace.
+
+Each case used two 910C chips on one physical card: planner `npu:0`, FP32 renderer
+`npu:1`. This is a tested configuration, not a minimum-capacity or GPU-equivalence
+claim. Each window spans 5.5 seconds of simulation time, not 5.5 seconds of wall
+time. PDM metrics and dense rewards were disabled. Full-log execution, official
+quality scores, dense image/GPU parity and performance remain unmeasured.
+
+The accepted simulator source is `90ad1a295420d87ad63391733f8f28124161b43d939964c55831b7a8e259a7d8`
+(211 runtime files); the public auditor SHA is
+`83c79ef344e995d3d440580e8db85fe8d792888eeafee0fe452b285d636758fe`.
+Per-case source, plan, checkpoint, image inventory and eight consumption-receipt
+hashes are in the [result JSON](../docs/validation/simengine_closed_loop_20261020.json).
+Earlier four-case diagnostics from source `1ef363…` are retained as history and
+are excluded from acceptance because their host/plan device mappings differed.
+The eight cases here are SimEngine control windows; they do not establish the
+eight AlgEngine synthetic training configurations.
+
 ## Reports and validation scope
 
 The public CPU replay auditor passed 11 Linux CPU fixtures and actually verified both recorded NR/R windows. It checks the exact frame/image inventory independently of the wrapper. Its [command and input contract](../docs/simengine_ascend_assessment.md#audit-a-replay-window) cover both NR/R sibling outputs, pinned preparation/source SHA256 values and a fresh report outside the inputs.
@@ -317,10 +443,9 @@ the original `WE_output/runner_report_*.json` reports to contain exactly the
 requested exact scenario IDs and number of unique successful scenarios, without an error message or
 invalid duration. This catches original runner paths that exit zero after a
 scene error. A zero launcher exit means these checks and both command exits
-passed. Formal closed-loop
-acceptance additionally requires the expected scene count, successful simulation
-reports, rendered camera outputs, vehicle feedback and applicable official
-metrics. A one-prediction replay cannot establish these properties.
+passed. Acceptance of a configured control window additionally requires the
+camera-coverage and actual-consumption checks above. Official metrics evaluate
+driving quality separately. A one-prediction replay cannot establish feedback.
 
 Run the local CPU protocol and process tests with:
 
