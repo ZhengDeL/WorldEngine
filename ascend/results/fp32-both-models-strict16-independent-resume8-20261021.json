@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "measurement_date": "2026-10-21",
+  "result": "bounded_two_model_strict16_independent4_resume4to8_all_original_comparisons_pass",
+  "measured_runtime": {
+    "sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "Python_files": 245,
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "precision": "fp32",
+    "MSDA_backend": "cuda-compatible",
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": false
+  },
+  "data": {
+    "source": "official NAVTRAIN derivation",
+    "distinct_current_anchors": 128,
+    "derived_annotation_frames": 193,
+    "cameras": 8,
+    "JPEG_files": 1544,
+    "frames_per_sample": 4,
+    "historical_frames": 3,
+    "current_frames": 1,
+    "prepared_manifest_sha256": "be781efcb64f5aff656d4e75337060fbdaf02e9a93a43de698373a4bd328fc58",
+    "anchor_history_sha256": "3446da9fe5a9f8a61adb11fef850d656ad0bffd5b662c18e0baa97bd439f4ce2"
+  },
+  "training_control": {
+    "world_size": 16,
+    "physical_cards": 8,
+    "batch_per_rank": 1,
+    "global_batch": 16,
+    "workers": 0,
+    "seed": 20261012,
+    "initialization": "Each independent branch starts from its model original official100pct epoch8 planning checkpoint; not the track-map initializer for full eight-epoch training.",
+    "runner": {
+      "type": "IterBasedRunner",
+      "max_iters": 8
+    },
+    "optimizer": {
+      "type": "AdamW",
+      "lr": 0.0002,
+      "paramwise_cfg": {
+        "custom_keys": {
+          "img_backbone": {
+            "lr_mult": 0.1
+          }
+        }
+      },
+      "weight_decay": 0.01,
+      "foreach": false
+    },
+    "stages_per_model": [
+      "continuous0to8",
+      "independent0to4",
+      "own_checkpoint_resume4to8"
+    ],
+    "completed_training_phases": 6,
+    "inherited_completed_training_phases": 1,
+    "fresh_training_phases": 5,
+    "rank_reports": 96,
+    "finite_rank_update_records": 512,
+    "history_token_occurrences": 2048
+  },
+  "original_thresholds": {
+    "tensor_atol": 1e-06,
+    "tensor_rtol": 1e-05,
+    "loss_absolute_difference_strictly_less_than": 0.0001,
+    "thresholds_modified": false
+  },
+  "models": [
+    {
+      "model": "VADv2",
+      "pairs": [
+        {
+          "update": 4,
+          "continuous_checkpoint": {
+            "bytes": 435109941,
+            "sha256": "acb578da6b46e50b8ff79b3497740129a8c572b83b5f19e4d54de0fdcced7436"
+          },
+          "independent_checkpoint": {
+            "bytes": 435109941,
+            "sha256": "e915d9a3f3d2773958d9c6c49bbcde0ceaec64fa296065a8c6e1718a62661b67"
+          },
+          "model_tensors": 889,
+          "Adam_tensors": 777,
+          "all_rank_RNG_tensors": 32,
+          "total_tensors": 1698,
+          "original_torch_equal_model_tensors": 889,
+          "original_torch_equal_total_tensors": 1698,
+          "max_model_absolute_difference": 0,
+          "max_combined_absolute_difference": 0,
+          "max_loss_absolute_difference": 0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_all_rank_RNG": true,
+          "original_comparator_exit": 0,
+          "original_report_sha256": "938de8bcb3bd5a0a94edf1864659b758bf0b386701bf4dcb6d29696e44da5080",
+          "within_original_tolerance": true
+        },
+        {
+          "update": 8,
+          "continuous_checkpoint": {
+            "bytes": 435110005,
+            "sha256": "5d692e6e859801c2d13f58978a66b2befb3be91e190ff10d27614d0b50a3972b"
+          },
+          "independent_checkpoint": {
+            "bytes": 435110005,
+            "sha256": "04f3e19f0bfb83114ab1dbe2432184ed47381e985ad12bbd64565b9e72bedb3b"
+          },
+          "model_tensors": 889,
+          "Adam_tensors": 777,
+          "all_rank_RNG_tensors": 32,
+          "total_tensors": 1698,
+          "original_torch_equal_model_tensors": 889,
+          "original_torch_equal_total_tensors": 1698,
+          "max_model_absolute_difference": 0,
+          "max_combined_absolute_difference": 0,
+          "max_loss_absolute_difference": 0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_all_rank_RNG": true,
+          "original_comparator_exit": 0,
+          "original_report_sha256": "29d0b2a22c3ffd3c32973666fca0fbb6005272098eaca86c19a6daaa101424d2",
+          "within_original_tolerance": true
+        }
+      ],
+      "independent_raw_byte_proof_available": true
+    },
+    {
+      "model": "HydraMDP",
+      "pairs": [
+        {
+          "update": 4,
+          "continuous_checkpoint": {
+            "bytes": 450988133,
+            "sha256": "b196a5d299cac13e4ffab4bc2437769a2272dbc683807834c48db124eb63f8ac"
+          },
+          "independent_checkpoint": {
+            "bytes": 450988133,
+            "sha256": "f874b691c5d51c1dc51bb7f496f5360fbed4bae7ce2fd799dcc7a0a19a1b7561"
+          },
+          "model_tensors": 909,
+          "Adam_tensors": 837,
+          "all_rank_RNG_tensors": 32,
+          "total_tensors": 1778,
+          "original_torch_equal_model_tensors": 909,
+          "original_torch_equal_total_tensors": 1778,
+          "max_model_absolute_difference": 0,
+          "max_combined_absolute_difference": 0,
+          "max_loss_absolute_difference": 0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_all_rank_RNG": true,
+          "original_comparator_exit": 0,
+          "original_report_sha256": "9a26cce48629b8ee70bef7976e20672528ce461bb2a406f6d8040fd2dde04619",
+          "within_original_tolerance": true
+        },
+        {
+          "update": 8,
+          "continuous_checkpoint": {
+            "bytes": 450988197,
+            "sha256": "10bd261d1e2136b377265f8cd9c8288fd445ce204ef0485e4665063f9413ae62"
+          },
+          "independent_checkpoint": {
+            "bytes": 450988197,
+            "sha256": "98049747f7494b82909e339b0d349ada8697713302ca5f69d9e317509106db6d"
+          },
+          "model_tensors": 909,
+          "Adam_tensors": 837,
+          "all_rank_RNG_tensors": 32,
+          "total_tensors": 1778,
+          "original_torch_equal_model_tensors": 909,
+          "original_torch_equal_total_tensors": 1778,
+          "max_model_absolute_difference": 0,
+          "max_combined_absolute_difference": 0,
+          "max_loss_absolute_difference": 0,
+          "identical_batch_tokens": true,
+          "identical_learning_rates": true,
+          "identical_all_rank_RNG": true,
+          "original_comparator_exit": 0,
+          "original_report_sha256": "33f95f7250a376b9c5c91aa0658aefd7b13771f2b8da9093c5cc62ecfba580c9",
+          "within_original_tolerance": true
+        }
+      ],
+      "independent_raw_byte_proof_available": false
+    }
+  ],
+  "actual_driver_return": 0,
+  "actual_outer_return": 0,
+  "all10_training_and_comparison_container_lifecycles_complete0": true,
+  "original_comparator_semantics": {
+    "counter_label": "bitwise_equal_tensors",
+    "actual_operator": "torch.equal",
+    "signed_zero_distinction_proven_by_original_operator": false,
+    "independent_Hydra_raw_byte_equality_claimed": false
+  },
+  "separate_VAD_logical_C_raw_result": {
+    "public_record": "fp32-vad-strict16-independent-resume8-20261021.json",
+    "report_sha256": "7b47e893ddcd7ade116a4041395e518cc9b9f4cad699fc2a2815adee71394c43",
+    "pairs": 2,
+    "raw_equal_tensors_per_pair": 1698,
+    "signed_zero_differences": 0,
+    "scope": "Independent VAD-only sidecar; not extended to Hydra or serialized checkpoint files."
+  },
+  "evidence_sha256": {
+    "original_comparator": "ba855451c728aa4bc921fe0fa89440407fe7e25acbe404b8567e9f3d600b0d0c",
+    "original_outer_wait": "d08aa51e55bcdac06201564ab8a7cd845669ad6ff4ff5245adbdd38f0409ea7a",
+    "original_outer_source": "15ee3c89ab39627850f64695d57159da7e5fa7b29aad63ceac3d500978d105c4",
+    "independent_251_metadata_review": "ea436a6702c209989bc8116be3094e987c2a99fe42aeb8afb26b22cbc8269f82",
+    "independent_comparison_CSV": "323b90f7e5f926e6a56c41966077d66bdd77ac2b53f59d1cb0b09b28cca98b4a"
+  },
+  "scope": {
+    "model_and_Adam_checkpoint_rank": 0,
+    "RNG_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "all_rank_model_and_Adam_payloads_compared": false,
+    "two_model_eight_update_strict_control_accepted": true,
+    "current_public76c_independent_resume_accepted": false,
+    "full_NAVTRAIN103288_training_accepted": false,
+    "complete_eight_epoch_or_convergence_accepted": false,
+    "GPU_training_parity_accepted": false,
+    "historical_GPU_numeric3_and_Hydra_full_NAVTEST_differences_preserved": true,
+    "prior_failed_controller_records_relabelled": false
+  }
+}

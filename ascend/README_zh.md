@@ -22,10 +22,13 @@ MSDA 默认使用 `reference`；可通过 `--msda-backend cuda-compatible` 选�
 | HydraMDP，官方权重，完整 NAVTEST | 两端推理及官方评分均已完成；4 个样本的选择候选 ID 不同，4 条轨迹和 2 个逐 token 评分行超出原容差，轨迹最大绝对差为 5.454713821411133；GPU／NPU PDMS 分别为 91.45968923／91.45952568 | 逐 token 数值对照超出原容差：原比较器退出 2，控制器退出 3。七项聚合指标均在原 `atol=1e-6`、`rtol=1e-5` 门槛内，不能覆盖逐 token 超差；根因仍在定位 |
 | MSDA，两组真实输入 tuple | 原前向及 value／location／attention 梯度对照均已完成，满足原容差 | 仅覆盖实测的两组 tuple 和一阶梯度，不代表全部模型 Tensor 或逐位等价 |
 | 原生 NPU Adam，保存梯度对照 | 每模型累计完成 8 次受控优化器更新：两组保存梯度序列 × 两次原生重复 × 两步，均满足原算术容差 | 使用保存的 GPU 裁剪后梯度，不重放模型前向／后向、裁剪、Dataset 或 DDP，不代表完整训练或严格续训等价 |
-| VADv2，独立四次更新及 4→8 续训 | 第 4、8 次更新处的两组 checkpoint 对照均满足原数值门槛，Tensor 与 loss 最大差均为 0；每组的 889 个模型、777 个 Adam 和 32 个全 rank RNG Tensor，共 1,698 个，逻辑 C 顺序原始字节全部相同；两项 CPU 比较及其实际 wait 均为 0 | 已留证的 `0488bfb7…` 源码、官方 NAVTRAIN128、16 rank × batch 1，每样本四帧（三帧历史加当前帧）、workers 0、FP32 `cuda-compatible`；模型／Adam 主体取 rank 0 checkpoint，RNG 覆盖全部 16 rank，不扩展为完整 epoch、Hydra 或当前源码的严格续训验收 |
+| VADv2，独立四次更新及 4→8 续训 | 第 4、8 步的两组对照中，Tensor 与 loss 最大差均为 0；每组 889 个模型 Tensor、共 1,698 个模型／Adam／RNG Tensor 均满足原 `torch.equal` 检查。另行完成的 VAD 字节检查证明每组 1,698 个逻辑 C 顺序 Tensor 字节相同 | 已留证的 `0488bfb7…` 源码；模型／Adam 主体取 rank 0 checkpoint，保存的 RNG 覆盖全部 16 rank。仅八次更新，不扩展为完整 epoch 或当前公开源码的独立续训验收 |
+| HydraMDP，独立四次更新及 4→8 续训 | 两组对照均满足原门槛，Tensor 与 loss 最大差均为 0；每组 909 个模型 Tensor、共 1,778 个联合 Tensor 均满足 `torch.equal`，batch token、学习率和全部 rank RNG 一致 | 同一有限范围源码、数据及 16 rank 对照；原相等计数不区分正负零，尚无 Hydra 独立 raw-byte 结论 |
 | 当前公开源码 `76c51f77…`，单芯片短链 | 两模型均完成 2 次 FP32 更新及独立 22-anchor 推理；原脚本、容器、watchdog 和外层实际 wait 均为 0，完整保存的模型／Adam 状态为有限值，checkpoint 含单 rank 四源 RNG | World 1、batch 1、`cuda-compatible`，使用按原 NAVTEST 日志互斥派生的 42 个训练／22 个评价锚点；未验收独立续训、官方重评分、GPU 对齐、完整 epoch 或收敛，历史 `0488bfb7…` 结果单列 |
 
-[VADv2 独立训练与续训结果](results/fp32-vad-strict16-independent-resume8-20261021.json)列出了官方 100% 初始化权重和四份 checkpoint 的 SHA-256。独立四步从该官方权重重新开始，第八步对照使用这次独立训练的第四步 checkpoint 恢复至第八步。另行执行的 CPU 字节检查先核对 shape／dtype，再比较逻辑 C 顺序的完整 Tensor 字节，包含正负零；它不表示序列化 checkpoint 文件相同。这里完成的是八次**更新**，完整双模型严格控制器和当前公开源码的独立续训仍须分别验收。
+[双模型 strict16 结果](results/fp32-both-models-strict16-independent-resume8-20261021.json)记录了完成的六个训练阶段、四项原比较和 checkpoint 身份。官方派生数据包含 128 个当前锚点、193 个注释帧，八相机共 1,544 张 JPEG；每个样本保留三帧历史和当前帧。两模型均使用 16 rank × batch 1、workers 0、FP32 `cuda-compatible`，关闭 HF32。原 Tensor 容差仍为 `atol=1e-6, rtol=1e-5`，loss 差要求严格小于 `1e-4`。四项比较的 Tensor 与 loss 最大差均为 0。
+
+比较主体是 rank 0 保存的模型／Adam 状态及全部 16 rank 的 RNG。[此前的 VAD 逻辑 C 字节检查](results/fp32-vad-strict16-independent-resume8-20261021.json)另行覆盖了正负零，范围不扩展到 Hydra，也不表示序列化 checkpoint 文件相同。这里完成的是八次**更新**。实测 `0488bfb7…` 与当前公开 `76c51f77…` 源码分开记录，本结果不证明完整 NAVTRAIN 八个 epoch 收敛或 GPU／NPU 训练等价。
 
 完整 NAVTRAIN 八个 epoch 的训练与收敛尚未验收。原生 GPU 重复训练和完整输入 pilot 已完成的数值超差记录继续保留，上述有限范围算子结果不解决这些差异。六组真实合成导出也仍未完成。
 
