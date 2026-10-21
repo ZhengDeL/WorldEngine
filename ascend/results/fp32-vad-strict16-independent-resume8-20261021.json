@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "measurement_date": "2026-10-21",
+  "model": "VADv2",
+  "result": "bounded_independent4_and_resume4to8_numeric_and_logical_C_raw_equal",
+  "measured_runtime": {
+    "sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "Python_files": 245,
+    "precision": "fp32",
+    "MSDA_backend": "cuda-compatible",
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48"
+  },
+  "official_initializer": {
+    "file": "e2e_vadv2_100pct_ep8.pth",
+    "bytes": 434885463,
+    "sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a"
+  },
+  "data": {
+    "source": "official NAVTRAIN derivation",
+    "distinct_current_anchors": 128,
+    "frames_per_sample": 4,
+    "historical_frames_per_sample": 3,
+    "current_frames_per_sample": 1,
+    "batch_per_rank": 1,
+    "ranks": 16,
+    "physical_cards": 8,
+    "workers": 0,
+    "prepared_manifest_sha256": "be781efcb64f5aff656d4e75337060fbdaf02e9a93a43de698373a4bd328fc58",
+    "anchor_history_manifest_sha256": "3446da9fe5a9f8a61adb11fef850d656ad0bffd5b662c18e0baa97bd439f4ce2"
+  },
+  "training_control": {
+    "optimizer": {
+      "type": "AdamW",
+      "lr": 0.0002,
+      "paramwise_cfg": {
+        "custom_keys": {
+          "img_backbone": {
+            "lr_mult": 0.1
+          }
+        }
+      },
+      "weight_decay": 0.01,
+      "foreach": false
+    },
+    "seed": 20261012,
+    "runner": {
+      "type": "IterBasedRunner",
+      "max_iters": 8
+    },
+    "continuous_updates": 8,
+    "independently_initialized_updates": 4,
+    "resumed_updates": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "original_thresholds": {
+    "tensor_atol": 1e-06,
+    "tensor_rtol": 1e-05,
+    "loss_atol": 0.0001,
+    "thresholds_modified": false
+  },
+  "pairs": [
+    {
+      "update": 4,
+      "comparison": "continuous8_checkpoint_vs_independent4",
+      "checkpoints": {
+        "continuous": {
+          "bytes": 435109941,
+          "sha256": "acb578da6b46e50b8ff79b3497740129a8c572b83b5f19e4d54de0fdcced7436"
+        },
+        "independent": {
+          "bytes": 435109941,
+          "sha256": "e915d9a3f3d2773958d9c6c49bbcde0ceaec64fa296065a8c6e1718a62661b67"
+        }
+      },
+      "numeric": {
+        "original_comparator_exit": 0,
+        "CPU_supervisor_return": 0,
+        "within_original_tolerance": true,
+        "model_tensors": 889,
+        "total_compared_tensors_including_RNG": 1698,
+        "max_tensor_absolute_difference": 0,
+        "max_loss_absolute_difference": 0,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_all_rank_RNG": true,
+        "complete_update_sequence": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "logical_C_raw": {
+        "model_tensors": 889,
+        "Adam_tensors": 777,
+        "all_rank_CPU_NPU_RNG_tensors": 32,
+        "total_tensors": 1698,
+        "raw_equal_tensors": 1698,
+        "differing_bytes": 0,
+        "differing_signed_zero_elements": 0,
+        "non_tensor_value_differences": 0
+      },
+      "original_numerical_report_sha256": "938de8bcb3bd5a0a94edf1864659b758bf0b386701bf4dcb6d29696e44da5080"
+    },
+    {
+      "update": 8,
+      "comparison": "continuous8_checkpoint_vs_independent4_then_resume4to8",
+      "checkpoints": {
+        "continuous": {
+          "bytes": 435110005,
+          "sha256": "5d692e6e859801c2d13f58978a66b2befb3be91e190ff10d27614d0b50a3972b"
+        },
+        "independent": {
+          "bytes": 435110005,
+          "sha256": "04f3e19f0bfb83114ab1dbe2432184ed47381e985ad12bbd64565b9e72bedb3b"
+        }
+      },
+      "numeric": {
+        "original_comparator_exit": 0,
+        "CPU_supervisor_return": 0,
+        "within_original_tolerance": true,
+        "model_tensors": 889,
+        "total_compared_tensors_including_RNG": 1698,
+        "max_tensor_absolute_difference": 0,
+        "max_loss_absolute_difference": 0,
+        "identical_batch_tokens": true,
+        "identical_learning_rates": true,
+        "identical_final_all_rank_RNG": true,
+        "complete_update_sequence": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "logical_C_raw": {
+        "model_tensors": 889,
+        "Adam_tensors": 777,
+        "all_rank_CPU_NPU_RNG_tensors": 32,
+        "total_tensors": 1698,
+        "raw_equal_tensors": 1698,
+        "differing_bytes": 0,
+        "differing_signed_zero_elements": 0,
+        "non_tensor_value_differences": 0
+      },
+      "original_numerical_report_sha256": "29d0b2a22c3ffd3c32973666fca0fbb6005272098eaca86c19a6daaa101424d2"
+    }
+  ],
+  "raw_comparison": {
+    "actual_comparison_exit": 0,
+    "actual_host_Popen_wait_return": 0,
+    "own_process_group_gone": true,
+    "execution": "CPU-only reading of saved checkpoints",
+    "accelerator_initialized": false,
+    "method": "Equal shape/dtype, detach CPU contiguous reshape(-1).view(uint8); compare complete logical-C bytes.",
+    "original_numeric_report_fields_reinterpreted_as_raw": false,
+    "serialized_checkpoint_file_equality_claimed": false
+  },
+  "evidence_sha256": {
+    "original_numerical_comparator": "ba855451c728aa4bc921fe0fa89440407fe7e25acbe404b8567e9f3d600b0d0c",
+    "raw_byte_worker": "62011a45330bbee1ae5fd2e2f77591e36eb7c316be7f3dd370ff176ea8a8faee",
+    "raw_comparison_report": "7b47e893ddcd7ade116a4041395e518cc9b9f4cad699fc2a2815adee71394c43",
+    "raw_comparison_actual_host_wait": "aea84aad118452a4f19858d58f2fb5ee20dca8aeac0b64a161deeba8092ad8cb"
+  },
+  "scope": {
+    "model_and_Adam_checkpoint_rank": 0,
+    "RNG_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "all_rank_model_and_Adam_payloads_compared": false,
+    "source_76c_device_independent_resume_accepted": false,
+    "Hydra_strict_comparison_accepted": false,
+    "entire_two_model_strict_controller_accepted": false,
+    "full_NAVTRAIN_epoch_or_convergence_accepted": false,
+    "cross_device_training_parity_accepted": false,
+    "general_repeatability_accepted": false,
+    "explanation": "The numerical and byte comparisons cover these two saved VAD checkpoint pairs only."
+  }
+}
