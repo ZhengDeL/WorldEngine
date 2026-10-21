@@ -719,10 +719,15 @@ runner = dict(
 - Incorrect pre-trained weights
 
 **Solution:**
-```bash
-# Check data loading
-python tools/analysis_tools/browse_dataset.py configs/worldengine/e2e_vadv2_50pct.py
 
+Optional dataset visualization uses tools from a separate MMDetection3D checkout;
+this WorldEngine checkout does not include a dataset browser. See the
+[MMDetection3D v1.0.0rc4 dataset visualization guide](https://github.com/open-mmlab/mmdetection3d/blob/v1.0.0rc4/docs/en/useful_tools.md#dataset)
+and its [browser source](https://github.com/open-mmlab/mmdetection3d/blob/v1.0.0rc4/tools/misc/browse_dataset.py).
+Check compatibility with the custom NAVFormer dataset and its pipeline before
+using that external tool. This visualization workflow has not been validated on NPU.
+
+```bash
 # Verify pre-trained weights loaded
 grep "load checkpoint" work_dirs/*/logs/train.*
 

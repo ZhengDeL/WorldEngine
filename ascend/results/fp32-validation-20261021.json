@@ -1,0 +1,365 @@
+{
+  "Hydra_common_input_diagnostic": {
+    "GPU_choices": [
+      390,
+      635,
+      112,
+      2526
+    ],
+    "NPU_choices": [
+      7220,
+      6807,
+      2675,
+      1108
+    ],
+    "actual_return": 3,
+    "all19_typed_input_fields_matched_after_explicit_GPU_can_bus_replay": true,
+    "each_NPU_repeated_vector_bitwise_stable": true,
+    "forwards": 12,
+    "historical_full_result_relabelled": false,
+    "inputs": 4,
+    "measured_runtime_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "model_state_sha256": "2730fe73b510128796d95463603878413ab31277881acb7e490aa90e7bce76e0",
+    "modified_float64_metadata_values": 27,
+    "modified_input_group_is_not_native_pipeline": true,
+    "repeats": 3,
+    "root_cause_resolved": false,
+    "selection_agreement_accepted": false,
+    "world_size": 1
+  },
+  "full_official_checkpoint_benchmarks": [
+    {
+      "GPU_ranks": 8,
+      "NPU_logical_ranks": 16,
+      "NPU_physical_cards": 8,
+      "all_internal_tensors_bitwise_equal_accepted": false,
+      "all_requested_output_comparisons_accepted": true,
+      "comparison": {
+        "aggregate_official_metrics": {
+          "comfort": {
+            "GPU": 0.9998353367363741,
+            "NPU": 0.9998353367363741,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "drivable_area_compliance": {
+            "GPU": 0.9038366540424831,
+            "NPU": 0.9038366540424831,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "driving_direction_compliance": {
+            "GPU": 0.9802815741808003,
+            "NPU": 0.9802815741808003,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "ego_progress": {
+            "GPU": 0.7667243534932295,
+            "NPU": 0.7667243534932295,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "no_at_fault_collisions": {
+            "GPU": 0.9840688292441956,
+            "NPU": 0.9840688292441956,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "score": {
+            "GPU": 0.8216216548127679,
+            "NPU": 0.8216216548127679,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "time_to_collision_within_bound": {
+            "GPU": 0.9380866128766672,
+            "NPU": 0.9380866128766672,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          }
+        },
+        "all_requested_comparisons_within_original_tolerance": true,
+        "chosen_index_mismatches": 0,
+        "official_metric_tokens_outside_tolerance": 0,
+        "tokens": 12146,
+        "trajectory_max_abs": 0.0,
+        "trajectory_tokens_outside_tolerance": 0
+      },
+      "comparison_complete": true,
+      "inference_and_official_scoring_complete": true,
+      "measured_NPU_runtime_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+      "measured_score_100": {
+        "GPU": 82.16216548127679,
+        "NPU": 82.16216548127679
+      },
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "original_GPU_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+      "per_token_derived_ledger": {
+        "bytes": 858261,
+        "file": "fp32-full-navtest-vad-20261021.csv",
+        "rows": 12146,
+        "scope": "Exact column projection of the original complete comparison ledger; no prediction or metric was recomputed",
+        "sha256": "632cf70826dd5c9e4331243d825365b98d1034133a5e8b0cb5dfc2bdc465297f"
+      },
+      "profile": "vad",
+      "training_convergence_accepted": false,
+      "trajectory_scalars_compared": 1457520,
+      "trajectory_shape_per_token": [
+        40,
+        3
+      ],
+      "unique_NAVTEST_anchors": 12146
+    },
+    {
+      "GPU_ranks": 8,
+      "NPU_logical_ranks": 16,
+      "NPU_physical_cards": 8,
+      "all_internal_tensors_bitwise_equal_accepted": false,
+      "all_requested_output_comparisons_accepted": false,
+      "comparison": {
+        "aggregate_official_metrics": {
+          "comfort": {
+            "GPU": 0.9996706734727482,
+            "NPU": 0.9996706734727482,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "drivable_area_compliance": {
+            "GPU": 0.9788407706240738,
+            "NPU": 0.9788407706240738,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "driving_direction_compliance": {
+            "GPU": 0.9651737197431253,
+            "NPU": 0.9651737197431253,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "ego_progress": {
+            "GPU": 0.8713970114718009,
+            "NPU": 0.8713930862717498,
+            "NPU_minus_GPU": -3.925200051102529e-06,
+            "within_tolerance": true
+          },
+          "no_at_fault_collisions": {
+            "GPU": 0.9899143751029146,
+            "NPU": 0.9899143751029146,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          },
+          "score": {
+            "GPU": 0.9145968923154308,
+            "NPU": 0.9145952568154097,
+            "NPU_minus_GPU": -1.6355000211909498e-06,
+            "within_tolerance": true
+          },
+          "time_to_collision_within_bound": {
+            "GPU": 0.9566935616663922,
+            "NPU": 0.9566935616663922,
+            "NPU_minus_GPU": 0.0,
+            "within_tolerance": true
+          }
+        },
+        "all_requested_comparisons_within_original_tolerance": false,
+        "chosen_index_mismatches": 4,
+        "official_metric_tokens_outside_tolerance": 2,
+        "tokens": 12146,
+        "trajectory_max_abs": 5.454713821411133,
+        "trajectory_tokens_outside_tolerance": 4
+      },
+      "comparison_complete": true,
+      "inference_and_official_scoring_complete": true,
+      "measured_NPU_runtime_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+      "measured_score_100": {
+        "GPU": 91.45968923154308,
+        "NPU": 91.45952568154097
+      },
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "original_GPU_commit": "3eded7e8ac64e5bed817860765089b5914ab698f",
+      "per_token_derived_ledger": {
+        "bytes": 858427,
+        "file": "fp32-full-navtest-hydra-20261021.csv",
+        "rows": 12146,
+        "scope": "Exact column projection of the original complete comparison ledger; no prediction or metric was recomputed",
+        "sha256": "025f0dca5105aeb74bb464399310e478fe45f6b943512eefe35f5499f33cc71e"
+      },
+      "profile": "hydra",
+      "training_convergence_accepted": false,
+      "trajectory_scalars_compared": 1457520,
+      "trajectory_shape_per_token": [
+        40,
+        3
+      ],
+      "unique_NAVTEST_anchors": 12146
+    }
+  ],
+  "new_public_runtime": {
+    "MSDA_backend": "cuda-compatible",
+    "Python_runtime_files": 245,
+    "acceptance": "Both models completed2 original training updates and22 independent planning inferences, with full saved model/Adam finite checks and one-rank four-source RNG state",
+    "complete_epoch_or_convergence_accepted": false,
+    "data": "42 training anchors and22 held-out inference anchors, derived from disjoint official NAVTEST logs; not NAVTRAIN139 or full NAVTRAIN",
+    "historical_journals": "Old0488 source journals require their original checkout; they are not migrated to the new source contract",
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "logical_chips_used": 1,
+    "models": [
+      {
+        "Adam_state_entries": 259,
+        "checkpoint_sha256": "b7b83990573eb7560d60c80f9f2ad72af73f67a34ed51ac4e1bf77c43c7b557f",
+        "complete_model_tensors": 889,
+        "inference_anchors": 22,
+        "inspected_model_Adam_tensors": 1666,
+        "one_rank_fourRNG_checkpoint": true,
+        "profile": "vad",
+        "updates_this_run": 2
+      },
+      {
+        "Adam_state_entries": 279,
+        "checkpoint_sha256": "ff6fba2c85d5c5403f3aee86242578002a59d8228f40de19ac20b64da78344d4",
+        "complete_model_tensors": 909,
+        "inference_anchors": 22,
+        "inspected_model_Adam_tensors": 1746,
+        "one_rank_fourRNG_checkpoint": true,
+        "profile": "hydra",
+        "updates_this_run": 2
+      }
+    ],
+    "native_CPU_skips": 0,
+    "native_CPU_tests": 83,
+    "official_score_or_GPU_parity_accepted": false,
+    "precision": "FP32; HF32 disabled",
+    "prepared_data_manifest_sha256": "e288e79c8997e4587c0469165bd10b0a7befa56f8e6c6952ae06d596cdee39a0",
+    "sha256": "76c51f77d6d0c17f33652ea307a654bee5057c76ccd6f122b34e1fab66a1d3c5"
+  },
+  "other_precisions_or_performance_extended_by_this_record": false,
+  "overall_FP32_acceptance_complete": false,
+  "real_MSDA": {
+    "all_cross_device_bits_equal_accepted": false,
+    "backend": "cuda-compatible",
+    "cases": 2,
+    "full_model_training_equivalence_accepted": false,
+    "measured_runtime_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "original_tolerance_passed": true,
+    "outputs": [
+      "forward",
+      "value_gradient",
+      "sampling_location_gradient",
+      "attention_weight_gradient"
+    ],
+    "repeats_per_case": 3
+  },
+  "record_date": "2026-10-21",
+  "remaining_acceptance": [
+    "Complete NAVTRAIN eight-epoch training and convergence for both models",
+    "Independent longer16-rank training/restoration numerical equivalence",
+    "Resolve Hydra selected-candidate differences under the original criterion",
+    "Six additional genuine WorldEngine synthetic exports and their original consumer paths"
+  ],
+  "saved_gradient_Adam": {
+    "models": [
+      {
+        "active_parameters": 259,
+        "all_original_tensor_comparisons_within_tolerance": true,
+        "cross_GPU_bitwise_equal": false,
+        "cross_GPU_moments_max_abs": 3.725290298461914e-09,
+        "cross_GPU_parameters_max_abs": 2.384185791015625e-07,
+        "full_named_parameters": 730,
+        "moments": 777,
+        "optimizer_updates": 8,
+        "profile": "vad",
+        "same_native_real_repeats_bitwise_exact": true
+      },
+      {
+        "active_parameters": 279,
+        "all_original_tensor_comparisons_within_tolerance": true,
+        "cross_GPU_bitwise_equal": false,
+        "cross_GPU_moments_max_abs": 1.4901161193847656e-08,
+        "cross_GPU_parameters_max_abs": 1.1920928955078125e-07,
+        "full_named_parameters": 750,
+        "moments": 837,
+        "optimizer_updates": 8,
+        "profile": "hydra",
+        "same_native_real_repeats_bitwise_exact": true
+      }
+    ],
+    "scope": "Real saved post-clipping GPU gradients replayed through native NPU AdamW; no model forward/backward, clipping, Dataset or DDP replay",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8"
+  },
+  "schema_version": 1,
+  "scope": "Completed FP32 measurements; acceptance remains per case and source version",
+  "source_documents": {
+    "common_input_NPU_four_token_capture": {
+      "bytes": 86352,
+      "sha256": "7fe113170daeb4fcf09d6d593fe8992b189253441f78137093c5c38e697c640a"
+    },
+    "hydra_full_comparison": {
+      "bytes": 4242,
+      "sha256": "fd92259aca136f8ad596618701f1424aad428ed5fb0fda0739331c4a4bdf786d"
+    },
+    "hydra_new_source_inference_validation": {
+      "bytes": 6112,
+      "sha256": "e701b595589fc3ce4dbbe58c9f02d8336729ced9c47aa698ac4f08046040a5e3"
+    },
+    "hydra_new_source_short_lifecycle": {
+      "bytes": 4373,
+      "sha256": "be453dad9bb7f2b42069b1d0a082a1c74a65480ea018442530046d21f5d6d9c9"
+    },
+    "hydra_new_source_short_model_result": {
+      "bytes": 915,
+      "sha256": "e7a14d0da8a22ce6a3c52f30ad5699a7fffd4002aeab5a41a6a4f556ba8d271d"
+    },
+    "hydra_original_token_ledger": {
+      "bytes": 5461378,
+      "sha256": "d399b9528aa06b749ff93988cea8dbc99e1e200eeac962424b5487bcbbaf621d"
+    },
+    "new_public_source_outer_actual_wait": {
+      "bytes": 2216,
+      "sha256": "729b558caef625c2f52a36b604fc25597fb0d6aa55e657a8ce7d18285c1c0bbd"
+    },
+    "new_public_source_two_model_result": {
+      "bytes": 10377,
+      "sha256": "280db1c606f242e75a8055f29991a266f77d98e693e3924a4aef10653ce38b70"
+    },
+    "real_CUDA_tuple_NPU_MSDA_actual_status": {
+      "bytes": 25573,
+      "sha256": "8fd36ed566c1de7ec215f45ff11fcb695697a041e03e0e81e0f68d7da27e75a3"
+    },
+    "saved_gradient_NPU_Adam_actual_peer": {
+      "bytes": 17357,
+      "sha256": "0f71ae8443f5cfaaf85054286a9f647e2622df02f9a706a94dd96af22b23b283"
+    },
+    "target_native_CPU83": {
+      "bytes": 17502,
+      "sha256": "bca608ffbf110aa4c6008655f732d6c0d5502ae4f9ef0a021a9bd18c5d0437a7"
+    },
+    "vad_full_comparison": {
+      "bytes": 4178,
+      "sha256": "9c59cf10245d17eedfde03442fbdc93e7312b3ecdb86187008c52400ff174058"
+    },
+    "vad_new_source_inference_validation": {
+      "bytes": 6127,
+      "sha256": "3dc737ccea230b261d1efd9702cb3c3d9e32cd862239f46b5073f1406bd421ac"
+    },
+    "vad_new_source_short_lifecycle": {
+      "bytes": 4360,
+      "sha256": "c9253f874a33a5f266069682c9093ed112c52fa1b0e08fda21295baf03ffa9e1"
+    },
+    "vad_new_source_short_model_result": {
+      "bytes": 913,
+      "sha256": "486401167484ceb1e595e16f9013e407535c02a3af2c1d405531927e3e505c7a"
+    },
+    "vad_original_token_ledger": {
+      "bytes": 5461212,
+      "sha256": "53be297b96b838072168048df47f0a0ea630b0040056f93bb016883e2a3f47c3"
+    }
+  },
+  "tolerance": {
+    "GPU_reference": true,
+    "atol": 1e-06,
+    "exact_candidate_selection_required": true,
+    "rtol": 1e-05
+  }
+}

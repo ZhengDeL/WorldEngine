@@ -1,6 +1,6 @@
 """Private original-MMDetection inference observer with durable per-rank resume.
 
-Restricted to frozen0488 NAVFormer vocabulary planning, process_perception=False,
+Restricted to the pinned candidate NAVFormer vocabulary planning, process_perception=False,
 workers=0, four-frame original inputs and the original unshuffled world16 sampler.
 This is additional execution instrumentation, not part of the frozen source.
 Partial journals are never complete NAVTEST predictions or an acceptance result.
@@ -23,7 +23,7 @@ from rank_journal import (RankJournal,canonical_json,common_start,need,rank_indi
 
 MULTI_SHA='1c17038cc42177a369516d2ca6520d5716c061b83c854e54b577d6d8301c82a7'
 COLLECT_SHA='b1bd40c200c4629cee65b59cc38eaa47aa459ff9a269b948052b8755e57bbe98'
-SOURCE_SHA='0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922'
+SOURCE_SHA='76c51f77d6d0c17f33652ea307a654bee5057c76ccd6f122b34e1fab66a1d3c5'
 IMAGE='sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48'
 
 
@@ -167,7 +167,7 @@ def main():
     output=args.output.resolve();journal_root=args.journal_root.resolve();locked_path=args.locked_inputs.resolve(strict=True)
     need(len(args.attempt_id)==32 and all(c in '0123456789abcdef' for c in args.attempt_id),'New lowercase UUID hex required')
     need(output!=journal_root and journal_root not in output.parents and output not in journal_root.parents,'Journal and attempt output must be separate')
-    need(fingerprint(root)==args.expected_source_sha256==SOURCE_SHA,'Frozen original0488 model/runtime source required')
+    need(fingerprint(root)==args.expected_source_sha256==SOURCE_SHA,'Pinned candidate model/runtime source required')
     need(os.environ.get('WORLDENGINE_IMAGE_ID')==args.expected_image_id==IMAGE,'Frozen original image required')
     need(int(os.environ.get('WORLD_SIZE','0'))==16,'torchrun unchanged world16 required')
     need(sha(config)==args.expected_config_sha256 and sha(checkpoint)==args.expected_checkpoint_sha256,'Config/checkpoint SHA differs')

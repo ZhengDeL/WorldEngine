@@ -542,7 +542,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
   --output "$RUNS/vad50_full"
 ```
 
-不传 `--steps`、`--epochs`，保留原配置八个 epoch、optimizer 和 LR horizon。迁移入口的 `--validate` 每个 epoch 执行评价。100% 训练将配置改为 `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`，初始化使用 `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`，并换新输出目录。原 50% filter 为 50,000 个锚点，完整 split 为 103,288；完整输入下的 8 次更新训练已完成，见上方记录；完整 epoch 训练及收敛仍待验收。
+不传 `--steps`、`--epochs`，保留原配置八个 epoch、optimizer 和 LR horizon。迁移入口的 `--validate` 每个 epoch 执行评价。100% 训练将配置改为 `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`，保留原配置的 `track_map_nuplan_r50_navtrain_50pct_bs1x8.pth` 初始化器，并换新输出目录。原 50% filter 为 50,000 个锚点，完整 split 为 103,288；完整输入下的 8 次更新训练已完成，见上方记录；完整 epoch 训练及收敛仍待验收。
 
 单独的[同步候选步骤](../ascend/execution/README_zh.md)只允许两个已测规划配置和八次更新，不用于完整 epoch 训练。后续四组独立重复已完成，其中两组通过原容差，两组超出原容差；同步设置尚不能作为通用修复。
 

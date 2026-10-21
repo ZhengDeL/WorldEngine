@@ -13,6 +13,6 @@ CHIPS=$3
 shift 3
 if [[ ${1:-} == -- ]]; then shift; fi
 make_common_arguments "$CHIPS" inference
-check_extra_arguments "$@"
+check_inference_arguments "$@"
 exec "${PYTHON_BIN:-python3}" "$WORLDENGINE_SOURCE/ascend/run_container.py" "${COMMON_ARGS[@]}" \
   --task inference --config "$CONFIG" --checkpoint "$CHECKPOINT" "$@"

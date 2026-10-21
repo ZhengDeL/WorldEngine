@@ -110,6 +110,7 @@ def main():
     parser.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
                         help='FP32 sampling backend; cuda-compatible matches the measured original CUDA arithmetic')
     args = parser.parse_args()
+    args.output = args.output.resolve()
     _validate_stop_options(args, parser)
     from ascend.msda import configure_backend
     configure_backend(args.msda_backend)

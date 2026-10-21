@@ -153,11 +153,14 @@ def prepare(args):
                 source, relative, mapping = resolve_camera(raw, camera_root)
                 # Actual JPEG decode validates the selected image, without a
                 # model pipeline or an accelerator import.
+                decoded_sha256 = sha256(source)
                 with Image.open(source) as image:
                     if image.format != "JPEG" or min(image.size) <= 0:
                         raise ValueError("Camera input must be a nonempty JPEG")
                     image.load()
-                camera_cache[raw] = (source, relative, mapping)
+                if sha256(source) != decoded_sha256:
+                    raise ValueError("Original JPEG bytes changed during decode")
+                camera_cache[raw] = (source, relative, mapping, decoded_sha256)
             rows.append((camera_name, camera_cache[raw]))
         if len({row[1][1] for row in rows}) != 8:
             raise ValueError("Eight cameras must have eight distinct original paths")
@@ -277,10 +280,12 @@ def prepare(args):
         (out / "cameras").symlink_to(camera_root, target_is_directory=True)
     image_records = {}
     for frame in retained:
-        for camera_name, (source, relative, mapping) in frame_cameras(frame):
+        for camera_name, (source, relative, mapping, decoded_sha256) in frame_cameras(frame):
             target = out / "cameras" / relative
             if relative not in image_records:
                 digest_before = sha256(source)
+                if digest_before != decoded_sha256:
+                    raise ValueError("Original JPEG bytes changed after cached decode")
                 if args.camera_mode == "copy":
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(source, target)
