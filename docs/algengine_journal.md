@@ -1,5 +1,7 @@
 # Recoverable planning inference on Ascend
 
+> Historical record: this page preserves the October 20, 2026 acceptance scope and locked identities at [archived commit `55efdef5`](https://github.com/ZhengDeL/WorldEngine/tree/55efdef54139c63ab9afce9178ebb3bd130717ef). For the current checkout, use [optimized inference recovery](algengine_ascend.md#recovering-optimized-inference) or the [filesystem entry](algengine_ascend.md#inference-recovery-with-file-collection). Refer here only for the input manifest and mount layout; execution scripts and hashes belong to their corresponding versions.
+
 Schema2 adds a durable per-rank journal to the existing AlgEngine planning
 inference path. VADv2 and HydraMDP passed the recorded **FP32, 22-official-anchor,
 16-rank** interruption and positive-position recovery checks on Ascend.
@@ -12,7 +14,7 @@ record. The measured journal result does not establish full NAVTEST scoring,
 training checkpoint recovery or convergence, GPU equivalence or performance.
 FP32 is the current validation priority; this guide schedules no other precision.
 
-The two inference tools are byte-identical to the measured runtime files:
+The following hashes identify the two files locked for that recorded run; they do not assert byte identity with the current checkout:
 
 | Tool | SHA256 |
 | --- | --- |

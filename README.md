@@ -23,6 +23,8 @@ The Ascend branch provides NPU entry points for AlgEngine. SimEngine retains its
 
 Optimized FP32 inference recovery uses [`ascend/tools/optimized_journal_inference.py`](ascend/tools/optimized_journal_inference.py); the [EN/ZH usage guides](docs/algengine_ascend.md#recovering-optimized-inference) and [measured record](docs/validation/algengine_fp32_optimization_20261029.json) distinguish this new contract from historical journals.
 
+The optional [filesystem recovery entry](ascend/tools/filesystem_journal_inference.py) retains per-rank parts and collects final results/reports without an HCCL barrier. Its [usage](docs/algengine_ascend.md#inference-recovery-with-file-collection) and [measured scope](docs/validation/algengine_fp32_optimization_20261029.json) cover official22/world4 tests; full-data and training acceptance remain separate.
+
 See the [current FP32 results and boundaries](ascend/README.md#fp32-measurements--october-21-2026) / [中文](ascend/README_zh.md#fp32-实测2026-年-10-月-21-日), [usage guide](docs/algengine_ascend.md) / [中文](docs/algengine_ascend_zh.md), and [measured results (JSON)](ascend/results/fp32-validation-20261021.json).
 
 - **Official-weight full NAVTEST, recorded `0488bfb7…` runtime:** both models completed all 12,146 anchors and official scoring. VADv2 selected trajectories and all seven per-token metrics agree. HydraMDP retains four selected-candidate differences, four trajectory differences and two score-row differences outside the original tolerance; its full comparison remains unaccepted.

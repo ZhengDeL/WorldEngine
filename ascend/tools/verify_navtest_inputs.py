@@ -24,7 +24,8 @@ import types
 import warnings
 
 HELPERS_SHA = '23689b27ffc5ed20453e5a2181e1c37c3fcab41654976f05d33227c21246f0a8'
-RUNTIME_SHA = '76c51f77d6d0c17f33652ea307a654bee5057c76ccd6f122b34e1fab66a1d3c5'
+RUNTIME_SHA = '7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb'
+RUNTIME_PYTHON_FILES = 247
 PREFLIGHT_SHA = 'f39bd2cbe8d6351b25bacd4c5b28632cd5b26e76052ea0d3e3f67f98c11cb85e'
 ASSET_LOCK_SHA = 'd9803fc42ddbda274f703dcda6d831db2658c1d403dc616704ad6da600bf8062'
 SPLIT_SHA = '61284edf5003c0291f843ce9817c822ba306609a62d54544223adae3fc7fc9cd'
@@ -65,6 +66,13 @@ exec(compile(archive_helper_path.read_bytes(),str(archive_helper_path),'exec'),A
 def need(value,message):
     if not value:raise Rejected(message)
 
+
+
+def validate_runtime_identity(identity):
+    need(isinstance(identity,dict) and identity.get('sha256')==RUNTIME_SHA
+         and type(identity.get('python_files')) is int
+         and identity['python_files']==RUNTIME_PYTHON_FILES,
+         'Pinned runtime source or Python file inventory differs')
 
 def utc():return datetime.now(timezone.utc).isoformat()
 
@@ -247,7 +255,7 @@ def run(args):
     try:
         report['accelerator_before']=H.accelerator_state();H.validate_CPU_only(report['accelerator_before'])
         report['source_before']=H.source_identity(source,guard)
-        need(report['source_before']['sha256']==RUNTIME_SHA and report['source_before']['python_files']==245,'Pinned runtime source differs')
+        validate_runtime_identity(report['source_before'])
         preflight=canonical_regular(source/'ascend/preflight.py')
         need(H.digest_file(preflight,guard)['sha256']==PREFLIGHT_SHA,'Pinned original inspect_phase differs')
         asset_lock=canonical_regular(source/'ascend/assets.lock.json')
@@ -301,7 +309,7 @@ def run(args):
         for path in references:guard.check();canonical_regular(path)
         reference_hash=hashlib.sha256()
         for relative in sorted(references.values()):reference_hash.update((relative+'\n').encode())
-        contract=dict(source_sha256=RUNTIME_SHA,python_files=245,inputs=report['input_files_before'],configs=configs,
+        contract=dict(source_sha256=RUNTIME_SHA,python_files=RUNTIME_PYTHON_FILES,inputs=report['input_files_before'],configs=configs,
             split_canonical_LF_SHA256=SPLIT_SHA,anchors=12146,logs=136,queue_length=4,cameras=8,
             log_token_to_official_name_sha256=hashlib.sha256(json.dumps(log_mapping,sort_keys=True).encode()).hexdigest(),
             reference_relative_paths_sha256=reference_hash.hexdigest(),unique_JPEGs=len(references),queue_frames=counts['queue_frames'])

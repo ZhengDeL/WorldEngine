@@ -653,5 +653,318 @@
       "communication_mode": "Original MMDetection NPU barrier/CPU collector; filesystem collection is a separate unaccepted workstream at this record time",
       "incompatible_journals": "A different source, tool version, mode, query chunk, topology, precision or input contract cannot reuse these saved prefixes"
     }
+  },
+  "filesystem_collection_verification": {
+    "public_entry": "ascend/tools/filesystem_journal_inference.py",
+    "source_candidate": {
+      "base_commit": "4c3c1405035ca6bc5f68d3248b888694d814d203",
+      "runtime_sha256": "7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+      "runtime_python_files": 247,
+      "NPU_snapshot_archive_sha256": "c40b12d66a4b53f6130ed4c629b356471d61e5e6ad4b53e5a57172d556fea559",
+      "NPU_snapshot_files": 472,
+      "NPU_executed_modules_SHA256": {
+        "file_collection.py": "6a5488bee8d53eb4fd6501702e80eb058653846f2d07ff5961c5bc074420542c",
+        "filesystem_journal_inference.py": "435c9afa18cfb934390d6ed19e9b42fb1cc338602b4e06d0693bc891c299a3bf",
+        "filesystem_journal_observer.py": "e29725530dc26c563c7bec4450266ad019cf5b507d945dd35919fdb084a20e82",
+        "journal_inference.py": "89e24b8d733d3a2e07ba17e4b5a8b9973d2f1428db3334014b85dcc11a359f37",
+        "rank_journal.py": "f92e2fe35f428be30851c272921c450582e5b2c5846297b415385e13f8dfe4c4"
+      },
+      "all472_NPU_snapshot_files_unchanged_after_run": true,
+      "note": "The NPU snapshot predates the separate QC binding repair. The five executed tool modules and runtime7a remain byte-identical; no whole-tree public full-data acceptance is implied."
+    },
+    "topology": {
+      "host_logical_chips": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "host_physical_cards": [
+        2,
+        3
+      ],
+      "container_visible_devices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "local_rank": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "world_size": 4
+    },
+    "inputs": {
+      "source": "Official OpenDriveLab WorldEngine NAVTEST; the same verified official22 token filter with complete original annotation/history",
+      "official_anchors": 22,
+      "padded_rows": 24,
+      "steps_per_rank": 6,
+      "filter_sha256": "446bfb797dbd747ae79673036b14e0659459276275e04c04401624d0d87e2097",
+      "ordered_tokens_sha256": "1eb436f001fb2d17b420f37099aca1d645af2e5a018e5e81d9e53df984f84a3b"
+    },
+    "precision": {
+      "mode": "FP32",
+      "matmul_HF32": false,
+      "conv_HF32": false,
+      "msda_backend": "cuda-compatible",
+      "optimization": "point-parallel-last-frame",
+      "query_chunk": 8192
+    },
+    "actual_public_NPU_runs": {
+      "vad_world4_continuous": {
+        "actual_torchrun_container_exit": 0,
+        "actual_container_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-29T18:22:55.637495424Z",
+        "finished_at": "2026-10-29T18:24:31.507536302Z",
+        "anchors": 22,
+        "world_size": 4,
+        "predictions_pickle_sha256": "db6c6f4165a05a96ee5918f35d802c763929d995d9899cbe6c9dfdc7669c12b7",
+        "validation_report_sha256": "b33ccea67f873ffffbeae48335c84432bce6dbc60edce7fe2bb4c5b7a13864ff",
+        "execution_report_sha256": "5dca08a2b8f30c6ac31080d3d51c2bc58ed996b4707f3c05e2b695fdca147dbf",
+        "actual_rank0_optimization_counts": {
+          "fallback_reasons": {},
+          "last_frame_calls": 6,
+          "last_frame_source_contract": "pinned_original_methods",
+          "observation_rank": 0,
+          "original_frame_fallback_calls": 0,
+          "original_msda_fallback_calls": 0,
+          "point_parallel_calls": 306,
+          "preserved_NumPy_draws": 36,
+          "query_chunk": 8192,
+          "requested": "point-parallel-last-frame"
+        },
+        "rank_committed": [
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "vad_world4_stop1": {
+        "actual_torchrun_container_exit": 1,
+        "actual_container_exit": 1,
+        "OOMKilled": false,
+        "started_at": "2026-10-29T18:24:34.959314345Z",
+        "finished_at": "2026-10-29T18:25:21.865281826Z",
+        "scope": "Controlled one-commit-per-rank pause",
+        "partial_rank_receipts": 4,
+        "committed_positions_per_rank": 1,
+        "complete_predictions_exported": false
+      },
+      "vad_world4_resume": {
+        "actual_torchrun_container_exit": 0,
+        "actual_container_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-29T18:25:25.227146351Z",
+        "finished_at": "2026-10-29T18:26:57.093677781Z",
+        "anchors": 22,
+        "world_size": 4,
+        "predictions_pickle_sha256": "db6c6f4165a05a96ee5918f35d802c763929d995d9899cbe6c9dfdc7669c12b7",
+        "validation_report_sha256": "bbfab011c04f8a72a04953913cb10b564399e6a185cac311f81d6d4743a757a9",
+        "execution_report_sha256": "14ec1d64202741f80f0703dbee782b6ba631d240c9819c335b29f80969968d6d",
+        "actual_rank0_optimization_counts": {
+          "fallback_reasons": {},
+          "last_frame_calls": 6,
+          "last_frame_source_contract": "pinned_original_methods",
+          "observation_rank": 0,
+          "original_frame_fallback_calls": 0,
+          "original_msda_fallback_calls": 0,
+          "point_parallel_calls": 306,
+          "preserved_NumPy_draws": 36,
+          "query_chunk": 8192,
+          "requested": "point-parallel-last-frame"
+        },
+        "rank_committed": [
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "vad_world4_replay": {
+        "actual_torchrun_container_exit": 0,
+        "actual_container_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-29T18:27:00.433105115Z",
+        "finished_at": "2026-10-29T18:27:56.113111947Z",
+        "anchors": 22,
+        "world_size": 4,
+        "predictions_pickle_sha256": "3af44080bb0aa9cc104eb9ef346b3ad07cb45796cd2c442c7264fc25aaa05178",
+        "validation_report_sha256": "24392c283b921ee4bde2311e3472e247ccb1bb92fa2d11d03cddccc282357c94",
+        "execution_report_sha256": "3a8c5af2bec7e88b7b9609d5721ee16364a13ff753318185854b8253ed9a2f8e",
+        "actual_rank0_optimization_counts": {
+          "fallback_reasons": {},
+          "last_frame_calls": 1,
+          "last_frame_source_contract": "pinned_original_methods",
+          "observation_rank": 0,
+          "original_frame_fallback_calls": 0,
+          "original_msda_fallback_calls": 0,
+          "point_parallel_calls": 51,
+          "preserved_NumPy_draws": 6,
+          "query_chunk": 8192,
+          "requested": "point-parallel-last-frame"
+        },
+        "rank_committed": [
+          6,
+          6,
+          6,
+          6
+        ]
+      },
+      "hydra_world4_continuous": {
+        "actual_torchrun_container_exit": 0,
+        "actual_container_exit": 0,
+        "OOMKilled": false,
+        "started_at": "2026-10-29T18:27:59.785999467Z",
+        "finished_at": "2026-10-29T18:29:33.79341531Z",
+        "anchors": 22,
+        "world_size": 4,
+        "predictions_pickle_sha256": "6b4ab0c3bc85c334c9097d1d36a683609ba68937bf3b9ccef1e6c07c94a66e49",
+        "validation_report_sha256": "7926af89efed4b2dc042b90b5174c54b226a6ef57401ee49bc508765904e5436",
+        "execution_report_sha256": "ff22e89036e23f53e0747b217f8ee2407e0e584c9abc61db22cb8cb3e2f739cf",
+        "actual_rank0_optimization_counts": {
+          "fallback_reasons": {},
+          "last_frame_calls": 6,
+          "last_frame_source_contract": "pinned_original_methods",
+          "observation_rank": 0,
+          "original_frame_fallback_calls": 0,
+          "original_msda_fallback_calls": 0,
+          "point_parallel_calls": 306,
+          "preserved_NumPy_draws": 36,
+          "query_chunk": 8192,
+          "requested": "point-parallel-last-frame"
+        },
+        "rank_committed": [
+          6,
+          6,
+          6,
+          6
+        ]
+      }
+    },
+    "independent_CPU_audits": {
+      "vad_world4": {
+        "actual_CPU_exit": 0,
+        "Runtime": "runc",
+        "Devices": [],
+        "DeviceRequests": null,
+        "comparison_sha256": "b20a926d973a8c25137254dfe17dca5a87437af75ca644aaff798c30e16b8c71",
+        "all_ordered_output_fields_typed_raw_exact": true,
+        "validated_routes": [
+          "continuous",
+          "resume",
+          "replay"
+        ],
+        "same_world_RNG_checked_ranks": 4,
+        "saved_prefix_bytes_unchanged": true
+      },
+      "hydra_world4": {
+        "actual_CPU_exit": 0,
+        "Runtime": "runc",
+        "Devices": [],
+        "DeviceRequests": null,
+        "comparison_sha256": "118fda1e0bdeec7e311bd209d94bcb5a9a5a720fc9cd36acbdb37ce7de0132e5",
+        "all_ordered_output_fields_typed_raw_exact": true,
+        "validated_routes": [
+          "continuous"
+        ],
+        "same_world_RNG_checked_ranks": 0,
+        "saved_prefix_bytes_unchanged": false
+      }
+    },
+    "CPU_contract_tests": {
+      "actual_exit": 0,
+      "tests": 28,
+      "skipped": 0,
+      "split": "22 collector tests + 6 installed-loop/world/AST/signal-guard tests",
+      "actual_image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+      "runtime": "runc",
+      "devices": []
+    },
+    "earlier_private_auxiliary": {
+      "accepted_private_world16_models": [
+        "VADv2",
+        "HydraMDP"
+      ],
+      "private_world4_VAD_continuous_pause_resume_replay": true,
+      "private_wrapper_sha256": "1136f3a99910b314e0d0205ec76b1e4c08591fad062580fab72c5a08fdbaa5d0",
+      "private_observer_sha256": "08114c73c3b80ec02809328414cd421209611b19c10a3a2d0b83eccee72c67c2",
+      "public_observed_test_AST_equal_to_private": true,
+      "scope": "Separate private execution evidence; not a public-world16 NPU claim"
+    },
+    "initial_launcher_attempt": {
+      "actual_exit": 1,
+      "model_execution_started": false,
+      "reason": "The private Docker wrapper used host4..7 as container-visible IDs. It was corrected to container0..3 following the public launcher; the unchanged472 source was re-run in a fresh attempt.",
+      "code_change_required": false
+    },
+    "boundaries": {
+      "public_NPU_world4_22_accepted": true,
+      "public_NPU_world16_accepted": false,
+      "world12_NPU_accepted": false,
+      "world12_CPU_contract_covered": true,
+      "public_full_NAVTEST_accepted": false,
+      "Hydra_public_recovery_accepted": false,
+      "training_recovery_or_convergence_accepted": false,
+      "official_scoring_recomputed": false,
+      "performance_accepted": false,
+      "GPU_comparison_added": false,
+      "notes": "Shared-filesystem collection removes the two final HCCL collectives; initial HCCL synchronization remains. Existing Hydra GPU differences are unchanged by this acceptance."
+    }
+  },
+  "current_checkout_NAVTEST_QC_binding_repair": {
+    "runtime_sha256": "7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+    "runtime_python_files": 247,
+    "QC_worker_sha256": "98be7a3d2bfc498da26c8d7143552728c1258cef3b27e2b6771db006231c265d",
+    "actual_CPU_exit": 0,
+    "Runtime": "runc",
+    "Devices": [],
+    "DeviceRequests": null,
+    "CPU_tests": 32,
+    "skipped": 0,
+    "test_scope": "Original17 input checks +4 source/inventory contracts +11 archive checks",
+    "legacy_source_and_wrong_count_rejected": true,
+    "NPU_snapshot_modified": false,
+    "full_official_JPEG_decode_repeated": false,
+    "scope": "CPU source binding and contract repair only; historical full image/archive audit records retain their original identities."
+  },
+  "private_complete_VAD_output_recovery": {
+    "official_unique_anchors": 12146,
+    "preserved_original_parts": 15,
+    "preserved_unique_anchors": 11387,
+    "missing_unique_anchors": 759,
+    "actual_new_recomputation_anchors": 760,
+    "actual_new_world_size": 4,
+    "actual_commits_per_rank": [
+      190,
+      190,
+      190,
+      190
+    ],
+    "actual_recomputation_exit": 0,
+    "OOMKilled": false,
+    "independent_preserved_padding_overlap_token": "ce28bbe99d7f5f43",
+    "overlap_raw_exact": true,
+    "full_old_NPU_different_typed_rows": 0,
+    "full_original_GPU_trajectory_max_abs": 0,
+    "full_original_GPU_selected_index_mismatches": 0,
+    "full_original_GPU_cached_metric_differences": 0,
+    "original_GPU_tolerance": {
+      "atol": 1e-06,
+      "rtol": 1e-05
+    },
+    "reassembled_predictions_sha256": "520baadcdbf5b5caf0a848ccfc644096402573eeaf90cac5d2f4d7d1bd2e55cc",
+    "original_world16_attempt_actual_exit": 1,
+    "original_attempt_and_parts_unchanged": true,
+    "reference_used_to_fill_predictions": false,
+    "uninterrupted_world16_attempt_accepted": false,
+    "public_FS_full_NAVTEST_accepted": false,
+    "independent_official_scoring_status": "running; no final score recorded here",
+    "PDMS_100": null,
+    "scope": "Private recovered output: fifteen preserved genuine760-row parts plus independently recomputed genuine original-rank1 sequence. A complete unique12146 export passed oldNPU raw and originalGPU tolerance gates. It is not a successful uninterrupted16rank run or public-entry full-data acceptance."
   }
 }

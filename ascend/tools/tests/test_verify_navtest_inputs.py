@@ -43,6 +43,35 @@ class NAVTESTInputQC(unittest.TestCase):
         report=self.root/'old_summary.json';report.write_text(json.dumps(value))
         return report,W.raw_sha(report),ledger,W.raw_sha(ledger),contract
 
+    def test_current_runtime_fingerprint_and_file_count(self):
+        identity=W.H.source_identity(TOOLS.parents[1],self.guard)
+        self.assertEqual(identity['sha256'],'7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb')
+        self.assertEqual(identity['python_files'],247)
+        W.validate_runtime_identity(identity)
+
+    def test_runtime_binding_rejects_legacy_or_changed_source(self):
+        for fingerprint,count in [
+            ('76c51f77d6d0c17f33652ea307a654bee5057c76ccd6f122b34e1fab66a1d3c5',245),
+            ('0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922',245),
+            ('0'*64,247)]:
+            with self.subTest(source=fingerprint),self.assertRaises(W.Rejected):
+                W.validate_runtime_identity(dict(sha256=fingerprint,python_files=count))
+
+    def test_runtime_binding_rejects_wrong_file_inventory(self):
+        for count in [245,248,True,247.0]:
+            with self.subTest(count=count),self.assertRaises(W.Rejected):
+                W.validate_runtime_identity(dict(sha256=W.RUNTIME_SHA,python_files=count))
+
+    def test_emitted_runtime_contract_uses_shared_file_count(self):
+        tree=ast.parse((TOOLS/'verify_navtest_inputs.py').read_text())
+        main=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='run')
+        contract=next(n.value for n in ast.walk(main) if isinstance(n,ast.Assign)
+                      and any(isinstance(t,ast.Name) and t.id=='contract' for t in n.targets))
+        count=next(k.value for k in contract.keywords if k.arg=='python_files')
+        self.assertIsInstance(count,ast.Name);self.assertEqual(count.id,'RUNTIME_PYTHON_FILES')
+        self.assertEqual(sum(isinstance(n,ast.Call) and isinstance(n.func,ast.Name)
+            and n.func.id=='validate_runtime_identity' for n in ast.walk(main)),1)
+
     def test_cleanup_disarms_timer_before_pool_shutdown_can_observe_stop(self):
         tree=ast.parse(Path(W.__file__).read_text())
         run=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='run')

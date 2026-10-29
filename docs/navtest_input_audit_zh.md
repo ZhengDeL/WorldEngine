@@ -6,7 +6,7 @@
 
 ## 输入与固定来源
 
-AlgEngine 源码必须符合原 245 文件指纹 `0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922`。新增工具位于嵌套目录，单独记录工具 SHA，不改变该统计范围。两模型原 100% 配置的 test 数据集必须同为完整 `NavSimOpenSceneE2E`，queue4、history3、load_interval1。
+当前优化分支要求运行源码指纹 `7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb`，共 247 个 Python 文件。嵌套工具单独记录 SHA，不计入这个范围。10 月 20 日的原始记录使用归档源码 `0488bfb7…`／245 文件，保留原身份；复跑旧记录须取回匹配的工具版本。当前源码绑定已通过 32 项 CPU 测试（原 17 项、4 项源码／数量合同测试、11 项归档测试），本次绑定修复没有重新解码全量图像。两模型原 100% 配置的 test 数据集必须同为完整 `NavSimOpenSceneE2E`，queue4、history3、load_interval1。
 
 数据目录内必须有下列发布者原文件，工具检查完整文件大小与 SHA：
 
@@ -32,7 +32,8 @@ SHA 来源为官方 Hugging Face LFS 元数据，版本 `a76f840b65e972bc45e56c2
 docker run --name "$JOB_NAME" --runtime runc --network none \
   --memory 64g --cpus 8 --pids-limit 1024 \
   -e PYTHONDONTWRITEBYTECODE=1 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
-  -e CUDA_VISIBLE_DEVICES= -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
+  -e CUDA_VISIBLE_DEVICES= -e ASCEND_RT_VISIBLE_DEVICES= \
+  -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
   -v "$SOURCE:/source:ro" -v "$DATA:/data:ro" \
   -v "$ARCHIVES:/archives:ro" -v "$QC_PARENT:/qc:rw" \
   --entrypoint /opt/conda/envs/bevformer/bin/python \

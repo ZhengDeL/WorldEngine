@@ -1,10 +1,12 @@
 # AlgEngine 规划推理断点续跑
 
+> 历史记录：本文保存 2026 年 10 月 20 日的验收范围和当次锁定值，对应[归档提交 `55efdef5`](https://github.com/ZhengDeL/WorldEngine/tree/55efdef54139c63ab9afce9178ebb3bd130717ef)。当前 checkout 的操作见[优化推理恢复](algengine_ascend_zh.md#优化推理的中断恢复)及[文件收集入口](algengine_ascend_zh.md#使用文件收集完成推理与恢复)。本文仅供参考输入格式和挂载布局，执行脚本及 SHA 以相应版本为准。
+
 schema2 为原有 AlgEngine 规划推理增加逐 rank 的持久化记录。VADv2 和 HydraMDP 已在昇腾上完成 **FP32、22 个官方真实 anchor、16 rank** 的中断恢复和正位置恢复检查。[结果 JSON](../ascend/results/fp32-navtest22-journal-recovery-20261020.json)列出源码、输入、通过标准和原始证据 SHA。
 
 完整 12,146 个 NAVTEST anchor 的官方 VADv2 FP32 推理已于 2026 年 10 月 20 日 06:54:29 UTC 单独启动，本记录尚未验收该完整运行。已通过的小集检查不代表完整评分、训练断点恢复、收敛、GPU 一致性或性能验收。当前优先完成 FP32，本文不安排其他精度作业。
 
-两个运行文件与本次实测文件逐字节一致。
+下表为该次实测所锁定的两个运行文件 SHA，不表示当前 checkout 与它们逐字节相同。
 
 | 文件 | SHA256 |
 | --- | --- |

@@ -18,9 +18,13 @@ remains a separate result.
 
 ## Inputs and fixed identities
 
-The selected AlgEngine source must have the original 245-file fingerprint
-`0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922`.
-The extra nested tools have their own hashes and do not change that scope.
+The current optimization checkout requires runtime fingerprint
+`7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb`
+and 247 Python files. Nested tools retain separate hashes. The October 20
+record remains bound to its archived `0488bfb7…` / 245-file source and matching
+tool version. The current binding passed 32 CPU tests: the original 17 checks,
+four source/inventory contract tests and 11 archive checks. This binding repair
+did not repeat the full image decode.
 Both original 100% model test configurations must describe the same full
 `NavSimOpenSceneE2E` test split, queue4, history3 and load_interval1.
 
@@ -65,7 +69,8 @@ mounts, exit/OOM state and the external owned-container deadline watchdog.
 docker run --name "$JOB_NAME" --runtime runc --network none \
   --memory 64g --cpus 8 --pids-limit 1024 \
   -e PYTHONDONTWRITEBYTECODE=1 -e TORCH_DEVICE_BACKEND_AUTOLOAD=0 \
-  -e CUDA_VISIBLE_DEVICES= -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
+  -e CUDA_VISIBLE_DEVICES= -e ASCEND_RT_VISIBLE_DEVICES= \
+  -e OPENBLAS_NUM_THREADS=1 -e OMP_NUM_THREADS=1 \
   -v "$SOURCE:/source:ro" -v "$DATA:/data:ro" \
   -v "$ARCHIVES:/archives:ro" -v "$QC_PARENT:/qc:rw" \
   --entrypoint /opt/conda/envs/bevformer/bin/python \

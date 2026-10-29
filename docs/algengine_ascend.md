@@ -27,7 +27,7 @@ WorldEngine contains **AlgEngine**, for model training and evaluation, and **Sim
 ## 1. Checkout and environment
 
 ```bash
-git clone --branch ascend-910c-algengine --recurse-submodules \
+git clone --branch ascend-910c-algengine-fp32-opt-20261029 --recurse-submodules \
   https://github.com/ZhengDeL/WorldEngine.git
 cd WorldEngine
 git rev-parse HEAD
@@ -971,3 +971,103 @@ torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inferen
 `CONFIG_SHA`, `CHECKPOINT_SHA` and `LOCKED_INPUTS_SHA` are SHA256 hashes of the exact mounted files. `DEADLINE_UTC` must be a future UTC timestamp. Set `HCCL_DETERMINISTIC=true` and `CLOSE_MATMUL_K_SHIFT=1` before starting Torch. A return of 1 alone does not prove a controlled pause: verify every partial receipt and its committed prefix before resuming. Resume must return 0 and cover every configured anchor.
 
 The [same validation record](validation/algengine_fp32_optimization_20261029.json) appends both models' actual 22-anchor/16-rank continuous, stop1, resume and completed-journal positive-position replay checks. Every exported typed field matched the uninstrumented baseline. Initial and per-step four-source RNG matched between the two journal routes; the uninstrumented baseline has no per-step RNG trace. Saved prefix bytes were unchanged. This validates that bounded recovery scope; full-dataset recovery, training convergence, GPU equivalence, scoring and performance remain separate gates. Source, tool, mode, chunk, precision, world size and input changes require a fresh compatible contract rather than adopting old progress.
+
+### Inference recovery with file collection
+
+`ascend/tools/filesystem_journal_inference.py` writes results and rank reports to separate shared directories. Each rank atomically publishes a complete part and SHA receipt; rank 0 merges in original sampler order and truncates padding. The final collections do not use an HCCL barrier. Initial model synchronization and journal-prefix inventory still use HCCL. This entry requires the pinned `7a8c50dc…` runtime, FP32, original vocabulary-planning heads and an explicit world size of 4, 12 or 16.
+
+Use the [input manifest and mount layout](algengine_journal.md) for the configuration, complete history annotation, PDM, vocabulary and passed input QC. The [current NAVTEST input-check commands](navtest_input_audit.md) bind runtime 7a8 / 247 files. Retain the fixed image and five-file manifest; keep journals from different entries and tool versions separate.
+
+The measured mapping mounts only host `/dev/davinci4` through `/dev/davinci7` plus the three control devices: `WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7`, container `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3`, local_rank 0–3. Reuse the installation's source, driver and dependency mounts and set the working directory to `/workspace/WorldEngine`. Mount source-external output, journal and collection directories as `/attempts:rw`, `/journal:rw` and `/collections:rw`; keep inputs, configuration, weights and `/proof` read-only. Run preparation in a device-free `--runtime runc` CPU container with Torch backend autoload disabled; mount the four assigned chips only for the NPU run.
+
+Generate and export a fresh `ATTEMPT_ID` for every attempt (`python -c 'import uuid; print(uuid.uuid4().hex)'`). Run the code below in the CPU container with `/config/inference.py`, `/weights/initial.pth` and `/proof/locked_inputs.json`, using the same input paths as inference. Set `WORLDENGINE_IMAGE_ID` to the verified fixed image ID. The code derives tokens in original annotation order and keeps the full history annotation. Collection directories and `plan.json` must be fresh; preserve `run_context.json` for attempts sharing a journal.
+
+```bash
+/opt/conda/envs/bevformer/bin/python - <<'PY'
+# Run in the CPU-only image with the same input paths and /collections mounted RW.
+import hashlib, json, os, pickle, sys
+from pathlib import Path
+import yaml
+sys.path.insert(0, "/workspace/WorldEngine/ascend/tools")
+from file_collection import create_collection
+
+def digest(path):
+    value = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            value.update(block)
+    return value.hexdigest()
+
+locked_path = Path("/proof/locked_inputs.json")
+locked = json.loads(locked_path.read_text())
+for item in locked.values():
+    assert Path(item["path"]).stat().st_size == item["bytes"]
+    assert digest(item["path"]) == item["sha256"]
+assert locked["annotation"]["sha256"] == "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+with open(locked["annotation"]["path"], "rb") as stream:
+    infos = pickle.load(stream)  # Only after verifying the official bytes above.
+infos = infos["infos"] if isinstance(infos, dict) else infos
+selected = set(yaml.safe_load(Path(locked["filter"]["path"]).read_text())["tokens"])
+ids = [row["token"] for row in infos if row["token"] in selected]
+assert len(ids) == len(set(ids)) == len(selected)
+world = 4
+context = dict(source_sha256="7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+    config_sha256=digest("/config/inference.py"), checkpoint_sha256=digest("/weights/initial.pth"),
+    locked_inputs_sha256=digest(locked_path), image_id=os.environ["WORLDENGINE_IMAGE_ID"],
+    world_size=world, anchors=len(ids), precision="fp32", backend="cuda-compatible",
+    optimization="point-parallel-last-frame", query_chunk=8192,
+    intended_host_devices=[4, 5, 6, 7], intended_container_devices=[0, 1, 2, 3])
+raw = json.dumps(context, sort_keys=True, separators=(",", ":")).encode()
+context_path = Path("/collections/run_context.json")
+if context_path.exists():
+    assert context_path.read_bytes() == raw
+else:
+    with context_path.open("xb") as stream:
+        stream.write(raw)
+run_hash = hashlib.sha256(raw).hexdigest()
+attempt = os.environ["ATTEMPT_ID"]  # A fresh UUID hex for every attempt.
+root = Path("/collections") / attempt
+root.mkdir(exist_ok=False)
+plan = dict(run_id=attempt, run_contract_sha256=run_hash)
+for name, size in [("results", len(ids)), ("reports", world)]:
+    folder = root / name
+    checksum = create_collection(folder, run_id=attempt, world_size=world, size=size,
+        source_sha256=run_hash, sample_field="token" if name == "results" else None,
+        expected_ids=ids if name == "results" else None)
+    plan[name] = dict(root=str(folder), contract_sha256=checksum)
+path = root / "plan.json"
+path.write_text(json.dumps(plan, indent=2))
+print("PLAN_SHA=" + digest(path), "ANCHORS=" + str(len(ids)))
+PY
+```
+
+Pass the printed `PLAN_SHA` and `ANCHORS`, and the actual configuration/checkpoint/manifest hashes `CONFIG_SHA`, `CHECKPOINT_SHA`, `LOCKED_INPUTS_SHA`, to the NPU container. Set `DEADLINE_UTC` to a future UTC time. Full NAVTEST uses its original complete configuration and 12,146 anchors; the 22-sample gate uses its corresponding official-token filter.
+
+```bash
+# Inside the NPU image; input/proof paths match the CPU preparation above.
+export WORLDENGINE_IMAGE_ID=sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48
+export WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
+export HCCL_DETERMINISTIC=true CLOSE_MATMUL_K_SHIFT=1
+export HCCL_CONNECT_TIMEOUT=1800 HCCL_EXEC_TIMEOUT=7200
+
+/opt/conda/envs/bevformer/bin/python -m torch.distributed.run \
+  --standalone --nproc_per_node=4 ascend/tools/filesystem_journal_inference.py \
+  --source-root /workspace/WorldEngine --config /config/inference.py \
+  --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json \
+  --expected-source-sha256 7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb \
+  --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA" \
+  --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" \
+  --precision fp32 --msda-backend cuda-compatible --deterministic \
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192 \
+  --expected-world-size 4 --expected-anchors "$ANCHORS" \
+  --journal-root /journal --journal-mode "${JOURNAL_MODE:-fresh}" \
+  --attempt-id "$ATTEMPT_ID" --output "/attempts/$ATTEMPT_ID" \
+  --collection-plan "/collections/$ATTEMPT_ID/plan.json" \
+  --expected-collection-plan-sha256 "$PLAN_SHA" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file /attempts/STOP
+```
+
+After an interruption, retain `/journal` and earlier outputs. Prepare a new attempt UUID, collection directories and plan with the same source, inputs, configuration, weights, mode, chunk and device contract, then set `JOURNAL_MODE=resume`. Add `--stop-after-steps 1` for a controlled check and verify every rank's partial receipt and saved position before recovery. The operator controls the STOP file. Complete acceptance requires actual inference exit 0, the configured anchor count and complete rank reports. Run independent official scoring as described in section 6.
+
+The [measured record](validation/algengine_fp32_optimization_20261029.json) separates the public entry's two-model, 22-anchor/world4 tests from earlier private world16/world4 auxiliary runs. VAD continuous, resumed and completed-journal replay outputs, step RNG and saved prefix bytes were exact; Hydra's continuous outputs matched. World12 has CPU contract coverage only. These small-set results do not accept full NAVTEST or full-data recovery of both models.

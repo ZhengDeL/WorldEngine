@@ -27,7 +27,7 @@ WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimE
 ## 1. 克隆仓库并准备环境
 
 ```bash
-git clone --branch ascend-910c-algengine --recurse-submodules \
+git clone --branch ascend-910c-algengine-fp32-opt-20261029 --recurse-submodules \
   https://github.com/ZhengDeL/WorldEngine.git
 cd WorldEngine
 git rev-parse HEAD
@@ -954,3 +954,103 @@ torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inferen
 三个 `*_SHA` 变量分别是实际挂载配置、权重和输入清单的 SHA256，`DEADLINE_UTC` 是未来的 UTC 时间。启动 Torch 前设置 `HCCL_DETERMINISTIC=true`、`CLOSE_MATMUL_K_SHIFT=1`。仅返回 1 不能证明受控暂停，须核对每份 partial 回执和已保存位置；恢复后须返回 0，并覆盖全部配置样本。
 
 [同一实测记录](validation/algengine_fp32_optimization_20261029.json) 已追加两模型在 22 个官方样本、16 rank 上的连续运行、中断、恢复和完成后正位置重放结果。全部输出字段的类型及原始数值与未加 journal 的基线一致；两条 journal 路线的初始及每步 Python/NumPy/Torch CPU/当前 NPU RNG 一致，原基线没有逐步 RNG 记录。已保存前缀的文件字节没有变化。该结果只验收这个有界恢复范围，不能代替完整数据恢复、训练收敛、GPU 对照、独立评分或性能验收。更换源码、工具、优化模式、分块、精度、world size 或输入后，须使用匹配的新合同，不能套用旧断点。
+
+### 使用文件收集完成推理与恢复
+
+`ascend/tools/filesystem_journal_inference.py` 将结果和各 rank 执行报告分别写入共享目录。各 rank 原子发布带 SHA 的完整 part，rank 0 按原 sampler 顺序合并并截去 padding；末尾不再依赖 HCCL barrier。初始模型同步和 journal 前缀核对仍使用 HCCL。此入口仅接受固定 `7a8c50dc…` 源码、FP32、原词表规划头，以及显式的 4、12 或 16 rank。
+
+先按[输入清单与挂载约定](algengine_journal_zh.md)准备配置、完整历史标注、PDM、词表和通过的输入 QC。当前源码的完整 NAVTEST 预检见[输入检查命令](navtest_input_audit_zh.md)，其源码合同为 7a8／247 文件。保留已锁定镜像与五文件清单；不同入口和工具版本的 journal 分别保存。
+
+以下是本次实测的设备映射：Docker 仅挂载宿主 `/dev/davinci4` 到 `/dev/davinci7` 及三个控制设备，`WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7`，容器内 `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3`、local_rank 为 0–3。沿用安装章节的源码、驱动及依赖挂载，工作目录设为 `/workspace/WorldEngine`；另外将源外的输出、journal、收集父目录分别挂载为 `/attempts:rw`、`/journal:rw`、`/collections:rw`。输入、配置、权重和 `/proof` 均只读。CPU 准备容器使用 `--runtime runc`，不挂设备，关闭 Torch 后端自动加载；NPU 容器再挂载上述四个芯片。
+
+为每次尝试生成并导出新的 `ATTEMPT_ID`（`python -c 'import uuid; print(uuid.uuid4().hex)'`），在 CPU 容器执行以下准备代码。配置路径为 `/config/inference.py`，权重为 `/weights/initial.pth`，五文件清单为 `/proof/locked_inputs.json`，与后续推理挂载相同；设置 `WORLDENGINE_IMAGE_ID` 为核验后的固定镜像 ID。代码按原 annotation 顺序生成 token 清单，保留完整历史标注。收集目录和 `plan.json` 必须全新；同一 journal 的 `run_context.json` 保持不变。
+
+```bash
+/opt/conda/envs/bevformer/bin/python - <<'PY'
+# Run in the CPU-only image with the same input paths and /collections mounted RW.
+import hashlib, json, os, pickle, sys
+from pathlib import Path
+import yaml
+sys.path.insert(0, "/workspace/WorldEngine/ascend/tools")
+from file_collection import create_collection
+
+def digest(path):
+    value = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            value.update(block)
+    return value.hexdigest()
+
+locked_path = Path("/proof/locked_inputs.json")
+locked = json.loads(locked_path.read_text())
+for item in locked.values():
+    assert Path(item["path"]).stat().st_size == item["bytes"]
+    assert digest(item["path"]) == item["sha256"]
+assert locked["annotation"]["sha256"] == "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+with open(locked["annotation"]["path"], "rb") as stream:
+    infos = pickle.load(stream)  # Only after verifying the official bytes above.
+infos = infos["infos"] if isinstance(infos, dict) else infos
+selected = set(yaml.safe_load(Path(locked["filter"]["path"]).read_text())["tokens"])
+ids = [row["token"] for row in infos if row["token"] in selected]
+assert len(ids) == len(set(ids)) == len(selected)
+world = 4
+context = dict(source_sha256="7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+    config_sha256=digest("/config/inference.py"), checkpoint_sha256=digest("/weights/initial.pth"),
+    locked_inputs_sha256=digest(locked_path), image_id=os.environ["WORLDENGINE_IMAGE_ID"],
+    world_size=world, anchors=len(ids), precision="fp32", backend="cuda-compatible",
+    optimization="point-parallel-last-frame", query_chunk=8192,
+    intended_host_devices=[4, 5, 6, 7], intended_container_devices=[0, 1, 2, 3])
+raw = json.dumps(context, sort_keys=True, separators=(",", ":")).encode()
+context_path = Path("/collections/run_context.json")
+if context_path.exists():
+    assert context_path.read_bytes() == raw
+else:
+    with context_path.open("xb") as stream:
+        stream.write(raw)
+run_hash = hashlib.sha256(raw).hexdigest()
+attempt = os.environ["ATTEMPT_ID"]  # A fresh UUID hex for every attempt.
+root = Path("/collections") / attempt
+root.mkdir(exist_ok=False)
+plan = dict(run_id=attempt, run_contract_sha256=run_hash)
+for name, size in [("results", len(ids)), ("reports", world)]:
+    folder = root / name
+    checksum = create_collection(folder, run_id=attempt, world_size=world, size=size,
+        source_sha256=run_hash, sample_field="token" if name == "results" else None,
+        expected_ids=ids if name == "results" else None)
+    plan[name] = dict(root=str(folder), contract_sha256=checksum)
+path = root / "plan.json"
+path.write_text(json.dumps(plan, indent=2))
+print("PLAN_SHA=" + digest(path), "ANCHORS=" + str(len(ids)))
+PY
+```
+
+将打印的 `PLAN_SHA`、`ANCHORS` 以及实际配置、权重、输入清单的 `CONFIG_SHA`、`CHECKPOINT_SHA`、`LOCKED_INPUTS_SHA` 传入 NPU 容器；`DEADLINE_UTC` 设置为未来 UTC 时间。完整 NAVTEST 使用原完整配置与 12,146 个样本，22 小集则使用对应官方 token filter。
+
+```bash
+# Inside the NPU image; input/proof paths match the CPU preparation above.
+export WORLDENGINE_IMAGE_ID=sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48
+export WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7
+export ASCEND_RT_VISIBLE_DEVICES=0,1,2,3
+export HCCL_DETERMINISTIC=true CLOSE_MATMUL_K_SHIFT=1
+export HCCL_CONNECT_TIMEOUT=1800 HCCL_EXEC_TIMEOUT=7200
+
+/opt/conda/envs/bevformer/bin/python -m torch.distributed.run \
+  --standalone --nproc_per_node=4 ascend/tools/filesystem_journal_inference.py \
+  --source-root /workspace/WorldEngine --config /config/inference.py \
+  --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json \
+  --expected-source-sha256 7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb \
+  --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA" \
+  --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" \
+  --precision fp32 --msda-backend cuda-compatible --deterministic \
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192 \
+  --expected-world-size 4 --expected-anchors "$ANCHORS" \
+  --journal-root /journal --journal-mode "${JOURNAL_MODE:-fresh}" \
+  --attempt-id "$ATTEMPT_ID" --output "/attempts/$ATTEMPT_ID" \
+  --collection-plan "/collections/$ATTEMPT_ID/plan.json" \
+  --expected-collection-plan-sha256 "$PLAN_SHA" \
+  --deadline-utc "$DEADLINE_UTC" --stop-file /attempts/STOP
+```
+
+中断后保留 `/journal` 和旧输出。为恢复重新生成 `ATTEMPT_ID`、收集目录及 plan，保持源码、输入、配置、权重、模式、分块和设备合同相同，将 `JOURNAL_MODE` 设为 `resume`。需要受控检查时加 `--stop-after-steps 1`；核对所有 rank 的 partial 回执和已保存位置后再恢复。STOP 文件由使用者管理。完整结果要求推理实际退出 0、样本数正确、所有 rank 执行报告完整；独立官方评分继续按第 6 节执行。
+
+[实测记录](validation/algengine_fp32_optimization_20261029.json) 分别列出公开入口两模型 22 样本／4 rank 验证，以及先前私有 16 rank／4 rank 辅助测试。公开入口的 VAD 连续运行、暂停后恢复及完成后重放，输出类型与原始数值、各步 RNG 和已存前缀均一致；Hydra 完成连续运行输出对照。12 rank 只有 CPU 合同测试，完整 NAVTEST 及两模型全量恢复未由这个小集结果验收。
