@@ -19,26 +19,17 @@
 
 This branch adds optional FP32 planning inference optimizations; `--inference-optimization none` remains the default. The `point-parallel-last-frame` option requires `--precision fp32 --msda-backend cuda-compatible` and retains all three history frames plus the current frame in the final original call. VADv2 and HydraMDP each completed the public CLI baseline/optimized comparison on 22 genuine official NAVTEST anchors with 16 ranks: every typed output field was raw exact. See the [measured record](docs/validation/algengine_fp32_optimization_20261029.json) and [English](docs/algengine_ascend.md#10-optional-fp32-planning-inference-optimizations) / [中文操作说明](docs/algengine_ascend_zh.md#10-fp32-规划推理优化选项). The separate complete 12,146-anchor regression is still running at the time of this record; this optimization record does not close training/backward/convergence acceptance or the known Hydra GPU/NPU differences.
 
-The default MSDA backend is `reference`; select `--msda-backend cuda-compatible` for the optional [CUDA-compatible route](ascend/MSDA_CUDA.md).
+The Ascend branch provides NPU entry points for AlgEngine. SimEngine retains its upstream GPU workflow. MSDA defaults to `reference`; the optional `cuda-compatible` backend is explicit.
 
-Full NAVTEST input validation: [CPU input guide](docs/navtest_input_audit.md) · [中文](docs/navtest_input_audit_zh.md) · [October 20 input and ledger record](docs/navtest_public_input_results.md) · [JSON](ascend/results/full-navtest-public-inputs-20261020.json).
+See the [current FP32 results and boundaries](ascend/README.md#fp32-measurements--october-21-2026) / [中文](ascend/README_zh.md#fp32-实测2026-年-10-月-21-日), [usage guide](docs/algengine_ascend.md) / [中文](docs/algengine_ascend_zh.md), and [measured results (JSON)](ascend/results/fp32-validation-20261021.json).
 
-The `ascend-910c-algengine` branch adds NPU training, fine-tuning, complete
-checkpoint restoration, inference and evaluation entry points for AlgEngine.
-SimEngine retains its upstream GPU workflow.
+- **Official-weight full NAVTEST, recorded `0488bfb7…` runtime:** both models completed all 12,146 anchors and official scoring. VADv2 selected trajectories and all seven per-token metrics agree. HydraMDP retains four selected-candidate differences, four trajectory differences and two score-row differences outside the original tolerance; its full comparison remains unaccepted.
+- **Independent short-training control, recorded `0488bfb7…` runtime:** VADv2 and HydraMDP completed six training stages and four original comparisons: continuous eight updates versus an independent four-update run and its 4→8 resume. Tensor and loss differences are zero at updates 4 and 8. See the [two-model bounded result](ascend/results/fp32-both-models-strict16-independent-resume8-20261021.json); the separate [VAD logical-C byte result](ascend/results/fp32-vad-strict16-independent-resume8-20261021.json) remains VAD-only.
+- **Current public `76c51f77…` source:** each model completed two FP32 updates and 22-anchor inference on one NPU chip. This short chain does not establish independent-resume, full-epoch, GPU-parity or convergence acceptance.
 
-- [English usage guide](docs/algengine_ascend.md) / [中文使用指南](docs/algengine_ascend_zh.md)
-- [Application/compiler environment](ascend/docker/dependency_repair/README.md),
-  [official-data NAVTRAIN139 / NAVTEST22 preparation](ascend/data_tools/navtrain139/README.md)
-- [Validation report](ascend/FULL_ALGENGINE.md) / [中文验证报告](ascend/VALIDATION_zh.md)
+Full eight-epoch training, convergence and unresolved HydraMDP numerical differences remain outside completed acceptance. Performance and BF16 work retain their separate historical scope.
 
-The CUDA-compatible backend completed [VADv2 and HydraMDP in FP32/BF16](ascend/results/cuda-compatible-navtrain139-short2-20261017.json): two updates, full own-checkpoint restoration, DDP4 inference and independent official NAVSIM scoring. Each group used four logical NPUs. The configured official-data subset contains 139 training anchors; these runs consumed the same eight training anchors and evaluated the same 22 held-out anchors. See the [measured commands](ascend/MSDA_CUDA.md#training-own-checkpoint-resume-and-inference).
-
-The [October 18 FP32 control](ascend/results/cuda-compatible-fp32-strict16-resume2-20261018.json) additionally verified VADv2 and HydraMDP with 16 ranks × batch 1: continuous updates 0→2, then a fresh process resuming that same run’s update-1 checkpoint to update 2. All compared tensors satisfy `torch.equal`; maximum tensor and loss differences are zero. This same-prefix control uses 32 distinct current anchors from the configured 139 and adds no inference or scoring result. See the [source and checkpoint boundary](ascend/MSDA_CUDA.md#source-and-checkpoint-version-contract).
-
-The [October 20 FP32 inference-recovery result](ascend/results/fp32-navtest22-journal-recovery-20261020.json) covers VADv2 and HydraMDP on 22 official NAVTEST anchors and 16 ranks. Both completed original/uninterrupted/interrupted/resumed checks and a fifth position-1 recovery check: final output fields and two-journal RNG matched exactly, with saved prefixes unchanged. The original baseline has no per-step RNG trace. [English reproduction guide](docs/algengine_journal.md) / [中文](docs/algengine_journal_zh.md). Full 12,146-anchor official VAD FP32 inference was launched separately and is not accepted as complete in this result.
-
-The [validation report](ascend/FULL_ALGENGINE.md) retains earlier 16-rank/eight-update controls, completed numerical comparisons outside their original tolerances, BF16 gradient-coverage repairs and real-log fine-tuning results. Full NAVTRAIN convergence, full independent benchmark quality, untested synthetic inputs and general numerical reproducibility remain outside completed acceptance. Performance optimization is a separate workstream.
+Historical evidence: [October 17 short-chain control](ascend/results/cuda-compatible-navtrain139-short2-20261017.json), [October 18 same-prefix resume](ascend/results/cuda-compatible-fp32-strict16-resume2-20261018.json), [October 20 inference journal](ascend/results/fp32-navtest22-journal-recovery-20261020.json), and the [versioned validation report](ascend/FULL_ALGENGINE.md). Full-data input checks are documented in the [CPU input guide](docs/navtest_input_audit.md) / [中文](docs/navtest_input_audit_zh.md).
 
 <div id="top" align="center">
 <p align="center">

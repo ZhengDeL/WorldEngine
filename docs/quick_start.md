@@ -293,7 +293,7 @@ bash scripts/run_ray_distributed_testing.sh \
     NR
 ```
 
-See [SimEngine Usage Guide](simengine_usage.md#distributed-testing) for details.
+See [SimEngine Usage Guide](simengine_usage.md#multi-gpu-distributed-testing-recommended) for details.
 
 ### 6. Fine-Tune on Rare Cases (AlgEngine)
 

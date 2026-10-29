@@ -42,7 +42,7 @@ curl -LsSf https://hf.co/cli/install.sh | bash
 hf download OpenDriveLab/WorldEngine --repo-type dataset --local-dir /path/to/your/WorldEngine_repo
 ```
 
-> **Note:** Stay tuned to our [News section](../README.md#-news).
+> **Note:** Stay tuned to our [News section](../README.md#news).
 
 ---
 

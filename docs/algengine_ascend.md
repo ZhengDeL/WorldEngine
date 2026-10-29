@@ -540,7 +540,7 @@ python3 ascend/run_container.py --devices "$DEVICES" \
   --output "$RUNS/vad50_full"
 ```
 
-Omitting `--steps` and `--epochs` keeps the original eight-epoch horizon, optimizer and LR schedule. The migration's `--validate` runs evaluation each epoch. For 100%, change the config to `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`, initialize with `track_map_nuplan_r50_navtrain_100pct_bs1x8.pth`, and select a fresh output. The 50% filter has 50,000 anchors; the full official split has 103,288. Full-input eight-update training has completed as recorded above; complete-epoch training and convergence remain unaccepted.
+Omitting `--steps` and `--epochs` keeps the original eight-epoch horizon, optimizer and LR schedule. The migration's `--validate` runs evaluation each epoch. For 100%, change the config to `projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py`, keep the original initializer `track_map_nuplan_r50_navtrain_50pct_bs1x8.pth`, and select a fresh output. The 50% filter has 50,000 anchors; the full official split has 103,288. Full-input eight-update training has completed as recorded above; complete-epoch training and convergence remain unaccepted.
 
 Do not apply the separate synchronous eight-update wrapper to a full epoch run. Its [documented protocol](../ascend/execution/README.md) is deliberately limited to the two measured planning configs and eight updates. Four independent repeated pairs completed; two were within the original tolerance and two were outside it. These settings are not an accepted general repair.
 

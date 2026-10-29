@@ -217,6 +217,8 @@ def decode_jpeg(path, relative, guard):
         if (before.st_dev,before.st_ino,before.st_size,before.st_mtime_ns) != (
                 after.st_dev,after.st_ino,after.st_size,after.st_mtime_ns):
             raise Rejected('Camera file changed during hash / verify / load')
+        if digest_file(path, guard) != content:
+            raise Rejected('Camera content changed during hash / verify / load')
         row['result'] = 'pass'
     except Paused:
         raise

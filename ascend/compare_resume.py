@@ -18,6 +18,15 @@ def json_safe(value):
     return value
 
 
+def raw_tensor_equal(first, second):
+    """Compare logical tensor bytes after the original shape/dtype checks."""
+    if first.shape != second.shape or first.dtype != second.dtype:
+        return False
+    first_bytes = first.detach().cpu().contiguous().reshape(-1).view(torch.uint8)
+    second_bytes = second.detach().cpu().contiguous().reshape(-1).view(torch.uint8)
+    return torch.equal(first_bytes, second_bytes)
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--continuous',type=Path,required=True)
@@ -41,7 +50,7 @@ def main():
             if not (bool(torch.isfinite(x).all()) and bool(torch.isfinite(y).all())):
                 stats['failures'].append(path+': nonfinite');return
             equal=torch.equal(x,y)
-            stats['bitwise_equal_tensors']+=int(equal)
+            stats['bitwise_equal_tensors']+=int(raw_tensor_equal(x,y))
             if x.is_floating_point():
                 diff=float((x-y).abs().max()) if x.numel() else 0.
                 stats['max_absolute_difference']=max(stats['max_absolute_difference'],diff)

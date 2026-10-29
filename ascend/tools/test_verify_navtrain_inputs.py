@@ -118,6 +118,36 @@ class InputInspectorFixtures(unittest.TestCase):
         with self.assertRaises(QC.Paused):
             QC.decode_jpeg(self.root/'not_opened.jpg', 'camera.jpg', guard)
 
+    def test_same_length_same_mtime_replacement_after_hash_is_rejected(self):
+        path = self.jpeg()
+        replacement = self.jpeg('replacement.jpg', color='yellow').read_bytes()
+        original_bytes = path.read_bytes()
+        size = max(len(original_bytes), len(replacement))
+        original_bytes += b'\0' * (size-len(original_bytes))
+        replacement += b'\0' * (size-len(replacement))
+        path.write_bytes(original_bytes)
+        old_hash = hashlib.sha256(original_bytes).hexdigest()
+        original_digest = QC.digest_file
+        changed = False
+
+        def replace_once_after_hash(filename, guard):
+            nonlocal changed
+            result = original_digest(filename, guard)
+            if not changed:
+                stamp = filename.stat()
+                filename.write_bytes(replacement)
+                os.utime(filename, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+                changed = True
+            return result
+
+        with mock.patch.object(QC, 'digest_file', side_effect=replace_once_after_hash):
+            result = QC.decode_jpeg(path, 'camera.jpg', self.guard)
+        self.assertTrue(result['verified'] and result['loaded'])
+        self.assertEqual(result['result'], 'error')
+        self.assertIn('content changed', result['error'])
+        self.assertEqual(result['sha256'], old_hash)
+        self.assertNotEqual(result['sha256'], hashlib.sha256(path.read_bytes()).hexdigest())
+
     def test_deadline_is_required_UTC_and_has_no_historical_date_cap(self):
         for value in (None, '2099-01-01T00:00:00', '2099-01-01T00:00:00+08:00',
                       '2000-01-01T00:00:00+00:00', 'invalid'):

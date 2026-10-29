@@ -12,6 +12,31 @@ IMAGE = 'local/worldengine:26.1.0-a3-clean-20261013'
 IMAGE_ID = 'sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f'
 
 
+def _validate_task_options(args, parser):
+    """Reject training settings that inference would otherwise discard."""
+    if args.task == 'inference':
+        training_only = (
+            'profile', 'train_filter', 'rare_split', 'synthetic_root', 'validate',
+            'steps', 'batch_size', 'workers', 'lr', 'inference_after', 'runtime',
+            'resume', 'epochs', 'stop_after', 'stop_after_epochs',
+            'duration_seconds', 'checkpoint_interval', 'check_interval',
+            'upstream_schedule',
+        )
+        for name in training_only:
+            value = getattr(args, name)
+            if value is not None and value is not False:
+                parser.error('--' + name.replace('_', '-') + ' requires --task train')
+    if args.profile is None:
+        args.profile = 'imitation'
+
+
+def _hccl_connect_timeout(parser):
+    value = os.environ.get('HCCL_CONNECT_TIMEOUT', '120').strip()
+    if not value.isascii() or not value.isdigit() or int(value) <= 0:
+        parser.error('HCCL_CONNECT_TIMEOUT must be a positive integer in seconds')
+    return str(int(value))
+
+
 def _validate_stop_options(args, parser):
     """Reject stop settings that the selected runner cannot honor."""
     import math
@@ -38,7 +63,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--devices',required=True,help='Comma-separated host logical NPU IDs; they are chips, not server counts')
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--profile',choices=['imitation','vadv2_ft','hydramdp_rl'],default='imitation')
+    p.add_argument('--profile',choices=['imitation','vadv2_ft','hydramdp_rl'],
+                   help='Training profile; defaults to imitation for --task train')
     p.add_argument('--task',choices=['train','inference'],default='train')
     p.add_argument('--config',type=Path,help='Train: any published AlgEngine config; inference: the corresponding dumped config')
     p.add_argument('--checkpoint',type=Path,required=True)
@@ -82,6 +108,7 @@ def main():
     p.add_argument('--inference-optimization',choices=MODES,default='none')
     p.add_argument('--msda-query-chunk',type=int,choices=CHUNKS,default=2048)
     args=p.parse_args()
+    _validate_task_options(args, p)
     if args.task!='inference' and (args.inference_optimization!='none' or args.msda_query_chunk!=2048):
         p.error('Inference optimization options require --task inference')
     try:
@@ -89,6 +116,7 @@ def main():
     except ValueError as exc:
         p.error(str(exc))
     _validate_stop_options(args, p)
+    hccl_timeout = _hccl_connect_timeout(p)
     if args.inference_after and args.task != 'train':
         p.error('--inference-after requires --task train')
     if args.train_filter and (args.task!='train' or not args.data_root or args.mini_prepared):
@@ -132,7 +160,7 @@ def main():
         if not (Path('/dev')/node).is_char_device():raise RuntimeError('Missing device node '+node)
         cmd+=['--device','/dev/'+node]
     for key,value in {'ASCEND_RT_VISIBLE_DEVICES':','.join(str(i) for i in range(len(devices))),
-                      'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','PYTHONUNBUFFERED':'1','HCCL_CONNECT_TIMEOUT':'120',
+                      'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','PYTHONUNBUFFERED':'1','HCCL_CONNECT_TIMEOUT':hccl_timeout,
                       'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}.items():
         cmd+=['-e',key+'='+value]
     train=['ascend/train.py','--profile',args.profile,'--output','/output','--checkpoint','/weights/initial.pth',
@@ -198,7 +226,8 @@ def main():
         config=args.config.resolve(strict=True)
         cmd+=['-v',f'{config}:/config/inference.py:ro']
         train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output','--precision',args.precision,'--msda-backend',args.msda_backend]
-        train+=['--inference-optimization',args.inference_optimization,'--msda-query-chunk',str(args.msda_query_chunk)]
+        if args.inference_optimization!='none':
+            train+=['--inference-optimization',args.inference_optimization,'--msda-query-chunk',str(args.msda_query_chunk)]
         if args.deterministic:train+=['--deterministic']
     import shlex
     inner='set +u\nsource /usr/local/Ascend/ascend-toolkit/set_env.sh\nexport PATH=/opt/conda/envs/bevformer/bin:/opt/conda/bin:$PATH\n'
@@ -215,7 +244,7 @@ def main():
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'
     cmd += [args.image,'bash','-lc',inner]
-    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend,'inference_optimization':args.inference_optimization,'msda_query_chunk':args.msda_query_chunk},indent=2))
+    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend,'hccl_connect_timeout':hccl_timeout,'inference_optimization':args.inference_optimization,'msda_query_chunk':args.msda_query_chunk},indent=2))
     result=subprocess.run(cmd,check=False)
     raise SystemExit(result.returncode)
 
