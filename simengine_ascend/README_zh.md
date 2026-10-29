@@ -15,6 +15,11 @@
 仅小规模 manifest 仍不能授权更大的真实输入。服务器有 8 张 NPU 物理卡、16 个芯片，
 本分支尚无 16 芯片扩展或 GPU 对照结果。
 
+本 FP32 优化分支还完成了同一官方场景的完整 24 帧验证，覆盖 VADv2/HydraMDP × NR/R
+四种组合。每组均使用原始四帧历史、实际执行二十次模型控制，并独立解码 192 张原尺寸相机图像。
+这是单场景功能验收；不代表全部场景的驾驶质量、GPU 精度对照或重建训练验收。
+前述 12 帧与 BF16 历史记录仍使用各自原始源码和依赖版本。
+
 此目录将 SimEngine 的逐帧文件协议接入可显式选择设备的 AlgEngine 规划器。
 仿真器与规划器仍使用各自环境、各自进程。仿真客户端只加载 CPU 文件协议，
 不会因导入客户端而加载 `torch_npu` 或切换 AlgEngine 源码。
@@ -40,9 +45,8 @@ NPU 规划器复用单独检出的 AlgEngine 迁移仓。本分支保留原 CUDA
 | 项目 | 固定值 |
 | --- | --- |
 | AlgEngine 仓库 | `https://github.com/ZhengDeL/WorldEngine` |
-| 依赖提交 | `972e1d9592860cef6520e0b39d7e4e9ab55a510a` |
-| 算法实现提交 | `f0461d7639e38841d218d304f0ab07afebf61eba` |
-| 算法源码 SHA-256 | `40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b` |
+| FP32 24 帧配置的 AlgEngine Git 提交 | `55efdef54139c63ab9afce9178ebb3bd130717ef` |
+| 算法源码 SHA-256 | `0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922` |
 | 校验范围 | `projects/AlgEngine/**/*.py`、`ascend/*.py`，共 245 个 Python 文件 |
 
 运行前后都会重新校验外部源码，同时单独记录本次闭环接入文件的 SHA-256。
@@ -57,6 +61,46 @@ Git 提交用于说明依赖版本，实际文件内容由源码 SHA-256 校验�
 `NPUDataParallel`。`npu:0` 表示进程可见范围内的逻辑设备 0。
 部署时应同时记录宿主机芯片映射；报告会保存 `WORLDENGINE_HOST_DEVICE_IDS` 和
 `ASCEND_RT_VISIBLE_DEVICES`。
+
+## 原场景完整 24 帧 FP32 配置
+
+外部 AlgEngine 单独检出为上表的完整 Git 提交，运行期间将两套源码只读挂载。
+规划器命令见英文版：显式选择 `--precision fp32 --msda-backend cuda-compatible`，
+并在同一组 `--cfg-options` 中设置 `sim.max_frame_per_scene=24`、连续四帧输入及真实共享目录。
+两个模型分别使用官方 100% 完整权重和原始 8192 项轨迹词表。
+
+为每次作业新建 `RUN_ROOT/frames`、`plan_traj`、`merged_ann_files`，暂不创建 `WE_output`。
+仿真命令增加 `--num-history 4 --num-future 20`，保留准备回执中的 `--scene-sha256`，
+设置 `--mode closed-loop --device npu:1`；共享规划、帧目录必须与规划器完全一致。
+规划器使用逻辑 `npu:0`，两进程由下述受控启动器一起启动，显式选择 `--reaction NR` 或 `R`。
+原场景必须已有 24 条真实帧元数据和全部八路相机。短场景、相机缺失、重复 token 或 pickle
+尾部多余内容会被拒绝，不会补帧或重复输入。
+24 帧 `--dry-run` 会读取经过完整 SHA 核验的准备 pickle，检查真实元数据；
+仍不执行模型或仿真器，也不创建作业输出。默认 12 帧 dry-run 不读取 pickle。
+
+本 24 帧配置禁止 `--pdm-metrics` 和 `--dense-rewards`：原场景末尾没有评分所需的额外未来窗口。
+这不影响二十次实际闭环控制，但不能据此报告官方驾驶评分。渲染源码修改后须重新完成小规模
+设备验证与完整真实捕获输入验证，不能沿用旧 manifest。截止时间使用未来的 ISO 8601
+`+00:00` UTC 格式，兼容 Python 3.9/3.10；不要复用历史作业的绝对截止时间。
+
+完整窗口独立审计使用 `python -m simengine_ascend.tools.audit_full24`，完整参数见英文版。
+在不挂载任何 GPU/NPU 的 CPU 容器中，将原作业、源码、外部 AlgEngine、准备资产只读挂载；
+审计输出使用输入目录之外的新文件。指定原始运行路径、两个宿主机芯片编号、源码和准备回执
+SHA-256、模型、NR/R 以及 `--expected-window-frames 24`。审计逐项核对 `4..23` 控制索引、
+每次四帧真实输入、原词表选中轨迹、原策略及控制器消费、后继状态与全部 24×8 张相机图像。
+
+`--expected-algengine-commit` 必须与原报告声明值一致；新作业应使用上表已核验的公开提交。
+10 月 29 日原始实验仍记录旧声明 `972e1d9592860cef6520e0b39d7e4e9ab55a510a`，
+实际执行的 245 个文件已逐文件匹配公开提交 `55efdef54139c63ab9afce9178ebb3bd130717ef`。
+复核旧作业时显式传入其旧声明，不修改历史报告；两者仍须通过相同的实际源码指纹校验。
+`--recorded-algengine-root` 填原规划器路径，可以与 CPU 审计挂载路径不同。
+
+CPU 检查命令：
+
+```bash
+python -m unittest simengine_ascend.test_run_simulation -v
+python -m unittest discover -s tools/simengine_ascend/tests -p test_window_contract.py -v
+```
 
 ## 运行方式
 
@@ -155,7 +199,8 @@ checkpoint 使用严格参数检查。单独的 LoRA 增量权重需要先按对
 
 规划器使用 `--device npu:0 --precision fp32` 或
 `--device npu:0 --precision bf16`。BF16 复用原迁移仓的 NPU autocast、FP32 几何计算
-和实际激活检查，不将模型参数整体转成 BF16。MSDA 默认使用 `reference` 路径。
+和实际激活检查，不将模型参数整体转成 BF16。早期 12 帧结果使用 `reference`；
+本分支当前 24 帧流程只验收 FP32，显式使用 `cuda-compatible`。
 原 GPU 调用保持默认 `cuda:0`；未指定精度时沿用配置中的 FP16 设置。
 
 正式双进程启动使用 `python -m simengine_ascend.launch_closed_loop`，要求提供

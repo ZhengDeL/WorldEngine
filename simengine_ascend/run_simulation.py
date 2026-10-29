@@ -19,6 +19,7 @@ import time
 from simengine_ascend.file_protocol import check_stop, deadline_epoch
 from simengine_ascend.launch_closed_loop import publish, validate_runner_reports
 from simengine_ascend.owned_process import cleanup_owned, peek_exit
+from simengine_ascend.window_contract import window_contract, inspect_scene_window
 
 ROOT = Path(__file__).resolve().parents[1]
 SIMULATION = ROOT / 'projects/SimEngine'
@@ -85,7 +86,10 @@ def load_scene_ids(path):
 
 
 def build_overrides(args):
+    window = window_contract(getattr(args, 'num_history', 4), getattr(args, 'num_future', 8))
     values = {
+        'num_history': window['num_history'],
+        'num_future': window['num_future'],
         'distributed_mode': 'SINGLE_NODE',
         'hydra.job.chdir': False,
         'gpu': False,
@@ -252,6 +256,10 @@ def main(argv=None):
     parser.add_argument('--pdm-metrics', action='store_true', help='Enable the original CPU PDM MetricManager')
     parser.add_argument('--dense-rewards', action='store_true', help='Enable original CPU dense scoring; needs original vocabulary')
     parser.add_argument('--cpu-threads', type=int, default=8)
+    parser.add_argument('--num-history', type=int, choices=(4,), default=4,
+                        help='Four real consecutive planner-history frames; unchanged original model contract')
+    parser.add_argument('--num-future', type=int, choices=(8, 20), default=8,
+                        help='Eight preserves the validated 12-frame window; twenty requests 24 real frames')
     parser.add_argument('--planner-data-path', type=Path)
     parser.add_argument('--planner-client-folder', type=Path)
     parser.add_argument('--dry-run', action='store_true', help='Print the exact command without executing the simulator')
@@ -282,6 +290,11 @@ def main(argv=None):
         parser.error('Replay mode does not use external planner directories')
     if args.scene_sha256 and not re.fullmatch(r'[0-9a-f]{64}', args.scene_sha256):
         parser.error('--scene-sha256 must be a lowercase SHA-256 digest')
+    window = window_contract(args.num_history, args.num_future)
+    if window['frames'] == 24 and not args.scene_sha256:
+        parser.error('The 24-frame mode requires --scene-sha256 from trusted official preparation')
+    if window['frames'] == 24 and (args.dense_rewards or args.pdm_metrics):
+        parser.error('The 24-frame candidate covers replay and closed-loop consumption only; PDM and dense-reward scoring require a separately reviewed original-horizon profile')
     scene_ids = load_scene_ids(args.expected_scene_ids)
     interrupted = []
     def guard():
@@ -292,6 +305,10 @@ def main(argv=None):
     scene_sha = sha256(args.scene_pkl, guard)
     if args.scene_sha256 and scene_sha != args.scene_sha256:
         raise ValueError('Prepared scene SHA-256 differs from the expected input')
+    scene_window = None
+    if window['frames'] == 24:
+        scene_window = inspect_scene_window(args.scene_pkl, args.scene_sha256, scene_ids,
+                                            args.num_history, args.num_future, guard)
     vocabulary = ROOT / 'data/alg_engine/test_8192_kmeans.npy'
     if args.dense_rewards:
         existing(vocabulary)
@@ -301,6 +318,7 @@ def main(argv=None):
         'result': 'command_prepared_not_executed', 'mode': args.mode, 'reaction': args.reaction,
         'started_utc': datetime.now(timezone.utc).isoformat(), 'deadline_utc': args.deadline_utc,
         'scene_pkl': str(args.scene_pkl), 'scene_sha256': scene_sha,
+        'configured_window': window, 'scene_window_preflight': scene_window,
         'expected_scene_ids': scene_ids, 'asset_root': str(args.asset_root), 'maps_root': str(args.maps_root),
         'validated_manifest': str(args.validated_manifest), 'manifest_sha256': sha256(args.validated_manifest, guard),
         'source': source_identity(guard), 'command': command, 'cwd': str(ROOT),

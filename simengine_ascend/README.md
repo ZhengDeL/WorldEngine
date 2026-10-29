@@ -20,6 +20,13 @@ Small-probe manifests alone do not authorize larger real inputs. The server's
 8 physical NPU cards contain 16 chips; this integration has no sixteen-chip
 scaling result or GPU comparison.
 
+The FP32 optimization branch additionally covers the complete selected 24-frame
+source scene for VADv2/HydraMDP × NR/R. Each case used four genuine history
+frames and twenty applied model controls, and independently decoded all
+192 original-size camera JPEGs. This is a single-scene functional check, not
+all-scene driving-quality, GPU-parity or reconstruction-training acceptance.
+The 12-frame/BF16 records above retain their original source and dependency pins.
+
 This package connects SimEngine's frame exchange to an explicitly selected
 AlgEngine planner device. The original simulation, camera geometry, selected
 trajectory and vehicle-coordinate conversion remain in their respective
@@ -53,9 +60,8 @@ The integration was prepared against:
 | Item | Pin |
 | --- | --- |
 | AlgEngine repository | `https://github.com/ZhengDeL/WorldEngine` |
-| Declared commit | `972e1d9592860cef6520e0b39d7e4e9ab55a510a` |
-| Algorithm implementation commit | `f0461d7639e38841d218d304f0ab07afebf61eba` |
-| Algorithm runtime SHA-256 | `40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b` |
+| AlgEngine Git commit for the FP32 24-frame profile | `55efdef54139c63ab9afce9178ebb3bd130717ef` |
+| Algorithm runtime SHA-256 | `0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922` |
 | Runtime fingerprint scope | 245 Python files: `projects/AlgEngine/**/*.py` and `ascend/*.py` |
 
 The runtime fingerprint uses sorted relative POSIX paths followed by each
@@ -84,7 +90,7 @@ Set these deployment values to existing absolute paths: `SIM_ROOT`,
 `DEADLINE_UTC`. `CFG` must be a compatible planning configuration and
 `CHECKPOINT` its complete checkpoint, not a LoRA-only delta. The checkpoint is
 loaded with a strict state-dictionary check. `DEADLINE_UTC` must be an explicit
-future time with timezone, for example the approved job cutoff in ISO 8601.
+future time with timezone. Use an ISO 8601 `+00:00` UTC offset for Python 3.9/3.10 compatibility. Set a technical cap appropriate to the scene, not a stale cutoff from an earlier experiment.
 
 Use matching official full 100pct configurations and complete checkpoints for the two published planners:
 
@@ -103,12 +109,13 @@ WORLDENGINE_IMAGE_ID="$IMAGE_ID" "$ALG_PYTHON" \
   "$SIM_ROOT/projects/AlgEngine/closed_loop/sim_test.py" "$CFG" "$CHECKPOINT" \
   --device npu:0 --precision fp32 \
   --algengine-root "$ALG_ROOT" \
-  --algengine-commit 972e1d9592860cef6520e0b39d7e4e9ab55a510a \
-  --expected-algengine-source-sha256 40997952fdc967296ac1bc15d19f3ef89054d1f3e75e25f23cacb48a8197308b \
+  --algengine-commit 55efdef54139c63ab9afce9178ebb3bd130717ef \
+  --expected-algengine-source-sha256 0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922 \
   --expected-image-id "$IMAGE_ID" \
-  --msda-backend reference --wait-timeout 600 \
+  --msda-backend cuda-compatible --wait-timeout 600 \
   --deadline-utc "$DEADLINE_UTC" --stop-file "$RUN_ROOT/STOP" \
   --cfg-options \
+    sim.max_frame_per_scene=24 \
     sim.monitored_folder="$RUN_ROOT/frames" \
     sim.plan_save_path="$RUN_ROOT/plan_traj" \
     sim.merged_ann_save_dir="$RUN_ROOT/merged_ann_files" \
@@ -121,10 +128,9 @@ WORLDENGINE_IMAGE_ID="$IMAGE_ID" "$ALG_PYTHON" \
 
 `--precision bf16` uses the external adapter's native NPU autocast, FP32
 geometry islands and actual activation checks. It does not cast the model's
-parameters to BF16. The default MSDA backend is the adapted reference path;
-`--msda-backend cuda-compatible` is a separate explicitly selected experiment.
-The reference MSDA path is used by the eight accepted target-device control
-windows. The CUDA-compatible MSDA option is not part of this closed-loop result.
+parameters to BF16. The earlier eight 12-frame cases used the reference MSDA
+backend. The current 24-frame profile is FP32 only and explicitly selects
+`cuda-compatible`; the two profiles do not share acceptance results.
 The local filesystem fixtures described below remain CPU tests.
 
 The original CUDA command remains available by omitting the NPU arguments.
@@ -135,6 +141,68 @@ For a bounded input replay, add `--max-predictions 1` and supply four valid
 frame metadata files plus their referenced images. This checks planner input
 and output processing. A replay does not execute vehicle feedback or validate
 the renderer.
+
+## Complete selected 24-frame FP32 scene
+
+Check out the external AlgEngine dependency separately at the full Git commit
+in the table above. Keep both code trees immutable during execution. Set the
+planner command above to `sim.max_frame_per_scene=24` in its single
+`--cfg-options` list. Use the matching full official checkpoint and vocabulary.
+Create new `frames`, `plan_traj` and `merged_ann_files` directories under
+`RUN_ROOT`; `WE_output` must remain absent until the simulator starts.
+
+For the simulation command below, add `--num-history 4 --num-future 20`, keep
+`--scene-sha256`, set `--mode closed-loop --device npu:1`, and point
+`--planner-data-path` and `--planner-client-folder` at the same `plan_traj` and
+`frames` directories used by the planner. Start both commands with the existing
+controlled launcher described below. Select `--reaction NR` or `R` explicitly.
+The source scene must contain 24 original metadata frames and all eight
+cameras. Short scenes, missing cameras, duplicate frame tokens and extra pickle
+bytes are rejected; no frames are repeated or synthesized to fill the window.
+Unlike the default 12-frame dry run, `--dry-run --num-future 20` also opens the
+whole-SHA-verified prepared pickle to check real metadata availability. It
+still executes no model or simulator and creates no run output.
+
+Do not pass `--pdm-metrics` or `--dense-rewards` to this 24-frame profile: its
+full-source window does not provide the additional future scoring horizon.
+This restriction concerns scoring inputs, not the twenty real closed-loop
+controls. A small-device manifest alone is insufficient; regenerate and pass
+the full captured-input renderer proof for the exact adapter before launch.
+
+After both commands complete, run the dedicated full-window auditor in a
+CPU-only container, with inputs mounted read-only and no accelerator devices:
+
+```bash
+python -m simengine_ascend.tools.audit_full24 \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --expected-source-sha256 "$APPROVED_SIM_RUNTIME_SHA" \
+  --expected-algengine-source-sha256 0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922 \
+  --expected-algengine-commit 55efdef54139c63ab9afce9178ebb3bd130717ef \
+  --recorded-algengine-root "$RECORDED_ALGENGINE_ROOT" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR --expected-window-frames 24 \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_CLOSED_LOOP_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+`RECORDED_ALGENGINE_ROOT` is the original planner's absolute code path; it may
+differ from the CPU audit mount. The expected declared commit must equal the
+literal value in the original report. The October 29 experiments recorded the
+older declaration `972e1d9592860cef6520e0b39d7e4e9ab55a510a`; their executed
+245-file source was independently matched file-for-file to clean public commit
+`55efdef54139c63ab9afce9178ebb3bd130717ef`. Re-audit those original records with
+their recorded declaration, without rewriting the reports. New launches should
+use the verified public commit above. The content fingerprint is checked in
+both cases; a declared Git SHA alone does not prove the executed source.
+
+CPU checks for the window contract:
+
+```bash
+python -m unittest simengine_ascend.test_run_simulation -v
+python -m unittest discover -s tools/simengine_ascend/tests -p test_window_contract.py -v
+```
 
 ## Simulation and controlled startup
 
