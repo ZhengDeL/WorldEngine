@@ -17,6 +17,8 @@
 
 ## AlgEngine on Ascend 910C / A3
 
+This branch adds optional FP32 planning inference optimizations; `--inference-optimization none` remains the default. The `point-parallel-last-frame` option requires `--precision fp32 --msda-backend cuda-compatible` and retains all three history frames plus the current frame in the final original call. VADv2 and HydraMDP each completed the public CLI baseline/optimized comparison on 22 genuine official NAVTEST anchors with 16 ranks: every typed output field was raw exact. See the [measured record](docs/validation/algengine_fp32_optimization_20261029.json) and [English](docs/algengine_ascend.md#10-optional-fp32-planning-inference-optimizations) / [中文操作说明](docs/algengine_ascend_zh.md#10-fp32-规划推理优化选项). The separate complete 12,146-anchor regression is still running at the time of this record; this optimization record does not close training/backward/convergence acceptance or the known Hydra GPU/NPU differences.
+
 The default MSDA backend is `reference`; select `--msda-backend cuda-compatible` for the optional [CUDA-compatible route](ascend/MSDA_CUDA.md).
 
 Full NAVTEST input validation: [CPU input guide](docs/navtest_input_audit.md) · [中文](docs/navtest_input_audit_zh.md) · [October 20 input and ledger record](docs/navtest_public_input_results.md) · [JSON](ascend/results/full-navtest-public-inputs-20261020.json).
