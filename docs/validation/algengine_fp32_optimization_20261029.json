@@ -1,0 +1,276 @@
+{
+  "schema": 1,
+  "recorded_utc": "2026-10-29T15:49:39.808886+00:00",
+  "result": "two_models_public_inference_CLI_NAVTEST22_raw_exact",
+  "tested_source": {
+    "commit": "0bcaff75a7f179597476d404d49d8a0ce18ba1c5",
+    "normalized_runtime_python_sha256": "dce783d2d19b0a3f24acd7f69094fbf2cbc4e5ce1bccb4efe4629d741e6dc0c6",
+    "exported_source_archive_sha256": "3e6a823f1f887d164c9961367db04d2ece08580ee1962a7145f6f88b0fd9b780",
+    "exported_files_SHA256_verified_before_and_after_runtime": 454,
+    "entry": "ascend/inference.py",
+    "comparator": "ascend/tools/compare_inference.py"
+  },
+  "runtime": {
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "torch_npu_git_version": "a783f11e456f27d7451a1ea745f1556823357c95"
+  },
+  "topology": {
+    "target": "Ascend 910C",
+    "physical_dual_chip_cards": 8,
+    "logical_chips": 16,
+    "world_size": 16,
+    "batch_per_rank": 1,
+    "unique_anchors": 22,
+    "executed_padded_samples": 32,
+    "steps_per_rank": 2
+  },
+  "precision": {
+    "mode": "fp32",
+    "matmul_allow_hf32": false,
+    "conv_allow_hf32": false,
+    "torch_deterministic": true,
+    "CLOSE_MATMUL_K_SHIFT": "1",
+    "HCCL_DETERMINISTIC": "true",
+    "msda_backend": "cuda-compatible"
+  },
+  "data": {
+    "origin": "OpenDriveLab/WorldEngine official real NAVTEST data",
+    "original_filter": "projects/AlgEngine/configs/navsim_splits/navtest_split/navtest.yaml",
+    "original_filter_sha256": "61284edf5003c0291f843ce9817c822ba306609a62d54544223adae3fc7fc9cd",
+    "original_anchors": 12146,
+    "selection": "First 22 entries of the original official filter token list; original annotation order retained",
+    "selected_filter_sha256": "446bfb797dbd747ae79673036b14e0659459276275e04c04401624d0d87e2097",
+    "selected_tokens": [
+      "5798a6e25f2553e4",
+      "3dc6b109b480502f",
+      "a4f2f32aa59f53b9",
+      "9164913b818a58b1",
+      "713c5a168c2452dc",
+      "1975d15fde2955ff",
+      "b27bfe84cc545daa",
+      "57730912486a5853",
+      "b111bb8716b756d2",
+      "e11f2ff7ffba5b45",
+      "b7ee1af184835990",
+      "3789d42ea83f569d",
+      "e9bb1dab462252e9",
+      "5ad18b7f7b2a52c7",
+      "e0bb2b04e9455fa6",
+      "1ebfee14fc925d6e",
+      "d2789ec30aaa5d6a",
+      "0d5b8da00d505be0",
+      "8be5c83488ff5980",
+      "871164a7e40652b5",
+      "8a8bf2275db85432",
+      "9bdf0d338d625e2a"
+    ],
+    "history_frames": 3,
+    "current_frames": 1,
+    "cameras_per_frame": 8,
+    "model_and_test_pipeline_unchanged": true,
+    "configuration_change": "Only data.test.nav_filter_path selects the documented official subset"
+  },
+  "models": {
+    "VADv2": {
+      "official_pretrained_weight": "e2e_vadv2_100pct_ep8.pth",
+      "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "source_config_sha256": "498728e61a0d3378e6c7ea22c3b4f131431963ea5d53628e0aa86b3bd7e200a9",
+      "runs": {
+        "baseline": {
+          "actual_return": 0,
+          "container_exit_code": 0,
+          "OOMKilled": false,
+          "started_utc": "2026-10-29T15:42:43.12260195Z",
+          "finished_utc": "2026-10-29T15:44:47.31263331Z",
+          "container_wall_seconds": 124.190032,
+          "original_test_runner_elapsed_seconds": 98.96860912296688,
+          "rank0_peak_allocated_bytes": 3719214080,
+          "rank0_execution": {
+            "requested": "none",
+            "query_chunk": 2048,
+            "observation_rank": 0,
+            "point_parallel_calls": 0,
+            "original_msda_fallback_calls": 0,
+            "last_frame_calls": 0,
+            "original_frame_fallback_calls": 0,
+            "preserved_NumPy_draws": 0,
+            "fallback_reasons": {},
+            "last_frame_source_contract": null
+          },
+          "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8",
+          "inference_validation_sha256": "4d086c7aaa801b4e4977dca464fbdb90b585fc28784fe649e29c777cd0c4ed20"
+        },
+        "optimized": {
+          "actual_return": 0,
+          "container_exit_code": 0,
+          "OOMKilled": false,
+          "started_utc": "2026-10-29T15:44:49.128903531Z",
+          "finished_utc": "2026-10-29T15:45:45.805815346Z",
+          "container_wall_seconds": 56.676912,
+          "original_test_runner_elapsed_seconds": 32.58586667798227,
+          "rank0_peak_allocated_bytes": 8536846848,
+          "rank0_execution": {
+            "requested": "point-parallel-last-frame",
+            "query_chunk": 8192,
+            "observation_rank": 0,
+            "point_parallel_calls": 102,
+            "original_msda_fallback_calls": 0,
+            "last_frame_calls": 2,
+            "original_frame_fallback_calls": 0,
+            "preserved_NumPy_draws": 12,
+            "fallback_reasons": {},
+            "last_frame_source_contract": "pinned_original_methods"
+          },
+          "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8",
+          "inference_validation_sha256": "f17248e1bcdec771418f05d5579102e63f91a21428f14b74db55dec23321764a"
+        }
+      },
+      "complete_output_comparison": {
+        "result": "exact",
+        "identity_mismatches": [],
+        "anchors": 22,
+        "ordered_tokens_equal": true,
+        "unique_tokens": true,
+        "typed_outputs_raw_exact": true,
+        "mismatched_tokens": [],
+        "requested_optimization_actually_used": true
+      },
+      "comparison_actual_return": 0,
+      "comparison_CPU_runtime": "runc",
+      "comparison_CPU_devices": [],
+      "comparison_report_sha256": "aa9ed83c5408f913051aea741385e805d5162b17719f5fe89e05ad507ec524e4"
+    },
+    "HydraMDP": {
+      "official_pretrained_weight": "e2e_hydramdp_100pct_ep8.pth",
+      "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "source_config_sha256": "8ce3aa01b0242d5e31e2a34b08d1595dffb1ce734e70043ef3da3879cfbaac99",
+      "runs": {
+        "baseline": {
+          "actual_return": 0,
+          "container_exit_code": 0,
+          "OOMKilled": false,
+          "started_utc": "2026-10-29T15:45:48.457863645Z",
+          "finished_utc": "2026-10-29T15:47:56.111376859Z",
+          "container_wall_seconds": 127.653513,
+          "original_test_runner_elapsed_seconds": 101.12694689200725,
+          "rank0_peak_allocated_bytes": 3730572288,
+          "rank0_execution": {
+            "requested": "none",
+            "query_chunk": 2048,
+            "observation_rank": 0,
+            "point_parallel_calls": 0,
+            "original_msda_fallback_calls": 0,
+            "last_frame_calls": 0,
+            "original_frame_fallback_calls": 0,
+            "preserved_NumPy_draws": 0,
+            "fallback_reasons": {},
+            "last_frame_source_contract": null
+          },
+          "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5",
+          "inference_validation_sha256": "65890aeb012c16d01dc3add288b1c1cfc480a79da64a2656f2a4c8c0755b3e19"
+        },
+        "optimized": {
+          "actual_return": 0,
+          "container_exit_code": 0,
+          "OOMKilled": false,
+          "started_utc": "2026-10-29T15:47:57.999291548Z",
+          "finished_utc": "2026-10-29T15:48:57.338905804Z",
+          "container_wall_seconds": 59.339614,
+          "original_test_runner_elapsed_seconds": 33.76960331900045,
+          "rank0_peak_allocated_bytes": 8547151872,
+          "rank0_execution": {
+            "requested": "point-parallel-last-frame",
+            "query_chunk": 8192,
+            "observation_rank": 0,
+            "point_parallel_calls": 102,
+            "original_msda_fallback_calls": 0,
+            "last_frame_calls": 2,
+            "original_frame_fallback_calls": 0,
+            "preserved_NumPy_draws": 12,
+            "fallback_reasons": {},
+            "last_frame_source_contract": "pinned_original_methods"
+          },
+          "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5",
+          "inference_validation_sha256": "724ccd2e309b3d340b91888e128edf39a5cdd05ccfde8151487b597326d0aa64"
+        }
+      },
+      "complete_output_comparison": {
+        "result": "exact",
+        "identity_mismatches": [],
+        "anchors": 22,
+        "ordered_tokens_equal": true,
+        "unique_tokens": true,
+        "typed_outputs_raw_exact": true,
+        "mismatched_tokens": [],
+        "requested_optimization_actually_used": true
+      },
+      "comparison_actual_return": 0,
+      "comparison_CPU_runtime": "runc",
+      "comparison_CPU_devices": [],
+      "comparison_report_sha256": "5fb07d4bf69911aadf35af99e6b2b2c98be9385589908eb35b2252460b2c019e"
+    }
+  },
+  "timing_scope": {
+    "repetitions_per_model": 1,
+    "formal_performance_accepted": false,
+    "original_test_runner": "Starts just before the original test script; includes model/checkpoint loading, inference and collection. Excludes earlier Python/Torch imports and config/precision setup.",
+    "container_wall": "Actual container start to exit, including earlier setup; independent NAVSIM scoring excluded.",
+    "interpretation": "Short integration A/B only. No warmed repeated-model, full-dataset or GPU/NPU performance ratio is accepted here."
+  },
+  "auxiliary_evidence_separate_from_public_CLI": {
+    "single_operator": {
+      "private_entry": true,
+      "CPU_synthetic_forward_raw_equal_cases": 15,
+      "NPU_synthetic_forward_raw_equal_cases": 15,
+      "skipped": 0,
+      "real_saved_original_CUDA_tuples": 2,
+      "query_chunks": [
+        2048,
+        4096,
+        8192
+      ],
+      "candidate_raw_equal_to_original_NPU": true,
+      "original_CUDA_atol": 1e-06,
+      "original_CUDA_rtol": 1e-05,
+      "original_CUDA_outside_tolerance_scalars": 0,
+      "scope": "MSDA forward only; not model timing or training acceptance"
+    },
+    "real_NAVTRAIN139": {
+      "private_entry": true,
+      "models": [
+        "VADv2",
+        "HydraMDP"
+      ],
+      "world_size": 16,
+      "steps_per_rank": 9,
+      "anchors": 139,
+      "all_original_typed_outputs_raw_exact": true,
+      "complete_final_BEV_and_planning_tensor_hashes_equal": true,
+      "Python_NumPy_TorchCPU_currentNPU_RNG_contract_preserved": true,
+      "named_buffers_and_input_metadata_unchanged": true,
+      "formal_performance_accepted": false,
+      "scope": "Auxiliary function/state regression with audit synchronization; not NAVTRAIN convergence and not the public CLI timing acceptance"
+    }
+  },
+  "boundaries": {
+    "full_NAVTEST_12146_optimized_regression": "Running separately at the time of this record; not accepted by this small-data record",
+    "new_GPU_run": false,
+    "known_prior_full_Hydra_GPU_NPU_difference": {
+      "selected_index_samples": 4,
+      "trajectory_samples": 4,
+      "official_score_samples": 2,
+      "status": "Retained; this small-data optimization comparison does not establish cross-device equivalence on those full-benchmark samples"
+    },
+    "training_implementation_changed": false,
+    "training_or_convergence_accepted": false,
+    "BF16_or_HF32_optimization_accepted": false,
+    "independent_NAVSIM_scoring_recomputed_for_this_22_subset": false
+  },
+  "device_release": {
+    "physical_NPU_process_tables_empty": 8,
+    "logical_chips": 16,
+    "open_chip_device_FDs": 0
+  }
+}

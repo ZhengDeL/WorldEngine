@@ -52,7 +52,7 @@ def compare(baseline, candidate):
                 mismatched_tokens=mismatched, requested_optimization_actually_used=optimization_used,
                 baseline_elapsed_seconds=a.get('elapsed_seconds'),
                 candidate_elapsed_seconds=b.get('elapsed_seconds'),
-                timing_scope='Original full inference job walltime; use repeated A/B with identical devices, data and warm state for performance acceptance')
+                timing_scope='Original test-runner walltime after Python/Torch imports and config setup; includes model/checkpoint loading, inference and collection. Use repeated A/B with identical devices, data and warm state for performance acceptance')
 
 
 def main():
