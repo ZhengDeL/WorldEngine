@@ -8,7 +8,8 @@ for VADv2/HydraMDP × NR/R. Each of the four cases used four genuine history
 frames and twenty applied model controls, then independently decoded all
 192 original-size camera JPEGs. See the [FP32 full-scene and renderer timing
 record](../docs/validation/simengine_fp32_20261029.json) for source, input and
-per-case audit hashes.
+per-case audit hashes. The original eight-control PDM/dense profile and its
+measured low-score cases are documented below.
 
 On one fixed full-resolution eight-camera capture, sequential same-chip ABBA
 measurements reduced median renderer forward time from 38.9381 to 17.7366 seconds.
@@ -160,10 +161,11 @@ Unlike the default 12-frame dry run, `--dry-run --num-future 20` also opens the
 whole-SHA-verified prepared pickle to check real metadata availability. It
 still executes no model or simulator and creates no run output.
 
-Do not pass `--pdm-metrics` or `--dense-rewards` to this 24-frame profile: its
-full-source window does not provide the additional future scoring horizon.
-This restriction concerns scoring inputs, not the twenty real closed-loop
-controls. A small-device manifest alone is insufficient; regenerate and pass
+This dedicated 24-frame acceptance profile explicitly rejects both scoring
+flags. Dense scoring over twenty controls would need 32 real source frames,
+which this scene does not contain. PDM has a different context contract; its
+acceptance is established separately in the eight-control scored profile below.
+The original twenty controls remain accepted without scoring. A small-device manifest alone is insufficient; regenerate and pass
 the full captured-input renderer proof for the exact adapter before launch.
 
 After both commands complete, run the dedicated full-window auditor in a
@@ -199,6 +201,111 @@ CPU checks for the window contract:
 ```bash
 python -m unittest simengine_ascend.test_run_simulation -v
 python -m unittest discover -s tools/simengine_ascend/tests -p test_window_contract.py -v
+```
+
+## Original PDM and dense scoring on an eight-control prefix
+
+The FP32 scored profile uses the same complete official 24-frame scene and
+AlgEngine commit `55efdef54139c63ab9afce9178ebb3bd130717ef`. It renders frames
+`0..11`, applies eight controls `4..11`, and keeps the original, unrendered
+frames `12..19` as real future context for CPU dense scoring. Do not shorten
+the prepared pickle to twelve frames or repeat frames. This is a single
+NAVTEST failure scene, not a NAVTRAIN rare-scene synthetic training set.
+
+On 2026-10-30, VADv2/HydraMDP × NR/R completed the original PDM and dense paths.
+Each case produced 96 fully decoded JPEGs, one endpoint PDM row at step 11,
+and nine dense positions `3..11`, each containing 8192 candidates × eight
+finite metric arrays. The original PDM CSV stores five decimal places:
+
+| Planner | Reaction | PDM score × 100 | Recorded quality observation |
+| --- | --- | ---: | --- |
+| VADv2 | NR | 79.057 | Progress 0.49736; NC/DAC/TTC equal 1 |
+| VADv2 | R | 0 | NC gate 0; first NC/DAC violation at step 11; DAC 1 |
+| HydraMDP | NR | 100 | All seven endpoint fields equal 1 |
+| HydraMDP | R | 27.233 | TTC 0, progress 0.25360; NC/DAC equal 1 |
+
+These are measured NPU-planner/CPU-scoring outputs, not GPU comparisons or a
+dataset-wide driving-quality acceptance. The low R scores are retained. The
+`first_violation_step` field records NC/DAC events; it does not establish a TTC
+event time. All four cases' 96 JPEGs, eight consumed plans and eight actual
+merged planner inputs match the corresponding prefix of the earlier unscored
+24-frame runs byte for byte. This checks that enabling scoring preserved that
+prefix; it does not prove GPU equivalence. Per-case receipts and boundaries
+are in the [versioned result](../docs/validation/simengine_fp32_20261029.json).
+
+Use the existing controlled two-process launch plan. Keep the planner's FP32,
+CUDA-compatible MSDA and pinned source/image checks, but set
+`sim.max_frame_per_scene=12` in its single `--cfg-options` list. Also set
+`sim.post_process_path` to the original vocabulary and retain both cleanup
+flags as `False`. The simulator phase uses:
+
+```bash
+"$SIM_PYTHON" -m simengine_ascend.run_simulation \
+  --scene-pkl "$PREPARED/scene.pkl" --scene-sha256 "$SCENE_SHA256" \
+  --asset-root "$PREPARED/assets" --maps-root "$MAPS_ROOT" \
+  --validated-manifest "$NPU_MANIFEST" --device npu:1 \
+  --output "$RUN_ROOT/WE_output" --deadline-utc "$DEADLINE_UTC" \
+  --stop-file "$RUN_ROOT/STOP" --expected-scene-ids "$SCENE_IDS_JSON" \
+  --mode closed-loop --reaction NR --num-history 4 --num-future 8 \
+  --planner-data-path "$RUN_ROOT/plan_traj" \
+  --planner-client-folder "$RUN_ROOT/frames" --pdm-metrics --dense-rewards
+```
+
+Place this argv in the existing launcher plan with its `{WE_output}`,
+`{deadline_utc}`, `{stop_file}`, `{plan_traj}` and `{frames}` substitutions.
+Use a new `RUN_ROOT` and matching NR/R in both the plan and audit. Each case
+uses a planner/renderer chip pair. The dense manager retains its original
+eight CPU workers; allocate CPU RAM and workers separately from the NPU count.
+The measured cases used a 48 GiB CPU memory limit and 16 CPU cores per complete
+job, plus a separate 16 GiB/two-core audit. These are the tested limits, not a
+measured minimum or a full-training memory requirement.
+
+Both code trees, prepared assets, maps, official complete checkpoints and
+vocabulary must be readable in each process. The dense manager resolves its
+vocabulary relative to `SIM_ROOT/data/alg_engine/test_8192_kmeans.npy`; the
+planner also needs `ALG_ROOT/data/alg_engine/test_8192_kmeans.npy`. Mount the
+same official data tree read-only at both locations. Keep the complete CANN
+proof closure: the full real-input manifest, its referenced small-device
+manifest and device report, capture JSON and NPZ archive, real-input reference
+report, and all 46 native runtime files. Preserve the absolute paths recorded
+in those proofs with read-only aliases, or regenerate the proofs for the new
+layout. Copying only `validated_real_manifest.json` is insufficient.
+
+The simulator environment needs the original NuPlan/Ray/geometry dependencies
+and maps. Preserve the validated Torch/NumPy/PROJ versions and import paths;
+do not replace an entire site-packages tree. Set `PROJ_DATA`/`PROJ_LIB` to the
+matching PROJ data directory, and bound BLAS threads in the CPU workers. The
+original managers run their scoring formulas on CPU in this profile; enabling
+these flags does not migrate scoring to NPU.
+
+After both original child commands have actually completed, run the separate
+fixed-profile audit in a CPU-only container with read-only inputs and no
+accelerator devices:
+
+```bash
+python -m simengine_ascend.tools.audit_scored_default8 \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALG_ROOT" --prepared-dir "$PREPARED" \
+  --expected-source-sha256 daabd5c34ed290038ad4d0da13c32e81100b9692a0b63ff9b657f72edd9c7d66 \
+  --expected-algengine-source-sha256 0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922 \
+  --expected-algengine-commit 55efdef54139c63ab9afce9178ebb3bd130717ef \
+  --expected-prepare-receipt-sha256 ac246caf243f2e1a679c4159dbd92ecb1cfe84f4197fc023295909d7943414fc \
+  --model vadv2 --precision fp32 --reaction NR --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_SCORED_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+`RECORDED_RUN_ROOT` and `RECORDED_ALG_ROOT` are the literal paths saved by the
+original processes, not necessarily the CPU audit's mount locations. This
+auditor checks the full consumption chain, original policy/controller state,
+complete images, pinned source/checkpoint/precision, PDM CSV, and all dense
+arrays. It checks that eight-step target fields are complete and finite; it
+does not recompute targets or scoring formulas. A score of zero remains a
+valid measured quality result. The older `audit_closed_loop` and `audit_full24`
+commands retain their unscored profiles and must not be used for this case.
+
+```bash
+python -m unittest simengine_ascend.tools.tests.test_audit_scored_default8 -v
 ```
 
 ## Simulation and controlled startup

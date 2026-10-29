@@ -75,8 +75,9 @@ Git 提交用于说明依赖版本，实际文件内容由源码 SHA-256 校验�
 24 帧 `--dry-run` 会读取经过完整 SHA 核验的准备 pickle，检查真实元数据；
 仍不执行模型或仿真器，也不创建作业输出。默认 12 帧 dry-run 不读取 pickle。
 
-本 24 帧配置禁止 `--pdm-metrics` 和 `--dense-rewards`：原场景末尾没有评分所需的额外未来窗口。
-这不影响二十次实际闭环控制，但不能据此报告官方驾驶评分。渲染源码修改后须重新完成小规模
+本 24 帧专用验收配置明确禁止两个评分开关。二十次控制的 dense 评分需要 32 条真实源帧，
+当前场景只有 24 帧；PDM 的上下文要求不同，另由下述八次控制配置实际验收。
+二十次无评分闭环控制的结论保持原样。渲染源码修改后须重新完成小规模
 设备验证与完整真实捕获输入验证，不能沿用旧 manifest。截止时间使用未来的 ISO 8601
 `+00:00` UTC 格式，兼容 Python 3.9/3.10；不要复用历史作业的绝对截止时间。
 
@@ -97,6 +98,90 @@ CPU 检查命令：
 ```bash
 python -m unittest simengine_ascend.test_run_simulation -v
 python -m unittest discover -s tools/simengine_ascend/tests -p test_window_contract.py -v
+```
+
+## 原始 PDM 与 dense 评分：八次控制前缀
+
+本配置仍使用同一份完整 24 帧官方场景和上表的 AlgEngine 提交。渲染帧为 `0..11`，
+实际控制为 `4..11`，未渲染的原始 `12..19` 帧保留为 CPU dense 评分的真实未来上下文。
+不要把准备 pickle 裁成 12 帧，也不要重复帧。该场景属于 NAVTEST failure，不能替代
+NAVTRAIN rare 场景或六组原始合成训练配置。
+
+2026 年 10 月 30 日，VADv2/HydraMDP × NR/R 四条路径均完成原始 PDM 和 dense 评分。
+每条路径产出 96 张可完整解码的 JPEG、step 11 的一条终点评分，以及 `3..11` 九个位置的
+密集奖励；每个位置均包含 8192 个候选的八项有限指标数组。原始 CSV 仅保留五位小数：
+
+| 模型 | 其他车辆策略 | PDM × 100 | 实际质量观察 |
+| --- | --- | ---: | --- |
+| VADv2 | NR | 79.057 | progress 0.49736，NC/DAC/TTC 均为 1 |
+| VADv2 | R | 0 | NC 门控为 0，首个 NC/DAC 违规记录在 step 11，DAC 为 1 |
+| HydraMDP | NR | 100 | 终点评分七个字段均为 1 |
+| HydraMDP | R | 27.233 | TTC 为 0，progress 0.25360，NC/DAC 均为 1 |
+
+这些是本次 NPU 规划器与原 CPU 评分器的实测输出，低分照实保留。它们不代表 GPU 对照
+或全部场景驾驶质量已验收。`first_violation_step` 只记录 NC/DAC 事件，不能据此推断 TTC
+事件时刻。四条路径与先前不启评分的 24 帧运行相比，同一前缀的 96 张 JPEG、八份实际
+消费的计划和八份真实模型输入均逐文件字节一致，说明启用评分未改变已核前缀；这项检查
+仍不等于 GPU 等价。逐项回执和边界见[版本化结果](../docs/validation/simengine_fp32_20261029.json)。
+
+使用原有双进程受控启动计划。规划器保留 FP32、`cuda-compatible` MSDA、完整权重及
+源码/镜像校验，在同一组 `--cfg-options` 中设置 `sim.max_frame_per_scene=12`，
+`sim.post_process_path` 指向原始词表，并保留两个清理选项为 `False`。仿真进程设置：
+
+```bash
+"$SIM_PYTHON" -m simengine_ascend.run_simulation \
+  --scene-pkl "$PREPARED/scene.pkl" --scene-sha256 "$SCENE_SHA256" \
+  --asset-root "$PREPARED/assets" --maps-root "$MAPS_ROOT" \
+  --validated-manifest "$NPU_MANIFEST" --device npu:1 \
+  --output "$RUN_ROOT/WE_output" --deadline-utc "$DEADLINE_UTC" \
+  --stop-file "$RUN_ROOT/STOP" --expected-scene-ids "$SCENE_IDS_JSON" \
+  --mode closed-loop --reaction NR --num-history 4 --num-future 8 \
+  --planner-data-path "$RUN_ROOT/plan_traj" \
+  --planner-client-folder "$RUN_ROOT/frames" --pdm-metrics --dense-rewards
+```
+
+将这组 argv 填入下述启动器计划，使用 `{WE_output}`、`{deadline_utc}`、`{stop_file}`、
+`{plan_traj}` 和 `{frames}` 替换值。每次使用新目录，NR/R 与审计参数保持一致。
+每条路径使用同一张物理卡的两个芯片，dense 保留原有八个 CPU 评分进程。本次每个完整
+作业设置 48 GiB CPU 内存上限和 16 个 CPU 核，独立审计为 16 GiB/两核；这些是实测配置，
+尚未测定最低资源需求，也不是全量训练的内存要求。
+
+两个进程都需要可读取的源码、准备资产、地图、官方完整权重和原始词表。dense 从
+`SIM_ROOT/data/alg_engine/test_8192_kmeans.npy` 读取词表，规划器还需要外部
+`ALG_ROOT/data/alg_engine/test_8192_kmeans.npy`；将同一份官方数据只读挂载到两处。
+CANN 完整输入 manifest 的依赖必须一并保留，包括其引用的小规模 manifest、设备报告、
+capture JSON、NPZ、真实输入参考报告和 46 个 native runtime 文件。通过只读路径别名
+保持回执中的绝对路径，或在新布局重新生成证明。只复制顶层 manifest 不能完成校验。
+
+仿真环境需具备原 NuPlan/Ray/地图与几何依赖，保留已验证的 Torch、NumPy、PROJ 版本
+及导入路径；不要整目录覆盖 site-packages。`PROJ_DATA`/`PROJ_LIB` 指向匹配的 PROJ 数据，
+并限制评分进程的 BLAS 线程。此配置的原评分公式仍在 CPU 上执行，两个开关不表示评分
+已迁到 NPU。
+
+两条原始子进程都实际结束后，在无 GPU/NPU 挂载的 CPU 容器中只读挂载所有输入，运行
+新的固定配置审计。完整参数与英文版一致：
+
+```bash
+python -m simengine_ascend.tools.audit_scored_default8 \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALG_ROOT" --prepared-dir "$PREPARED" \
+  --expected-source-sha256 daabd5c34ed290038ad4d0da13c32e81100b9692a0b63ff9b657f72edd9c7d66 \
+  --expected-algengine-source-sha256 0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922 \
+  --expected-algengine-commit 55efdef54139c63ab9afce9178ebb3bd130717ef \
+  --expected-prepare-receipt-sha256 ac246caf243f2e1a679c4159dbd92ecb1cfe84f4197fc023295909d7943414fc \
+  --model vadv2 --precision fp32 --reaction NR --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_SCORED_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+`RECORDED_RUN_ROOT` 和 `RECORDED_ALG_ROOT` 填原进程报告中的路径，可与审计容器的
+挂载路径不同。审计核对完整消费链、原策略/控制器状态、全部图像、源码/权重/精度、
+PDM CSV 和 dense 数组。八步目标字段检查形状、有限性和 SHA，不重算目标或评分公式。
+零分保留为实际质量结果。旧 `audit_closed_loop` 和 `audit_full24` 的无评分配置保持原样，
+不能用于此项验收。
+
+```bash
+python -m unittest simengine_ascend.tools.tests.test_audit_scored_default8 -v
 ```
 
 ## 运行方式
