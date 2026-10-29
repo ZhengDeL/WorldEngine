@@ -897,3 +897,44 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 The [validation report](../ascend/FULL_ALGENGINE.md) records the measured conditions, versions and results for small-data training, restoration and scoring. The public rebuild and two 16-rank LoRA fine-tuning workflows have actual small-data evidence. Four independent synchronous base-planner controls completed, with two comparisons outside the original tolerance. Full NAVTRAIN convergence, complete independent NAVTEST results, the other six genuine synthetic configurations and sustained operation in the target environment remain unvalidated.
 
 The measured public-source reproduction used 37 training candidate anchors and 22 log-disjoint evaluation anchors. Both LoRA fine-tuning comparisons were bitwise equal on the newly built image. [Versioned evidence](../ascend/results/actual-public-reproduction-16chip-20261014.json) records its configurations, inputs and boundaries. Preserve the original camera directory layout when passing the camera root for the original NAVTEST annotation.
+
+## 10. Optional FP32 planning inference optimizations
+
+Inference keeps the original path by default. `--inference-optimization` selects a temporary inference-only implementation; it does not change training, checkpoints, model parameters, the test pipeline or scoring. The options require `--precision fp32 --msda-backend cuda-compatible` with Matmul/Conv HF32 disabled.
+
+| Option | Behavior and scope |
+| --- | --- |
+| `none` | Original implementation and query chunk 2048. |
+| `point-parallel` | Batches independent MSDA sampling points. Retains compensated FP32 coordinates and ascending level/point accumulation. `--msda-query-chunk` accepts 2048, 4096 or 8192; larger chunks require more transient memory. |
+| `point-parallel-last-frame` | Adds planning-only NAVFormer frame elimination for a batch of one and exactly three history frames plus the current frame. The final original call still processes all four frames. Three discarded outer prefix calls are removed, reducing BEV frame evaluations from 11 to 4. The six NumPy draws from those discarded eval GridMask calls are preserved. |
+
+The last-frame path checks the original model methods and GridMask source before use. Training mode, enabled gradients, perception, different queues or changed source use the original frame path and record the reason. Gradient-bearing MSDA inputs use the original forward/backward implementation. The original functions are restored when inference exits, including on exceptions. These fallbacks preserve execution; inspect the recorded counters to confirm that the requested optimization was actually used.
+
+Use the same dumped inference configuration, official weights, data, image, precision, deterministic settings and logical chips for both runs. The paths below follow the mounts in section 6; the configuration must already reference those paths. Use fresh output directories.
+
+```bash
+# DEVICES selects logical chips: 0,...,15 is 8 dual-chip physical cards.
+COMMON=(--task inference --devices "$DEVICES"
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$INFERENCE_CONFIG" --data-root "$DATA"
+  --checkpoint "$CHECKPOINT" --vocab "$VOCAB" --maps "$MAPS"
+  --memory "$EVAL_MEMORY" --cpus 64 --pids-limit 8192
+  --precision fp32 --msda-backend cuda-compatible --deterministic)
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --output "$RUNS/fp32_original"
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192 \
+  --output "$RUNS/fp32_optimized"
+```
+
+Inside the same installed runtime, compare the two result directories:
+
+```bash
+python ascend/tools/compare_inference.py \
+  --baseline /results/fp32_original --candidate /results/fp32_optimized \
+  --output /results/fp32_comparison.json
+```
+
+The comparator checks source/config/checkpoint/runtime/precision/topology identity, ordered tokens and every typed result field with raw tensor/array equality. Exit 0 also requires actual use of the requested optimization. `inference_validation.json` records the selected option, query chunk, actual calls and fallback reasons observed on rank 0. Independent NAVSIM scoring remains required as described in section 6.
+
+For performance acceptance, repeat unprofiled A/B runs with the same device mapping and data, and report full job time separately from warmed model windows. Startup, loading and result collection are included in the original `elapsed_seconds`; this is not isolated kernel latency. Do not compare an audited/profiled run against an uninstrumented run. A short subset confirms functionality and numerical consistency only; it does not establish complete NAVTEST quality or training convergence. To return to the original execution path, omit the optimization flags or set `--inference-optimization none` and leave the chunk at 2048.

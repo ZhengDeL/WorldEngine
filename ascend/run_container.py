@@ -3,9 +3,11 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 IMAGE = 'local/worldengine:26.1.0-a3-clean-20261013'
 IMAGE_ID = 'sha256:a182f52df8e9e343214e7631597230560877fce594199c6a0ea26a988832461f'
 
@@ -76,7 +78,16 @@ def main():
     p.add_argument('--debug-anomaly',action='store_true')
     p.add_argument('--msda-backend',choices=('reference','cuda-compatible'),default='reference',
                    help='FP32 MSDA implementation; preserve the selection for training, resume and inference')
+    from ascend.inference_optimization import MODES, CHUNKS, validate_options
+    p.add_argument('--inference-optimization',choices=MODES,default='none')
+    p.add_argument('--msda-query-chunk',type=int,choices=CHUNKS,default=2048)
     args=p.parse_args()
+    if args.task!='inference' and (args.inference_optimization!='none' or args.msda_query_chunk!=2048):
+        p.error('Inference optimization options require --task inference')
+    try:
+        validate_options(args.inference_optimization,args.msda_query_chunk,args.precision,args.msda_backend)
+    except ValueError as exc:
+        p.error(str(exc))
     _validate_stop_options(args, p)
     if args.inference_after and args.task != 'train':
         p.error('--inference-after requires --task train')
@@ -187,6 +198,7 @@ def main():
         config=args.config.resolve(strict=True)
         cmd+=['-v',f'{config}:/config/inference.py:ro']
         train=['ascend/inference.py','--config','/config/inference.py','--checkpoint','/weights/initial.pth','--output','/output','--precision',args.precision,'--msda-backend',args.msda_backend]
+        train+=['--inference-optimization',args.inference_optimization,'--msda-query-chunk',str(args.msda_query_chunk)]
         if args.deterministic:train+=['--deterministic']
     import shlex
     inner='set +u\nsource /usr/local/Ascend/ascend-toolkit/set_env.sh\nexport PATH=/opt/conda/envs/bevformer/bin:/opt/conda/bin:$PATH\n'
@@ -203,7 +215,7 @@ def main():
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'
     cmd += [args.image,'bash','-lc',inner]
-    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend},indent=2))
+    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend,'inference_optimization':args.inference_optimization,'msda_query_chunk':args.msda_query_chunk},indent=2))
     result=subprocess.run(cmd,check=False)
     raise SystemExit(result.returncode)
 

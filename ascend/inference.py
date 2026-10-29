@@ -48,7 +48,16 @@ def main():
     p.add_argument('--deterministic',action='store_true',help='Request original Torch/CANN deterministic algorithms with required initial launcher environment')
     p.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
                    help='Use the same MSDA backend as training or the selected comparison')
+    from ascend.inference_optimization import MODES, CHUNKS, validate_options, optimized_inference
+    p.add_argument('--inference-optimization', choices=MODES, default='none',
+                   help='Explicit FP32 inference path; none preserves the original implementation')
+    p.add_argument('--msda-query-chunk', type=int, choices=CHUNKS, default=2048,
+                   help='Query chunk for the selected inference optimization; default 2048')
     args=p.parse_args()
+    try:
+        validate_options(args.inference_optimization,args.msda_query_chunk,args.precision,args.msda_backend)
+    except ValueError as exc:
+        p.error(str(exc))
     from ascend.msda import configure_backend
     configure_backend(args.msda_backend)
     # Keep actual loaded files and exported artifacts stable across os.chdir(ALG).
@@ -88,8 +97,11 @@ def main():
     os.chdir(ALG)
     from ascend.autocast import inference_precision
     bf16_evidence={}
-    with inference_precision(args.precision,bf16_evidence):
-        runpy.run_path(str(ALG/'scripts/test.py'),run_name='__main__')
+    with optimized_inference(args.inference_optimization,args.msda_query_chunk,
+                             precision=args.precision,backend=args.msda_backend,
+                             source_root=ROOT) as optimization_evidence:
+        with inference_precision(args.precision,bf16_evidence):
+            runpy.run_path(str(ALG/'scripts/test.py'),run_name='__main__')
     torch.npu.synchronize()
     final_precision=precision_state(args.precision,stage='after_original_inference')
     if final_precision['public']!=actual_precision['public']:
@@ -103,7 +115,7 @@ def main():
                       torch_npu_git_version=getattr(getattr(torch_npu,'version',None),'git_version',None),
                       precision=dict(before_model=actual_precision,after_original_inference=final_precision),
                       precision_observation_rank=0,world_size=torch.distributed.get_world_size(),
-                      device_provenance=device_provenance(),bf16=bf16_evidence if args.precision=='bf16' else None)
+                      device_provenance=device_provenance(),inference_optimization=optimization_evidence,bf16=bf16_evidence if args.precision=='bf16' else None)
         with (args.output/'predictions.pkl').open('rb') as stream:
             results=pickle.load(stream)
         with open(cfg.data.test.nav_filter_path) as stream:

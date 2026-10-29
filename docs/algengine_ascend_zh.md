@@ -881,3 +881,43 @@ docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}} oom={{.State
 小数据训练、恢复和评分的实测条件、版本及结果见[验证报告](../ascend/VALIDATION_zh.md)。公开配方重建、两类微调的 16 芯片训练与续训、独立日志推理及官方评分已有实测。公开同步入口四组基座训练重复均完成，其中两组超容差，数值问题仍待解决；完整 NAVTRAIN 收敛、完整独立 NAVTEST、其余六个真实合成配置和目标环境持续训练尚未验收。
 
 公开提交 `ec153c1` 的实际复现覆盖 37 个训练候选、22 个独立评价锚点；新镜像两类 LoRA 微调的最终比较全部逐位相同。[复现证据](../ascend/results/actual-public-reproduction-16chip-20261014.json)记录配置、镜像、输入和边界。使用原始相机目录层级，不能将平铺 JPEG 目录直接作为原 NAVTEST 标注的相机根目录。
+
+## 10. FP32 规划推理优化选项
+
+推理默认沿用原实现。`--inference-optimization` 只在本次推理进程中启用优化，不改训练、权重、模型参数、测试数据处理和评分。使用时须指定 `--precision fp32 --msda-backend cuda-compatible`，保持 Matmul/Conv HF32 关闭。
+
+| 选项 | 执行方式及适用范围 |
+| --- | --- |
+| `none` | 原实现，查询分块为 2048。 |
+| `point-parallel` | 合并计算相互独立的 MSDA 采样点，保留原补偿坐标算法和逐层、逐点累加顺序。`--msda-query-chunk` 可选 2048、4096、8192，较大分块会增加临时内存。 |
+| `point-parallel-last-frame` | 在上一项基础上，去掉 NAVFormer 规划推理中输出被丢弃的前三次外层计算。仅适用于 batch 1、三帧历史加当前帧。保留的最后一次原调用仍处理全部四帧，BEV 帧计算次数由 11 次减为 4 次，并补齐被省去调用中的六次 NumPy 随机数消耗。 |
+
+最后一帧优化启用前会核对原模型方法和 GridMask 源码。训练模式、启用梯度、感知任务、其他历史帧配置或源码变化时，回到原帧处理路径并记录原因。带梯度的 MSDA 输入使用原前向和反向实现。推理结束或异常退出都会恢复原函数。查看实际调用计数，确认优化确实生效。
+
+两次运行使用同一份已导出的推理配置、官方权重、数据、镜像、精度、确定性设置和逻辑芯片。配置中的路径须与第 6 节的挂载一致，输出目录分别新建。下面的 `DEVICES=0,...,15` 表示 16 个逻辑芯片，即 8 张双芯物理卡。
+
+```bash
+COMMON=(--task inference --devices "$DEVICES"
+  --image "$IMAGE" --expected-image-id "$IMAGE_ID"
+  --config "$INFERENCE_CONFIG" --data-root "$DATA"
+  --checkpoint "$CHECKPOINT" --vocab "$VOCAB" --maps "$MAPS"
+  --memory "$EVAL_MEMORY" --cpus 64 --pids-limit 8192
+  --precision fp32 --msda-backend cuda-compatible --deterministic)
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --output "$RUNS/fp32_original"
+python3 ascend/run_container.py "${COMMON[@]}" \
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192 \
+  --output "$RUNS/fp32_optimized"
+```
+
+在同一套已安装环境内比较两个结果目录：
+
+```bash
+python ascend/tools/compare_inference.py \
+  --baseline /results/fp32_original --candidate /results/fp32_optimized \
+  --output /results/fp32_comparison.json
+```
+
+比较工具核对源码、配置、权重、运行环境、精度、设备配置和 token 顺序，并逐字段检查输出类型及原始数值是否一致。退出码为 0 还要求所选优化确实执行。`inference_validation.json` 保存选项、分块、实际调用次数及回退原因，计数来自 rank 0。官方 NAVSIM 独立评分仍按第 6 节执行。
+
+性能测试需在相同设备和数据上重复交替运行，分别报告完整作业耗时和预热后的模型耗时。原 `elapsed_seconds` 包含启动、数据读取及结果收集，不能当作纯算子时延；带审计或 profiler 的运行不能与普通运行直接比较。小集验证只证明该范围内的功能及数值一致性，不代表完整 NAVTEST 质量或训练收敛。需要回退时，去掉优化参数，或指定 `--inference-optimization none` 并保留分块 2048。

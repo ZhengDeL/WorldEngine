@@ -53,7 +53,7 @@ check_extra_arguments() {
     case "${option%%=*}" in
       --devices|--image|--expected-image-id|--output|--vocab|--checkpoint|--config|--task|--precision|--data-root|--mini-prepared|--memory|--cpus|--batch-size|--workers|--rare-split|--synthetic-root|--official-metric-cache|--maps)
         printf 'Set %s through the documented environment variable instead.\n' "$option" >&2; return 2 ;;
-      --profile|--train-filter|--lr|--steps|--epochs|--resume|--stop-after|--stop-after-epochs|--duration-seconds|--checkpoint-interval|--check-interval|--pids-limit|--shm-size|--validate|--deterministic|--debug-anomaly|--inference-after|--detach|--runtime|--upstream-schedule)
+      --inference-optimization|--msda-query-chunk|--msda-backend|--profile|--train-filter|--lr|--steps|--epochs|--resume|--stop-after|--stop-after-epochs|--duration-seconds|--checkpoint-interval|--check-interval|--pids-limit|--shm-size|--validate|--deterministic|--debug-anomaly|--inference-after|--detach|--runtime|--upstream-schedule)
         ;; # Complete original option names only; never forward abbreviations.
       --*)
         printf 'Unsupported or abbreviated launcher option: %s\n' "$option" >&2; return 2 ;;
