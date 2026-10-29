@@ -272,5 +272,202 @@
     "physical_NPU_process_tables_empty": 8,
     "logical_chips": 16,
     "open_chip_device_FDs": 0
-  }
+  },
+  "subsequent_source_verifications": [
+    {
+      "recorded_utc": "2026-10-29T16:27:51.699841+00:00",
+      "tested_commit": "f24d5f5a2c3c1ecf1e139e3c1c0a729042f1a7b5",
+      "runtime_python_sha256": "7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+      "source_export_sha256": "d7ea50ee1bb240ca33bdc79bb4a30b4d1c700c9ccb95f89ab4027de0d91d1d5b",
+      "exported_files_verified_before_and_after_runtime": 465,
+      "merge_parents": [
+        "339cbdc6d843d3e9a86b9caf44615b86b4cd852b",
+        "01445caa20278aab06255f3825c04370d0dc5633"
+      ],
+      "baseline_correction": "The initial optimization branch started at 55efdef. A normal merge of published migration baseline 01445caa restores its later fixes, tests and measured results while retaining the original optimization commits. The initial 0bcaff record above remains unchanged.",
+      "original_AlgEngine_tree_unchanged_from_01445caa": true,
+      "latest_baseline_additions": {
+        "unchanged_raw_files": 9,
+        "container_contract_test": "All original checks retained, two assertions and two optimization contract tests added"
+      },
+      "CPU_regressions": {
+        "actual_return": 0,
+        "container_exit_code": 0,
+        "OOMKilled": false,
+        "tests": 51,
+        "skipped": 0,
+        "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+        "runtime": "runc",
+        "devices": [],
+        "groups": {
+          "compare_resume_raw_bytes": 5,
+          "launcher_backend": 10,
+          "prepare_real_mini_integrity": 3,
+          "run_container_contract": 9,
+          "train_output_paths": 3,
+          "verify_navtrain_inputs": 15,
+          "inference_optimization": 6
+        }
+      },
+      "public_entry": "ascend/inference.py",
+      "public_comparator": "ascend/tools/compare_inference.py",
+      "precision": {
+        "mode": "fp32",
+        "matmul_allow_hf32": false,
+        "conv_allow_hf32": false,
+        "torch_deterministic": true,
+        "CLOSE_MATMUL_K_SHIFT": "1",
+        "HCCL_DETERMINISTIC": "true",
+        "msda_backend": "cuda-compatible"
+      },
+      "topology": {
+        "target": "Ascend 910C",
+        "physical_dual_chip_cards": 8,
+        "logical_chips": 16,
+        "world_size": 16,
+        "batch_per_rank": 1,
+        "unique_anchors": 22,
+        "executed_padded_samples": 32,
+        "steps_per_rank": 2
+      },
+      "selected_official_filter_sha256": "446bfb797dbd747ae79673036b14e0659459276275e04c04401624d0d87e2097",
+      "models": {
+        "VADv2": {
+          "runs": {
+            "baseline": {
+              "actual_return": 0,
+              "container_exit_code": 0,
+              "OOMKilled": false,
+              "source_config_sha256": "498728e61a0d3378e6c7ea22c3b4f131431963ea5d53628e0aa86b3bd7e200a9",
+              "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+              "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8",
+              "inference_validation_sha256": "d466c98799b9de32c22bb03e0273ccffc8eaee917ac7bce392e0e539ba603a12",
+              "rank0_execution": {
+                "requested": "none",
+                "query_chunk": 2048,
+                "observation_rank": 0,
+                "point_parallel_calls": 0,
+                "original_msda_fallback_calls": 0,
+                "last_frame_calls": 0,
+                "original_frame_fallback_calls": 0,
+                "preserved_NumPy_draws": 0,
+                "fallback_reasons": {},
+                "last_frame_source_contract": null
+              },
+              "original_test_runner_elapsed_seconds": 98.54615631100023,
+              "container_wall_seconds": 122.565588,
+              "started_utc": "2026-10-29T16:20:52.494472692Z",
+              "finished_utc": "2026-10-29T16:22:55.060060461Z"
+            },
+            "optimized": {
+              "actual_return": 0,
+              "container_exit_code": 0,
+              "OOMKilled": false,
+              "source_config_sha256": "498728e61a0d3378e6c7ea22c3b4f131431963ea5d53628e0aa86b3bd7e200a9",
+              "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+              "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8",
+              "inference_validation_sha256": "d749fdfe980451af09afd5b84eb8629d53c31aa3405676e7d96983327029dfe2",
+              "rank0_execution": {
+                "requested": "point-parallel-last-frame",
+                "query_chunk": 8192,
+                "observation_rank": 0,
+                "point_parallel_calls": 102,
+                "original_msda_fallback_calls": 0,
+                "last_frame_calls": 2,
+                "original_frame_fallback_calls": 0,
+                "preserved_NumPy_draws": 12,
+                "fallback_reasons": {},
+                "last_frame_source_contract": "pinned_original_methods"
+              },
+              "original_test_runner_elapsed_seconds": 34.46690908295568,
+              "container_wall_seconds": 59.038494,
+              "started_utc": "2026-10-29T16:22:57.034242473Z",
+              "finished_utc": "2026-10-29T16:23:56.072736792Z"
+            }
+          },
+          "comparison_actual_return": 0,
+          "comparison": {
+            "result": "exact",
+            "identity_mismatches": [],
+            "anchors": 22,
+            "ordered_tokens_equal": true,
+            "unique_tokens": true,
+            "typed_outputs_raw_exact": true,
+            "mismatched_tokens": [],
+            "requested_optimization_actually_used": true
+          },
+          "comparison_report_sha256": "dea6284c6a220e6034f8b977b895d47c8a8d55eaa66fbd07baa5fdbfcf0f42fc"
+        },
+        "HydraMDP": {
+          "runs": {
+            "baseline": {
+              "actual_return": 0,
+              "container_exit_code": 0,
+              "OOMKilled": false,
+              "source_config_sha256": "8ce3aa01b0242d5e31e2a34b08d1595dffb1ce734e70043ef3da3879cfbaac99",
+              "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+              "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5",
+              "inference_validation_sha256": "28da4116a25b5cdc60c44131d5171458c30d29ff1e77444450b823669968d257",
+              "rank0_execution": {
+                "requested": "none",
+                "query_chunk": 2048,
+                "observation_rank": 0,
+                "point_parallel_calls": 0,
+                "original_msda_fallback_calls": 0,
+                "last_frame_calls": 0,
+                "original_frame_fallback_calls": 0,
+                "preserved_NumPy_draws": 0,
+                "fallback_reasons": {},
+                "last_frame_source_contract": null
+              },
+              "original_test_runner_elapsed_seconds": 98.22140535601648,
+              "container_wall_seconds": 122.794866,
+              "started_utc": "2026-10-29T16:23:58.992400448Z",
+              "finished_utc": "2026-10-29T16:26:01.787266523Z"
+            },
+            "optimized": {
+              "actual_return": 0,
+              "container_exit_code": 0,
+              "OOMKilled": false,
+              "source_config_sha256": "8ce3aa01b0242d5e31e2a34b08d1595dffb1ce734e70043ef3da3879cfbaac99",
+              "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+              "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5",
+              "inference_validation_sha256": "de928f355fd727a8ded98ac0652b94bf3070867cd822fdd23e32a786f72737f6",
+              "rank0_execution": {
+                "requested": "point-parallel-last-frame",
+                "query_chunk": 8192,
+                "observation_rank": 0,
+                "point_parallel_calls": 102,
+                "original_msda_fallback_calls": 0,
+                "last_frame_calls": 2,
+                "original_frame_fallback_calls": 0,
+                "preserved_NumPy_draws": 12,
+                "fallback_reasons": {},
+                "last_frame_source_contract": "pinned_original_methods"
+              },
+              "original_test_runner_elapsed_seconds": 32.852413873013575,
+              "container_wall_seconds": 58.535375,
+              "started_utc": "2026-10-29T16:26:03.569737719Z",
+              "finished_utc": "2026-10-29T16:27:02.105112353Z"
+            }
+          },
+          "comparison_actual_return": 0,
+          "comparison": {
+            "result": "exact",
+            "identity_mismatches": [],
+            "anchors": 22,
+            "ordered_tokens_equal": true,
+            "unique_tokens": true,
+            "typed_outputs_raw_exact": true,
+            "mismatched_tokens": [],
+            "requested_optimization_actually_used": true
+          },
+          "comparison_report_sha256": "eb6bb791f47e32d412103fd1d7b4872777de451fda6dd4b0add03d16855e8ac4"
+        }
+      },
+      "full_12146_optimized_acceptance": false,
+      "journal_recovery_on_this_source_accepted": false
+    }
+  ],
+  "latest_public_source_verification": "subsequent_source_verifications[0]"
 }
