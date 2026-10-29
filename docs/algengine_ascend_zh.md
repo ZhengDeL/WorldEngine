@@ -925,3 +925,32 @@ python ascend/tools/compare_inference.py \
 [实测记录](validation/algengine_fp32_optimization_20261029.json)：两模型通过公开 `ascend/inference.py` 完成原实现与优化实现的 16 rank 对照，使用 22 个官方真实 NAVTEST 样本。全部输出字段的类型及原始数值一致，优化调用计数非零。记录另列单算子和 139 样本辅助审计，并保留完整集、GPU 对照及训练验收的边界。
 
 合并 `01445caa` 迁移基线后，`f24d5f5` 已重新完成四组 NPU 运行和两组公开 CPU 比较，均退出 0，两模型输出仍逐字段、逐原始数值一致。同一记录追加了新源码身份和 51 项 CPU 回归结果，保留原 `0bcaff` 实测记录。
+
+### 优化推理的中断恢复
+
+优化版恢复使用 `ascend/tools/optimized_journal_inference.py`，固定运行时源码为 `7a8c50dc…`。优化默认关闭，需显式选择 `point-parallel-last-frame` 和分块 8192。原 `journal_inference.py` 保持 SHA `89e24b8d…` 不变，固定原迁移源码 `76c51f77…`，不接受优化参数。10 月 20 日归档使用另一个源码和工具版本，其断点不能拿到新入口继续运行。
+
+镜像、16 芯片挂载、完整历史标注和五文件输入清单沿用[恢复工具的输入与挂载约定](algengine_journal_zh.md)。清单锁定标注、PDM、词表、filter 及已通过的输入 QC。连续运行和恢复须使用同一源码、权重、数据、FP32 设置和设备配置。每次尝试使用新的输出子目录和 UUID，journal 目录保持相同。
+
+```bash
+COMMON=(--source-root /workspace/WorldEngine --config /config/inference.py
+  --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json
+  --journal-root /journal --precision fp32 --msda-backend cuda-compatible
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192
+  --deterministic --expected-anchors 22
+  --expected-source-sha256 7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb
+  --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA"
+  --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" --deadline-utc "$DEADLINE_UTC")
+torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
+  "${COMMON[@]}" --journal-mode fresh --attempt-id "$STOP_UUID" \
+  --output /attempts/stop1 --stop-after-steps 1
+# 预期为受控暂停：torchrun 实际返回 1，16 份 partial 回执齐全，
+# 每 rank 已保存一个位置，没有完整 predictions.pkl。
+torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
+  "${COMMON[@]}" --journal-mode resume --attempt-id "$RESUME_UUID" \
+  --output /attempts/resumed
+```
+
+三个 `*_SHA` 变量分别是实际挂载配置、权重和输入清单的 SHA256，`DEADLINE_UTC` 是未来的 UTC 时间。启动 Torch 前设置 `HCCL_DETERMINISTIC=true`、`CLOSE_MATMUL_K_SHIFT=1`。仅返回 1 不能证明受控暂停，须核对每份 partial 回执和已保存位置；恢复后须返回 0，并覆盖全部配置样本。
+
+[同一实测记录](validation/algengine_fp32_optimization_20261029.json) 已追加两模型在 22 个官方样本、16 rank 上的连续运行、中断、恢复和完成后正位置重放结果。全部输出字段的类型及原始数值与未加 journal 的基线一致；两条 journal 路线的初始及每步 Python/NumPy/Torch CPU/当前 NPU RNG 一致，原基线没有逐步 RNG 记录。已保存前缀的文件字节没有变化。该结果只验收这个有界恢复范围，不能代替完整数据恢复、训练收敛、GPU 对照、独立评分或性能验收。更换源码、工具、优化模式、分块、精度、world size 或输入后，须使用匹配的新合同，不能套用旧断点。

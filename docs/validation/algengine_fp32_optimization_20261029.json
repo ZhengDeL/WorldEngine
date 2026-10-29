@@ -469,5 +469,189 @@
       "journal_recovery_on_this_source_accepted": false
     }
   ],
-  "latest_public_source_verification": "subsequent_source_verifications[0]"
+  "latest_public_source_verification": "subsequent_source_verifications[0]",
+  "optimized_inference_journal_verification": {
+    "recorded_utc": "2026-10-29T16:47:56.541608+00:00",
+    "result": "two_model_optimized_FP32_inference_recovery_NAVTEST22_passed",
+    "runtime_core_commit": "f24d5f5a2c3c1ecf1e139e3c1c0a729042f1a7b5",
+    "runtime_python_sha256": "7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+    "entry": "ascend/tools/optimized_journal_inference.py",
+    "entry_sha256": "3a8729f94e9c4d5d93c02a87b3a4c6e8d73c30a2bae88fd3d1014fe35ca0cbca",
+    "original_observer_unchanged_sha256": "89e24b8d733d3a2e07ba17e4b5a8b9973d2f1428db3334014b85dcc11a359f37",
+    "rank_journal_unchanged_sha256": "f92e2fe35f428be30851c272921c450582e5b2c5846297b415385e13f8dfe4c4",
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "world_size": 16,
+    "physical_dual_chip_cards": 8,
+    "unique_anchors": 22,
+    "padded_sampler_positions": 32,
+    "mode": "point-parallel-last-frame",
+    "query_chunk": 8192,
+    "precision": "fp32",
+    "HF32_disabled": true,
+    "locked_inputs": {
+      "annotation": {
+        "bytes": 848516627,
+        "sha256": "59a8bdf1a9a2c6066dd562333679f54ffee9cbfe9cb3420bab27dce62c5da21b"
+      },
+      "filter": {
+        "bytes": 6171,
+        "sha256": "446bfb797dbd747ae79673036b14e0659459276275e04c04401624d0d87e2097"
+      },
+      "input_qc": {
+        "bytes": 27893,
+        "sha256": "0131f7cebcf65ab1183b54233291d03bfeae99bbdee7888aafe841569b490cb2"
+      },
+      "pdm": {
+        "bytes": 2791314758,
+        "sha256": "58d82e73bc3dfaa6464ea7d90dee86f8e0139ea1679145d610a9babf86fe7316"
+      },
+      "vocabulary": {
+        "bytes": 3932288,
+        "sha256": "cc44a31e75a53406db59f026f0358de97931e726f10254542f98d2a87a38ad35"
+      }
+    },
+    "locked_input_manifest_sha256": "d3d0fb1f6618fae68c3a862dc20391f6b03297c4e37409413e78b165423c1751",
+    "CPU_guards": {
+      "tests": 17,
+      "skipped": 0,
+      "actual_return": 0,
+      "accelerator_devices_mapped": false,
+      "scope": "Original installed loop/collector CPU fixtures plus new source/options/RNG/prefix guards and delayed partial-claim writer with 15 early readers"
+    },
+    "models": {
+      "VADv2": {
+        "stages": {
+          "continuous": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          },
+          "stop1": {
+            "actual_torchrun_return": 1,
+            "container_exit": 1,
+            "OOMKilled": false,
+            "meaning": "Controlled committed pause; no complete predictions"
+          },
+          "resume": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          },
+          "replay": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          }
+        },
+        "all_original_baseline_and_complete_route_ordered_typed_outputs_raw_exact": true,
+        "initial_and_every_step_Python_NumPy_TorchCPU_currentNPU_RNG_exact": true,
+        "unmodified_baseline_has_per_step_RNG_trace": false,
+        "stop1_saved_files_verified_unchanged": 80,
+        "completed_saved_files_verified_unchanged": 112,
+        "every_rank_positive_replay": {
+          "common_resume_step": 1,
+          "skipped_saved_positions": 1,
+          "forward_steps": 1,
+          "replayed_exact_steps": 1,
+          "new_committed_steps": 0
+        },
+        "CPU_audit_actual_return": 0,
+        "CPU_audit_report_sha256": "f1db159ccf3a1afbc8cc5aff57719938fc1e71841bf32f7602449a27262e30f5",
+        "complete_routes": {
+          "continuous": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "0de0ab124aa00a4833e1283595fb4057442d9ce394b1cee614a7c68065682b74",
+            "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8"
+          },
+          "resume": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "c8aa5fae885def5f87760387bd8763ea1de816aa821e8cac707d0afd7a16ed91",
+            "predictions_pickle_sha256": "6ad7604564cace18d0181fd8be2c7d062e62983a55c8f8167d14565587b8d7e8"
+          },
+          "replay": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "46cc3cd823f5eae0bcd5708addc7ed201fcf88c2e177940aae8520f8f9a8f1ef",
+            "predictions_pickle_sha256": "3af44080bb0aa9cc104eb9ef346b3ad07cb45796cd2c442c7264fc25aaa05178"
+          }
+        }
+      },
+      "HydraMDP": {
+        "stages": {
+          "continuous": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          },
+          "stop1": {
+            "actual_torchrun_return": 1,
+            "container_exit": 1,
+            "OOMKilled": false,
+            "meaning": "Controlled committed pause; no complete predictions"
+          },
+          "resume": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          },
+          "replay": {
+            "actual_torchrun_return": 0,
+            "container_exit": 0,
+            "OOMKilled": false,
+            "meaning": "Complete configured-anchor inference"
+          }
+        },
+        "all_original_baseline_and_complete_route_ordered_typed_outputs_raw_exact": true,
+        "initial_and_every_step_Python_NumPy_TorchCPU_currentNPU_RNG_exact": true,
+        "unmodified_baseline_has_per_step_RNG_trace": false,
+        "stop1_saved_files_verified_unchanged": 80,
+        "completed_saved_files_verified_unchanged": 112,
+        "every_rank_positive_replay": {
+          "common_resume_step": 1,
+          "skipped_saved_positions": 1,
+          "forward_steps": 1,
+          "replayed_exact_steps": 1,
+          "new_committed_steps": 0
+        },
+        "CPU_audit_actual_return": 0,
+        "CPU_audit_report_sha256": "75a88fcb4cf387f466dd4d9549be0f4a2eb3d6d174b0e1db9af6e9629f86541a",
+        "complete_routes": {
+          "continuous": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "311fbd46da96d553a3ba7a6affc22918beca69e36339b9f395cd80a8cb4a722b",
+            "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5"
+          },
+          "resume": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "d936311433f328dc97a4393d4ebdcf6790d57e506e9b65aba31ce5eb84f560d4",
+            "predictions_pickle_sha256": "a10ba8e9c97744271c74a77e307fe50354dfeb631807ef31f8ab93d6c938f0a5"
+          },
+          "replay": {
+            "anchors": 22,
+            "all_ordered_typed_output_fields_raw_exact": true,
+            "report_sha256": "ac7990c7c1a435b5e99b08f07b8c1aa57808164edaa50b4ada1be2f216b19511",
+            "predictions_pickle_sha256": "6e351a0e1e6a665d1b4d5bccbee957f107f5e9ad6ba2395d91994776744f8136"
+          }
+        }
+      }
+    },
+    "boundaries": {
+      "full_NAVTEST_recovery_accepted": false,
+      "training_recovery_or_convergence_accepted": false,
+      "GPU_parity_accepted": false,
+      "official_scoring_recomputed": false,
+      "performance_accepted": false,
+      "communication_mode": "Original MMDetection NPU barrier/CPU collector; filesystem collection is a separate unaccepted workstream at this record time",
+      "incompatible_journals": "A different source, tool version, mode, query chunk, topology, precision or input contract cannot reuse these saved prefixes"
+    }
+  }
 }

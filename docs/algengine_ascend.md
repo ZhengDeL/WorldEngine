@@ -942,3 +942,32 @@ For performance acceptance, repeat unprofiled A/B runs with the same device mapp
 [Validation record](validation/algengine_fp32_optimization_20261029.json): both models completed the public `ascend/inference.py` baseline/optimized paths on 22 genuine official NAVTEST anchors with 16 ranks. All typed output fields were raw exact and the requested optimization counters were nonzero. The record separates auxiliary operator/139-anchor audits and retains the full-benchmark, GPU and training limits.
 
 The check was repeated on merged source `f24d5f5`, which includes published migration baseline `01445caa`: all four NPU runs and both public CPU comparisons exited 0; both models retained raw-exact outputs. The same record appends this source identity and 51 passing CPU regressions without replacing the original `0bcaff` measurements.
+
+### Recovering optimized inference
+
+Use `ascend/tools/optimized_journal_inference.py` for the explicitly pinned optimized runtime `7a8c50dc…`. Optimization remains disabled by default; select `point-parallel-last-frame` and chunk 8192 explicitly. The original `journal_inference.py` is retained unchanged at SHA `89e24b8d…` and pins the original migration source `76c51f77…`; it does not accept optimization flags. The older October 20 archive uses a different source and tool hash. Never reuse its journal with this entry.
+
+Prepare the image, 16 chip mounts, full historical annotation and five-file immutable input manifest using the [journal input and mount contract](algengine_journal.md#inputs-and-mounts). The manifest covers annotation, PDM, vocabulary, filter and approved input QC. Run inside the verified image with the same source, checkpoint, data, FP32 settings and topology throughout. Every attempt needs a new output child and UUID; the journal directory stays the same.
+
+```bash
+COMMON=(--source-root /workspace/WorldEngine --config /config/inference.py
+  --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json
+  --journal-root /journal --precision fp32 --msda-backend cuda-compatible
+  --inference-optimization point-parallel-last-frame --msda-query-chunk 8192
+  --deterministic --expected-anchors 22
+  --expected-source-sha256 7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb
+  --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA"
+  --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" --deadline-utc "$DEADLINE_UTC")
+torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
+  "${COMMON[@]}" --journal-mode fresh --attempt-id "$STOP_UUID" \
+  --output /attempts/stop1 --stop-after-steps 1
+# Expected controlled pause: real torchrun return 1, all 16 partial receipts,
+# one committed position per rank, and no complete predictions.pkl.
+torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
+  "${COMMON[@]}" --journal-mode resume --attempt-id "$RESUME_UUID" \
+  --output /attempts/resumed
+```
+
+`CONFIG_SHA`, `CHECKPOINT_SHA` and `LOCKED_INPUTS_SHA` are SHA256 hashes of the exact mounted files. `DEADLINE_UTC` must be a future UTC timestamp. Set `HCCL_DETERMINISTIC=true` and `CLOSE_MATMUL_K_SHIFT=1` before starting Torch. A return of 1 alone does not prove a controlled pause: verify every partial receipt and its committed prefix before resuming. Resume must return 0 and cover every configured anchor.
+
+The [same validation record](validation/algengine_fp32_optimization_20261029.json) appends both models' actual 22-anchor/16-rank continuous, stop1, resume and completed-journal positive-position replay checks. Every exported typed field matched the uninstrumented baseline. Initial and per-step four-source RNG matched between the two journal routes; the uninstrumented baseline has no per-step RNG trace. Saved prefix bytes were unchanged. This validates that bounded recovery scope; full-dataset recovery, training convergence, GPU equivalence, scoring and performance remain separate gates. Source, tool, mode, chunk, precision, world size and input changes require a fresh compatible contract rather than adopting old progress.
