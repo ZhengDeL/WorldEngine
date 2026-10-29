@@ -20,7 +20,7 @@ from journal_inference import (COLLECT_SHA, Guard, IMAGE, JournalPause, MULTI_SH
                                SOURCE_SHA, fingerprint, observed_test, parse_deadline)
 from rank_journal import canonical_json, need, rng_pack, rng_unpack, sha, sync_directory, write_file
 
-OPTIMIZED_SOURCE_SHA = 'dce783d2d19b0a3f24acd7f69094fbf2cbc4e5ce1bccb4efe4629d741e6dc0c6'
+OPTIMIZED_SOURCE_SHA = '7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb'
 MODES = ('none', 'point-parallel', 'point-parallel-last-frame')
 CHUNKS = (2048, 4096, 8192)
 
@@ -33,7 +33,7 @@ def optimization_contract(expected_source, actual_source, mode, chunk, backend):
     need(backend in ('reference', 'cuda-compatible'), 'Unsupported MSDA backend')
     need(mode != 'none' or chunk == 2048, 'Original path requires query chunk 2048')
     need(expected_source != SOURCE_SHA or (mode == 'none' and chunk == 2048),
-         'Frozen0488 supports only its original inference path')
+         'Original migration source supports only its original inference path')
     need(mode == 'none' or backend == 'cuda-compatible', 'Optimized inference requires cuda-compatible MSDA')
     return dict(mode=mode, query_chunk=chunk, scope='FP32 planning inference only')
 
