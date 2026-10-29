@@ -3,29 +3,26 @@
 [中文说明](README_zh.md)
 
 Start with the [environment, build and validation guide](../docs/simengine_ascend_assessment.md).
-Device evidence now includes 20 small FP32 cases and one official MTGS scene on
-one 910C chip: all 1,550,733 Gaussians, eight 1920×1080 cameras, full-output finite
-checks and 1,024 sampled pixels against NumPy. The original configured 12-frame
-NR/R replay windows completed and each saved 96 decodable JPEGs. Independent
-CPU inventory verified frames 0–11 and all eight cameras, spanning 5.5 seconds of
-simulation time. These renderer/replay results are retained in the
-[bounded real-scene record](../docs/validation/simengine_real_scene_20261020.json).
-The subsequent VADv2/HydraMDP × FP32/BF16 × R/NR matrix passed all eight configured
-closed-loop control windows. Each run rendered 12 frames, decoded 96 JPEGs and
-applied eight model plans through the original policy and controller. See the
-[closed-loop evidence](../docs/validation/simengine_closed_loop_20261020.json).
-The selected source scene has 24 frames; this result covers the configured
-12-frame window, not the complete source log or driving quality.
-Small-probe manifests alone do not authorize larger real inputs. The server's
-8 physical NPU cards contain 16 chips; this integration has no sixteen-chip
-scaling result or GPU comparison.
+This FP32 branch covers one official MTGS scene's complete 24-frame source log
+for VADv2/HydraMDP × NR/R. Each of the four cases used four genuine history
+frames and twenty applied model controls, then independently decoded all
+192 original-size camera JPEGs. See the [FP32 full-scene and renderer timing
+record](../docs/validation/simengine_fp32_20261029.json) for source, input and
+per-case audit hashes.
 
-The FP32 optimization branch additionally covers the complete selected 24-frame
-source scene for VADv2/HydraMDP × NR/R. Each case used four genuine history
-frames and twenty applied model controls, and independently decoded all
-192 original-size camera JPEGs. This is a single-scene functional check, not
-all-scene driving-quality, GPU-parity or reconstruction-training acceptance.
-The 12-frame/BF16 records above retain their original source and dependency pins.
+On one fixed full-resolution eight-camera capture, sequential same-chip ABBA
+measurements reduced median renderer forward time from 38.9381 to 17.7366 seconds.
+The complete uncompressed RGB+ED, alpha and radii were bitwise identical. This
+is a renderer optimization comparison on one 910C chip, not GPU equivalence or
+a closed-loop end-to-end timing result. Single-scene control acceptance does
+not establish all-scene driving quality or reconstruction-training support.
+
+Earlier [renderer/replay](../docs/validation/simengine_real_scene_20261020.json)
+and [eight 12-frame FP32/BF16 closed-loop cases](../docs/validation/simengine_closed_loop_20261020.json)
+retain their original source, dependencies and acceptance scope. A small-device
+manifest alone does not authorize a larger input. Each current closed-loop case
+uses two chips of one dual-chip physical NPU card; sixteen-chip scaling is not
+part of this result.
 
 This package connects SimEngine's frame exchange to an explicitly selected
 AlgEngine planner device. The original simulation, camera geometry, selected

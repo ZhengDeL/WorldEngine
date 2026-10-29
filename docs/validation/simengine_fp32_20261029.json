@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "scope": "One official original 24-frame MTGS scene, forward rendering and closed-loop control; FP32 only",
+  "code": {
+    "SimEngine_git_commit": "7cce9a91299777ee01f9db99eca6d25de2cbb777",
+    "SimEngine_runtime_sha256": "daabd5c34ed290038ad4d0da13c32e81100b9692a0b63ff9b657f72edd9c7d66",
+    "runtime_files": 212,
+    "raw_runtime_files_match_clean_git_objects": 212,
+    "integration_files_match_clean_git_objects": 18,
+    "AlgEngine_git_commit": "55efdef54139c63ab9afce9178ebb3bd130717ef",
+    "AlgEngine_runtime_sha256": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922",
+    "AlgEngine_runtime_files": 245,
+    "AlgEngine_raw_files_match_clean_git_objects": 245,
+    "recorded_AlgEngine_declared_commit": "972e1d9592860cef6520e0b39d7e4e9ab55a510a",
+    "historical_metadata": "Original experiment reports retain their earlier literal commit declaration. All 245 executed algorithm files separately match the verified public Git commit; no original report was rewritten.",
+    "full24_CPU_auditor_sha256": "8c1b416fd568b505aebadf86c0a19c18c7554e45d00ec440df5476fd573c4718"
+  },
+  "environment": {
+    "target": "Ascend 910C",
+    "image_id": "sha256:3522f3ac97044486686539405709fb7f833eac3c95767b93db7fff1956e54d48",
+    "torch": "2.7.1+cpu",
+    "torch_npu": "2.7.1.post8",
+    "planner_precision": "FP32, autocast disabled, HF32 disabled",
+    "planner_MSDA": "cuda-compatible",
+    "renderer_precision": "FP32, HF32 disabled",
+    "closed_loop_devices": "Two logical NPU chips from one physical dual-chip card per case; planner npu:0, renderer npu:1",
+    "representative_native_Conv2d_Linear_FP32_observed": true,
+    "all_layers_all_frames_dtype_claimed": false
+  },
+  "inputs": {
+    "publisher": "OpenDriveLab/WorldEngine",
+    "dataset_url": "https://huggingface.co/datasets/OpenDriveLab/WorldEngine",
+    "scene": "2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4",
+    "prepare_receipt_sha256": "ac246caf243f2e1a679c4159dbd92ecb1cfe84f4197fc023295909d7943414fc",
+    "history_frames": 4,
+    "real_future_control_frames": 20,
+    "frames": 24,
+    "cameras": 8,
+    "image_height": 1080,
+    "image_width": 1920,
+    "simulation_time_span_seconds": 11.5,
+    "padded_or_repeated_source_frames": 0
+  },
+  "changes": [
+    "Stable tile sort uses exact FP32 keys when the tile grid is at most 2**24; larger grids retain the integer fallback.",
+    "Reuse starts[gaussian_ids] for intersection offsets instead of repeating the same counts twice.",
+    "Expose explicit four-history/twenty-future real windows and independently audit all twenty consumed controls."
+  ],
+  "functional_results": [
+    {
+      "model": "vadv2",
+      "precision": "fp32",
+      "reaction": "NR",
+      "host_chips": [
+        14,
+        15
+      ],
+      "result": "pass_configured_real_closed_loop_consumption_window",
+      "configured_frames": 24,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "decoded_camera_jpegs": 192,
+      "image_inventory_sha256": "e3e9c0b467b5074fa43dd7ad0923a1b0c700dd20b7a6a7b79917f77d3d3a2c17",
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "audit_report_sha256": "4daf7cbbd8938433a831ba7145cb2e7fd6eca9ba77b8fba53a35b966da937144",
+      "selected_source_log_complete": true
+    },
+    {
+      "model": "vadv2",
+      "precision": "fp32",
+      "reaction": "R",
+      "host_chips": [
+        0,
+        1
+      ],
+      "result": "pass_configured_real_closed_loop_consumption_window",
+      "configured_frames": 24,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "decoded_camera_jpegs": 192,
+      "image_inventory_sha256": "9b7006e0bed9afb863d3a8d6c29d6a12b3b5c8f893f8ade82a1f3557b723d44e",
+      "official_checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+      "audit_report_sha256": "8ed11652ea7bf9fe387fd0b940e88fb4a698c93ba535d123f26713f6751afab6",
+      "selected_source_log_complete": true
+    },
+    {
+      "model": "hydramdp",
+      "precision": "fp32",
+      "reaction": "NR",
+      "host_chips": [
+        2,
+        3
+      ],
+      "result": "pass_configured_real_closed_loop_consumption_window",
+      "configured_frames": 24,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "decoded_camera_jpegs": 192,
+      "image_inventory_sha256": "81068eab7bdf7b840e1f435d6f627676da7ed7f6f3d9be67c65793b0a4b87052",
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "audit_report_sha256": "6387d9546e4f314d2a296780a4382296916b455d8bb527795c5c9ac06fbb89c2",
+      "selected_source_log_complete": true
+    },
+    {
+      "model": "hydramdp",
+      "precision": "fp32",
+      "reaction": "R",
+      "host_chips": [
+        10,
+        11
+      ],
+      "result": "pass_configured_real_closed_loop_consumption_window",
+      "configured_frames": 24,
+      "consumed_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "decoded_camera_jpegs": 192,
+      "image_inventory_sha256": "712c99d53b0c2291bd42ef6e1d07a341ef40415c698832128de6bd69a69cd75d",
+      "official_checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+      "audit_report_sha256": "1f04e1c593057f912059812b16e261f3012ed43c0b7ac6d49bcef382385f26da",
+      "selected_source_log_complete": true
+    }
+  ],
+  "representative_render_ABBA": {
+    "result": "pass_sequential_ABBA_full_uncompressed_bitwise",
+    "scope": "one fixed official full-resolution eight-camera capture, same isolated NPU13, FP32/HF32off, 1warmup+3repeats per fresh container; no concurrent Sim or chip12 numeric work; excludes H2D,CPU hash/export,planning and closed-loop lifecycle",
+    "method": "Fresh containers in baseline/candidate/candidate/baseline order; one warmup plus three synchronized measured renders per container",
+    "host_chip": 13,
+    "Gaussians": 1550733,
+    "views": 8,
+    "height": 1080,
+    "width": 1920,
+    "input_capture_sha256": "28e09bf9184126cf92f3c63f917673233f5bbf3c8fd48169f1e230720ddcd8c0",
+    "input_archive_sha256": "4d646bf5b4a7e8f94385ee96b1d7f8126580b01813facab259607152887abf62",
+    "baseline_seconds": [
+      38.90301727299811,
+      38.91026584804058,
+      38.93664724100381,
+      38.988647577993106,
+      38.93961926101474,
+      38.95971907500643
+    ],
+    "candidate_seconds": [
+      17.730188861023635,
+      17.750239108980168,
+      17.70708384201862,
+      17.753200729959644,
+      17.74171654798556,
+      17.731524773000274
+    ],
+    "baseline_median_seconds": 38.938133251009276,
+    "candidate_median_seconds": 17.736620660492918,
+    "time_reduction_percent": 54.44922706962798,
+    "speedup": 2.1953524290983597,
+    "full_uncompressed_outputs_bitwise_equal": true,
+    "maximum_absolute_difference": 0,
+    "complete_arrays": {
+      "rgb_expected_depth": {
+        "shape": [
+          8,
+          1080,
+          1920,
+          4
+        ],
+        "dtype": "float32",
+        "npy_sha256": "33b2bcd6cfccfd819cb1014d59dfd1c65eb37c1b8de0b7394874a94b388979a3",
+        "bytes": 265420928
+      },
+      "alpha": {
+        "shape": [
+          8,
+          1080,
+          1920,
+          1
+        ],
+        "dtype": "float32",
+        "npy_sha256": "9bbca436863558e26bf5e8cd0c987e96cfd8d4a7199f1a482dc80e9ab3186831",
+        "bytes": 66355328
+      },
+      "radii": {
+        "shape": [
+          8,
+          1550733
+        ],
+        "dtype": "int64",
+        "npy_sha256": "e44a81ef3181c14744807e9b26ed27eb80100c562d451436b90b4c36b4a7ef4a",
+        "bytes": 99247040
+      }
+    },
+    "timing_exclusions": [
+      "host-to-device copy",
+      "CPU output export and hashing",
+      "planner",
+      "simulator startup",
+      "data I/O",
+      "complete closed-loop job"
+    ]
+  },
+  "selected_full_scene_regression": {
+    "model": "vadv2",
+    "precision": "fp32",
+    "reaction": "NR",
+    "all_192_JPEG_bytes_inventory_equal_to_original": true,
+    "all_twenty_consumed_plan_NPY_SHA256_equal_to_original": true,
+    "extra_unconsumed_plan": "The asynchronous optimized planner published step24 before exit. It was not applied and is excluded from the twenty controls.",
+    "uncompressed_comparison_boundary": "Whole uncompressed RGB+ED, alpha and radii were checked on one fixed complete eight-camera renderer capture; this is not an uncompressed all-frame or GPU comparison."
+  },
+  "verification": {
+    "local_CPU_window_and_command_tests": 13,
+    "local_CPU_full24_audit_contract_tests": 3,
+    "server_CPU_Torch_renderer_tests": 18,
+    "small_device_probe": "Passed for this adapter",
+    "full_captured_input_NumPy_reference": "1024 sampled pixels passed; all complete outputs finite",
+    "final_public_full24_CPU_audits": 4,
+    "all_case_NPU_and_independent_CPU_audit_exits": 0
+  },
+  "boundaries": [
+    "The complete log belongs to this one selected official scene; no all-scene SimEngine coverage is claimed.",
+    "PDM/dense-reward scoring was disabled; the 24-frame source window lacks the additional future horizon required by that scoring profile.",
+    "The renderer speedup is a same-NPU optimization comparison, not a GPU/NPU hardware ratio or closed-loop end-to-end speedup.",
+    "GPU image/trajectory parity and driving quality are not established by these results.",
+    "The current CANN renderer is forward-only. MTGS reconstruction training/backward, LiDAR, BWM and deformable backends remain outside this acceptance.",
+    "BF16 results from the earlier 12-frame profile are separate; this record accepts FP32 only."
+  ]
+}
