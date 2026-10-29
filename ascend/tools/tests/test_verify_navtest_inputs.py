@@ -45,20 +45,21 @@ class NAVTESTInputQC(unittest.TestCase):
 
     def test_current_runtime_fingerprint_and_file_count(self):
         identity=W.H.source_identity(TOOLS.parents[1],self.guard)
-        self.assertEqual(identity['sha256'],'7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb')
-        self.assertEqual(identity['python_files'],247)
+        self.assertEqual(identity['sha256'],'cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610')
+        self.assertEqual(identity['python_files'],249)
         W.validate_runtime_identity(identity)
 
     def test_runtime_binding_rejects_legacy_or_changed_source(self):
         for fingerprint,count in [
             ('76c51f77d6d0c17f33652ea307a654bee5057c76ccd6f122b34e1fab66a1d3c5',245),
             ('0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922',245),
-            ('0'*64,247)]:
+            ('7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb',247),
+            ('0'*64,249)]:
             with self.subTest(source=fingerprint),self.assertRaises(W.Rejected):
                 W.validate_runtime_identity(dict(sha256=fingerprint,python_files=count))
 
     def test_runtime_binding_rejects_wrong_file_inventory(self):
-        for count in [245,248,True,247.0]:
+        for count in [245,247,248,250,True,249.0]:
             with self.subTest(count=count),self.assertRaises(W.Rejected):
                 W.validate_runtime_identity(dict(sha256=W.RUNTIME_SHA,python_files=count))
 

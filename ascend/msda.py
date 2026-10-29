@@ -7,6 +7,8 @@ The coordinate, zero-padding and boundary rules follow the unmodified MMCV
 PyTorch reference; this does not establish GPU fused-kernel numerical parity.
 """
 import os
+import hashlib
+from pathlib import Path
 from types import SimpleNamespace
 
 import torch
@@ -14,30 +16,72 @@ import torch.nn.functional as F
 
 BACKENDS = ('reference', 'cuda-compatible')
 _CUDA_FUNCTION = None
+_CUDA_VALUE_GRADIENT_LAYOUT = None
+_VALUE_GRADIENT_LAYOUT = 'none'  # Explicit process-local API; never inherited from the environment.
 
 
-def configure_backend(name):
-    """Select a process-local backend before model construction."""
-    if name not in BACKENDS:
-        raise ValueError('Unsupported MSDA backend: ' + str(name))
+def configure_backend(name, *, value_gradient_layout='none'):
+    """Select before construction; a training layout is never read from env."""
+    global _VALUE_GRADIENT_LAYOUT
+    from ascend.msda_value_gradient import MODES
+    if name not in BACKENDS or value_gradient_layout not in MODES:
+        raise ValueError('Unsupported MSDA backend or value-gradient layout')
+    if value_gradient_layout != 'none' and name != 'cuda-compatible':
+        raise ValueError('MSDA value-gradient layout requires cuda-compatible MSDA')
+    requested = (name, value_gradient_layout)
+    if _CUDA_VALUE_GRADIENT_LAYOUT is not None and value_gradient_layout != _CUDA_VALUE_GRADIENT_LAYOUT:
+        raise RuntimeError('MSDA policy cannot change after CUDA-compatible function construction')
+    _VALUE_GRADIENT_LAYOUT = value_gradient_layout
     os.environ['WORLDENGINE_MSDA_BACKEND'] = name
 
 
-def backend_policy():
+def _configuration():
+    from ascend.msda_value_gradient import MODES
     name = os.environ.get('WORLDENGINE_MSDA_BACKEND', 'reference')
-    if name not in BACKENDS:
-        raise ValueError('Unsupported MSDA backend: ' + name)
+    if name not in BACKENDS or _VALUE_GRADIENT_LAYOUT not in MODES:
+        raise ValueError('Unsupported MSDA backend or value-gradient layout')
+    requested = (name, _VALUE_GRADIENT_LAYOUT)
+    if _VALUE_GRADIENT_LAYOUT != 'none' and name != 'cuda-compatible':
+        raise RuntimeError('MSDA value-gradient layout escaped its original backend')
+    if _CUDA_VALUE_GRADIENT_LAYOUT is not None and _VALUE_GRADIENT_LAYOUT != _CUDA_VALUE_GRADIENT_LAYOUT:
+        raise RuntimeError('MSDA policy differs from its constructed function')
+    return requested
+
+
+def backend_policy():
+    name, layout = _configuration()
+    selected = dict(mode=layout, scope='FP32 training value gradient only',
+                    compute_dtype='torch.float32', query_chunk=2048)
     if name == 'cuda-compatible':
         from ascend.msda_cuda_compatible import POLICY
-        return dict(backend=name, implementation=dict(POLICY))
-    return dict(backend=name, implementation='MMCV CPU32 mathematical reference via NPU grid_sample')
+        implementation = dict(POLICY)
+        if layout == 'head-major':
+            from ascend import msda_value_gradient
+            selected.update(helper_source_sha256=hashlib.sha256(
+                Path(msda_value_gradient.__file__).read_bytes()).hexdigest(),
+                measured_primitive_source_sha256=msda_value_gradient.MEASURED_PRIMITIVE_SHA256,
+                layout='original B,S,H,C destination; temporary B,H,S,C; axis2 scatter_add; copy back',
+                indices='original int64 B,Q,H address stream',
+                original_destination_returned=True, global_Tensor_method_replacement=False)
+            implementation['value_gradient_order'] = (
+                'original querychunk,level,point,corner order; per-call head-major axis2 scatter_add and copy back')
+        return dict(backend=name, implementation=implementation,
+                    training_value_gradient=selected)
+    return dict(backend=name, implementation='MMCV CPU32 mathematical reference via NPU grid_sample',
+                training_value_gradient=selected)
 
 
 def _cuda_function():
-    global _CUDA_FUNCTION
+    global _CUDA_FUNCTION, _CUDA_VALUE_GRADIENT_LAYOUT
+    configuration = _configuration()
     if _CUDA_FUNCTION is None:
         from ascend.msda_cuda_compatible import make_function
-        _CUDA_FUNCTION = make_function(torch)
+        accumulator = None
+        if configuration[1] == 'head-major':
+            from ascend.msda_value_gradient import make_accumulator
+            accumulator = make_accumulator(torch)
+        _CUDA_FUNCTION = make_function(torch, grad_value_accumulator=accumulator)
+        _CUDA_VALUE_GRADIENT_LAYOUT = configuration[1]
     return _CUDA_FUNCTION
 
 

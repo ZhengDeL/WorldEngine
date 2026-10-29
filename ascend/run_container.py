@@ -107,7 +107,15 @@ def main():
     from ascend.inference_optimization import MODES, CHUNKS, validate_options
     p.add_argument('--inference-optimization',choices=MODES,default='none')
     p.add_argument('--msda-query-chunk',type=int,choices=CHUNKS,default=2048)
+    p.add_argument('--msda-value-grad-layout',choices=('none','head-major'),default='none')
     args=p.parse_args()
+    from ascend.msda_value_gradient import validate_training_option
+    try:
+        validate_training_option(args.msda_value_grad_layout, precision=args.precision,
+            backend=args.msda_backend, task=args.task, runtime=bool(args.runtime or args.resume or args.stop_after
+                or args.duration_seconds or args.epochs or args.stop_after_epochs))
+    except ValueError as exc:
+        p.error(str(exc))
     _validate_task_options(args, p)
     if args.task!='inference' and (args.inference_optimization!='none' or args.msda_query_chunk!=2048):
         p.error('Inference optimization options require --task inference')
@@ -164,7 +172,8 @@ def main():
                       'HF_HUB_OFFLINE':'1','TRANSFORMERS_OFFLINE':'1'}.items():
         cmd+=['-e',key+'='+value]
     train=['ascend/train.py','--profile',args.profile,'--output','/output','--checkpoint','/weights/initial.pth',
-           '--vocab','/weights/vocab.npy','--precision',args.precision,'--msda-backend',args.msda_backend]
+           '--vocab','/weights/vocab.npy','--precision',args.precision,'--msda-backend',args.msda_backend,
+           '--msda-value-grad-layout',args.msda_value_grad_layout]
     for key in ('batch_size','workers','lr','epochs','stop_after','stop_after_epochs','duration_seconds','checkpoint_interval','check_interval'):
         value=getattr(args,key)
         if value is not None:train+=['--'+key.replace('_','-'),str(value)]
@@ -244,7 +253,7 @@ def main():
         inner+='if [ "$rc" -eq 0 ]; then\n  torchrun --standalone --nproc_per_node=1 '+shlex.join(inference)+' > /output/inference_console.log 2>&1\n  rc=$?\nfi\n'
     inner+='printf "%s\\n" "$rc" > /output/exit_code\nexit "$rc"'
     cmd += [args.image,'bash','-lc',inner]
-    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend,'hccl_connect_timeout':hccl_timeout,'inference_optimization':args.inference_optimization,'msda_query_chunk':args.msda_query_chunk},indent=2))
+    (output/'launch.json').write_text(json.dumps({'command':cmd,'image_id':image_id,'host_devices':devices,'nproc':len(devices),'profile':args.profile,'pids_limit':pids_limit,'precision':args.precision,'deterministic':args.deterministic,'msda_backend':args.msda_backend,'msda_value_grad_layout':args.msda_value_grad_layout,'hccl_connect_timeout':hccl_timeout,'inference_optimization':args.inference_optimization,'msda_query_chunk':args.msda_query_chunk},indent=2))
     result=subprocess.run(cmd,check=False)
     raise SystemExit(result.returncode)
 

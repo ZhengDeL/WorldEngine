@@ -966,5 +966,1331 @@
     "independent_official_scoring_status": "running; no final score recorded here",
     "PDMS_100": null,
     "scope": "Private recovered output: fifteen preserved genuine760-row parts plus independently recomputed genuine original-rank1 sequence. A complete unique12146 export passed oldNPU raw and originalGPU tolerance gates. It is not a successful uninterrupted16rank run or public-entry full-data acceptance."
+  },
+  "production_training_head_major_verification": {
+    "recorded_UTC": "2026-10-29T19:53:39.621024+00:00",
+    "runtime_sha256": "216499c4268afe5e6ed32564765616b636bde1723b38c47b924ebae8ca9a0e5c",
+    "runtime_python_files": 249,
+    "helper_source_sha256": "3ea227d93d4a01050c5f83b719cd8b650435d7e94b14f004f58006d42415e03b",
+    "default": "none",
+    "explicit_flag": "--msda-value-grad-layout head-major",
+    "scope": "FP32 training cuda-compatible MSDA with full runtime checkpoint contract; no environment activation",
+    "arithmetic": "Preserve original querychunk/level/point/corner accumulation order; use an exact B,H,S,C temporary for each original int64 B,Q,H address call; return original B,S,H,C gradient",
+    "changed_original_model_files": 0,
+    "unchanged_original_model_python_files": 223,
+    "original_tolerance": {
+      "atol": 1e-06,
+      "rtol": 1e-05
+    },
+    "production_NPU_kernel_gate": {
+      "result": "pass_frozen_production249_kernel_gates",
+      "actual_wait_cli_return": 0,
+      "actual_wait_stdout": "0\n",
+      "actual_container_state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-29T18:41:59.89288768Z",
+        "FinishedAt": "2026-10-29T18:46:14.58654874Z"
+      },
+      "device_released_utc": "2026-10-29T18:48:06.320140+00:00",
+      "production_source_sha256": "216499c4268afe5e6ed32564765616b636bde1723b38c47b924ebae8ca9a0e5c",
+      "production_source_files": 249,
+      "helper_sha256": "3ea227d93d4a01050c5f83b719cd8b650435d7e94b14f004f58006d42415e03b",
+      "cases": {
+        "vad": {
+          "actual_exit": 0,
+          "CUDA_full_comparisons": 56,
+          "CUDA_original_tolerance_pass": true,
+          "old_NPU_full_raw_comparisons": 16,
+          "self_repeat_full_raw_comparisons": 8,
+          "all_raw_exact": true,
+          "old_NPU_max_abs": 0.0,
+          "baseline_backward_seconds": [
+            10.265652008994948,
+            10.256801338982768
+          ],
+          "head_backward_seconds": [
+            1.5630939829861745,
+            1.5503513860167004
+          ],
+          "median_backward_ratio": 6.5915572350480405,
+          "peak_reserved_bytes": 922746880
+        },
+        "hydra": {
+          "actual_exit": 0,
+          "CUDA_full_comparisons": 56,
+          "CUDA_original_tolerance_pass": true,
+          "old_NPU_full_raw_comparisons": 16,
+          "self_repeat_full_raw_comparisons": 8,
+          "all_raw_exact": true,
+          "old_NPU_max_abs": 0.0,
+          "baseline_backward_seconds": [
+            10.184350032999646,
+            10.174563578970265
+          ],
+          "head_backward_seconds": [
+            1.5447359230020083,
+            1.5317979769897647
+          ],
+          "median_backward_ratio": 6.617483919817802,
+          "peak_reserved_bytes": 922746880
+        },
+        "np18_none": {
+          "actual_exit": 0,
+          "tests_run": 18,
+          "skipped": 0,
+          "full_raw_comparisons": 144,
+          "all_raw_exact": true,
+          "actual_callback_none": true,
+          "fixture_source_check_scope": "Seven unchanged fixture/source-preservation checks; actual production source/helper separately pinned"
+        },
+        "np18_head_major": {
+          "actual_exit": 0,
+          "tests_run": 18,
+          "skipped": 0,
+          "full_raw_comparisons": 144,
+          "all_raw_exact": true,
+          "actual_callback_none": false,
+          "fixture_source_check_scope": "Seven unchanged fixture/source-preservation checks; actual production source/helper separately pinned"
+        },
+        "camera": {
+          "actual_exit": 0,
+          "synthetic": true,
+          "CUDA_capture_available": false,
+          "value_shape": [
+            8,
+            10845,
+            8,
+            32
+          ],
+          "location_shape": [
+            8,
+            7487,
+            8,
+            4,
+            8,
+            2
+          ],
+          "needs_grad": [
+            true,
+            true,
+            true
+          ],
+          "old_NPU_full_raw_comparisons": 16,
+          "self_full_raw_comparisons": 8,
+          "all_raw_exact": true,
+          "baseline_backward_seconds": [
+            36.355460673046764,
+            36.345493158034515
+          ],
+          "head_backward_seconds": [
+            3.7591356800403446,
+            3.7414419919950888
+          ],
+          "median_backward_ratio": 9.692713949504693,
+          "peak_reserved_bytes": 1413480448
+        }
+      },
+      "comparison_references": {
+        "real_CUDA": "original captured CUDA20 full arrays",
+        "old_NPU": "separately imported baseline.py originalfeb35 FP32 operator full output, not production head",
+        "self": "same implementation repetition1"
+      },
+      "boundary": "Kernel validation of the frozen production implementation/API. Model training/update/resume/convergence not accepted by these tests."
+    },
+    "CPU_release_tests": {
+      "actual_exit": 0,
+      "tests": 188,
+      "skipped": 0,
+      "device_acceptance": false,
+      "source_inventory_files": 848,
+      "actual_wait_sha256": "a534d332dd799f0322719af40ef29655ba71d0323da738ac6b2e1db047524927",
+      "report_sha256": "3ab5961c21aa845d7f878fe07dcb755142e31ebd09de1bda9a0518066511c709"
+    },
+    "full_NAVTRAIN_input_QC": {
+      "actual_exit": 0,
+      "anchors": 103288,
+      "JPEGs": 1219960,
+      "JPEG_bytes": 261922433991,
+      "all_current_JPEG_SHA_matches_decoded_ledger": true,
+      "input_gate_sha256": "fd3e44513a978fcf19c3e4aaa02e15ad78edd3e84cda2eb6685a9a2909af2e80"
+    },
+    "short_training_protocol": {
+      "world_size": 16,
+      "physical_cards": 8,
+      "per_rank_batch": 1,
+      "global_batch": 16,
+      "workers": 0,
+      "original_max_epochs": 8,
+      "updates_per_epoch": 6456,
+      "continuous_updates": 8,
+      "independent_partial_updates": 4,
+      "resume_new_updates": 4,
+      "completed_epochs": 0,
+      "training_initializer": "official track-map50 checkpoint; not final e2e inference checkpoint",
+      "checkpoint_contract_rewritten": false,
+      "old_source_checkpoint_restore_claimed": false
+    },
+    "VADv2": {
+      "state": "accepted_full_input_short_training_and_same_source_resume",
+      "actual_NN_stages": {
+        "continuous8": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T18:57:18.751566921Z",
+            "FinishedAt": "2026-10-29T19:11:06.698638951Z"
+          },
+          "peak_CPU_bytes": 860904071168
+        },
+        "partial4": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T19:16:17.940704868Z",
+            "FinishedAt": "2026-10-29T19:25:09.49299866Z"
+          },
+          "peak_CPU_bytes": 858149842944
+        },
+        "resume4to8": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T19:30:11.870370252Z",
+            "FinishedAt": "2026-10-29T19:39:18.203890768Z"
+          },
+          "peak_CPU_bytes": 863940714496
+        }
+      },
+      "public_CP4_original_threshold_CPU_exit": 0,
+      "public_CP8_original_threshold_CPU_exit": 0,
+      "same_source_CP8_full_raw_comparison": {
+        "result": "pass_complete_CPU_raw_state_comparison",
+        "mode": "same-contract",
+        "model": "vadv2",
+        "updates": 8,
+        "counts": {
+          "model": 889,
+          "optimizer": 777,
+          "rank_RNG": 16
+        },
+        "raw_exact": {
+          "state_dict": true,
+          "optimizer": true,
+          "all16_RNG": true,
+          "epoch_cursor": true,
+          "completed_updates": true,
+          "completed_epochs": true,
+          "contract": true
+        },
+        "declared_contract_differences": null,
+        "actual_run_evidence": null,
+        "left_sha256": "9ee9d100e38922467e469fd9662142a72886925318ee513447f65ab425754c0f",
+        "right_sha256": "6309bd05ffedb48287911c56448a0c9e71516618c46309e740a5e188149bb765",
+        "whole_serialized_files_claimed_identical": false,
+        "checkpoint_metadata_modified": false,
+        "NPU_initialized": false,
+        "CUDA_initialized": false,
+        "elapsed_seconds": 28.932498809997924
+      },
+      "cross_implementation_CP8_raw_comparison": {
+        "result": "pass_complete_CPU_raw_state_comparison",
+        "mode": "original4ef-versus-head249",
+        "model": "vadv2",
+        "updates": 8,
+        "counts": {
+          "model": 889,
+          "optimizer": 777,
+          "rank_RNG": 16
+        },
+        "raw_exact": {
+          "state_dict": true,
+          "optimizer": true,
+          "all16_RNG": true,
+          "epoch_cursor": true,
+          "completed_updates": true,
+          "completed_epochs": true,
+          "declared_only_contract_differences_strict_types": true
+        },
+        "declared_contract_differences": {
+          "result": "pass_only_declared_source_and_head_policy_differences",
+          "expected_difference_paths": [
+            "source_sha256",
+            "precision.msda.training_value_gradient",
+            "precision.msda.implementation.value_gradient_order"
+          ],
+          "checkpoint_metadata_modified": false,
+          "resume_compatibility_claimed": false
+        },
+        "actual_run_evidence": {
+          "ranks": 16,
+          "actual_input_rows": 128,
+          "runtime_rows": 128
+        },
+        "left_sha256": "a680654261cd3e49dfe0cc0dbe29ab616adafed78d05e855d08afc1a9a21a6b3",
+        "right_sha256": "9ee9d100e38922467e469fd9662142a72886925318ee513447f65ab425754c0f",
+        "whole_serialized_files_claimed_identical": false,
+        "checkpoint_metadata_modified": false,
+        "NPU_initialized": false,
+        "CUDA_initialized": false,
+        "elapsed_seconds": 30.610814749030396
+      },
+      "unprofiled_rank0_iteration_seconds": {
+        "old4ef_unprofiled": {
+          "steps": [
+            {
+              "iter": 1,
+              "seconds": 324.7567189987749,
+              "loss": 9.074913024902344
+            },
+            {
+              "iter": 2,
+              "seconds": 321.9402027889155,
+              "loss": 8.722280502319336
+            },
+            {
+              "iter": 3,
+              "seconds": 318.51208927691914,
+              "loss": 8.904989242553711
+            },
+            {
+              "iter": 4,
+              "seconds": 317.4551013801247,
+              "loss": 8.7508544921875
+            },
+            {
+              "iter": 5,
+              "seconds": 319.86641328409314,
+              "loss": 8.854686737060547
+            },
+            {
+              "iter": 6,
+              "seconds": 318.5041392741259,
+              "loss": 8.30527400970459
+            },
+            {
+              "iter": 7,
+              "seconds": 318.36034764302894,
+              "loss": 8.29412841796875
+            },
+            {
+              "iter": 8,
+              "seconds": 318.19985970202833,
+              "loss": 8.807777404785156
+            }
+          ],
+          "first": 324.7567189987749,
+          "later_median": 318.5041392741259,
+          "later_mean": 318.9768790498908,
+          "CP8_exists": true,
+          "CP8_bytes": 435110645,
+          "CP8_sha256": "a680654261cd3e49dfe0cc0dbe29ab616adafed78d05e855d08afc1a9a21a6b3"
+        },
+        "new249_head": {
+          "steps": [
+            {
+              "iter": 1,
+              "seconds": 90.40820730099222,
+              "loss": 9.074913024902344
+            },
+            {
+              "iter": 2,
+              "seconds": 74.79056583496276,
+              "loss": 8.722280502319336
+            },
+            {
+              "iter": 3,
+              "seconds": 75.23426415398717,
+              "loss": 8.904989242553711
+            },
+            {
+              "iter": 4,
+              "seconds": 77.25655048299814,
+              "loss": 8.7508544921875
+            },
+            {
+              "iter": 5,
+              "seconds": 75.63562929601176,
+              "loss": 8.854686737060547
+            },
+            {
+              "iter": 6,
+              "seconds": 76.3633932749508,
+              "loss": 8.30527400970459
+            },
+            {
+              "iter": 7,
+              "seconds": 77.0511300379876,
+              "loss": 8.29412841796875
+            },
+            {
+              "iter": 8,
+              "seconds": 76.52236056001857,
+              "loss": 8.807777404785156
+            }
+          ],
+          "first": 90.40820730099222,
+          "later_median": 76.3633932749508,
+          "later_mean": 76.12198480584526,
+          "CP8_exists": true,
+          "CP8_bytes": 435112117,
+          "CP8_sha256": "9ee9d100e38922467e469fd9662142a72886925318ee513447f65ab425754c0f"
+        },
+        "status.json": {
+          "state": "prepared_explicit_source249_head_pilot"
+        },
+        "vadv2/continuous8/owned_control/status.json": {
+          "state": "completed_controlled_container",
+          "error": null,
+          "actual_supervisor_return": 0,
+          "watchdog_actual_return": 0,
+          "actual_terminal_container_state": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T18:57:18.751566921Z",
+            "FinishedAt": "2026-10-29T19:11:06.698638951Z"
+          },
+          "observed_cgroup_peak_bytes": 860904071168
+        }
+      },
+      "observed_iteration_ratio": {
+        "first": 3.5921154582523256,
+        "later_median": 4.170900815359703,
+        "later_mean": 4.190338439853675
+      },
+      "original_private_parent_exit": 1,
+      "independent_completion_actual_exit": 0,
+      "control_repair": "Historical private comparator SHA ba855 was rebound to current public3eb in two control-only constants. Original parent1, model source, checkpoints and tolerances retained. Current public comparisons and full raw CPU acceptance then actual0."
+    },
+    "HydraMDP": {
+      "state": "accepted_full_input_short_training_and_same_source_resume",
+      "same_source_resume_accepted": true,
+      "actual_NN_stages": {
+        "continuous8": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T19:52:38.278438536Z",
+            "FinishedAt": "2026-10-29T20:06:36.721447044Z"
+          },
+          "peak_CPU_bytes": 862408847360
+        },
+        "partial4": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T20:11:31.792339075Z",
+            "FinishedAt": "2026-10-29T20:20:14.579342293Z"
+          },
+          "peak_CPU_bytes": 861220556800
+        },
+        "resume4to8": {
+          "actual_return": 0,
+          "terminal": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-29T20:25:06.212440586Z",
+            "FinishedAt": "2026-10-29T20:33:40.204664848Z"
+          },
+          "peak_CPU_bytes": 868129345536
+        }
+      },
+      "original_public_comparisons": {
+        "4": {
+          "actual_return": 0,
+          "report_sha256": "9a26cce48629b8ee70bef7976e20672528ce461bb2a406f6d8040fd2dde04619",
+          "actual_original_comparator_sha256": "e0a2c4c3f3f1619f13764c6ec6d5deb2e3386a7d179d90784bfbcc662dddfe1e",
+          "actual_supervisor_sha256": "33447b2b02bd557f8e29367fb11a4aad3c3317842ef59bbc1c0b71814aacc7e4",
+          "comparator_sha256": "3ebf6988e6a79d1ee3ae62c7774419bb0f5cd5b71bca89cfd5cc545c4d460027",
+          "original_tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          }
+        },
+        "8": {
+          "actual_return": 0,
+          "report_sha256": "33f95f7250a376b9c5c91aa0658aefd7b13771f2b8da9093c5cc62ecfba580c9",
+          "actual_original_comparator_sha256": "e0a2c4c3f3f1619f13764c6ec6d5deb2e3386a7d179d90784bfbcc662dddfe1e",
+          "actual_supervisor_sha256": "057660efc48a880ac634fbf376e180186ca9ee25788a1fac0a66698e7d1a177a",
+          "comparator_sha256": "3ebf6988e6a79d1ee3ae62c7774419bb0f5cd5b71bca89cfd5cc545c4d460027",
+          "original_tolerance": {
+            "atol": 1e-06,
+            "rtol": 1e-05
+          }
+        }
+      },
+      "complete_raw_checkpoint_checks": {
+        "4": {
+          "actual_return": 0,
+          "report_sha256": "3213fd77815ff3b7b08089977e5edb4e730218aa70301b5e920f96e5d4fa4354",
+          "actual_wait_sha256": "a3e164e721a13a7fdc9d3b405695941d3da99d18825473445f5199cc1d1bcef8",
+          "counts": {
+            "model": 909,
+            "optimizer": 837,
+            "rank_RNG": 16
+          },
+          "raw_exact": {
+            "state_dict": true,
+            "optimizer": true,
+            "all16_RNG": true,
+            "epoch_cursor": true,
+            "completed_updates": true,
+            "completed_epochs": true,
+            "contract": true
+          },
+          "checkpoint_metadata_modified": false
+        },
+        "8": {
+          "actual_return": 0,
+          "report_sha256": "953785e44d464361b3a882ba74c9359610a16bdd0bb867dc19c75ee0121698c8",
+          "actual_wait_sha256": "3f463ea3f13d924285e5664aff2a78041a0776beea707d9a72b5d7d195163c59",
+          "counts": {
+            "model": 909,
+            "optimizer": 837,
+            "rank_RNG": 16
+          },
+          "raw_exact": {
+            "state_dict": true,
+            "optimizer": true,
+            "all16_RNG": true,
+            "epoch_cursor": true,
+            "completed_updates": true,
+            "completed_epochs": true,
+            "contract": true
+          },
+          "checkpoint_metadata_modified": false
+        }
+      },
+      "acceptance_report_sha256": "7da99377e44d28786f63f55ceada486393703b74b463f8d4da0e28b9142e08b9",
+      "full_eight_epoch_training_completed": false,
+      "convergence_accepted": false,
+      "GPU_training_parity": false,
+      "scope": "Source2164/head-major full NAVTRAIN input, eight updates within epoch0 and independent4+4 replay; not current CBE epoch-boundary mini acceptance."
+    },
+    "timing_boundary": "Original synchronized runtime hook from after DataLoader fetch to before checkpoint write, includes validation, forward, backward and optimizer. Cold first update is separate; updates2to8 median is a short observation, not full job time, GPU benchmark or long-run performance acceptance.",
+    "boundaries": [
+      "Full eight epochs and convergence are not complete.",
+      "Only same-source, same-precision, same-layout, same-topology checkpoints may restore.",
+      "Kernel CUDA tolerance checks do not establish complete model GPU quality parity.",
+      "Private point-parallel plus head-major research is not integrated.",
+      "Final runtime249 full NAVTEST inference regression is in progress; historical7a results retain their source identity.",
+      "Full GPU/NPU training equivalence is not established by NPU before/after or same-source resume comparisons.",
+      "Six additional real synthetic training export configurations still lack confirmed inputs.",
+      "Official pretrained NAVTEST scores do not replace full cross-device evaluation of newly short-trained checkpoints."
+    ]
+  },
+  "optimized_full_NAVTEST_7a_measured": {
+    "runtime_sha256": "7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb",
+    "runtime_python_files": 247,
+    "checkpoint_source": "Official pretrained inference checkpoints, not weights produced by the short training runs",
+    "unique_anchors": 12146,
+    "physical_cards_per_full_run": 8,
+    "logical_chips_per_full_run": 16,
+    "precision": "FP32, HF32 matmul and convolution disabled",
+    "VADv2": {
+      "original_full16_exit": 1,
+      "original_full16_OOMKilled": false,
+      "original_error": "Final HCCL collection timeout; no complete original uninterrupted output",
+      "preserved_parts": 15,
+      "recomputed_original_rank1_positions": 760,
+      "new_recomputation_logical_chips": 4,
+      "new_recomputation_actual_exit": 0,
+      "missing_unique_anchors_filled_by_actual_NPU": 759,
+      "reference_used_to_fill_predictions": false,
+      "reassembled_unique_anchors": 12146,
+      "old_NPU_typed_prediction_row_differences": 0,
+      "GPU_trajectory_max_abs": 0.0,
+      "GPU_selected_index_differences": 0,
+      "new_official_scoring_actual_exit": 0,
+      "new_official_score_valid_tokens": 12146,
+      "PDM_Score_times100": 82.1621654812768,
+      "GPU_PDM_Score_times100": 82.1621654812768,
+      "GPU_seven_official_metric_differences": 0,
+      "GPU_and_new_NPU_whole_official_CSV_SHA256": "bcbb03748d1e99cbda2e636a47996ee30a97f356f30c18a290a2af71f78263fe",
+      "uninterrupted16rank_wall_time_claimed": false
+    },
+    "HydraMDP": {
+      "actual_NN_exit": 0,
+      "OOMKilled": false,
+      "container_started_UTC": "2026-10-29T17:33:13.013613487Z",
+      "container_finished_UTC": "2026-10-29T19:20:17.177667137Z",
+      "container_wall_seconds": 6424.164054,
+      "application_elapsed_seconds": 6400.359,
+      "old_NPU_prediction_typed_row_differences": 0,
+      "old_NPU_whole_prediction_SHA_equal": true,
+      "new_independent_official_scoring_actual_exit": 0,
+      "new_official_score_valid_tokens": 12146,
+      "PDM_Score_times100": 91.45952568154098,
+      "GPU_PDM_Score_times100": 91.45968923154307,
+      "GPU_selected_index_outlier_samples": 4,
+      "GPU_trajectory_outlier_samples": 4,
+      "GPU_original_quality_threshold_passed": false,
+      "official_score_comparison": {
+        "result": "new_Hydra_full12146_independent_official_scoring_original_GPU_and_NPU_comparison",
+        "anchors": 12146,
+        "original_tolerance": {
+          "atol": 1e-06,
+          "rtol": 1e-05
+        },
+        "new_NPU_CSV_sha256": "42a534278a8333c6f6b24b779693257fd31f7dd6c59a8ba67a3cadb7c664a600",
+        "old_NPU_CSV_sha256": "42a534278a8333c6f6b24b779693257fd31f7dd6c59a8ba67a3cadb7c664a600",
+        "original_GPU_CSV_sha256": "d9de291c3eb825ff3a8e77cd380b10fd4a976a2e8eb79478659bc0bead256de6",
+        "old_NPU_whole_CSV_bytes_equal": true,
+        "GPU_any_metric_samples_outside_original_tolerance": 2,
+        "GPU_any_metric_tokens": [
+          "02ff5ce64ad75584",
+          "507c91dd2444555e"
+        ],
+        "GPU_metric_comparison": {
+          "no_at_fault_collisions": {
+            "max_abs": 0.0,
+            "outside_original_tolerance": 0,
+            "tokens": []
+          },
+          "drivable_area_compliance": {
+            "max_abs": 0.0,
+            "outside_original_tolerance": 0,
+            "tokens": []
+          },
+          "ego_progress": {
+            "max_abs": 0.053790477790736424,
+            "outside_original_tolerance": 2,
+            "tokens": [
+              "02ff5ce64ad75584",
+              "507c91dd2444555e"
+            ]
+          },
+          "time_to_collision_within_bound": {
+            "max_abs": 0.0,
+            "outside_original_tolerance": 0,
+            "tokens": []
+          },
+          "comfort": {
+            "max_abs": 0.0,
+            "outside_original_tolerance": 0,
+            "tokens": []
+          },
+          "driving_direction_compliance": {
+            "max_abs": 0.0,
+            "outside_original_tolerance": 0,
+            "tokens": []
+          },
+          "score": {
+            "max_abs": 0.02241269907947352,
+            "outside_original_tolerance": 2,
+            "tokens": [
+              "02ff5ce64ad75584",
+              "507c91dd2444555e"
+            ]
+          }
+        }
+      }
+    },
+    "timing_boundary": "Hydra6424.164s is actual complete NPU container wall time including startup and result processing, excluding the separate official CPU scoring. Historical eight-hour NPU jobs and older GPU timings used different job conditions; no hardware speed ratio or repeated end-to-end performance acceptance is claimed.",
+    "current_release_source249_full_inference": "Separate in-progress regression on216499c4 runtime249; these completed7a results are not relabeled as final249 results."
+  },
+  "current_command_runtime_binding": {
+    "runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+    "runtime_python_files": 249,
+    "original_AlgEngine_model_files_changed": 0,
+    "entry_sha256": {
+      "ascend/tools/optimized_journal_inference.py": "77faf18b334f63b854de9beb02dd8b5d2313ae78cbafcb6c0d4661aadd56929e",
+      "ascend/tools/filesystem_journal_inference.py": "58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007",
+      "ascend/tools/verify_navtest_inputs.py": "cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b"
+    },
+    "scope": "Current commands and independent runtime binding; earlier measurement sections keep their original source identities",
+    "publication_state": "draft_not_published"
+  },
+  "epoch_end_warmup_LR_repair": {
+    "recorded_UTC": "2026-10-29T21:56:41.828653+00:00",
+    "original_runtime_sha256": "216499c4268afe5e6ed32564765616b636bde1723b38c47b924ebae8ca9a0e5c",
+    "fixed_runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+    "fixed_runtime_py_sha256": "c468cc632cbcbe4dea200e775451baac71ea67f5d203c6cf24a6d50d532d4a20",
+    "mechanism": "Repeated actual MMCV before_train_epoch overwrote saved warmup LR during an already consumed epoch suffix; zero further optimizer updates did not reapply warmup",
+    "reproduction": {
+      "library": "MMCV1.7.2 CosineAnnealingLrUpdaterHook",
+      "original_warmup_updates": 500,
+      "mini_loader_batches_per_epoch": 1,
+      "max_epochs": 8,
+      "saved_LR": 2.6743196245939602e-06,
+      "old_repeated_before_epoch_LR": 7.804434702122455e-06,
+      "new_optimizer_updates": 0,
+      "parameters_unchanged": true,
+      "CPU_actual_return": 0,
+      "meaning_of_return0": "The defect was reproduced; this is not acceptance of the old runtime"
+    },
+    "repair": "Keep original hooks, preserve exact saved param-group LR across repeated before-epoch hooks only for a validated consumed-epoch cursor; reject parameter-group identity/order/count changes",
+    "CPU_actual_installed_MMCV_AdamW": {
+      "functional_cases": 5,
+      "group_identity_negative_cases": 3,
+      "actual_returns": [
+        0,
+        0
+      ],
+      "skipped": 0,
+      "accelerator_context_initialized": false
+    },
+    "maintained_public_regression": {
+      "path": "ascend/tools/tests/test_epoch_resume.py",
+      "class": "InstalledMMCVWarmupResume",
+      "source_sha256": "90adbb6bd1fb2266c735bc00e3178cde09f1208a50cb5d95c06051529ad0fe94",
+      "fixed_runtime_actual_tests": 7,
+      "fixed_runtime_native_return": 0,
+      "fixed_runtime_skipped": 0,
+      "old_a6_same_tests_native_return": 1,
+      "old_a6_specific_assertion_failures": 4,
+      "old_a6_setup_errors": 0,
+      "both_same_process_NPU_and_CUDA_initialized": false,
+      "first_tested_source_sha256": "0de1f88d30af0d069be5beeb79600150065b77889e96a67367df8b2ba316367e",
+      "current_header_only_revision_actual_CPU195_accepted": true
+    },
+    "complete_candidate_CPU_qualification": {
+      "actual_tests": 195,
+      "skipped": 0,
+      "suites": 19,
+      "actual_exit": 0,
+      "native_report_sha256": "3e04851117aeb19db7ba13b333966c517eb66bc511fbc7e99e7269377325de5b",
+      "whole_repo_files_before_after_unchanged": 848,
+      "device_nodes": [],
+      "scope": "CPU harness and subprocess suite. Real CPU model/AdamW tests are included; no NPU acceptance is inferred from the parent harness state.",
+      "actual_wait_sha256": "13a04c648bcf90a53eb04ae0c9ebe918d301f75f11a1d65534505000a43c6225",
+      "revision": "actual_CPU195_v2_current90ad_header",
+      "parent_harness_NPU_initialized": null
+    },
+    "NPU_epoch_boundary": {
+      "state": "accepted",
+      "dataset": "Project-selected16 anchors from official NAVTRAIN; not an official separately released mini dataset; original four-frame/eight-camera context and PDM arrays retained",
+      "world_size": 16,
+      "batch_per_rank": 1,
+      "loader_batches": 1,
+      "max_epochs": 8,
+      "routes": [
+        "VAD cross2_vs_1plus1",
+        "VAD final8_vs_8plus0",
+        "Hydra cross2_vs_1plus1",
+        "Hydra final8_vs_8plus0"
+      ],
+      "accepted": true,
+      "actual_return": 0,
+      "source_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+      "original_warmup_updates": 500,
+      "precision": "FP32",
+      "HF32_enabled": false,
+      "training_value_gradient": "head-major",
+      "whole_acceptance_sha256": "d835128f419b15170ea34d38796d4ef5c8104af031e5fe493a93f5b540acca96",
+      "strict_receipt_gate_source_sha256": "29b528770bc26933578e64730a06f15eb4fc3cd8beabe69d61eb6f317f9f27d3",
+      "route_results": {
+        "vadv2": {
+          "crossing": {
+            "accepted": true,
+            "NN_actual_returns": [
+              0,
+              0,
+              0
+            ],
+            "CPU_actual_return": 0,
+            "NN_phases": [
+              "continuous2",
+              "partial1",
+              "resume1to2"
+            ],
+            "NN_status_sha256": [
+              "140d5ed56966a1dcd55dbf00ec69cf2d1ef81a4619373e8eb57e8a144c993282",
+              "c7e8838ff0879d620133dc5d1d9e152130d1fb610793cd996d667debef1a6bde",
+              "e3c9dc697f8fdbf850e0be4018bde9833c7d6816167985131a98b0127f0d3730"
+            ],
+            "CPU_report_sha256": "5e8528fddaef4be0124d217e515068130713b48077a8cc42d2102716d7dac558",
+            "CPU_status_sha256": "9761cd3961c09e4669185059369ae83dabed4ce2aa7a6cd821ef0f8f9671857d",
+            "complete_raw_checkpoint_checks": {
+              "CP1": {
+                "left_sha256": "19748c3f969d3039842668b5ce4818fe13c302965d7c629960e5e3784af016d3",
+                "right_sha256": "ad602bbb9ac33ad9c7f13a85c2f10c723aba8e29d0543a701b0f0306c373913c",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 889,
+                  "optimizer": 777,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              },
+              "CP2": {
+                "left_sha256": "01789bedbe40e6bd490e554b02ed61021356fb4a3cd7fb4a57f3dc65b7f38962",
+                "right_sha256": "5d448d8bf8d284bec94c871a38e372500955280dd9a0044d38b2088d7fff23e8",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 889,
+                  "optimizer": 777,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              }
+            },
+            "actual_observation_checks": {
+              "ranks": 16,
+              "actual_input_update_rows": 32,
+              "exact_fresh_state_and_input_RNG_signatures": true
+            },
+            "original_public_comparator_actual_returns": [
+              0,
+              0
+            ],
+            "zero_tail_rejection_is_expected": false,
+            "checkpoint_metadata_modified": false
+          },
+          "finalization": {
+            "accepted": true,
+            "NN_actual_returns": [
+              0,
+              0,
+              0
+            ],
+            "CPU_actual_return": 0,
+            "NN_phases": [
+              "continuous8",
+              "partial8",
+              "finalize8"
+            ],
+            "NN_status_sha256": [
+              "a7dd7c981755a0c615f25ca2b70d146d7c43c5f9a0a439b7379450dc832ff931",
+              "f59d5a9aab3e762d55e2bc17c958657c396225b418ef51723f7258ec3ff65b1a",
+              "7ca57ca6dca896c18f0e987f6a74dd531032af061208092ae9df7ce3a1dfc7d6"
+            ],
+            "CPU_report_sha256": "c8bc2001e0753763e25aced325428711334c3ebf9cc44f774cfa0d251569e54d",
+            "CPU_status_sha256": "358cd0f456024818d75235b0044158e24439894f02436539c84245405d1201e0",
+            "complete_raw_checkpoint_checks": {
+              "epoch8_complete": {
+                "left_sha256": "78f51a129697f4e4316a8131bd1481380c4c3b9ef100d4e84d5f7efa9be8db4b",
+                "right_sha256": "821a102f99303d14bcd47a12d9863862207a7e9ab045ce88122ded16b36eed16",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 889,
+                  "optimizer": 777,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              },
+              "pending_iter8_to_finalized_epoch8_no_updates": {
+                "before_sha256": "87d8042784938f421f902f1c9452f61e5331e0d47112f72a0848fd4d62b667d1",
+                "after_sha256": "821a102f99303d14bcd47a12d9863862207a7e9ab045ce88122ded16b36eed16",
+                "declared_counter_transition": {
+                  "completed_updates": [
+                    8,
+                    8
+                  ],
+                  "completed_epochs": [
+                    7,
+                    8
+                  ],
+                  "completed_batches": [
+                    1,
+                    0
+                  ]
+                },
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true
+                },
+                "counts": {
+                  "model": 889,
+                  "optimizer": 777,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              }
+            },
+            "actual_observation_checks": {
+              "ranks": 16,
+              "actual_input_update_rows": 128,
+              "exact_fresh_state_and_input_RNG_signatures": true
+            },
+            "original_public_comparator_actual_returns": [
+              1
+            ],
+            "zero_tail_rejection_is_expected": true,
+            "checkpoint_metadata_modified": false
+          }
+        },
+        "hydramdp": {
+          "crossing": {
+            "accepted": true,
+            "NN_actual_returns": [
+              0,
+              0,
+              0
+            ],
+            "CPU_actual_return": 0,
+            "NN_phases": [
+              "continuous2",
+              "partial1",
+              "resume1to2"
+            ],
+            "NN_status_sha256": [
+              "75fee77228cb1abf2b512663925f32d8e645860223d92813aef8462096e020ee",
+              "e5a18dc41c5bfdc165a05133d48ec5e0770740234d64b6e659fe57a9f4277382",
+              "e3d8eb473d2e21ffe9dc87be8d263ba579b992c10eb111d413f3a0c9f9b14306"
+            ],
+            "CPU_report_sha256": "2b746c854effcd508784347774955a11efd53a8079da9c14fa0b4b06fd3957ce",
+            "CPU_status_sha256": "d5cf71fa4b171935ad8b0ce2b6852313aacb123eac20fbad3bcbe7308d710d33",
+            "complete_raw_checkpoint_checks": {
+              "CP1": {
+                "left_sha256": "20cdd08d9f89a65bc4a48d5205c3d56a87ac2814d88748a75b139e722fb9ce04",
+                "right_sha256": "8bfaffa97e29fbe06ff978adf733f518a8c9231d600664b1b13fb4796cd0c929",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 909,
+                  "optimizer": 837,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              },
+              "CP2": {
+                "left_sha256": "9345ac3dddec3ca727883e324e8704cdb29397213955ee28c470d3f96d0f41ce",
+                "right_sha256": "82804a52f4bf1054d2cf0951adfcbfc51a2b7e66fc032fe4dc01207eb3a5613c",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 909,
+                  "optimizer": 837,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              }
+            },
+            "actual_observation_checks": {
+              "ranks": 16,
+              "actual_input_update_rows": 32,
+              "exact_fresh_state_and_input_RNG_signatures": true
+            },
+            "original_public_comparator_actual_returns": [
+              0,
+              0
+            ],
+            "zero_tail_rejection_is_expected": false,
+            "checkpoint_metadata_modified": false
+          },
+          "finalization": {
+            "accepted": true,
+            "NN_actual_returns": [
+              0,
+              0,
+              0
+            ],
+            "CPU_actual_return": 0,
+            "NN_phases": [
+              "continuous8",
+              "partial8",
+              "finalize8"
+            ],
+            "NN_status_sha256": [
+              "c9497ce2208ab5427ad1ab94076af32ec0d3ba46da967bcc5e01fadce2924d3f",
+              "c7a0aef9b2533a1c66bbfecff67fc1ae8159da7abe4b2685bbb4219b1ef98a3e",
+              "4fe0ef3a2c446a416486d01ac30163d911e05cf1a08cf4992fec4da3508a7cc1"
+            ],
+            "CPU_report_sha256": "fb321560a07b3a1bf12c6fb974916285ba19fccaff13b8f9de767a8fe86f1b3f",
+            "CPU_status_sha256": "bff1913a8131435252417f716dd886e80d12a08c4415adc666dfd65a4fb1b7c5",
+            "complete_raw_checkpoint_checks": {
+              "epoch8_complete": {
+                "left_sha256": "7f5bff3ed6427cfcfab31d27041c02a024c507e37f326c6406225cb9dcea4d79",
+                "right_sha256": "860dd94db5f6d0ca025c29df32788b1d1354a6b5263c4a86050f427aae170307",
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true,
+                  "completed_epochs": true,
+                  "epoch_cursor": true
+                },
+                "counts": {
+                  "model": 909,
+                  "optimizer": 837,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              },
+              "pending_iter8_to_finalized_epoch8_no_updates": {
+                "before_sha256": "e12c661f3f2264122883899096fa96028af952220e92b79c58409fc82be9e41e",
+                "after_sha256": "860dd94db5f6d0ca025c29df32788b1d1354a6b5263c4a86050f427aae170307",
+                "declared_counter_transition": {
+                  "completed_updates": [
+                    8,
+                    8
+                  ],
+                  "completed_epochs": [
+                    7,
+                    8
+                  ],
+                  "completed_batches": [
+                    1,
+                    0
+                  ]
+                },
+                "raw_exact": {
+                  "state_dict": true,
+                  "optimizer": true,
+                  "all16_four_RNG": true,
+                  "contract": true,
+                  "completed_updates": true
+                },
+                "counts": {
+                  "model": 909,
+                  "optimizer": 837,
+                  "rank_RNG": 16
+                },
+                "compared_state": "Every state_dict tensor including persistent buffers, every Adam tensor and param-group scalar including LR, four RNG streams per rank, contract and explicit cursor/counters"
+              }
+            },
+            "actual_observation_checks": {
+              "ranks": 16,
+              "actual_input_update_rows": 128,
+              "exact_fresh_state_and_input_RNG_signatures": true
+            },
+            "original_public_comparator_actual_returns": [
+              1
+            ],
+            "zero_tail_rejection_is_expected": true,
+            "checkpoint_metadata_modified": false
+          }
+        }
+      },
+      "accepted_scope": "Genuine16anchor/loader1 epoch-boundary functionality only; mini8epochs is not complete NAVTRAIN8epoch or convergence; no GPU/NPU training-parity claim",
+      "recorded_UTC": "2026-10-29T23:38:17.656594+00:00"
+    },
+    "boundaries": {
+      "full_NAVTRAIN_batches_per_epoch": 6456,
+      "specific_short_warmup_failure_demonstrated_on_full_NAVTRAIN": false,
+      "full_NAVTRAIN_eight_epoch_convergence_accepted": false,
+      "GPU_NPU_training_equivalence_accepted": false,
+      "old_checkpoint_metadata_rewritten": false,
+      "old_source_checkpoint_adoption_allowed": false,
+      "original_numeric_tolerance_unchanged": true
+    }
+  },
+  "optimized_full_NAVTEST_2164_measured": {
+    "runtime_sha256": "216499c4268afe5e6ed32564765616b636bde1723b38c47b924ebae8ca9a0e5c",
+    "runtime_python_files": 249,
+    "precision": "FP32/HF32-off",
+    "physical_dual_chip_cards": 8,
+    "logical_chips": 16,
+    "VADv2": {
+      "actual_NPU_exit": 0,
+      "OOMKilled": false,
+      "unique_anchors": 12146,
+      "rank_commits": [
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760
+      ],
+      "uninterrupted": true,
+      "recomputation_or_resume_used": false,
+      "container_started_UTC": "2026-10-29T19:57:14.842845227Z",
+      "container_finished_UTC": "2026-10-29T21:43:02.245872947Z",
+      "container_wall_seconds": 6347.403027,
+      "inference_application_seconds": 6323.2546,
+      "predictions_sha256": "bff2edcfe9c1ec91d85515faea9a9cd75fc30bbeaab9c28e630b0dc7382775b3",
+      "actual_CPU_comparison_exit": 0,
+      "old_NPU_full_typed_different_rows": 0,
+      "original_GPU_trajectory_max_abs": 0,
+      "original_GPU_selected_index_mismatches": 0,
+      "original_GPU_cached_metric_max_abs": {
+        "ade_4s": 0.0,
+        "fde_4s": 0.0,
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "score": 0.0
+      },
+      "independent_official_NAVSIM_score_state": "actual_exit0_noOOM_full12146",
+      "independent_official_PDMS_100": 82.1621654812768,
+      "actual_NPU_wait_sha256": "1e9a9878f810b08ddf1a55e275b286848fa70887494ebfe4a64e6573171d6c9c",
+      "CPU_comparison_wait_sha256": "5028f19f9e4a061cfe8b2f9da799df774b4863a9b4e1eb6e1dec1d3dd688de4b",
+      "CPU_comparison_report_sha256": "e27510cc1b8c6c35f45e22ca9e4cc9e2b786ee03f5d72c95b56a3053629a26e1",
+      "independent_official_metrics_max_abs_vs_GPU": {
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.0,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.0
+      },
+      "independent_official_metric_samples_outside_original_tolerance": {
+        "no_at_fault_collisions": 0,
+        "drivable_area_compliance": 0,
+        "ego_progress": 0,
+        "time_to_collision_within_bound": 0,
+        "comfort": 0,
+        "driving_direction_compliance": 0,
+        "score": 0
+      },
+      "independent_official_CSV_sha256": "bcbb03748d1e99cbda2e636a47996ee30a97f356f30c18a290a2af71f78263fe",
+      "independent_official_CSV_entire_bytes_equal_GPU": true,
+      "independent_official_score_wait_sha256": "7278a5e5f50f567ad8363a0deeddecf0f6f7a55ffb08691a064c0649ef615995",
+      "independent_official_compare_report_sha256": "412a20531f5b3830d1914f9592c43a375d7a8c1c3ec15f29db16047cd4779ba9"
+    },
+    "HydraMDP": {
+      "state": "actual_full_NPU_typed_regression_and_independent_official_score_complete_known_GPU_gap_retained",
+      "actual_NPU_exit": 0,
+      "OOMKilled": false,
+      "unique_anchors": 12146,
+      "rank_commits": [
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760,
+        760
+      ],
+      "uninterrupted": true,
+      "recomputation_or_resume_used": false,
+      "container_started_UTC": "2026-10-29T20:46:09.191406588Z",
+      "container_finished_UTC": "2026-10-29T22:30:50.586418599Z",
+      "container_wall_seconds": 6281.395012,
+      "inference_application_seconds": 6257.662677921995,
+      "predictions_sha256": "bbc8a91640cdc7336ea6073cdda0cc60d290479b316d01f32c5daa45bb311d5d",
+      "actual_CPU_comparison_exit": 0,
+      "old_NPU_full_typed_different_rows": 0,
+      "GPU_comparison": {
+        "trajectory_max_abs": 5.454713821411133,
+        "trajectory_scalars_outside_original_tolerance": 480,
+        "trajectory_samples_outside_original_tolerance": 4,
+        "selected_index_mismatches": 4,
+        "cached_metric_max_abs": {
+          "ade_4s": 1.7205479145050049,
+          "fde_4s": 5.453895568847656,
+          "no_at_fault_collisions": 0.0,
+          "drivable_area_compliance": 0.0,
+          "ego_progress": 0.0,
+          "time_to_collision_within_bound": 0.0,
+          "comfort": 0.0,
+          "score": 0.0
+        },
+        "cached_metric_samples_outside_original_tolerance": {
+          "ade_4s": 4,
+          "fde_4s": 4,
+          "no_at_fault_collisions": 0,
+          "drivable_area_compliance": 0,
+          "ego_progress": 0,
+          "time_to_collision_within_bound": 0,
+          "comfort": 0,
+          "score": 0
+        }
+      },
+      "GPU_original_gate_passed": false,
+      "known_original_GPU_gap_closed": false,
+      "known_original_GPU_gap_unchanged": true,
+      "independent_official_NAVSIM_score_state": "actual_exit0_noOOM_full12146",
+      "actual_NPU_wait_sha256": "778a6e3945f53e69112a63ea2fe6c09e0edcddf45f5c9f05f46ecda2d621b60a",
+      "actual_journal_execution_sha256": "2e1dbafb5058d654d433d683125d325fc8dd52048e0cb11d746f926d32aff18d",
+      "CPU_comparison_wait_sha256": "bf7ba6c72869df27ec3ce209c85ebc271917b33fd67f38f667a8760917eb891d",
+      "CPU_comparison_report_sha256": "59a81f54b64635d4d33eaa3763a6cfce391028bf32ad71d9a536fdfc77da98dc",
+      "new_complete_exit_accepted": true,
+      "independent_official_PDMS_100": 91.45952568154098,
+      "independent_official_score_summary_sha256": "79e41a917a5f44d0ed798f7a47f0b8ed49b423fc946ff4e33e3e59604902a655",
+      "independent_official_score_wait_sha256": "020debdb08c13bc273aaa97d888a23c5da5751e73795bde957acefe4327614ca",
+      "independent_official_CSV_sha256": "42a534278a8333c6f6b24b779693257fd31f7dd6c59a8ba67a3cadb7c664a600",
+      "independent_official_CSV_entire_bytes_equal_old_NPU": true,
+      "independent_official_score_comparison_actual_return": 0,
+      "independent_official_compare_report_sha256": "c03b74e1bcbd6c802b795ba130631f1b98abea968f0c51625bc4f68899726211",
+      "independent_official_compare_actual_sha256": "56b2f48eecf7b5c07aad82e5716ce7761c6086b806d811f6a7ee6edaff8d4764",
+      "independent_official_metrics_max_abs_vs_GPU": {
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.053790477790736424,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.02241269907947352
+      },
+      "independent_official_metric_samples_outside_original_tolerance": {
+        "no_at_fault_collisions": 0,
+        "drivable_area_compliance": 0,
+        "ego_progress": 2,
+        "time_to_collision_within_bound": 0,
+        "comfort": 0,
+        "driving_direction_compliance": 0,
+        "score": 2
+      },
+      "independent_official_metrics_GPU_gate_passed": false
+    },
+    "timing_boundary": "Container wall includes startup, input loading and file collection, excludes separate CPU comparison and official NAVSIM scoring. Application duration is a different recorded interval. No hardware GPU/NPU ratio is derived."
+  },
+  "current_candidate_cbe_public_inference_route_verification": {
+    "recorded_UTC": "2026-10-29T22:04:04.777629+00:00",
+    "runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+    "runtime_python_files": 249,
+    "entry": "ascend/tools/filesystem_journal_inference.py",
+    "entry_sha256": "58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007",
+    "physical_cards": 2,
+    "logical_chips": 4,
+    "world_size": 4,
+    "batch_per_rank": 1,
+    "FP32_HF32_disabled": true,
+    "test_scope": "Existing official22 NAVTEST anchors, full original annotation/PDM/history retained; only test filter changed",
+    "models": {
+      "vad": {
+        "actual_NPU_exit": 0,
+        "actual_CPU_audit_exit": 0,
+        "checkpoint_sha256": "fe86c0bf7d992c172f24138b9df35d39b5c26ea04d90b16ead83c5d1c0a3587a",
+        "unique_anchors": 22,
+        "padded_positions": 24,
+        "old_NPU_typed_different_rows": 0,
+        "predictions_sha256": "db6c6f4165a05a96ee5918f35d802c763929d995d9899cbe6c9dfdc7669c12b7",
+        "old_NPU_full_predictions_sha256": "7222b4748b808b34c0de991614c21292519b5da67bd2e3733951d2af7ae7a0b9",
+        "NN_wait_sha256": "49f3235254716d1b57793102872f4a2bfc2fa1a4276b2c960a68f27d053f0655",
+        "CPU_wait_sha256": "0bcc96cdc9d5faf5354f6fee38b3df16d928e1c9f2b8ba8bdfee2378ed64e030",
+        "CPU_report_sha256": "0bedc3be23e8db19c4294f9b40c2b40c6ecc1dd84823de61423adf1e4c6d7cec",
+        "NN_started_UTC": "2026-10-29T21:49:53.555879297Z",
+        "NN_finished_UTC": "2026-10-29T21:51:23.460338267Z"
+      },
+      "hydra": {
+        "actual_NPU_exit": 0,
+        "actual_CPU_audit_exit": 0,
+        "checkpoint_sha256": "298c403d6d4ba5ac1f4a301ad5e257f72c7c641e4daef138ff88fa30b2534f04",
+        "unique_anchors": 22,
+        "padded_positions": 24,
+        "old_NPU_typed_different_rows": 0,
+        "predictions_sha256": "6b4ab0c3bc85c334c9097d1d36a683609ba68937bf3b9ccef1e6c07c94a66e49",
+        "old_NPU_full_predictions_sha256": "bbc8a91640cdc7336ea6073cdda0cc60d290479b316d01f32c5daa45bb311d5d",
+        "NN_wait_sha256": "31cb3bff483c860e027a35d18ade0f30d5b69972fd83327fcc602e1981589e7f",
+        "CPU_wait_sha256": "6935a158bb1db0f1276dbcba41d9baba5601a905ec10fadfcbdddcb7de87f875",
+        "CPU_report_sha256": "128a8665705d7e02fa386eebcecd7e3320260c6aa87fb13190220401d8a67fbb",
+        "NN_started_UTC": "2026-10-29T21:51:29.760644057Z",
+        "NN_finished_UTC": "2026-10-29T21:52:59.903022977Z"
+      }
+    },
+    "independent_official_NAVSIM_score_recomputed": false,
+    "full12146_current_cbe_NPU_run_accepted": false,
+    "GPU_quality_gap_closed": false,
+    "old2164_complete_result_relabelled_as_cbe": false,
+    "training_epoch_recovery_accepted_by_inference_test": false
   }
 }

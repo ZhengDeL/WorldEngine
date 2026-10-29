@@ -109,11 +109,20 @@ def main():
     parser.add_argument('--debug-anomaly', action='store_true', help='Record the forward origin of a failing backward operation')
     parser.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
                         help='FP32 sampling backend; cuda-compatible matches the measured original CUDA arithmetic')
+    parser.add_argument('--msda-value-grad-layout', choices=('none', 'head-major'), default='none',
+                        help='Explicit FP32 training value-gradient layout; preserve it for exact resume')
     args = parser.parse_args()
+    from ascend.msda_value_gradient import validate_training_option
+    try:
+        validate_training_option(args.msda_value_grad_layout, precision=args.precision,
+            backend=args.msda_backend, runtime=bool(args.runtime or args.resume or args.stop_after
+                or args.duration_seconds or args.epochs or args.stop_after_epochs))
+    except ValueError as exc:
+        parser.error(str(exc))
     args.output = args.output.resolve()
     _validate_stop_options(args, parser)
     from ascend.msda import configure_backend
-    configure_backend(args.msda_backend)
+    configure_backend(args.msda_backend, value_gradient_layout=args.msda_value_grad_layout)
     if args.train_filter and (not args.data_root or args.mini_prepared):
         parser.error('--train-filter requires --data-root without --mini-prepared')
     if args.train_filter:

@@ -20,7 +20,7 @@ from filesystem_journal_observer import (COLLECT_SHA, Guard, IMAGE, JournalPause
                                SOURCE_SHA, fingerprint, observed_test, parse_deadline)
 from rank_journal import canonical_json, need, rng_pack, rng_unpack, sha, sync_directory, write_file
 
-OPTIMIZED_SOURCE_SHA = '7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb'
+OPTIMIZED_SOURCE_SHA = 'cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610'
 MODES = ('none', 'point-parallel', 'point-parallel-last-frame')
 CHUNKS = (2048, 4096, 8192)
 

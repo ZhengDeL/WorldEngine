@@ -90,7 +90,7 @@ def pixel_coordinates(torch, xy, height, width):
     y = compensated_scale_offset_FP32(torch, xy[..., 1], height)
     return (x, y)
 
-def make_function(torch):
+def make_function(torch, grad_value_accumulator=None):
     """Create an isolated autograd Function; never replace registered operators."""
 
     def samples(value, locations, weights, pairs, chunk):
@@ -178,7 +178,12 @@ def make_function(torch):
                     for w, addr, mask in zip(coef, addresses, masks):
                         contribution = w.unsqueeze(-1) * tg
                         contribution = contribution * mask.unsqueeze(-1)
-                        flat.index_add_(0, addr.reshape(-1), contribution.reshape(-1, c))
+                        if grad_value_accumulator is None:
+                            flat.index_add_(0, addr.reshape(-1), contribution.reshape(-1, c))
+                        else:
+                            updated = grad_value_accumulator(flat, addr.reshape(-1),
+                                contribution.reshape(-1, c), (b, s, h, c))
+                            require(updated is flat, 'Value-gradient accumulator must preserve its destination')
                 if needed[1]:
                     v1, v2, v3, v4 = pixels
                     gh = -hx.unsqueeze(-1) * v1

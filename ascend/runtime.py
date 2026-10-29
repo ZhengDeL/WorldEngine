@@ -18,6 +18,7 @@ import torch.distributed as dist
 from mmcv.runner import HOOKS, RUNNERS, Hook, IterBasedRunner, EpochBasedRunner
 from mmcv.runner.checkpoint import save_checkpoint
 from ascend.precision import precision_state
+from ascend.epoch_cursor import EpochCursorLoader, EpochPaused, validate_cursor
 
 
 def rng_state():
@@ -126,12 +127,121 @@ class AscendEpochRunner(ResumeMixin, EpochBasedRunner):
         self.resume_contract=json.loads(json.dumps(resume_contract))
         super().__init__(**kwargs)
 
+    def call_hook(self,fn_name):
+        if fn_name=='before_train_iter':
+            self._inner_iter+=getattr(self,'_ascend_epoch_offset',0)
+        saved=getattr(self,'_ascend_empty_suffix_lrs',None)
+        result=super().call_hook(fn_name)
+        if fn_name=='before_train_epoch' and saved is not None:
+            # An already consumed epoch has no before_train_iter to reapply
+            # its saved warmup LR. Keep the actual post-update optimizer LR
+            # while the original pending after_train_epoch hooks finish.
+            if (len(self.optimizer.param_groups)!=len(saved)
+                    or any(group is not original for group,(original,_) in zip(self.optimizer.param_groups,saved))):
+                raise RuntimeError('Optimizer parameter groups changed during empty-suffix epoch hooks')
+            for group,value in saved:group['lr']=value
+        return result
+
     def train(self,data_loader,**kwargs):
         state=getattr(self,'_ascend_resume',None)
+        self._ascend_epoch_offset=0
+        epoch_sampler_contract(data_loader)
         if state is not None:
-            restore_rng(state['rng_by_rank'][dist.get_rank()])
+            cursor=state.get('epoch_cursor')
+            if cursor is None:
+                # Preserve historical epoch-boundary checkpoint behavior.
+                restore_rng(state['rng_by_rank'][dist.get_rank()])
+            else:
+                offset=validate_cursor(cursor,completed_updates=state['completed_updates'],
+                    completed_epochs=state['completed_epochs'],loader_batches=len(data_loader))
+                if cursor['sampler']!=epoch_sampler_contract(data_loader):
+                    raise RuntimeError('Epoch resume sampler/data/batch contract changed')
+                if data_loader.num_workers!=0:
+                    raise RuntimeError('Exact epoch replay requires workers=0')
+                self._ascend_epoch_offset=offset
+                if (cursor['iterator_created'] and offset==len(data_loader)
+                        and state['completed_epochs']==self.resume_contract['runner']['max_epochs']-1
+                        and state['completed_updates']==len(data_loader)*self.resume_contract['runner']['max_epochs']):
+                    # The last optimizer update was saved inside after_train_iter.
+                    # Original after_train_epoch hooks are still pending. Their
+                    # empty-suffix finalization must not invent another update.
+                    self._ascend_epoch_finalization=dict(completed_updates=state['completed_updates'],
+                        completed_epochs=state['completed_epochs'],loader_batches=len(data_loader),
+                        completed_batches=offset)
+                if cursor['iterator_created']:
+                    if offset==len(data_loader):
+                        self._ascend_empty_suffix_lrs=[(group,group['lr']) for group in self.optimizer.param_groups]
+                    data_loader=EpochCursorLoader(data_loader,offset,state['rng_by_rank'][dist.get_rank()],restore_rng)
+                else:
+                    # A fresh epoch still has its original before-epoch hooks
+                    # and base-seed draw ahead of it. Restore before both.
+                    restore_rng(state['rng_by_rank'][dist.get_rank()])
             del self._ascend_resume
-        return super().train(data_loader,**kwargs)
+        try:
+            return super().train(data_loader,**kwargs)
+        except EpochPaused as pause:
+            # The original MMCV loop increments _iter after after_train_iter.
+            # A cooperative pause occurs inside that hook, after optimizer and
+            # complete checkpoint. Commit that one completed update here.
+            if pause.completed_updates!=self._iter+1:
+                raise RuntimeError('Epoch pause completed-update counter differs')
+            self._iter=pause.completed_updates
+            if hasattr(self,'data_batch'):del self.data_batch
+            self._ascend_epoch_paused=dict(completed_updates=self._iter,completed_epochs=self._epoch,
+                completed_batches=self._inner_iter+1,reason='own_PAUSE_after_complete_update_checkpoint')
+            raise
+        finally:
+            self._ascend_epoch_offset=0
+            if hasattr(self,'_ascend_empty_suffix_lrs'):del self._ascend_empty_suffix_lrs
+
+    def run(self,*args,**kwargs):
+        try:
+            return super().run(*args,**kwargs)
+        except EpochPaused:
+            if not getattr(self,'_ascend_epoch_paused',None):raise
+            self.call_hook('after_run')
+
+
+def epoch_finalization_only(runner,hook):
+    """Recognize only strict saved-final-batch recovery with pending epoch hooks."""
+    marker=getattr(runner,'_ascend_epoch_finalization',None)
+    if marker is None:return False
+    if not isinstance(runner,EpochBasedRunner):
+        raise RuntimeError('Epoch finalization marker on a non-epoch runner')
+    maximum=runner.resume_contract['runner']['max_epochs']
+    if (set(marker)!={'completed_updates','completed_epochs','loader_batches','completed_batches'}
+            or any(type(value) is not int for value in marker.values())
+            or marker['loader_batches']<=0 or marker['completed_batches']!=marker['loader_batches']
+            or marker['completed_epochs']!=maximum-1
+            or marker['completed_updates']!=maximum*marker['loader_batches']
+            or hook.steps!=0 or runner.iter!=hook.initial_iter or runner.iter!=marker['completed_updates']
+            or hook.initial_epoch!=maximum-1 or runner.epoch!=maximum
+            or getattr(runner,'_ascend_restoration',{}).get('result')!='pass_exact_saved_state_restore'
+            or runner.resume_contract['precision']['mode']!='fp32' or hook.expected_pg):
+        raise RuntimeError('Zero-update epoch finalization lacks the exact saved final-batch/epoch/restore contract')
+    return True
+
+
+def epoch_sampler_contract(loader):
+    if loader.num_workers!=0 or not getattr(loader,'_auto_collation',False):
+        raise RuntimeError('Epoch checkpoint/replay requires original batch DataLoader workers=0')
+    sampler=loader.sampler
+    if type(sampler).__name__!='DistributedGroupSampler' or getattr(sampler,'skip_iter_at_epoch',False):
+        raise RuntimeError('Epoch replay requires original unskipped DistributedGroupSampler')
+    flags=np.asarray(loader.dataset.flag)
+    if flags.ndim!=1 or flags.dtype.hasobject or len(flags)!=len(loader.dataset):
+        raise RuntimeError('Original epoch flag inventory differs')
+    batch=loader.batch_sampler
+    if (sampler.num_replicas!=dist.get_world_size() or sampler.rank!=dist.get_rank()
+            or sampler.samples_per_gpu!=batch.batch_size):
+        raise RuntimeError('Epoch sampler rank/world/batch differs from actual process')
+    return dict(sampler_type=type(sampler).__module__+'.'+type(sampler).__name__,
+        seed=int(sampler.seed),num_replicas=int(sampler.num_replicas),
+        samples_per_gpu=int(sampler.samples_per_gpu),num_samples=int(sampler.num_samples),
+        total_size=int(sampler.total_size),dataset_size=len(loader.dataset),
+        batch_size=int(batch.batch_size),drop_last=bool(batch.drop_last),
+        flag_dtype=flags.dtype.str,flag_shape=list(flags.shape),
+        flag_sha256=hashlib.sha256(flags.tobytes(order='C')).hexdigest())
 
 
 @HOOKS.register_module()
@@ -247,6 +357,16 @@ class AscendRuntimeHook(Hook):
         meta.update(iter=completed,epoch=epoch,ascend_resume=dict(
             version=1,contract=runner.resume_contract,completed_updates=completed,
             completed_epochs=epoch,rng_by_rank=states))
+        if isinstance(runner,EpochBasedRunner):
+            if kind=='iter' and runner.data_loader.sampler.epoch!=runner.epoch:
+                raise RuntimeError('Actual epoch sampler was not set to the current epoch')
+            cursor=runner.inner_iter+1 if kind=='iter' else 0
+            epoch_state=dict(schema_version=1,epoch=epoch,completed_batches=cursor,
+                loader_batches=len(runner.data_loader),sampler=epoch_sampler_contract(runner.data_loader),
+                iterator_created=kind=='iter')
+            validate_cursor(epoch_state,completed_updates=completed,completed_epochs=epoch,
+                loader_batches=len(runner.data_loader))
+            meta['ascend_resume']['epoch_cursor']=epoch_state
         path=self.out_dir/f'{kind}_{completed if kind=="iter" else epoch}.pth'
         if self.rank==0:
             temporary=path.with_suffix('.pth.tmp')
@@ -288,6 +408,17 @@ class AscendRuntimeHook(Hook):
             if completed%self.interval==0 or completed==runner.max_iters or stop:
                 self.checkpoint(runner,completed,0,'iter')
             if stop:runner._max_iters=completed
+        elif isinstance(runner,EpochBasedRunner):
+            completed=runner.iter+1
+            pause_file=self.out_dir/'PAUSE'
+            if os.path.lexists(pause_file) and (pause_file.is_symlink() or not pause_file.is_file()):
+                raise RuntimeError('Own epoch PAUSE must be a regular nonsymlink file')
+            pause=torch.tensor(int(pause_file.is_file()),device='npu')
+            dist.all_reduce(pause,op=dist.ReduceOp.MAX)
+            requested=bool(pause.item())
+            if completed%self.interval==0 or requested:
+                self.checkpoint(runner,completed,runner.epoch,'iter')
+            if requested:raise EpochPaused(completed)
 
     def after_train_epoch(self,runner):
         if isinstance(runner,EpochBasedRunner):
@@ -297,7 +428,9 @@ class AscendRuntimeHook(Hook):
 
     def after_run(self,runner):
         changed=bool((self.before!=self.watch.detach()).any())
-        if not changed:raise RuntimeError('Watched trainable planning parameter did not update')
+        finalization_only=epoch_finalization_only(runner,self)
+        if not changed and not finalization_only:raise RuntimeError('Watched trainable planning parameter did not update')
+        if finalization_only and changed:raise RuntimeError('Parameter changed during zero-update epoch finalization')
         if self.expected_pg and not self.pg_observed_nonzero:
             raise RuntimeError('No nonzero real policy-gradient loss')
         gathered=[torch.empty_like(self.watch) for _ in range(dist.get_world_size())]
@@ -313,12 +446,12 @@ class AscendRuntimeHook(Hook):
             before=before_precision['raw_options'][key];after=after_precision['raw_options'][key]
             if before is not None and after is not None and before!=after:
                 raise RuntimeError('Actual raw NPU HF32 setting changed during original training')
-        report=dict(result='pass',rank=self.rank,world_size=dist.get_world_size(),profile=self.profile,
+        report=dict(result='pass_epoch_finalization_only_no_optimizer_updates' if finalization_only else 'pass',rank=self.rank,world_size=dist.get_world_size(),profile=self.profile,
                     precision=dict(before_model=before_precision,after_original_training=after_precision),
                     device_provenance=self.device_provenance,
                     initial_iter=self.initial_iter,final_iter=runner.iter,updates_this_run=self.steps,
                     initial_epoch=self.initial_epoch,final_epoch=runner.epoch,
-                    train_seconds=time.monotonic()-self.start,total_seconds=time.monotonic()-self.run_started,
+                    train_seconds=(time.monotonic()-self.start if self.start is not None else 0.),total_seconds=time.monotonic()-self.run_started,
                     raw_loss_records=self.raw_losses,checkpoint=getattr(self,'last_checkpoint',None),
                     parameter_updated=changed,watched_parameter_sync=True,
                     peak_allocated_bytes=torch.npu.max_memory_allocated(),peak_reserved_bytes=torch.npu.max_memory_reserved(),
@@ -334,4 +467,11 @@ class AscendRuntimeHook(Hook):
                       expected_pg=self.expected_pg,pg_observed_nonzero=self.pg_observed_nonzero,
                       model_parameters=sum(p.numel() for p in self.model.parameters()),
                       trainable_parameters=sum(p.numel() for p in self.model.parameters() if p.requires_grad))
+        if isinstance(runner,EpochBasedRunner):
+            report['epoch_finalization_only']=finalization_only
+            report['epoch_finalization_checkpoint_boundary']=getattr(runner,'_ascend_epoch_finalization',None)
+            report['epoch_pause']=getattr(runner,'_ascend_epoch_paused',None)
+            report['original_epoch_horizon_complete']=runner.epoch>=runner.resume_contract['runner']['max_epochs']
+            report['epoch_checkpoint_interval_updates']=self.interval
+            report['epoch_mid_update_replay_supported_workers0']=True
         (self.out_dir/f'runtime_rank{self.rank}.json').write_text(json.dumps(report,indent=2))

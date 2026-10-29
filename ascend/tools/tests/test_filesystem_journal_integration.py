@@ -88,4 +88,22 @@ class CooperativeWaitGuard(unittest.TestCase):
    with self.assertRaisesRegex(RuntimeError,'owned signal requested'):collect_results_file([dict(rank=0)],4,rank=0,world_size=4,root=root,run_id='signal',contract_sha256=digest,deadline_utc=(datetime.now(timezone.utc)+timedelta(seconds=10)).isoformat(),guard_callback=stopped)
    self.assertFalse((root/'part_000000.pkl').exists())
 
+class CurrentFilesystemSourceContract(unittest.TestCase):
+ def test_current_filesystem_source_and_optimized_gate_agree(self):
+  import filesystem_journal_inference as entry
+  import optimized_journal_inference as optimized
+  expected='cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610'
+  self.assertEqual(entry.fingerprint(TOOLS.parents[1]),expected)
+  self.assertEqual(entry.OPTIMIZED_SOURCE_SHA,expected)
+  self.assertEqual(entry.OPTIMIZED_SOURCE_SHA,optimized.OPTIMIZED_SOURCE_SHA)
+  for mode,chunk in [('none',2048),('point-parallel',8192),('point-parallel-last-frame',8192)]:
+   self.assertEqual(entry.optimization_contract(expected,expected,mode,chunk,'cuda-compatible')['query_chunk'],chunk)
+ def test_old_optimized_journal_source_cannot_be_adopted(self):
+  import filesystem_journal_inference as entry
+  old='7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb'
+  with self.assertRaisesRegex(RuntimeError,'Unsupported pinned runtime source'):
+   entry.optimization_contract(old,entry.OPTIMIZED_SOURCE_SHA,'point-parallel-last-frame',8192,'cuda-compatible')
+  with self.assertRaisesRegex(RuntimeError,'fingerprint differs'):
+   entry.optimization_contract(entry.OPTIMIZED_SOURCE_SHA,old,'point-parallel-last-frame',8192,'cuda-compatible')
+
 if __name__=='__main__':unittest.main(verbosity=2)
