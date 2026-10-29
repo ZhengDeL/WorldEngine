@@ -26,6 +26,21 @@ trajectory and vehicle-coordinate conversion remain in their respective
 components. The planner runs in a separate process; importing the simulator
 client does not import `torch_npu` or select an external AlgEngine checkout.
 
+## FP32 tile processing
+
+Tile grids with at most `2**24` entries use exact FP32 integer keys for the
+stable tile sort. Larger grids retain the original integer keys. Gaussian
+depth order and equal-depth Gaussian-ID order are preserved. The existing
+Gaussian-ID expansion also supplies each intersection's start offset through
+indexing, avoiding a second `repeat_interleave` over the same counts.
+
+Updating the adapter changes its source hash. Regenerate the small-device
+validation and complete captured-input proof before using a new manifest;
+previous manifests are rejected for the changed adapter. Keep FP32, the same
+input and device, warmup and explicit device synchronization when measuring
+render time. Report that timer separately from planner and closed-loop time.
+This change retains the forward-only rendering contract.
+
 ## Dependencies and source identity
 
 The NPU planner requires the separately adapted AlgEngine repository. This

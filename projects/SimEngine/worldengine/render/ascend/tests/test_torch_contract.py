@@ -13,6 +13,42 @@ except ImportError:
 
 @unittest.skipIf(torch is None,'A real Torch installation is required')
 class TorchContractTests(unittest.TestCase):
+    def test_tile_membership_depth_and_equal_depth_order(self):
+        from worldengine.render.ascend.cann import tile_intersections
+        means=torch.tensor([[8.,8.],[8.,8.],[17.,8.],[8.,8.],[80.,80.]])
+        radii=torch.tensor([8,8,8,0,1]);depths=torch.tensor([2.,2.,1.,0.,3.])
+        ids,counts=tile_intersections(means,radii,depths,32,16,16)
+        # Tile0 contains ID2(depth1), then ID0/ID1(depth2, original ID order).
+        # Tile1 contains only ID2. Off-image and zero-radius entries contribute
+        # no intersections. This is independent of the implementation's sort.
+        self.assertEqual(ids.tolist(),[2,0,1,2]);self.assertEqual(counts.tolist(),[3,1])
+
+    def test_large_grid_retains_integer_sort_keys(self):
+        from unittest.mock import patch
+        from worldengine.render.ascend.cann import _stable_tile_order
+        # Adjacent IDs beyond exact FP32 range would collapse after a cast,
+        # changing the original stable order. Exercise the fallback directly
+        # without allocating an image with millions of tiles.
+        keys=torch.tensor([2**24+1,2**24,2**24+2],dtype=torch.int64)
+        with patch.object(torch,'argsort',wraps=torch.argsort) as sort:
+            self.assertEqual(_stable_tile_order(keys,2**24+3).tolist(),[1,0,2])
+            self.assertEqual(sort.call_args.args[0].dtype,torch.int64)
+
+    def test_tile_offsets_skip_empty_gaussians_between_repeated_ids(self):
+        from worldengine.render.ascend.cann import tile_intersections
+        means=torch.tensor([[100.,100.],[8.,8.],[0.,0.],[17.,8.],[8.,8.]])
+        radii=torch.tensor([0,8,0,8,8]);depths=torch.tensor([0.,2.,0.,1.,2.])
+        ids,counts=tile_intersections(means,radii,depths,32,16,16)
+        self.assertEqual(ids.tolist(),[3,1,4,3]);self.assertEqual(counts.tolist(),[3,1])
+
+    def test_exact_float_tile_key_boundary_retains_equal_key_order(self):
+        from unittest.mock import patch
+        from worldengine.render.ascend.cann import _stable_tile_order
+        keys=torch.tensor([2**24-1,2**24-2,2**24-1,0],dtype=torch.int64)
+        with patch.object(torch,'argsort',wraps=torch.argsort) as sort:
+            self.assertEqual(_stable_tile_order(keys,2**24).tolist(),[3,1,0,2])
+            self.assertEqual(sort.call_args.args[0].dtype,torch.float32)
+
     def test_positive_sh_nonunit_scale_invariance_and_independent_reference(self):
         from worldengine.render.ascend.sh import spherical_harmonics
         rng=np.random.default_rng(20261020)

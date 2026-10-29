@@ -37,6 +37,15 @@ def runtime_identity():
             'npu_device_name':torch.npu.get_device_name(torch.npu.current_device())}
 
 
+def _stable_tile_order(keys,grid_tiles):
+    # Int64 ArgSort uses AiCPU on the supported NPU stack. Every tile ID is
+    # exactly representable in FP32 within this grid bound; stable=True keeps
+    # depth and Gaussian-ID ties unchanged. Larger grids retain integer keys.
+    if grid_tiles<=2**24:
+        keys=keys.to(torch.float32)
+    return torch.argsort(keys,stable=True)
+
+
 def tile_intersections(means2d, radii, depths, width, height, tile_size, maximum=16_000_000):
     """gsplat 1.4 rectangular tile membership, stable by depth then Gaussian ID."""
     nx,ny=math.ceil(width/tile_size),math.ceil(height/tile_size)
@@ -54,14 +63,16 @@ def tile_intersections(means2d, radii, depths, width, height, tile_size, maximum
                 torch.zeros(nx*ny,dtype=torch.int64,device=radii.device))
     ids=torch.repeat_interleave(torch.arange(len(radii),device=radii.device),counts,output_size=total)
     starts=torch.cumsum(counts,0)-counts
-    relative=torch.arange(total,device=radii.device)-torch.repeat_interleave(starts,counts,output_size=total)
+    # ids already expands each Gaussian by counts; gathering its start offset
+    # avoids a second identical repeat_interleave over the same counts.
+    relative=torch.arange(total,device=radii.device)-starts[ids]
     tile_x=low[ids,0]+relative%spans[ids,0]
     tile_y=low[ids,1]+relative//spans[ids,0]
     tiles=tile_y*nx+tile_x
     # Two stable sorts preserve increasing Gaussian ID for equal depths, like
     # gsplat's stable sort over its original intersection expansion order.
     order=torch.argsort(depths[ids],stable=True)
-    order=order[torch.argsort(tiles[order],stable=True)]
+    order=order[_stable_tile_order(tiles[order],nx*ny)]
     totals=torch.zeros(nx*ny,dtype=torch.int64,device=radii.device)
     totals.scatter_add_(0,tiles,torch.ones_like(tiles))
     return ids[order].to(torch.int64).contiguous(),totals
