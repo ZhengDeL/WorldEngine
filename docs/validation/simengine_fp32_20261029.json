@@ -1186,6 +1186,389 @@
     "performance_accepted": false,
     "GPU_equivalence": false,
     "all_scene_quality": false,
-    "renderer_backward_training": false
+    "renderer_backward_training": false,
+    "initial_VADNR_scope_record_retained": true,
+    "current_repaired_path_coverage": [
+      "vadv2_NR",
+      "vadv2_R",
+      "hydramdp_NR",
+      "hydramdp_R"
+    ],
+    "additional_repaired_paths_verification_20261030": {
+      "result": "accepted_three_remaining_terminal_horizon_scored_raw_cases",
+      "actual_return": 0,
+      "source_git_commit": "933f6fb780f644c4bae82abfa93f3f488eaa2596",
+      "source_runtime": {
+        "sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+        "files": 213
+      },
+      "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+      "external_AlgEngine_commit": "a783047c92621ca3d2f658fbe054f200783e8e25",
+      "source_manifest_sha256": "141894e8a4630fdffad58e072481c576a3ec02cf77bff1489df276573dd60db1",
+      "cases": [
+        {
+          "model": "vadv2",
+          "reaction": "R",
+          "actual_NN_exit": 0,
+          "actual_CPU_exit": 0,
+          "NPU_CID": "ccb0ad7819f9786eab5865e4d814128243ea3d38b01d5c1e40358d70ae6232d2",
+          "NPU_state": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-30T03:30:44.341465895Z",
+            "FinishedAt": "2026-10-30T03:38:38.046808581Z"
+          },
+          "CPU_CID": "5cb32b1f32b66c8ff8646c5929e4e2137cc2feee15f742084ec7e6d7884cdd5e",
+          "source_commit": "933f6fb780f644c4bae82abfa93f3f488eaa2596",
+          "source": {
+            "sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+            "files": 213
+          },
+          "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+          "external_AlgEngine": {
+            "sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+            "files": 249,
+            "commit": "a783047c92621ca3d2f658fbe054f200783e8e25"
+          },
+          "generated_predictions": 8,
+          "consumed_control_indices": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "unused_merged12_absent": true,
+          "unused_plan12_absent": true,
+          "rendered_frames": 12,
+          "JPEGs": 96,
+          "dense_positions": 9,
+          "proposals_per_position": 8192,
+          "metric_arrays_per_position": 8,
+          "all_dense_finite": true,
+          "complete_prefix_persisted_bytes_equal": true,
+          "PDM_times100": 0.0,
+          "PDM_metrics": {
+            "no_at_fault_collisions": 0.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.0,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.0
+          },
+          "PDM_CSV_sha256": "4f0ff627fcfe35fecde8c31db51553a5dd8560c07cc30609b2460c80e421e9af",
+          "PDM_CSV_precision_decimals": 5,
+          "unrounded_internal_PDM_values_compared": false,
+          "native_files": {
+            "acceptance": {
+              "producer_relative_path": "results/vadv2_R/acceptance.json",
+              "bytes": 4802,
+              "sha256": "beb7e7f8ce23fd0242fcaaa2f0673fa515b5b35dbba8f4ff1ff110b03e726cd0"
+            },
+            "NN_terminal": {
+              "producer_relative_path": "results/vadv2_R/vadv2_R/01_NPU/stage.json",
+              "bytes": 1185,
+              "sha256": "34becde628764869ead1e4c94072e5f3777253c6a2bd2cb2508279d2b1191eff"
+            },
+            "CPU_terminal": {
+              "producer_relative_path": "results/vadv2_R/vadv2_R/02_CPU/actual.json",
+              "bytes": 437,
+              "sha256": "acf2591a721d0ac224b8e24c1f00c451e97de604c89dfa5c69f3cd763906792c"
+            },
+            "public_audit": {
+              "producer_relative_path": "results/vadv2_R/vadv2_R/02_CPU/scoring.json",
+              "bytes": 31011,
+              "sha256": "7d4dbacd16c3dffd3d77858d7781989d00570c888dc5522a8d2166b046fcc8df"
+            },
+            "raw_comparison": {
+              "producer_relative_path": "results/vadv2_R/vadv2_R/02_CPU/comparison.json",
+              "bytes": 1816,
+              "sha256": "28f73458277ecb754a86318164ae0d65b10d4b7abeaa9f36c17f186d72e47a82"
+            },
+            "planner_report": {
+              "producer_relative_path": "results/vadv2_R/vadv2_R/01_NPU/run/job/plan_traj/closed_loop_planner_report.json",
+              "bytes": 28599,
+              "sha256": "90ef0cb43ba6326ebe1c160e206bc17cd27567a19334ff305555c80c7eadca9a"
+            },
+            "assigned_pair_release": {
+              "producer_relative_path": "results/vadv2_R/assigned_pair_after/device_gate.json",
+              "bytes": 2376,
+              "sha256": "e862f2aecc469b7ce16983350da00fbf22867ed644019f831ab03746e68a3db4"
+            }
+          }
+        },
+        {
+          "model": "hydramdp",
+          "reaction": "NR",
+          "actual_NN_exit": 0,
+          "actual_CPU_exit": 0,
+          "NPU_CID": "6f9aba4f42b2d4ba085ef249d23010f98ae119f2a39b99301308ee1daff885d8",
+          "NPU_state": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-30T03:38:50.741463067Z",
+            "FinishedAt": "2026-10-30T03:46:34.638123811Z"
+          },
+          "CPU_CID": "4914692da853556f3213ab9508e00b734b305480960413ae1e45628c3aaaa97c",
+          "source_commit": "933f6fb780f644c4bae82abfa93f3f488eaa2596",
+          "source": {
+            "sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+            "files": 213
+          },
+          "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+          "external_AlgEngine": {
+            "sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+            "files": 249,
+            "commit": "a783047c92621ca3d2f658fbe054f200783e8e25"
+          },
+          "generated_predictions": 8,
+          "consumed_control_indices": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "unused_merged12_absent": true,
+          "unused_plan12_absent": true,
+          "rendered_frames": 12,
+          "JPEGs": 96,
+          "dense_positions": 9,
+          "proposals_per_position": 8192,
+          "metric_arrays_per_position": 8,
+          "all_dense_finite": true,
+          "complete_prefix_persisted_bytes_equal": true,
+          "PDM_times100": 100.0,
+          "PDM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 1.0,
+            "time_to_collision_within_bound": 1.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 1.0
+          },
+          "PDM_CSV_sha256": "fc78a48ff58b7e8c602758f05f4ebec1f2317ef46f98d9f4ffce0ac80ac4e5f6",
+          "PDM_CSV_precision_decimals": 5,
+          "unrounded_internal_PDM_values_compared": false,
+          "native_files": {
+            "acceptance": {
+              "producer_relative_path": "results/hydramdp_NR/acceptance.json",
+              "bytes": 4811,
+              "sha256": "2e89de42c2a86f287ae790df29555adc14eadf5e06312e5ba24ca3d3983b913f"
+            },
+            "NN_terminal": {
+              "producer_relative_path": "results/hydramdp_NR/hydramdp_NR/01_NPU/stage.json",
+              "bytes": 1185,
+              "sha256": "e0b32a837cedbc23375bcd8e7b4fa1d3905f3b1b079161dfd5080b7190f6ef6c"
+            },
+            "CPU_terminal": {
+              "producer_relative_path": "results/hydramdp_NR/hydramdp_NR/02_CPU/actual.json",
+              "bytes": 438,
+              "sha256": "24ecc9ec6fe4c932a0db7852f5a84c3eab370a72cda8919c46fc7b1051efd95c"
+            },
+            "public_audit": {
+              "producer_relative_path": "results/hydramdp_NR/hydramdp_NR/02_CPU/scoring.json",
+              "bytes": 31018,
+              "sha256": "6ae8a8d1a5596a157609cda5756b37720605af45709bf14bd3dd01c0bf1a54b4"
+            },
+            "raw_comparison": {
+              "producer_relative_path": "results/hydramdp_NR/hydramdp_NR/02_CPU/comparison.json",
+              "bytes": 1816,
+              "sha256": "112b81eab1c1af4d3f2d6d53dfbd5a0c0f552d456c7eb5c8007729a1ddf19c00"
+            },
+            "planner_report": {
+              "producer_relative_path": "results/hydramdp_NR/hydramdp_NR/01_NPU/run/job/plan_traj/closed_loop_planner_report.json",
+              "bytes": 28605,
+              "sha256": "3a214479c54b8ef9b130dca5277934e641904a71620583af954629138927334e"
+            },
+            "assigned_pair_release": {
+              "producer_relative_path": "results/hydramdp_NR/assigned_pair_after/device_gate.json",
+              "bytes": 2380,
+              "sha256": "f7c091d3d4f3ee5538344233c657ff521958e2d8f80c9b685d70b50e29fd38a0"
+            }
+          }
+        },
+        {
+          "model": "hydramdp",
+          "reaction": "R",
+          "actual_NN_exit": 0,
+          "actual_CPU_exit": 0,
+          "NPU_CID": "b5eed298e4d8e2d510d982357ba4767529efea7fcef4f2300b18b7aba60804e2",
+          "NPU_state": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-30T03:46:47.370543894Z",
+            "FinishedAt": "2026-10-30T03:54:32.302466706Z"
+          },
+          "CPU_CID": "fe14fb2ad4e065077a298d33d53262cb139f290fe4e388b39c510b15f35765c2",
+          "source_commit": "933f6fb780f644c4bae82abfa93f3f488eaa2596",
+          "source": {
+            "sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+            "files": 213
+          },
+          "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+          "external_AlgEngine": {
+            "sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+            "files": 249,
+            "commit": "a783047c92621ca3d2f658fbe054f200783e8e25"
+          },
+          "generated_predictions": 8,
+          "consumed_control_indices": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "unused_merged12_absent": true,
+          "unused_plan12_absent": true,
+          "rendered_frames": 12,
+          "JPEGs": 96,
+          "dense_positions": 9,
+          "proposals_per_position": 8192,
+          "metric_arrays_per_position": 8,
+          "all_dense_finite": true,
+          "complete_prefix_persisted_bytes_equal": true,
+          "PDM_times100": 27.233,
+          "PDM_metrics": {
+            "no_at_fault_collisions": 1.0,
+            "drivable_area_compliance": 1.0,
+            "ego_progress": 0.2536,
+            "time_to_collision_within_bound": 0.0,
+            "comfort": 1.0,
+            "driving_direction_compliance": 1.0,
+            "score": 0.27233
+          },
+          "PDM_CSV_sha256": "b1419da64b26ccfdecc45bad9a006355d0acf2101982c094f032b7c25c3e5a71",
+          "PDM_CSV_precision_decimals": 5,
+          "unrounded_internal_PDM_values_compared": false,
+          "native_files": {
+            "acceptance": {
+              "producer_relative_path": "results/hydramdp_R/acceptance.json",
+              "bytes": 4808,
+              "sha256": "9d18f4ee1ac34993795e3cf1495ef1b7ae793f9a7157f71d19479b634a7a7336"
+            },
+            "NN_terminal": {
+              "producer_relative_path": "results/hydramdp_R/hydramdp_R/01_NPU/stage.json",
+              "bytes": 1185,
+              "sha256": "7e154458c9764ead2f181b788a6de869d867a5c89bef709e327f8c73f77ee1b7"
+            },
+            "CPU_terminal": {
+              "producer_relative_path": "results/hydramdp_R/hydramdp_R/02_CPU/actual.json",
+              "bytes": 437,
+              "sha256": "6242dc23138df94b72e12a857cd16556b4e46f9644ffb93f25f15a82ae6e505e"
+            },
+            "public_audit": {
+              "producer_relative_path": "results/hydramdp_R/hydramdp_R/02_CPU/scoring.json",
+              "bytes": 31024,
+              "sha256": "875977703852dcf6f6e71191c5ca5fa0cb17a2c9abe8c32ae4bd4ead81ef8487"
+            },
+            "raw_comparison": {
+              "producer_relative_path": "results/hydramdp_R/hydramdp_R/02_CPU/comparison.json",
+              "bytes": 1816,
+              "sha256": "cb3cdee2295be93c581115f651b9180becc11ae8dc38a38c6859ab0e9b7c391c"
+            },
+            "planner_report": {
+              "producer_relative_path": "results/hydramdp_R/hydramdp_R/01_NPU/run/job/plan_traj/closed_loop_planner_report.json",
+              "bytes": 28605,
+              "sha256": "d5432cb476969524b22c2ccab5aed3cc44baf67e6cf57aefb5c729da617beb29"
+            },
+            "assigned_pair_release": {
+              "producer_relative_path": "results/hydramdp_R/assigned_pair_after/device_gate.json",
+              "bytes": 2379,
+              "sha256": "408510d5239bc49d01230a34377d2dc9a49b010041be6b6802aeab30a0a0193c"
+            }
+          }
+        }
+      ],
+      "CPU43": {
+        "tests": 43,
+        "skips": 0,
+        "native_runtime_files": 46,
+        "actual_return": 0,
+        "NPU_initialized": false,
+        "native_report": {
+          "producer_relative_path": "CPU_qualification_v1/CPU_preflight.json",
+          "bytes": 1957,
+          "sha256": "dfa26e87518576096a9ccefc072ef54d197661ae59c1dd74143d7b79acd9b8b5"
+        },
+        "native_terminal": {
+          "producer_relative_path": "CPU_qualification_v1/actual.json",
+          "bytes": 510,
+          "sha256": "c630b16d51225d7f92e8ef8cc4bcb3a6336b0ab555999dcbc6d0d074f5c41013"
+        }
+      },
+      "native_original_files_verified": 38,
+      "hash_basis": "All native-file SHA256 values refer to complete original file bytes; no JSON canonicalization or reserialization.",
+      "all_same_official_scene": true,
+      "all_exactly_eight_generated_and_consumed": true,
+      "all_original_prefix_and_persisted_PDM_CSV_raw_equal": true,
+      "observed_run_times_are_not_comparative_performance": true,
+      "GPU_equivalence": false,
+      "all_scene_quality": false,
+      "renderer_backward_training": false,
+      "local_original_file_verification": {
+        "kind": "Local crosscheck of 38 remote before/after SHA256 records and downloaded original bytes",
+        "file_name": "originals_verification.json",
+        "bytes": 6671,
+        "sha256": "72e0f6bc11a9f00010008cc4bda385da272b8363dbbd058d8c5258b36437c51d",
+        "hash_basis": "Complete local verification JSON file bytes; derived verification, not a native execution report"
+      },
+      "native_overall_acceptance": {
+        "producer_relative_path": "results/acceptance.json",
+        "bytes": 16799,
+        "sha256": "3ae433a2e36820f219f089102cb78841de493dc7f64e2fb05ecb9ff14ee3dd2b"
+      },
+      "native_parent_terminal": {
+        "producer_relative_path": "results/actual_parent_return.json",
+        "bytes": 25,
+        "sha256": "6f4ecc92b5cfe9c64cbf74491d55ac91183e12fb6184d14864c800b313a89064"
+      }
+    },
+    "same_source_equal_work_end_to_end_ABBA": {
+      "state": "pending",
+      "actual_performance_result_available": false,
+      "SimEngine_commit": "933f6fb780f644c4bae82abfa93f3f488eaa2596",
+      "external_AlgEngine_commit": "a783047c92621ca3d2f658fbe054f200783e8e25",
+      "A": "none / querychunk2048",
+      "B": "point-parallel-last-frame / querychunk8192",
+      "same_renderer": true,
+      "required_generated_predictions": 8,
+      "required_consumed_controls": 8,
+      "formal_ratio": null,
+      "scope": "One official VADv2 NR scored twelve-frame prefix, same host and chips0/1. The earlier interrupted 9/8/9/8-plan observations remain unchanged."
+    }
   }
 }

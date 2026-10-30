@@ -39,11 +39,16 @@ continues to supply genuine scoring context; it does not authorize plan 12.
 At the boundary, the existing bounded monitor waits for the next scene or the
 completion flag before another model call. No arbitrary delay is added.
 
-The repaired VADv2 NR NPU run generated exactly eight plans and retained all
-96 JPEGs, twelve metadata files, eight consumed plans and inputs, nine complete
-dense positions, and the persisted PDM CSV byte for byte. The other three
-repaired paths, GPU execution, and a new uninterrupted equal-work performance
-comparison remain unverified. The planner entry is outside the 213-file runtime
+The repair passed VADv2/HydraMDP × NR/R on this one official scene. Each run
+generated and consumed exactly eight plans, retained all 96 JPEGs, twelve
+metadata files, eight plans and actual inputs, nine complete dense positions,
+and the persisted five-decimal PDM CSV byte for byte, and left no `merged_12`
+or plan 12. The three additional paths ran the published SimEngine commit
+`933f6fb780f644c4bae82abfa93f3f488eaa2596`; the original VADv2 NR evidence retains
+its earlier declaration and the same repaired entry hash. VADv2 R still scores
+0 and HydraMDP R 27.233: functional/raw acceptance does not establish driving
+quality. GPU execution, reconstruction training, and a new uninterrupted
+equal-work end-to-end performance comparison remain unverified. The planner entry is outside the 213-file runtime
 fingerprint; its separate integration SHA is
 `f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a`.
 Use the matching complete checkout, not the runtime fingerprint alone.
