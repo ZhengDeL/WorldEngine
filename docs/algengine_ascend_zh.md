@@ -53,7 +53,7 @@ git rev-parse HEAD
 git submodule status
 ```
 
-先构建[公开父镜像](../ascend/docker/README_zh.md)，再完成[依赖环境及三项 CPU 检查](../ascend/docker/dependency_repair/README_zh.md)。宿主需要可用的 Ascend 驱动、Docker、Python 3 和 NPU 字符设备；镜像提供 PyTorch/Torch-NPU、OpenMMLab、DrivingSDK 和地图处理依赖。不要在此镜像上覆盖安装原仓的 CUDA wheel。
+先构建[公开父镜像](../ascend/docker/README_zh.md)，再完成[依赖环境及三项 CPU 检查](../ascend/docker/dependency_repair/README_zh.md)。宿主需要可用的 Ascend 驱动、Docker、Python 3.9 或更高版本，以及 NPU 字符设备；启动前用 `python3 --version` 核对宿主解释器。镜像提供 PyTorch/Torch-NPU、OpenMMLab、DrivingSDK 和地图处理依赖。不要在此镜像上覆盖安装原仓的 CUDA wheel。
 
 按安装说明取得镜像标签和**实际 image ID**。下文显式传递这两个值，不依赖 launcher 的历史默认镜像。开始新的训练可使用自行构建的镜像；恢复已有断点必须使用原训练的镜像与源码。
 

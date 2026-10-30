@@ -53,7 +53,7 @@ git rev-parse HEAD
 git submodule status
 ```
 
-Build the [public parent image](../ascend/docker/README.md), then complete the [dependency environment and its three CPU checks](../ascend/docker/dependency_repair/README.md) before training. The host needs a working Ascend driver, Docker, Python 3 and readable NPU character devices. The image supplies PyTorch/Torch-NPU, OpenMMLab, DrivingSDK and the geospatial dependencies. Do not replace them with the upstream CUDA wheels.
+Build the [public parent image](../ascend/docker/README.md), then complete the [dependency environment and its three CPU checks](../ascend/docker/dependency_repair/README.md) before training. The host needs a working Ascend driver, Docker, Python 3.9 or later and readable NPU character devices. Check the host interpreter with `python3 --version` before running the launcher. The image supplies PyTorch/Torch-NPU, OpenMMLab, DrivingSDK and the geospatial dependencies. Do not replace them with the upstream CUDA wheels.
 
 Use the image tag and **actual image ID** obtained by that installation procedure. The examples explicitly pass both values rather than relying on the launcher's historical defaults. A saved checkpoint must resume with the same image and source contract.
 
