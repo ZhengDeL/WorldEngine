@@ -1,6 +1,9 @@
 {
   "current_qualification_20261030": {
     "recorded_UTC": "2026-10-30T03:33:45.544417+00:00",
+    "recorded_UTC_scope": "Initial draft creation; final measurements were added after their actual terminal receipts were verified. Original result timestamps and evidence hashes are retained.",
+    "runtime_code_commit": "322c291d16cec336cf55f0d3433e05a8942b58b7",
+    "complete_result_scope_reviewed_UTC": "2026-10-30T04:18:54+00:00",
     "state": "complete_two_model_full_NAVTEST_regression_known_Hydra_GPU_gap_retained",
     "runtime_sha256": "a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
     "runtime_python_files": 250,
