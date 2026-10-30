@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import sys
+from .planner_optimization import options
 
 
 def file_sha(path):
@@ -160,6 +161,7 @@ class ClosedLoopRuntime:
         match=re.fullmatch(r'(cuda|npu):(\d+)',args.device)
         if not match:raise ValueError('--device must be cuda:N or npu:N')
         self.backend,self.index=match.group(1),int(match.group(2))
+        self.optimization_options=options(args,self.backend)
         self.root=self.sim_root
         self.evidence={}
         self.fp32_evidence=None
@@ -180,6 +182,10 @@ class ClosedLoopRuntime:
             identity=algengine_identity(self.root)
             if identity['source_sha256']!=args.expected_algengine_source_sha256:
                 raise ValueError('External AlgEngine runtime source fingerprint differs')
+            from .planner_optimization import bind_source
+            optimization_binding=bind_source(self.root,identity,self.optimization_options[0])
+            if optimization_binding is not None:
+                self.provenance['inference_optimization_source']=optimization_binding
             # Refuse already-imported local CUDA modules before changing paths.
             assert_module_origins(self.root)
             sys.path[:0]=[str(self.root/'projects/AlgEngine'),str(self.root),str(self.root/'ascend/third_party/navsim')]
@@ -208,6 +214,16 @@ class ClosedLoopRuntime:
                 raise ValueError('GPU BF16 closed-loop execution is not implemented by this NPU adapter')
             torch.cuda.set_device(self.index)
         return self
+
+    def optimization_context(self):
+        from .planner_optimization import activate
+        return activate(self)
+
+    def validate_optimization(self,predictions):
+        mode,chunk=self.optimization_options
+        if mode!='none':
+            from .planner_optimization import validate_actual
+            validate_actual(self.provenance.get('inference_optimization',{}),mode,chunk,predictions)
 
     def precision_context(self):
         if self.backend!='npu':return nullcontext()

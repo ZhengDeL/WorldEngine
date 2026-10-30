@@ -2,6 +2,96 @@
 
 [中文说明](README_zh.md)
 
+## Explicit FP32 planner optimization
+
+The current runtime adds an optional bridge to the separately pinned AlgEngine
+inference context. The default `--inference-optimization none` retains the
+original planner. The optimized scored profile selects
+`--inference-optimization point-parallel-last-frame --msda-query-chunk 8192`
+with `--device npu:0 --precision fp32 --msda-backend cuda-compatible`.
+It requires AlgEngine runtime
+`cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610`
+(249 Python files), including the three helper hashes enforced by
+`planner_optimization.py`. Pass its separately verified full Git commit as
+`--algengine-commit`. This profile fixes `ALG_OPT_COMMIT` to
+`a783047c92621ca3d2f658fbe054f200783e8e25`; check out that external commit.
+A declared commit alone does not verify the source.
+
+For this profile, use the eight-control simulation configuration below:
+planner `sim.max_frame_per_scene=12`, simulator
+`--num-history 4 --num-future 8 --pdm-metrics --dense-rewards`,
+and the complete unchanged real 24-frame prepared scene. Add the two
+optimization options to the **planner phase argv** before `--cfg-options` in
+the controlled launch plan. Keep the renderer FP32 and its existing validated
+CANN capture proof. No rendering operator or scoring formula is replaced.
+The new SimEngine runtime fingerprint is
+`9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541`
+(213 runtime files). Four actual VADv2/HydraMDP × NR/R NPU jobs and the public CPU auditor passed; the complete persisted scored prefix matches the original 212/245 outputs byte for byte.
+
+PDM × 100 remains 79.057/0 for VADv2 NR/R and 100/27.233 for HydraMDP NR/R, including the original low R scores. Each VAD case generated nine plans and recorded 54 compensated historical GridMask calls; each Hydra case generated eight and recorded 48. All applied eight controls with no optimization fallback. Same-host/same-pair complete scored ABBA is measured separately; the concurrent job wall times are not used for a speed ratio.
+
+The complete 24-frame/twenty-control results and original eight-control scores
+later in this guide belong to SimEngine commit
+`27b13d7a03da257c3d2a66a95b640bd522ab0c61` / runtime 212, with AlgEngine 245.
+Use that immutable SimEngine checkout for those older audit commands. They
+are not acceptance of the new planner bridge or its end-to-end performance.
+
+The new public CPU auditor additionally compares every persisted prefix byte
+with a completed original 212/245 scored job. First create a portable reference
+from that real job and its successful public `audit_scored_default8` report.
+`REFERENCE_AUDIT_SHA` is the independently recorded whole report SHA-256;
+`REFERENCE_JSON` must be a fresh file outside all input trees. Use a CPU-only
+container, read-only inputs, and the new checkout's Python path for both modes:
+
+```bash
+python -m simengine_ascend.tools.audit_optimized_default8 prepare-reference \
+  --job "$ORIGINAL_RUN" --recorded-job-root "$ORIGINAL_RECORDED_RUN" \
+  --validated-audit "$ORIGINAL_SCORED_AUDIT" \
+  --expected-audit-sha256 "$REFERENCE_AUDIT_SHA" \
+  --source-root "$SIM_ROOT" --prepared-dir "$PREPARED" \
+  --vocabulary "$VOCABULARY" --model vadv2 --reaction NR \
+  --output "$REFERENCE_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+Independently record the resulting whole `REFERENCE_SHA`. Then audit the new
+complete job, using its actual host chip pair and literal recorded AlgEngine
+commit. `NEW_AUDIT_JSON` must also be fresh and outside the inputs:
+
+```bash
+python -m simengine_ascend.tools.audit_optimized_default8 audit \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --reference-inventory "$REFERENCE_JSON" --expected-reference-sha256 "$REFERENCE_SHA" \
+  --expected-source-sha256 9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541 \
+  --expected-algengine-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-algengine-commit "$ALG_OPT_COMMIT" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+Use matching `--model hydramdp` / `--reaction R` in both modes for the other
+paths. The audit checks 96 JPEGs, twelve metadata files, eight consumed plans
+and actual four-frame model inputs, nine complete dense pickle files and all
+eight arrays per position, and the persisted five-decimal PDM CSV. It also
+requires actual optimization calls, no fallback and the actual compensation
+counter for skipped historical GridMask calls (six NumPy draws per generated
+prediction). This counter is not the total RNG calls in the original path.
+The prediction count is recorded separately from
+the eight consumed controls; a terminal unconsumed plan is excluded from the
+prefix-byte comparison. Internal unrounded PDM values, GPU equivalence,
+all-scene quality and renderer backward are outside this check.
+
+CPU fixtures for the bridge and new audit:
+
+```bash
+python -m unittest simengine_ascend.tools.tests.test_planner_optimization \
+  simengine_ascend.tools.tests.test_audit_optimized_default8 -v
+```
+
 Start with the [environment, build and validation guide](../docs/simengine_ascend_assessment.md).
 This FP32 branch covers one official MTGS scene's complete 24-frame source log
 for VADv2/HydraMDP × NR/R. Each of the four cases used four genuine history

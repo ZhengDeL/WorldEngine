@@ -2,6 +2,82 @@
 
 [English](README.md)
 
+## 显式启用 FP32 规划推理优化
+
+当前运行代码新增外部 AlgEngine 推理优化入口，默认
+`--inference-optimization none` 保留原规划路径。启用时，在受控启动计划的
+**planner 阶段 argv** 中、`--cfg-options` 之前增加
+`--inference-optimization point-parallel-last-frame --msda-query-chunk 8192`，
+同时保留 `--device npu:0 --precision fp32 --msda-backend cuda-compatible`。
+外部 AlgEngine 必须为源码指纹
+`cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610`
+的 249 文件版本，三个实际 helper 的完整 SHA 由 `planner_optimization.py` 固定。
+外部仓库检出已核验公开提交 `a783047c92621ca3d2f658fbe054f200783e8e25`，
+将同一值赋给 `ALG_OPT_COMMIT` 并传入 `--algengine-commit`；仅声明提交号不能代替源码检查。
+
+本次优化配置限定下述八次控制评分窗口：规划器 `sim.max_frame_per_scene=12`，
+仿真器 `--num-history 4 --num-future 8 --pdm-metrics --dense-rewards`。
+完整 24 帧真实准备数据及原渲染 CANN 捕获证明保持不变，不裁掉评分所需未来帧。
+渲染仍为 FP32，评分沿用原公式。新 SimEngine 指纹为
+`9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541`
+（213 个运行文件）。VADv2/HydraMDP × NR/R 四组实际 NPU 作业及公开 CPU 审计均通过，完整评分前缀输出与原 212/245 版本逐字节一致。
+
+VADv2 NR/R 的 PDM×100 为 79.057/0，HydraMDP NR/R 为 100/27.233，原低分保持不变。VAD 两组实际各生成 9 份计划并补偿 54 次历史 GridMask 随机调用；Hydra 两组各生成 8 份并补偿 48 次；四组均只消费 8 份控制计划，优化回退数为零。同机同芯片的完整评分 ABBA 另行进行，暂不据此次并发作业耗时计算性能倍率。
+
+后文完整 24 帧／二十次控制及原八次控制评分结果，均属于 SimEngine 提交
+`27b13d7a03da257c3d2a66a95b640bd522ab0c61` 的 212 文件版本及外部 AlgEngine 245。
+复现原结果应单独检出该固定 SimEngine 提交，并使用其原审计命令。
+这些历史结果不代替新规划优化或端到端耗时验收。
+
+新公开 CPU 审计同时核对原控制链和完整输出字节。先从已完成的原 212/245 评分作业及
+其公开 `audit_scored_default8` 成功报告生成便携参照。`REFERENCE_AUDIT_SHA` 为独立保存的
+原报告整体 SHA-256；`REFERENCE_JSON` 必须是输入目录之外的新文件。两种模式都使用
+新源码目录的 Python 路径，在不挂 GPU/NPU 的 CPU 容器中执行，输入只读：
+
+```bash
+python -m simengine_ascend.tools.audit_optimized_default8 prepare-reference \
+  --job "$ORIGINAL_RUN" --recorded-job-root "$ORIGINAL_RECORDED_RUN" \
+  --validated-audit "$ORIGINAL_SCORED_AUDIT" \
+  --expected-audit-sha256 "$REFERENCE_AUDIT_SHA" \
+  --source-root "$SIM_ROOT" --prepared-dir "$PREPARED" \
+  --vocabulary "$VOCABULARY" --model vadv2 --reaction NR \
+  --output "$REFERENCE_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+独立记录参照文件整体 `REFERENCE_SHA`，再检查新作业。设备编号填写实际宿主机两枚芯片；
+`ALG_OPT_COMMIT` 与新规划报告中的真实声明一致。审计输出同样使用输入目录之外的新文件：
+
+```bash
+python -m simengine_ascend.tools.audit_optimized_default8 audit \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --reference-inventory "$REFERENCE_JSON" --expected-reference-sha256 "$REFERENCE_SHA" \
+  --expected-source-sha256 9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541 \
+  --expected-algengine-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-algengine-commit "$ALG_OPT_COMMIT" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$NEW_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+其他路径同时替换两条命令的 `--model hydramdp` 或 `--reaction R`。检查范围包括
+96 张 JPEG、12 份逐帧元数据、8 份实际消费轨迹和四帧输入、9 份完整 dense pickle 及
+每位置八个完整数组，以及五位小数保存的 PDM CSV。还必须存在真实优化调用、零回退和
+补偿跳过历史 GridMask 调用的实际计数（每次预测六次 NumPy 随机抽样），不代表原路径
+的全部随机调用次数。真实生成预测数单列，可能另有一个未消费末尾
+计划，不将其计作第九次控制。未保存的内部原始精度 PDM 值、GPU 等价、全场景质量及
+渲染训练反向不在本项验收范围内。
+
+CPU 夹具命令：
+
+```bash
+python -m unittest simengine_ascend.tools.tests.test_planner_optimization \
+  simengine_ascend.tools.tests.test_audit_optimized_default8 -v
+```
+
 环境、后端构建、官方数据与验收顺序见[部署与验证指南](../docs/simengine_ascend_assessment_zh.md)。
 本 FP32 分支已完成同一官方 MTGS 场景的完整 24 帧验证，覆盖 VADv2/HydraMDP × NR/R
 四种组合。每组均使用原始四帧历史、实际执行二十次模型控制，并独立解码 192 张原尺寸相机图像。

@@ -641,5 +641,299 @@
       "No MTGS backward/reconstruction, LiDAR, BWM, deformable backend, BF16 or synthetic-training acceptance is added.",
       "All four compared actual prefixes retain identical JPEG, consumed-plan, merged-input and frame-metadata bytes relative to the corresponding original unscored 24-frame run."
     ]
+  },
+  "optimized_default8_planner_verification_20261030": {
+    "state": "accepted_four_actual_FP32_scored_prefixes_and_complete_original_persisted_raw",
+    "accepted": true,
+    "code": {
+      "SimEngine_base_git_commit": "27b13d7a03da257c3d2a66a95b640bd522ab0c61",
+      "SimEngine_runtime_sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+      "SimEngine_runtime_files": 213,
+      "changed_runtime_files": {
+        "projects/AlgEngine/closed_loop/sim_test.py": "5a7099f9e4f365b95a8a8c1ee0ae964db5c70aad0cc3533968d4f3170cc13e5c",
+        "simengine_ascend/closed_loop_runtime.py": "70372268d8d740fb842179c003d2f6c348fb0e1e4f8ca38d13e75326820ef416",
+        "simengine_ascend/planner_optimization.py": "542b44505a6cb6edacecb2c00bbb9073cc014ad33c194bb74f21928b4b12f98e"
+      },
+      "AlgEngine_git_commit": "a783047c92621ca3d2f658fbe054f200783e8e25",
+      "AlgEngine_runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+      "AlgEngine_runtime_files": 249,
+      "public_CPU_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929"
+    },
+    "mode": "point-parallel-last-frame",
+    "msda_query_chunk": 8192,
+    "default_mode": "none",
+    "planner_precision": "FP32, HF32 off, cuda-compatible MSDA",
+    "scene": "2021.09.29.15.23.04_veh-28_00601_00802-6326d00e52115da4",
+    "real_prepared_context_frames": 24,
+    "CPU": {
+      "tests": 29,
+      "skips": 0,
+      "actual_return": 0,
+      "original_scored_jobs_re_read": 4,
+      "no_accelerator_mounts": true,
+      "report_sha256": "51f4b89d7a33cf59a8efc52fb64fb619a4db7aeacf683c2d0bd96b11026ec668",
+      "actual_terminal_sha256": "b6e9b29ca8fe6468a697097178ac67e889e1056038e2733febd667177ae21bd5"
+    },
+    "cases": [
+      {
+        "model": "vadv2",
+        "reaction": "NR",
+        "host_chips": [
+          0,
+          1
+        ],
+        "actual_NPU_exit": 0,
+        "NPU_container_wall_seconds": 462.324453,
+        "wall_time_condition": "Observed job wall time; first case separated and other three concurrent, including concurrent independent CPU QC. Not an equal-condition performance comparison.",
+        "rendered_frames": 12,
+        "decoded_JPEGs": 96,
+        "consumed_control_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "generated_predictions": 9,
+        "actual_preserved_NumPy_draws": 54,
+        "preserved_counter_scope": "Compensation for skipped historical GridMask calls; not total original-path RNG calls",
+        "actual_point_parallel_calls": 459,
+        "original_fallback_calls": 0,
+        "PDM_times100": 79.057,
+        "original_PDM_metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.49736,
+          "time_to_collision_within_bound": 1.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.79057
+        },
+        "first_NC_DAC_violation_step": null,
+        "dense_positions": 9,
+        "proposals_per_position": 8192,
+        "finite_metric_arrays_per_position": 8,
+        "complete_original_prefix_persisted_bytes_equal": true,
+        "unrounded_internal_PDM_values_compared": false,
+        "public_CPU_audit_exit": 0,
+        "public_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929",
+        "public_audit_report_sha256": "e3537af1308a340095c2df92121b3c2f825548081d74dbbbd8d57f46ac69cb34",
+        "public_CPU_actual_sha256": "96726a6d0c126e0908c4f7ac5111698b98bd5147fc83a13c15c22e043f5a408a",
+        "original_portable_reference_sha256": "d5234104c241ea668c662095f4fc36ac0fc9b6505d3428185c353ab80cb7de77",
+        "dense_pickle_sha256_by_step": {
+          "3": "e62f38a4324f4ae33448e7ef38ab7a2e289ba8f7097e9a987c8cc8ad14f54677",
+          "4": "b2a6d2b69a9d881184b4d6fa447b65083c8bc94abe5ee0cc89af922178a3ac39",
+          "5": "db1c910e11775236a7303a79ce210858a44c91a94d0dcfa7fd85ca8b31ce4d94",
+          "6": "691eaf9d9ad3acd30fb1b5afa4875f453e300b2d3f3dfdc771b296ef1ff5ba3f",
+          "7": "d609034f32eaff0d6304012b97aeb5af59882e85bf3f3c56b2527179abb53418",
+          "8": "48a4f220e4ade8de26f2bb7186f10cee47b1351790d2df362faf984f2b726ca4",
+          "9": "9fe399d4f377a9517506fa607986db1f93f3084d615dad0b692be76f5dee35ea",
+          "10": "31bbd7ed16fe58325b5c3ef2453ced904f748c507d8fdd04b0f200b97dfb4065",
+          "11": "70fba3d9a6be378c301e5cbfac8437547f0ef6fc414ef3cd72140851cda80a73"
+        }
+      },
+      {
+        "model": "vadv2",
+        "reaction": "R",
+        "host_chips": [
+          2,
+          3
+        ],
+        "actual_NPU_exit": 0,
+        "NPU_container_wall_seconds": 476.593741,
+        "wall_time_condition": "Observed job wall time; first case separated and other three concurrent, including concurrent independent CPU QC. Not an equal-condition performance comparison.",
+        "rendered_frames": 12,
+        "decoded_JPEGs": 96,
+        "consumed_control_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "generated_predictions": 9,
+        "actual_preserved_NumPy_draws": 54,
+        "preserved_counter_scope": "Compensation for skipped historical GridMask calls; not total original-path RNG calls",
+        "actual_point_parallel_calls": 459,
+        "original_fallback_calls": 0,
+        "PDM_times100": 0.0,
+        "original_PDM_metrics": {
+          "no_at_fault_collisions": 0.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.0,
+          "time_to_collision_within_bound": 1.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.0
+        },
+        "first_NC_DAC_violation_step": 11.0,
+        "dense_positions": 9,
+        "proposals_per_position": 8192,
+        "finite_metric_arrays_per_position": 8,
+        "complete_original_prefix_persisted_bytes_equal": true,
+        "unrounded_internal_PDM_values_compared": false,
+        "public_CPU_audit_exit": 0,
+        "public_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929",
+        "public_audit_report_sha256": "a8a677307c1fd842659a24f3a24a32a8cf207b3cf8be459cd697cd955f5956ae",
+        "public_CPU_actual_sha256": "12e4e93197f79ce5cf421853d0d3ee218690466d087ca1a3bd15d4d8f5000268",
+        "original_portable_reference_sha256": "881bbf236e14914bfd58b2bbbe71355a6e21b12b041ac56e260a025daebf671e",
+        "dense_pickle_sha256_by_step": {
+          "3": "e62f38a4324f4ae33448e7ef38ab7a2e289ba8f7097e9a987c8cc8ad14f54677",
+          "4": "b2a6d2b69a9d881184b4d6fa447b65083c8bc94abe5ee0cc89af922178a3ac39",
+          "5": "db1c910e11775236a7303a79ce210858a44c91a94d0dcfa7fd85ca8b31ce4d94",
+          "6": "691eaf9d9ad3acd30fb1b5afa4875f453e300b2d3f3dfdc771b296ef1ff5ba3f",
+          "7": "a9b3eb3bc2686b8702a7eaab4010c6ecb46272f42ecee62f87279d8113c43455",
+          "8": "ab45fde6e965b10ed5ff0579276f90fd4c432fc4365442c89f2ebd94d22577b9",
+          "9": "1e380be119e6b312b5078ad5c931c248623611d617fc6c858915ca460484dd46",
+          "10": "3c670f3e55ea5b2ec20efa2ca3ed93c4faafcb46396fd319bec670e697a5768f",
+          "11": "3a9fbf029d578a2feaa4af885e6b0b8722647983f3f8a02c123f2c6203f07e9d"
+        }
+      },
+      {
+        "model": "hydramdp",
+        "reaction": "NR",
+        "host_chips": [
+          4,
+          5
+        ],
+        "actual_NPU_exit": 0,
+        "NPU_container_wall_seconds": 461.169728,
+        "wall_time_condition": "Observed job wall time; first case separated and other three concurrent, including concurrent independent CPU QC. Not an equal-condition performance comparison.",
+        "rendered_frames": 12,
+        "decoded_JPEGs": 96,
+        "consumed_control_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "generated_predictions": 8,
+        "actual_preserved_NumPy_draws": 48,
+        "preserved_counter_scope": "Compensation for skipped historical GridMask calls; not total original-path RNG calls",
+        "actual_point_parallel_calls": 408,
+        "original_fallback_calls": 0,
+        "PDM_times100": 100.0,
+        "original_PDM_metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 1.0,
+          "time_to_collision_within_bound": 1.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 1.0
+        },
+        "first_NC_DAC_violation_step": null,
+        "dense_positions": 9,
+        "proposals_per_position": 8192,
+        "finite_metric_arrays_per_position": 8,
+        "complete_original_prefix_persisted_bytes_equal": true,
+        "unrounded_internal_PDM_values_compared": false,
+        "public_CPU_audit_exit": 0,
+        "public_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929",
+        "public_audit_report_sha256": "5c0af476fee9fde13669c2efe8385e9ed616d955ac035a0cac79340406f5f9aa",
+        "public_CPU_actual_sha256": "463e0dc2973ca20b03c3d7b9de965db1a27d46193c55e9b32b94243f56e8cbbf",
+        "original_portable_reference_sha256": "de790a72cb1ece151090819cd9fd3781c8af3c84e005ae4d18d5c4f09e6ff76d",
+        "dense_pickle_sha256_by_step": {
+          "3": "e62f38a4324f4ae33448e7ef38ab7a2e289ba8f7097e9a987c8cc8ad14f54677",
+          "4": "c1498fa16f06502297668c0b89b592d50dfef7bd76d11ccbba258b7ba9d8bde8",
+          "5": "8ff1c0d9197cc8d896e0ca6a1db8751e2547c97a02822a354661c9e55c299331",
+          "6": "2d2d2daf5e072600e85f6afe990481ec7b47b638245593f20b96c5a0a1403702",
+          "7": "a338c98f19e6ff22fc70b28ab5f45d414efc46bddef4441332d6a84ea0f29902",
+          "8": "98b45272e5e194836e919258fd3b7b54f3473371de080956547f978b8a94e440",
+          "9": "df0f12b3052c6ce817bbb51c2a83b99c269e07054e9d744b506889d92568e2c9",
+          "10": "742bad69ff499cea2ed0bfad7d0b16d189c563ddc0d0d8ca85fc5e604ab5ce27",
+          "11": "46db70454638cd78e0e680c9613d05434683d245595a02c7dff4cf821a3fec4c"
+        }
+      },
+      {
+        "model": "hydramdp",
+        "reaction": "R",
+        "host_chips": [
+          6,
+          7
+        ],
+        "actual_NPU_exit": 0,
+        "NPU_container_wall_seconds": 461.953642,
+        "wall_time_condition": "Observed job wall time; first case separated and other three concurrent, including concurrent independent CPU QC. Not an equal-condition performance comparison.",
+        "rendered_frames": 12,
+        "decoded_JPEGs": 96,
+        "consumed_control_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "generated_predictions": 8,
+        "actual_preserved_NumPy_draws": 48,
+        "preserved_counter_scope": "Compensation for skipped historical GridMask calls; not total original-path RNG calls",
+        "actual_point_parallel_calls": 408,
+        "original_fallback_calls": 0,
+        "PDM_times100": 27.233,
+        "original_PDM_metrics": {
+          "no_at_fault_collisions": 1.0,
+          "drivable_area_compliance": 1.0,
+          "ego_progress": 0.2536,
+          "time_to_collision_within_bound": 0.0,
+          "comfort": 1.0,
+          "driving_direction_compliance": 1.0,
+          "score": 0.27233
+        },
+        "first_NC_DAC_violation_step": null,
+        "dense_positions": 9,
+        "proposals_per_position": 8192,
+        "finite_metric_arrays_per_position": 8,
+        "complete_original_prefix_persisted_bytes_equal": true,
+        "unrounded_internal_PDM_values_compared": false,
+        "public_CPU_audit_exit": 0,
+        "public_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929",
+        "public_audit_report_sha256": "499320360864da475278b1afdecacd25d2dbb094648f523e91a89866447597b5",
+        "public_CPU_actual_sha256": "8a87dc832fad4aebc60787d3d4fb58718eaa9fded84e7361229013ced42db844",
+        "original_portable_reference_sha256": "1f8ff80be76e457d4cfee44fd1a131cb4d12b2280119b3817ca232e8b15591e7",
+        "dense_pickle_sha256_by_step": {
+          "3": "e62f38a4324f4ae33448e7ef38ab7a2e289ba8f7097e9a987c8cc8ad14f54677",
+          "4": "b2a6d2b69a9d881184b4d6fa447b65083c8bc94abe5ee0cc89af922178a3ac39",
+          "5": "1b443d13bdc05cbf7d17745512cf479177a162f5ebffa054c519857a820b3bca",
+          "6": "21498654629d59abbdab65eb32f104f9b587b23bb8580b083f99038662a365bf",
+          "7": "be20e40f4bc4b1312926352d5aaa3225e0ce27fa23692b93fb6f197abe6dbd4d",
+          "8": "b43e576a80907313296c57de6adc02b47380d12afb41d45b0476f6fa46115afc",
+          "9": "4ffc761da4f115b87d4409f825fdc24cee34393edce79c91846a638ca70ff54d",
+          "10": "d6b795794ffbb84d92fc2c85cda1a2b9a38cd01248c72da95f1d12775bb10e44",
+          "11": "be406d42b686b6b8b3e0deeff669ebb907fac8dd4f402f62df389f485a790a45"
+        }
+      }
+    ],
+    "public_four_case_acceptance_sha256": "71b82da7d97e5dcbac25b534c2f87cce81616804aec382de537f8214021625aa",
+    "first_NN_CPU_raw_acceptance_sha256": "0c19cacd30a70c7a89dde66d0a616320620d7fe1003e434e17294dc40ac5104f",
+    "remaining_three_NN_CPU_raw_acceptance_sha256": "808e77239d89578c93eaf1d81f4e28d1a159281231b89c60bc0a41b4ba7471e0",
+    "evidence_download": {
+      "files": 26,
+      "source_SHA_before_after_and_local_equal": true
+    },
+    "end_to_end_ABBA": {
+      "state": "running_separate_same_host_same_pair_four_fresh_scored_jobs",
+      "performance_accepted": false,
+      "performance_ratio": null,
+      "scope": "A original 212/245 versus B213/CBE249, VADv2 NR only; completed equal-generation four-case artifacts and isolation required before a ratio"
+    },
+    "limits": [
+      "One NAVTEST failure scene; not all-scene driving quality or NAVTRAIN synthetic-training acceptance.",
+      "Low R scores remain unchanged: VAD NC=0 at step11; Hydra TTC=0 with lower progress. No GPU closed-loop equivalence measured.",
+      "Original twenty-control/24-frame results and renderer-only 54.45% reduction retain their original 212/245 source identity.",
+      "Current MTGS adapter acceptance covers forward rendering, not reconstruction training/backward."
+    ]
   }
 }

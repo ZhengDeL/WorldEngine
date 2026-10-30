@@ -32,6 +32,8 @@ def parse_args():
     parser.add_argument('--expected-algengine-source-sha256')
     parser.add_argument('--algengine-commit');parser.add_argument('--expected-image-id')
     parser.add_argument('--msda-backend',choices=('reference','cuda-compatible'),default='reference')
+    parser.add_argument('--inference-optimization',choices=('none','point-parallel','point-parallel-last-frame'),default='none')
+    parser.add_argument('--msda-query-chunk',type=int,default=2048)
     parser.add_argument('--wait-timeout',type=float,default=120)
     parser.add_argument('--deadline-utc',default=os.environ.get('WORLDENGINE_CLOSED_LOOP_DEADLINE_UTC'))
     parser.add_argument('--stop-file',default=os.environ.get('WORLDENGINE_CLOSED_LOOP_STOP_FILE'))
@@ -227,7 +229,9 @@ def main():
                 report['checkpoint_strict_state_dict']=True
             if args.fuse_conv_bn:model=fuse_conv_bn(model)
             model=runtime.wrap(model)
-            asyncio.run(run_inference_loop(model,cfg,logger,runtime,args,report))
+            with runtime.optimization_context():
+                asyncio.run(run_inference_loop(model,cfg,logger,runtime,args,report))
+            runtime.validate_optimization(report['predictions'])
         if report['predictions']<1:raise ValueError('No real model prediction was produced')
         report.update(result='completed_configured_closed_loop_planner_run',runtime=runtime.finish())
     except BaseException as error:
