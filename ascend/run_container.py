@@ -107,9 +107,9 @@ def main():
     from ascend.inference_optimization import MODES, CHUNKS, validate_options
     p.add_argument('--inference-optimization',choices=MODES,default='none')
     p.add_argument('--msda-query-chunk',type=int,choices=CHUNKS,default=2048)
-    p.add_argument('--msda-value-grad-layout',choices=('none','head-major'),default='none')
+    p.add_argument('--msda-value-grad-layout',choices=('none','head-major','point-parallel-head-major'),default='none')
     args=p.parse_args()
-    from ascend.msda_value_gradient import validate_training_option
+    from ascend.msda_training_point_parallel import validate_training_option
     try:
         validate_training_option(args.msda_value_grad_layout, precision=args.precision,
             backend=args.msda_backend, task=args.task, runtime=bool(args.runtime or args.resume or args.stop_after

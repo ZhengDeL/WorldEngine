@@ -19,13 +19,13 @@ remains a separate result.
 ## Inputs and fixed identities
 
 Current commands require runtime fingerprint
-`cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610`
-and **249 Python files**. The current `ascend/tools/verify_navtest_inputs.py`
-worker SHA256 is `cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b`.
+`a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81`
+and **250 Python files**. The current `ascend/tools/verify_navtest_inputs.py`
+worker SHA256 is `c880c82308fcff08f67e508922d9e94254cdfa8ec9cb4bdcb5cf28c08a542ae4`.
 Nested tools retain separate hashes. The historical 32 CPU tests belonged to
 `7a8c50dc…` / 247 files; the October 20 image/archive result remains bound to
 `0488bfb7…` / 245 files and its matching tool. Those records are not a new
-249-file acceptance. Generate a fresh QC report matching this runtime and
+250-file acceptance. Generate a fresh QC report matching this runtime and
 worker before running the current inference workflow.
 Both original 100% model test configurations must describe the same full
 `NavSimOpenSceneE2E` test split, queue4, history3 and load_interval1.

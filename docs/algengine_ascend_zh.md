@@ -6,18 +6,24 @@
 
 WorldEngine 有两个模块：**AlgEngine** 负责模型训练与评价，**SimEngine** 负责渲染、仿真和 rollout 生成。这里操作 AlgEngine；已有的真实 SimEngine 导出可以作为训练输入，本指南不部署其渲染器。
 
-当前复现命令固定运行源码指纹 `cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610`，范围为 `projects/AlgEngine/**/*.py` 与 `ascend/*.py`，共 **249 个 Python 文件**。嵌套工具单独固定 SHA。历史记录中的 `7a8c50dc…`／247 文件、`0488bfb7…`／245 文件仍指各自实际运行版本，不能把旧 journal 或 checkpoint 接到新源码继续使用。当前两模型完整训练／恢复验收尚未全部完成；下列操作方法不等于已完成八个 epoch。
+当前复现命令固定运行源码指纹 `a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81`，范围为 `projects/AlgEngine/**/*.py` 与 `ascend/*.py`，共 **250 个 Python 文件**。嵌套工具单独固定 SHA。历史记录中的 `7a8c50dc…`／247 文件、`0488bfb7…`／245 文件仍指各自实际运行版本，不能把旧 journal 或 checkpoint 接到新源码继续使用。本版增加点并行训练路径及策略梯度最终批恢复；已完成的短训、恢复和完整推理按各自实测源码记录，见下方验证范围。两模型各八个完整epoch及收敛仍未完成。
 
 | 当前工具 | SHA256 |
 | --- | --- |
-| `ascend/tools/optimized_journal_inference.py` | `77faf18b334f63b854de9beb02dd8b5d2313ae78cbafcb6c0d4661aadd56929e` |
-| `ascend/tools/filesystem_journal_inference.py` | `58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007` |
+| `ascend/tools/optimized_journal_inference.py` | `0139087b307959f3014ca147deb7f107272f82aaf7fd1239d24878b562ff215b` |
+| `ascend/tools/filesystem_journal_inference.py` | `7aabadb6a25fb80d011fe4bb5428dc42caf46252bda3f043691974141cee27ce` |
 | `ascend/tools/filesystem_journal_observer.py` | `e29725530dc26c563c7bec4450266ad019cf5b507d945dd35919fdb084a20e82` |
 | `ascend/tools/file_collection.py` | `6a5488bee8d53eb4fd6501702e80eb058653846f2d07ff5961c5bc074420542c` |
 | `ascend/tools/rank_journal.py` | `f92e2fe35f428be30851c272921c450582e5b2c5846297b415385e13f8dfe4c4` |
-| `ascend/tools/verify_navtest_inputs.py` | `cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b` |
+| `ascend/tools/verify_navtest_inputs.py` | `c880c82308fcff08f67e508922d9e94254cdfa8ec9cb4bdcb5cf28c08a542ae4` |
 
 公共完整状态比较器 `ascend/compare_resume.py` 的当前 SHA 为 `3ebf6988e6a79d1ee3ae62c7774419bb0f5cd5b71bca89cfd5cc545c4d460027`。旧实验控制器若固定其他比较器 SHA，应取回对应旧版本，不能删除或跳过来源校验。
+
+## 当前FP32验证结果
+
+源码 `a0d8820b…` 已完成两模型官方基座的完整NAVTEST推理及独立评分。VADv2覆盖12,146样本，推理作业1小时47分18秒，PDM-Score×100为82.16216548；HydraMDP覆盖12,146样本，作业1小时44分19秒，评分91.45952568。作业时长包含启动、输入处理和结果汇总，不含独立官方评分。已有原GPU作业分别为1小时03分24秒、1小时03分29秒；可以对照作业完成时间，不将异工况数据换算为硬件性能倍数。
+
+VADv2轨迹、候选选择及85,022个官方评分值与已有GPU参考一致。HydraMDP仍有4个选择／轨迹样本和2个评分样本超原容差，未将均分接近当作逐样本通过；完整预测及官方评分CSV与旧NPU结果一致。[版本化实测记录](validation/algengine_fp32_optimization_20261029.json)区分当前A0完整推理、`eade6ede…` 的139小集／LoRA／PG短训和独立4+4恢复，以及历史 `216499c4…` 完整推理。短周期训练及恢复已完成，完整NAVTRAIN各八轮收敛尚未完成。
 
 ## 常用入口
 
@@ -608,10 +614,19 @@ cat "$CHECK/comparison.json"
 
 `--msda-value-grad-layout head-major` 只改变 FP32 MSDA 的值梯度累加路径，默认仍为 `none`。它仅用于训练，要求 `--msda-backend cuda-compatible`、FP32 及完整运行时合同；推理和 BF16 不接受此选项。helper 保留原 point／corner 顺序，并返回原梯度缓冲区，源码 SHA 为 `3ea227d93d4a01050c5f83b719cd8b650435d7e94b14f004f58006d42415e03b`。布局及 helper 身份随 checkpoint 的 precision/MSDA 合同保存。
 
+#### 点并行训练与策略梯度末批恢复
+
+`--msda-value-grad-layout point-parallel-head-major` 是另一显式训练选项，要求与 `head-major` 相同。它将独立采样点的计算并行化，仍按原query分块、level、point、corner顺序累加，通道0–31求和顺序不变，FP32与原数值门槛不变。默认仍为 `none`；正式续训必须保持源码、布局、初始化、训练时限和完整checkpoint合同一致，不能把旧检查点换一个源码标签继续。
+
+下面例子用 `GRAD_LAYOUT` 选择布局。`head-major` 为既有布局；`point-parallel-head-major` 为新增选项。当前没有跨backward持久缓冲或自动切换布局。139样本、LoRA及策略梯度短周期对照的实测源为 `eade6ede…`；当前A0版本的策略梯度最终批8→8零更新收尾另有实际NPU专项记录。两者均不能代替完整NAVTRAIN收敛。
+
+在最后一批更新完成、最后epoch尚待收尾时保存的PG断点，现在可以只完成epoch收尾而不再次执行优化器更新。该路径要求精确恢复、原PG合同及最终游标均匹配；回执明确记录本次PG未执行。普通PG训练仍要求实测非零策略梯度loss。
+
 下列原生 epoch 示例对两个原 100% 规划配置均使用官方感知初始化权重，保留八个 epoch horizon 和 global batch16（16 个逻辑芯片，每 rank B1）。这是操作方法，不表示八个 epoch 或两模型收敛已经完成。先通过第4节的完整输入及资源检查；小集或 CPU 检查的内存限额不能直接用于全量训练。
 
 ```bash
 : "${TRAIN_MEMORY:?Set a full-training RAM budget from available host/cgroup memory}"
+GRAD_LAYOUT=point-parallel-head-major  # or head-major
 HEAD_MODEL=vadv2                     # vadv2 or hydramdp
 case "$HEAD_MODEL" in
   vadv2) HEAD_CONFIG=projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py ;;
@@ -619,14 +634,14 @@ case "$HEAD_MODEL" in
   *) exit 2 ;;
 esac
 HEAD_INITIALIZER="$WEIGHTS/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth"
-HEAD_PARTIAL="$RUNS/${HEAD_MODEL}_fp32_head_epochs8_partial"
-HEAD_RESUMED="$RUNS/${HEAD_MODEL}_fp32_head_epochs8_resumed"
+HEAD_PARTIAL="$RUNS/${HEAD_MODEL}_fp32_${GRAD_LAYOUT}_epochs8_partial"
+HEAD_RESUMED="$RUNS/${HEAD_MODEL}_fp32_${GRAD_LAYOUT}_epochs8_resumed"
 HEAD_COMMON=(--devices 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
   --image "$IMAGE" --expected-image-id "$IMAGE_ID"
   --config "$SOURCE/$HEAD_CONFIG" --data-root "$DATA"
   --checkpoint "$HEAD_INITIALIZER" --vocab "$VOCAB" --maps "$MAPS"
   --runtime --epochs 8 --batch-size 1 --workers 0 --upstream-schedule
-  --precision fp32 --msda-backend cuda-compatible --msda-value-grad-layout head-major
+  --precision fp32 --msda-backend cuda-compatible --msda-value-grad-layout "$GRAD_LAYOUT"
   --deterministic --checkpoint-interval 1000 --check-interval 1
   --memory "$TRAIN_MEMORY" --cpus 64 --pids-limit 8192)
 python3 ascend/run_container.py "${HEAD_COMMON[@]}" --output "$HEAD_PARTIAL"
@@ -993,7 +1008,7 @@ python ascend/tools/compare_inference.py \
 
 当前 wrapper 为上表的 `77faf18b…`。下方版本化记录中 `7a8c50dc…`／247 文件的运行结果保留历史身份，不构成本版本完整数据验收。
 
-优化版恢复使用 `ascend/tools/optimized_journal_inference.py`，固定运行时源码为 `cbe54694…`／249 文件。优化默认关闭，需显式选择 `point-parallel-last-frame` 和分块 8192。原 `journal_inference.py` 保持 SHA `89e24b8d…` 不变，固定原迁移源码 `76c51f77…`，不接受优化参数。10 月 20 日归档使用另一个源码和工具版本，其断点不能拿到新入口继续运行。
+优化版恢复使用 `ascend/tools/optimized_journal_inference.py`，固定运行时源码为 `a0d8820b…`／250 文件。优化默认关闭，需显式选择 `point-parallel-last-frame` 和分块 8192。原 `journal_inference.py` 保持 SHA `89e24b8d…` 不变，固定原迁移源码 `76c51f77…`，不接受优化参数。10 月 20 日归档使用另一个源码和工具版本，其断点不能拿到新入口继续运行。
 
 镜像、16 芯片挂载、完整历史标注和五文件输入清单沿用[恢复工具的输入与挂载约定](algengine_journal_zh.md)。清单锁定标注、PDM、词表、filter 及已通过的输入 QC。连续运行和恢复须使用同一源码、权重、数据、FP32 设置和设备配置。每次尝试使用新的输出子目录和 UUID，journal 目录保持相同。
 
@@ -1003,7 +1018,7 @@ COMMON=(--source-root /workspace/WorldEngine --config /config/inference.py
   --journal-root /journal --precision fp32 --msda-backend cuda-compatible
   --inference-optimization point-parallel-last-frame --msda-query-chunk 8192
   --deterministic --expected-anchors 22
-  --expected-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610
+  --expected-source-sha256 a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81
   --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA"
   --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" --deadline-utc "$DEADLINE_UTC")
 torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
@@ -1024,9 +1039,9 @@ torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inferen
 
 当前 wrapper／observer 分别固定为上表的 `58184035…`／`e2972553…`；五个恢复工具的身份及输出合同必须成组保留。
 
-`ascend/tools/filesystem_journal_inference.py` 将结果和各 rank 执行报告分别写入共享目录。各 rank 原子发布带 SHA 的完整 part，rank 0 按原 sampler 顺序合并并截去 padding；末尾不再依赖 HCCL barrier。初始模型同步和 journal 前缀核对仍使用 HCCL。此入口仅接受固定 `cbe54694…`／249 文件源码、FP32、原词表规划头，以及显式的 4、12 或 16 rank。
+`ascend/tools/filesystem_journal_inference.py` 将结果和各 rank 执行报告分别写入共享目录。各 rank 原子发布带 SHA 的完整 part，rank 0 按原 sampler 顺序合并并截去 padding；末尾不再依赖 HCCL barrier。初始模型同步和 journal 前缀核对仍使用 HCCL。此入口仅接受固定 `a0d8820b…`／250 文件源码、FP32、原词表规划头，以及显式的 4、12 或 16 rank。
 
-先按[输入清单与挂载约定](algengine_journal_zh.md)准备配置、完整历史标注、PDM、词表和通过的输入 QC。当前源码的完整 NAVTEST 预检见[输入检查命令](navtest_input_audit_zh.md)，其当前源码合同为 cbe54694…／249 文件。保留已锁定镜像与五文件清单；不同入口和工具版本的 journal 分别保存。
+先按[输入清单与挂载约定](algengine_journal_zh.md)准备配置、完整历史标注、PDM、词表和通过的输入 QC。当前源码的完整 NAVTEST 预检见[输入检查命令](navtest_input_audit_zh.md)，其当前源码合同为 a0d8820b…／250 文件。保留已锁定镜像与五文件清单；不同入口和工具版本的 journal 分别保存。
 
 以下是本次实测的设备映射：Docker 仅挂载宿主 `/dev/davinci4` 到 `/dev/davinci7` 及三个控制设备，`WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7`，容器内 `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3`、local_rank 为 0–3。沿用安装章节的源码、驱动及依赖挂载，工作目录设为 `/workspace/WorldEngine`；另外将源外的输出、journal、收集父目录分别挂载为 `/attempts:rw`、`/journal:rw`、`/collections:rw`。输入、配置、权重和 `/proof` 均只读。CPU 准备容器使用 `--runtime runc`，不挂设备，关闭 Torch 后端自动加载；NPU 容器再挂载上述四个芯片。
 
@@ -1061,7 +1076,7 @@ selected = set(yaml.safe_load(Path(locked["filter"]["path"]).read_text())["token
 ids = [row["token"] for row in infos if row["token"] in selected]
 assert len(ids) == len(set(ids)) == len(selected)
 world = 4
-context = dict(source_sha256="cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+context = dict(source_sha256="a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
     config_sha256=digest("/config/inference.py"), checkpoint_sha256=digest("/weights/initial.pth"),
     locked_inputs_sha256=digest(locked_path), image_id=os.environ["WORLDENGINE_IMAGE_ID"],
     world_size=world, anchors=len(ids), precision="fp32", backend="cuda-compatible",
@@ -1105,7 +1120,7 @@ export HCCL_CONNECT_TIMEOUT=1800 HCCL_EXEC_TIMEOUT=7200
   --standalone --nproc_per_node=4 ascend/tools/filesystem_journal_inference.py \
   --source-root /workspace/WorldEngine --config /config/inference.py \
   --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json \
-  --expected-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-source-sha256 a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81 \
   --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA" \
   --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" \
   --precision fp32 --msda-backend cuda-compatible --deterministic \

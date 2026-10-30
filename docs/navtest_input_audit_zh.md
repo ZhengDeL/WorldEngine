@@ -6,7 +6,7 @@
 
 ## 输入与固定来源
 
-当前命令要求运行源码指纹 `cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610`，共 **249 个 Python 文件**；当前 `ascend/tools/verify_navtest_inputs.py` 的 SHA256 为 `cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b`。嵌套工具不计入运行源码指纹，需单独保存来源。历史 `7a8c50dc…`／247 文件绑定通过的 32 项 CPU 测试，以及 10 月 20 日 `0488bfb7…`／245 文件的完整图像／归档实测，仍保留各自身份；不能继承为当前 249 文件版本的新通过结果。使用当前命令必须生成与该源码及 worker 匹配的新 QC 报告。两模型原 100% 配置的 test 数据集必须同为完整 `NavSimOpenSceneE2E`，queue4、history3、load_interval1。
+当前命令要求运行源码指纹 `a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81`，共 **250 个 Python 文件**；当前 `ascend/tools/verify_navtest_inputs.py` 的 SHA256 为 `c880c82308fcff08f67e508922d9e94254cdfa8ec9cb4bdcb5cf28c08a542ae4`。嵌套工具不计入运行源码指纹，需单独保存来源。历史 `7a8c50dc…`／247 文件绑定通过的 32 项 CPU 测试，以及 10 月 20 日 `0488bfb7…`／245 文件的完整图像／归档实测，仍保留各自身份；不能继承为当前 250 文件版本的新通过结果。使用当前命令必须生成与该源码及 worker 匹配的新 QC 报告。两模型原 100% 配置的 test 数据集必须同为完整 `NavSimOpenSceneE2E`，queue4、history3、load_interval1。
 
 数据目录内必须有下列发布者原文件，工具检查完整文件大小与 SHA：
 

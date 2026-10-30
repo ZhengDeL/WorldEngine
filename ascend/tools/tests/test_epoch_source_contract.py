@@ -11,7 +11,7 @@ sys.path.insert(0,str(HERE.parent))
 import optimized_journal_inference as optimized
 import journal_inference as legacy
 import verify_navtest_inputs as qc
-EXPECTED='cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610'
+EXPECTED='a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81'
 class EpochSourceContractTests(unittest.TestCase):
  def test_old_checkpoint_source_contracts_refused_before_tensor_restore(self):
   tree=ast.parse((SOURCE/'ascend/runtime.py').read_text())
@@ -34,6 +34,6 @@ class EpochSourceContractTests(unittest.TestCase):
   with self.assertRaisesRegex(RuntimeError,'Unsupported pinned runtime source'):optimized.optimization_contract('7a8c50dce5f58b4a568f1dd7d6286ddb3370d6723c71ae3c2550045fc72555fb',EXPECTED,'none',2048,'cuda-compatible')
   with self.assertRaisesRegex(RuntimeError,'fingerprint differs'):optimized.optimization_contract(legacy.SOURCE_SHA,EXPECTED,'none',2048,'cuda-compatible')
  def test_exact_epoch_overlay_and_locked_original_MSDA_reference(self):
-  pins={'ascend/runtime.py':'c468cc632cbcbe4dea200e775451baac71ea67f5d203c6cf24a6d50d532d4a20','ascend/epoch_cursor.py':'f83615141f95468838064a27a1b18890843d8c220116871c52d4a4986e198916','ascend/tools/tests/fixtures/msda_training/msda_cuda_compatible_before.py':'feb35fc82b67dec1fbf8d24c0f5f60d6ff30356e8f419cf37e90d92481e854d9','ascend/train.py':'9808b858818f80e38152f7b14e8024dca096d5e4c7b5a65428577e04d06d69c7'}
+  pins={'ascend/runtime.py':'83b33ee9b546fa06637d4b8d29ccd17f6367d78b7b3465dba635e2f9c16154ee','ascend/epoch_cursor.py':'f83615141f95468838064a27a1b18890843d8c220116871c52d4a4986e198916','ascend/tools/tests/fixtures/msda_training/msda_cuda_compatible_before.py':'feb35fc82b67dec1fbf8d24c0f5f60d6ff30356e8f419cf37e90d92481e854d9','ascend/train.py':'296c09bf33d227e7b2121ef8622396c88dc773c37d0498312cce9fc4b8d68a9a'}
   for name,pin in pins.items():self.assertEqual(hashlib.sha256((SOURCE/name).read_bytes()).hexdigest(),pin,name)
 if __name__=='__main__':unittest.main()

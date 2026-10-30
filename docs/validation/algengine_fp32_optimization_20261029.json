@@ -1,4 +1,137 @@
 {
+  "current_qualification_20261030": {
+    "recorded_UTC": "2026-10-30T03:33:45.544417+00:00",
+    "state": "complete_two_model_full_NAVTEST_regression_known_Hydra_GPU_gap_retained",
+    "runtime_sha256": "a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
+    "runtime_python_files": 250,
+    "physical_dual_chip_cards": 8,
+    "logical_chips": 16,
+    "world_size": 16,
+    "batch_per_rank": 1,
+    "precision": "FP32; matmul/conv HF32 disabled; original deterministic settings retained",
+    "inference_mode": "point-parallel-last-frame",
+    "query_chunk": 8192,
+    "VADv2": {
+      "actual_NPU_exit": 0,
+      "OOMKilled": false,
+      "unique_anchors": 12146,
+      "container_started_UTC": "2026-10-30T01:11:59.033733277Z",
+      "container_finished_UTC": "2026-10-30T02:59:17.387916187Z",
+      "container_wall_seconds": 6438.354183,
+      "application_elapsed_seconds": 6415.434209209983,
+      "selected_trajectory_and_index_max_differences_to_GPU": 0,
+      "typed_old_NPU_difference_rows": 0,
+      "official_scorer_actual_return": 0,
+      "valid_official_tokens": 12146,
+      "PDM_Score_times100": 82.1621654812768,
+      "original_tolerance": {
+        "atol": 1e-06,
+        "rtol": 1e-05
+      },
+      "official_numeric_values_compared": 85022,
+      "official_GPU_gate_passed": true,
+      "official_original_NPU_gate_passed": true,
+      "official_CSV_whole_bytes_equal_GPU_and_old_NPU": true,
+      "native_evidence_sha256": {
+        "NN/wait.json": "6ef187898920c6f407be119e10856fad8c309122cac8f18548de839c430705ac",
+        "NN/inference_validation.json": "8e6ae3585b53293ba694879e6b2016574df006c352cc0f25c0519d81172d146e",
+        "NN/journal_execution.json": "bca586e7ee41dfa4c5f6d40f9b753c487468f93c33abf8f36ba3e603ed753c4c",
+        "CPU/comparison.json": "e27510cc1b8c6c35f45e22ca9e4cc9e2b786ee03f5d72c95b56a3053629a26e1",
+        "CPU/official_score.json": "6775334f001c8c22f36b0309d8e8857c8e31bbd35f5781e780732229bb19a731",
+        "CPU/score_wait.json": "fbfcf0847052d764f4d3e86e34785d9e82279ba3c9971a3b5c015969b0847669",
+        "metrics/report.json": "2e317f9ffda27ed3aee40a0e410674599a2b024ed4a6302b4d3e78ea8b5f8ebf"
+      },
+      "durable_archive": {
+        "complete": true,
+        "bytes": 288839680,
+        "SHA256": "a3ca9459459908f0dfbfd2b7581378efc32c1038372c7dd5b1be598b4dd0b247",
+        "native_closure_SHA256": "4da5bc333d5906dd8380ef79c539da41d3706fa1eb8ff01900cae1deebf2a333",
+        "source_RAM_originals_retained": true,
+        "no_links_followed_or_members_extracted": true
+      },
+      "historical_GPU_container_wall_seconds": 3803.672413
+    },
+    "HydraMDP": {
+      "state": "complete_NPU_typed_and_independent_official_score",
+      "actual_NPU_exit": 0,
+      "OOMKilled": false,
+      "unique_anchors": 12146,
+      "container_wall_seconds": 6258.971592,
+      "GPU_selected_candidate_outlier_samples": 4,
+      "GPU_trajectory_outlier_samples": 4,
+      "GPU_original_gate_passed": false,
+      "known_original_GPU_gap_closed": false,
+      "container_started_UTC": "2026-10-30T01:30:04.591347138Z",
+      "container_finished_UTC": "2026-10-30T03:14:23.562939376Z",
+      "application_elapsed_seconds": 6235.757896005001,
+      "official_scorer_actual_return": 0,
+      "valid_official_tokens": 12146,
+      "PDM_Score_times100": 91.45952568154098,
+      "official_numeric_values_compared": 85022,
+      "official_original_NPU_gate_passed": true,
+      "official_original_GPU_gate_passed": false,
+      "official_GPU_metric_outlier_samples": 2,
+      "official_CSV_whole_bytes_equal_original_NPU": true,
+      "persistent_disk_verified": true,
+      "original_GPU_trajectory_max_absolute_difference": 5.454713821411133,
+      "official_GPU_max_absolute_difference": {
+        "no_at_fault_collisions": 0.0,
+        "drivable_area_compliance": 0.0,
+        "ego_progress": 0.053790477790736424,
+        "time_to_collision_within_bound": 0.0,
+        "comfort": 0.0,
+        "driving_direction_compliance": 0.0,
+        "score": 0.02241269907947352
+      },
+      "native_evidence_sha256": {
+        "NN/wait.json": "f25a863a40d622382007af90ca4e8cdbd495f3a0fdd7ef2d9d38d939b14ac9f1",
+        "NN/inference_validation.json": "848993d81e547163d515a69477a61a9b2e3b7f2f2c9431b59ed11b0a9f40b0d0",
+        "NN/journal_execution.json": "f52f1e1a4f2bb7eb063692dd3c8a27827892e95dd92b15e1c8c356f5dec52fd7",
+        "CPU/comparison.json": "59a81f54b64635d4d33eaa3763a6cfce391028bf32ad71d9a536fdfc77da98dc",
+        "CPU/score_wait.json": "4774b5fa8b77dffe22e9d227c281c4b6b7b915c6b7c7ce6487bc0a636f23b0c7",
+        "CPU/official_score.json": "79e41a917a5f44d0ed798f7a47f0b8ed49b423fc946ff4e33e3e59604902a655",
+        "metrics/report.json": "c03b74e1bcbd6c802b795ba130631f1b98abea968f0c51625bc4f68899726211",
+        "metrics/actual.json": "56b2f48eecf7b5c07aad82e5716ce7761c6086b806d811f6a7ee6edaff8d4764",
+        "disk_retention_actual.json": "6ce0b1c103d5680d1c9447b4dfa905aa5a9c850f0948bc9727394189a1677294"
+      },
+      "historical_GPU_container_wall_seconds": 3808.925397
+    },
+    "timing_scope": "Actual continuous container start-to-exit, including startup/input processing/inference/result collection; independent CPU comparison and official scoring excluded. Separate historical GPU job timing is not a hardware speed ratio.",
+    "full_NAVTRAIN_training_or_convergence_accepted": false,
+    "latest_private_persistent_buffer_included": false,
+    "qualification_prerequisites": [
+      {
+        "host_label": "252",
+        "CPU_tests": 224,
+        "CPU_skips": 0,
+        "CPU_device_nodes": [],
+        "CPU_native_SHA256": "384d485175d01ae456215ae3c450c7ff3161724a0994223e3ddfccf8397aca3d",
+        "fresh_input_QC_actual_exit": 0,
+        "required_and_decoded_JPEGs": 142976,
+        "reused_decodes": 0,
+        "QC_native_SHA256": "941d468d1596a4eca1c72e852f68023d7bff2ffec1bb3c9fe6491826a221b84d",
+        "publisher_archive_provenance_accepted_by_this_QC": false,
+        "image_pixel_provenance_accepted_by_this_QC": false,
+        "FS22_two_models_actual_exit": 0,
+        "complete_12146_order_verified": true
+      },
+      {
+        "host_label": "253",
+        "CPU_tests": 224,
+        "CPU_skips": 0,
+        "CPU_device_nodes": [],
+        "CPU_native_SHA256": "89e2c01d3b32d1a10984cecdbfbe8bb2baf566fba4ab78df4b9f8e745f18b4c4",
+        "fresh_input_QC_actual_exit": 0,
+        "required_and_decoded_JPEGs": 142976,
+        "reused_decodes": 0,
+        "QC_native_SHA256": "391c055e31ecb93d865207d490c36e2f17df5e85f96d88ad2b2299d1ce252c7f",
+        "publisher_archive_provenance_accepted_by_this_QC": false,
+        "image_pixel_provenance_accepted_by_this_QC": false,
+        "FS22_two_models_actual_exit": 0,
+        "complete_12146_order_verified": true
+      }
+    ]
+  },
   "schema": 1,
   "recorded_utc": "2026-10-29T15:49:39.808886+00:00",
   "result": "two_models_public_inference_CLI_NAVTEST22_raw_exact",
@@ -1651,16 +1784,15 @@
     "current_release_source249_full_inference": "Separate in-progress regression on216499c4 runtime249; these completed7a results are not relabeled as final249 results."
   },
   "current_command_runtime_binding": {
-    "runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
-    "runtime_python_files": 249,
+    "runtime_sha256": "a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
+    "runtime_python_files": 250,
     "original_AlgEngine_model_files_changed": 0,
     "entry_sha256": {
-      "ascend/tools/optimized_journal_inference.py": "77faf18b334f63b854de9beb02dd8b5d2313ae78cbafcb6c0d4661aadd56929e",
-      "ascend/tools/filesystem_journal_inference.py": "58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007",
-      "ascend/tools/verify_navtest_inputs.py": "cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b"
+      "ascend/tools/optimized_journal_inference.py": "0139087b307959f3014ca147deb7f107272f82aaf7fd1239d24878b562ff215b",
+      "ascend/tools/filesystem_journal_inference.py": "7aabadb6a25fb80d011fe4bb5428dc42caf46252bda3f043691974141cee27ce",
+      "ascend/tools/verify_navtest_inputs.py": "c880c82308fcff08f67e508922d9e94254cdfa8ec9cb4bdcb5cf28c08a542ae4"
     },
-    "scope": "Current commands and independent runtime binding; earlier measurement sections keep their original source identities",
-    "publication_state": "draft_not_published"
+    "scope": "Current command/runtime binding. Historical CBE command metadata and every recorded measurement keep their executed identity. Publication is identified by the containing Git commit."
   },
   "epoch_end_warmup_LR_repair": {
     "recorded_UTC": "2026-10-29T21:56:41.828653+00:00",
@@ -2292,5 +2424,81 @@
     "GPU_quality_gap_closed": false,
     "old2164_complete_result_relabelled_as_cbe": false,
     "training_epoch_recovery_accepted_by_inference_test": false
+  },
+  "PG_finalization_A0d8_actual_20261030": {
+    "actual_return": 0,
+    "result": "pass_real_HydraPG_final_epoch_zero_update_full_raw",
+    "source_sha256": "a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
+    "profile": "hydramdp_rl",
+    "world_size": 16,
+    "effective_unique_anchors": 2,
+    "padded_positions": 16,
+    "loader_batches": 1,
+    "original_max_epochs": 8,
+    "original_warmup_iters": 500,
+    "checkpoint_interval": 8,
+    "NN_cases": [
+      "continuous8",
+      "partial8",
+      "finalize8"
+    ],
+    "actual_updates": [
+      8,
+      8,
+      0
+    ],
+    "final_expected_pg": true,
+    "final_pg_observed_nonzero": false,
+    "final_pg_executed_this_run": false,
+    "final_pg_zero_update_epoch_finalization": true,
+    "full_raw_exact": {
+      "model": true,
+      "Adam_and_parameter_group_scalars": true,
+      "all16_four_RNG": true,
+      "original_contract": true,
+      "cursor_and_counters": true
+    },
+    "declared_finalization_counter_transition": {
+      "updates": [
+        8,
+        8
+      ],
+      "epochs": [
+        7,
+        8
+      ],
+      "completed_batches": [
+        1,
+        0
+      ]
+    },
+    "counts": {
+      "model": 989,
+      "optimizer": 240,
+      "rank_RNG": 16
+    },
+    "all16_full_model_Adam_typed_hashes_bind_checkpoint": true,
+    "observed_prefix_input_LR_loss_RNG_rows": 128,
+    "whole_serialized_CP_bytes_claimed_equal": false,
+    "checkpoint_metadata_modified": false,
+    "full_NAVTRAIN_or_convergence": false,
+    "NPU_initialized": false,
+    "CUDA_initialized": false,
+    "acceptance_native_SHA256": "7a90148a95382015ae221c84322bc833be4aff90cf4d0cc913248e54c74903d1",
+    "independent_CPU_report_SHA256": "74906b3fe27107ce61df4bf669c5450413c9501cf60cb910e5c2c648efba4eeb",
+    "original_parent_rejected_CPU_shm_envelope_preserved": true,
+    "original_NPU_stages_recomputed": false
+  },
+  "historical_command_runtime_binding_CBE249": {
+    "runtime_sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+    "runtime_python_files": 249,
+    "original_AlgEngine_model_files_changed": 0,
+    "entry_sha256": {
+      "ascend/tools/optimized_journal_inference.py": "77faf18b334f63b854de9beb02dd8b5d2313ae78cbafcb6c0d4661aadd56929e",
+      "ascend/tools/filesystem_journal_inference.py": "58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007",
+      "ascend/tools/verify_navtest_inputs.py": "cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b"
+    },
+    "scope": "Current commands and independent runtime binding; earlier measurement sections keep their original source identities",
+    "publication_state": "draft_not_published"
   }
 }

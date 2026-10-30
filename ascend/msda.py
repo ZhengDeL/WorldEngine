@@ -23,7 +23,7 @@ _VALUE_GRADIENT_LAYOUT = 'none'  # Explicit process-local API; never inherited f
 def configure_backend(name, *, value_gradient_layout='none'):
     """Select before construction; a training layout is never read from env."""
     global _VALUE_GRADIENT_LAYOUT
-    from ascend.msda_value_gradient import MODES
+    from ascend.msda_training_point_parallel import MODES
     if name not in BACKENDS or value_gradient_layout not in MODES:
         raise ValueError('Unsupported MSDA backend or value-gradient layout')
     if value_gradient_layout != 'none' and name != 'cuda-compatible':
@@ -36,7 +36,7 @@ def configure_backend(name, *, value_gradient_layout='none'):
 
 
 def _configuration():
-    from ascend.msda_value_gradient import MODES
+    from ascend.msda_training_point_parallel import MODES
     name = os.environ.get('WORLDENGINE_MSDA_BACKEND', 'reference')
     if name not in BACKENDS or _VALUE_GRADIENT_LAYOUT not in MODES:
         raise ValueError('Unsupported MSDA backend or value-gradient layout')
@@ -65,6 +65,22 @@ def backend_policy():
                 original_destination_returned=True, global_Tensor_method_replacement=False)
             implementation['value_gradient_order'] = (
                 'original querychunk,level,point,corner order; per-call head-major axis2 scatter_add and copy back')
+        elif layout == 'point-parallel-head-major':
+            from ascend import msda_cuda_compatible, msda_value_gradient, msda_training_point_parallel
+            selected.update(
+                scope='FP32 training MSDA forward and three gradients',
+                helper_source_sha256=hashlib.sha256(Path(msda_training_point_parallel.__file__).read_bytes()).hexdigest(),
+                coordinate_source_sha256=hashlib.sha256(Path(msda_cuda_compatible.__file__).read_bytes()).hexdigest(),
+                head_helper_source_sha256=hashlib.sha256(Path(msda_value_gradient.__file__).read_bytes()).hexdigest(),
+                measured_combined_source_sha256=msda_training_point_parallel.MEASURED_COMBINED_SHA256,
+                measured_head_helper_source_sha256=msda_training_point_parallel.MEASURED_HEAD_HELPER_SHA256,
+                point_arithmetic='parallel independent P axis; P is never reduced',
+                layout='original B,S,H,C destination; temporary B,H,S,C; axis2 scatter_add; copy back',
+                indices='original int64 B,Q,H address stream; point slice packed contiguous',
+                accumulation_order='ascending querychunk, level, point, corner; ascending channels0..31',
+                original_destination_returned=True, global_Tensor_method_replacement=False)
+            implementation['value_gradient_order'] = (
+                'original querychunk,level,point,corner order; point arithmetic parallel; head-major axis2 scatter_add')
         return dict(backend=name, implementation=implementation,
                     training_value_gradient=selected)
     return dict(backend=name, implementation='MMCV CPU32 mathematical reference via NPU grid_sample',
@@ -75,12 +91,16 @@ def _cuda_function():
     global _CUDA_FUNCTION, _CUDA_VALUE_GRADIENT_LAYOUT
     configuration = _configuration()
     if _CUDA_FUNCTION is None:
-        from ascend.msda_cuda_compatible import make_function
-        accumulator = None
-        if configuration[1] == 'head-major':
-            from ascend.msda_value_gradient import make_accumulator
-            accumulator = make_accumulator(torch)
-        _CUDA_FUNCTION = make_function(torch, grad_value_accumulator=accumulator)
+        if configuration[1] == 'point-parallel-head-major':
+            from ascend.msda_training_point_parallel import make_function
+            _CUDA_FUNCTION = make_function(torch)
+        else:
+            from ascend.msda_cuda_compatible import make_function
+            accumulator = None
+            if configuration[1] == 'head-major':
+                from ascend.msda_value_gradient import make_accumulator
+                accumulator = make_accumulator(torch)
+            _CUDA_FUNCTION = make_function(torch, grad_value_accumulator=accumulator)
         _CUDA_VALUE_GRADIENT_LAYOUT = configuration[1]
     return _CUDA_FUNCTION
 

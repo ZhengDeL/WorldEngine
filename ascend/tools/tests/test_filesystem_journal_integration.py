@@ -92,7 +92,7 @@ class CurrentFilesystemSourceContract(unittest.TestCase):
  def test_current_filesystem_source_and_optimized_gate_agree(self):
   import filesystem_journal_inference as entry
   import optimized_journal_inference as optimized
-  expected='cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610'
+  expected='a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81'
   self.assertEqual(entry.fingerprint(TOOLS.parents[1]),expected)
   self.assertEqual(entry.OPTIMIZED_SOURCE_SHA,expected)
   self.assertEqual(entry.OPTIMIZED_SOURCE_SHA,optimized.OPTIMIZED_SOURCE_SHA)

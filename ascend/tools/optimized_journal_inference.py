@@ -20,7 +20,7 @@ from journal_inference import (COLLECT_SHA, Guard, IMAGE, JournalPause, MULTI_SH
                                SOURCE_SHA, fingerprint, observed_test, parse_deadline)
 from rank_journal import canonical_json, need, rng_pack, rng_unpack, sha, sync_directory, write_file
 
-OPTIMIZED_SOURCE_SHA = 'cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610'
+OPTIMIZED_SOURCE_SHA = 'a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81'
 MODES = ('none', 'point-parallel', 'point-parallel-last-frame')
 CHUNKS = (2048, 4096, 8192)
 

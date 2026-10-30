@@ -1,4 +1,4 @@
-"""CPU replay contracts and installed MMCV/AdamW regressions; no NPU/CUDA jobs."""
+"""CPU replay contracts including toy CPU models and AdamW; no NPU/CUDA jobs."""
 import ast
 import copy
 import hashlib
@@ -327,7 +327,7 @@ class EpochReplay(unittest.TestCase):
         self.assertEqual(random.getstate(),final[0]);self.assertTrue(real_torch.equal(real_torch.random.get_rng_state(),final[1]))
 
 
-def actual_after_run(env,changed=False):
+def actual_after_run(env,changed=False,expected_pg=False):
     """Execute the candidate's complete after_run body, not a mirrored guard."""
     class Watch:
         def __init__(self,value):self.value=value
@@ -336,7 +336,8 @@ def actual_after_run(env,changed=False):
         def __ne__(self,other):return SimpleNamespace(any=lambda:self.value!=other.value)
     runner=env.runner;hook=runner.hook;marker=runner._ascend_epoch_finalization
     hook.initial_iter=marker['completed_updates'];hook.initial_epoch=marker['completed_epochs']
-    hook.expected_pg=False;hook.before=Watch(1.);hook.watch=Watch(2. if changed else 1.)
+    hook.expected_pg=expected_pg;hook.before=Watch(1.);hook.watch=Watch(2. if changed else 1.)
+    if expected_pg:runner.resume_contract['expected_pg']=True
     hook.raw_losses=[];hook.raw_loss_count=0;hook.initialization_matches=[];hook.optimizer_initial_steps=[runner.iter]
     hook.device_provenance={};hook.watched_parameter_name='fixture.weight';hook.pg_observed_nonzero=False
     runner.model.parameters=lambda:[SimpleNamespace(numel=lambda:1,requires_grad=True)]

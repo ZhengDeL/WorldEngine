@@ -6,18 +6,24 @@ For the CUDA-compatible route, pass `--msda-backend cuda-compatible` consistentl
 
 WorldEngine contains **AlgEngine**, for model training and evaluation, and **SimEngine**, for rendering, simulation and rollout generation. This guide covers AlgEngine. Existing genuine SimEngine exports can be used as training inputs; deploying its renderer on NPU is outside this guide.
 
-Current commands pin runtime fingerprint `cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610` over `projects/AlgEngine/**/*.py` and `ascend/*.py`: **249 Python files**. Nested tools have separate hashes. Historical `7a8c50dc…` / 247-file and `0488bfb7…` / 245-file results retain their executed versions. An old journal or checkpoint cannot be adopted by changing the source label. Complete two-model training/recovery acceptance for this version is pending; the commands are not evidence of eight completed epochs.
+Current commands pin runtime fingerprint `a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81` over `projects/AlgEngine/**/*.py` and `ascend/*.py`: **250 Python files**. Nested tools have separate hashes. Historical `7a8c50dc…` / 247-file and `0488bfb7…` / 245-file results retain their executed versions. An old journal or checkpoint cannot be adopted by changing the source label. This version adds explicit point-parallel training and policy-gradient final-batch recovery. Completed short controls and full inference retain their measured source identities; see the validation record. Full eight-epoch training and convergence remain unaccepted.
 
 | Current tool | SHA256 |
 | --- | --- |
-| `ascend/tools/optimized_journal_inference.py` | `77faf18b334f63b854de9beb02dd8b5d2313ae78cbafcb6c0d4661aadd56929e` |
-| `ascend/tools/filesystem_journal_inference.py` | `58184035cd595f36fcc6f14636243591c8537511fbf81260e59b7a976e92f007` |
+| `ascend/tools/optimized_journal_inference.py` | `0139087b307959f3014ca147deb7f107272f82aaf7fd1239d24878b562ff215b` |
+| `ascend/tools/filesystem_journal_inference.py` | `7aabadb6a25fb80d011fe4bb5428dc42caf46252bda3f043691974141cee27ce` |
 | `ascend/tools/filesystem_journal_observer.py` | `e29725530dc26c563c7bec4450266ad019cf5b507d945dd35919fdb084a20e82` |
 | `ascend/tools/file_collection.py` | `6a5488bee8d53eb4fd6501702e80eb058653846f2d07ff5961c5bc074420542c` |
 | `ascend/tools/rank_journal.py` | `f92e2fe35f428be30851c272921c450582e5b2c5846297b415385e13f8dfe4c4` |
-| `ascend/tools/verify_navtest_inputs.py` | `cc9834a2d71a518bbf5f18cf1389e26e973bcf6732f62f171a6d063269b77f1b` |
+| `ascend/tools/verify_navtest_inputs.py` | `c880c82308fcff08f67e508922d9e94254cdfa8ec9cb4bdcb5cf28c08a542ae4` |
 
 The current public full-state comparator, `ascend/compare_resume.py`, has SHA `3ebf6988e6a79d1ee3ae62c7774419bb0f5cd5b71bca89cfd5cc545c4d460027`. An older experiment controller that pins a different comparator needs its matching version; do not remove or bypass the source check.
+
+## Current FP32 validation
+
+Runtime `a0d8820b…` completed both official-weight NAVTEST jobs: VADv2 12,146 samples in 1:47:18, score 82.16216548; HydraMDP 12,146 samples in 1:44:19, score 91.45952568 (PDM-Score ×100). These are actual container-wall observations, including startup and collection, excluding independent official scoring. Saved original GPU job times are 1:03:24 and 1:03:29, respectively; they are not an equal-condition hardware benchmark.
+
+VADv2 trajectories/selections and all 85,022 official metric values match the saved GPU reference. HydraMDP retains 4 selection/trajectory outliers and 2 score-row outliers at the original tolerance; its complete output and official CSV remain identical to the previous NPU run. The [validation record](validation/algengine_fp32_optimization_20261029.json) separates current A0 results, recorded `eade6ede…` training controls and historical `216499c4…` full inference. The 139-sample short controls, LoRA/PG and independent 4+4 checks have completed; full NAVTRAIN eight-epoch convergence has not.
 
 ## Quick reference
 
@@ -606,10 +612,19 @@ The comparator checks tensors, losses, tokens, LR and final RNG at its unchanged
 
 `--msda-value-grad-layout head-major` changes only the FP32 MSDA value-gradient accumulator. The default is `none`. The option requires training, `--msda-backend cuda-compatible`, FP32 and the complete runtime contract; inference and BF16 reject it. The helper keeps the original point/corner order and returns the original gradient buffer. Its source SHA is `3ea227d93d4a01050c5f83b719cd8b650435d7e94b14f004f58006d42415e03b`; the selected layout/helper identity is saved under the checkpoint's precision/MSDA contract.
 
+#### Point-parallel training and policy-gradient finalization
+
+`--msda-value-grad-layout point-parallel-head-major` is an additional explicit training option with the same requirements as `head-major`. Independent point arithmetic runs in parallel while query-chunk, level, point, corner and channel 0..31 accumulation order remains unchanged. FP32 and the original tolerances are retained. The default remains `none`; exact resume requires the original source, layout, initializer, horizon and full checkpoint contract. Relabeling an old checkpoint is unsupported.
+
+The example below selects the layout with `GRAD_LAYOUT`. There is no cross-backward persistent buffer or automatic layout selection. The recorded 139/LoRA/PG short controls used runtime `eade6ede…`; the current A0 runtime has its own actual NPU 8→8 zero-update PG-finalization evidence. Neither establishes complete NAVTRAIN convergence.
+
+A PG checkpoint saved after the final optimizer update but before the final epoch is finalized can now finish that epoch without another update. Exact restoration, the original PG declaration and the final cursor are required. The receipt explicitly reports that PG did not execute during this finalization; normal PG training still requires an observed nonzero policy-gradient loss.
+
 The following native epoch example uses the original perception initializer for either published 100% planning configuration. It retains the eight-epoch horizon and global batch 16 (16 logical chips, B1). It is an operating procedure, not a claim that eight epochs or two-model convergence have completed. Use the full-input audit and resource checks in section 4; a mini/CPU-inspection memory limit is not a full-training allocation.
 
 ```bash
 : "${TRAIN_MEMORY:?Set a full-training RAM budget from available host/cgroup memory}"
+GRAD_LAYOUT=point-parallel-head-major  # or head-major
 HEAD_MODEL=vadv2                     # vadv2 or hydramdp
 case "$HEAD_MODEL" in
   vadv2) HEAD_CONFIG=projects/AlgEngine/configs/worldengine/e2e_vadv2_100pct.py ;;
@@ -617,14 +632,14 @@ case "$HEAD_MODEL" in
   *) exit 2 ;;
 esac
 HEAD_INITIALIZER="$WEIGHTS/track_map_nuplan_r50_navtrain_50pct_bs1x8.pth"
-HEAD_PARTIAL="$RUNS/${HEAD_MODEL}_fp32_head_epochs8_partial"
-HEAD_RESUMED="$RUNS/${HEAD_MODEL}_fp32_head_epochs8_resumed"
+HEAD_PARTIAL="$RUNS/${HEAD_MODEL}_fp32_${GRAD_LAYOUT}_epochs8_partial"
+HEAD_RESUMED="$RUNS/${HEAD_MODEL}_fp32_${GRAD_LAYOUT}_epochs8_resumed"
 HEAD_COMMON=(--devices 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
   --image "$IMAGE" --expected-image-id "$IMAGE_ID"
   --config "$SOURCE/$HEAD_CONFIG" --data-root "$DATA"
   --checkpoint "$HEAD_INITIALIZER" --vocab "$VOCAB" --maps "$MAPS"
   --runtime --epochs 8 --batch-size 1 --workers 0 --upstream-schedule
-  --precision fp32 --msda-backend cuda-compatible --msda-value-grad-layout head-major
+  --precision fp32 --msda-backend cuda-compatible --msda-value-grad-layout "$GRAD_LAYOUT"
   --deterministic --checkpoint-interval 1000 --check-interval 1
   --memory "$TRAIN_MEMORY" --cpus 64 --pids-limit 8192)
 python3 ascend/run_container.py "${HEAD_COMMON[@]}" --output "$HEAD_PARTIAL"
@@ -1010,7 +1025,7 @@ The check was repeated on merged source `f24d5f5`, which includes published migr
 
 The current wrapper is `77faf18b…` in the table above. Earlier `7a8c50dc…` / 247-file measurements in the versioned record retain their historical identity and do not establish current full-data acceptance.
 
-Use `ascend/tools/optimized_journal_inference.py` for the explicitly pinned optimized runtime `cbe54694…` / 249 files. Optimization remains disabled by default; select `point-parallel-last-frame` and chunk 8192 explicitly. The original `journal_inference.py` is retained unchanged at SHA `89e24b8d…` and pins the original migration source `76c51f77…`; it does not accept optimization flags. The older October 20 archive uses a different source and tool hash. Never reuse its journal with this entry.
+Use `ascend/tools/optimized_journal_inference.py` for the explicitly pinned optimized runtime `a0d8820b…` / 250 files. Optimization remains disabled by default; select `point-parallel-last-frame` and chunk 8192 explicitly. The original `journal_inference.py` is retained unchanged at SHA `89e24b8d…` and pins the original migration source `76c51f77…`; it does not accept optimization flags. The older October 20 archive uses a different source and tool hash. Never reuse its journal with this entry.
 
 Prepare the image, 16 chip mounts, full historical annotation and five-file immutable input manifest using the [journal input and mount contract](algengine_journal.md#inputs-and-mounts). The manifest covers annotation, PDM, vocabulary, filter and approved input QC. Run inside the verified image with the same source, checkpoint, data, FP32 settings and topology throughout. Every attempt needs a new output child and UUID; the journal directory stays the same.
 
@@ -1020,7 +1035,7 @@ COMMON=(--source-root /workspace/WorldEngine --config /config/inference.py
   --journal-root /journal --precision fp32 --msda-backend cuda-compatible
   --inference-optimization point-parallel-last-frame --msda-query-chunk 8192
   --deterministic --expected-anchors 22
-  --expected-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610
+  --expected-source-sha256 a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81
   --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA"
   --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" --deadline-utc "$DEADLINE_UTC")
 torchrun --standalone --nproc_per_node=16 ascend/tools/optimized_journal_inference.py \
@@ -1041,9 +1056,9 @@ The [same validation record](validation/algengine_fp32_optimization_20261029.jso
 
 The current wrapper/observer are `58184035…` / `e2972553…` in the table above. Preserve the five recovery-tool identities and their output contract together.
 
-`ascend/tools/filesystem_journal_inference.py` writes results and rank reports to separate shared directories. Each rank atomically publishes a complete part and SHA receipt; rank 0 merges in original sampler order and truncates padding. The final collections do not use an HCCL barrier. Initial model synchronization and journal-prefix inventory still use HCCL. This entry requires the pinned `cbe54694…` / 249-file runtime, FP32, original vocabulary-planning heads and an explicit world size of 4, 12 or 16.
+`ascend/tools/filesystem_journal_inference.py` writes results and rank reports to separate shared directories. Each rank atomically publishes a complete part and SHA receipt; rank 0 merges in original sampler order and truncates padding. The final collections do not use an HCCL barrier. Initial model synchronization and journal-prefix inventory still use HCCL. This entry requires the pinned `a0d8820b…` / 250-file runtime, FP32, original vocabulary-planning heads and an explicit world size of 4, 12 or 16.
 
-Use the [input manifest and mount layout](algengine_journal.md) for the configuration, complete history annotation, PDM, vocabulary and passed input QC. The [current NAVTEST input-check commands](navtest_input_audit.md) bind runtime cbe5 / 249 files. Retain the fixed image and five-file manifest; keep journals from different entries and tool versions separate.
+Use the [input manifest and mount layout](algengine_journal.md) for the configuration, complete history annotation, PDM, vocabulary and passed input QC. The [current NAVTEST input-check commands](navtest_input_audit.md) bind runtime a0d8 / 250 files. Retain the fixed image and five-file manifest; keep journals from different entries and tool versions separate.
 
 The measured mapping mounts only host `/dev/davinci4` through `/dev/davinci7` plus the three control devices: `WORLDENGINE_HOST_DEVICE_IDS=4,5,6,7`, container `ASCEND_RT_VISIBLE_DEVICES=0,1,2,3`, local_rank 0–3. Reuse the installation's source, driver and dependency mounts and set the working directory to `/workspace/WorldEngine`. Mount source-external output, journal and collection directories as `/attempts:rw`, `/journal:rw` and `/collections:rw`; keep inputs, configuration, weights and `/proof` read-only. Run preparation in a device-free `--runtime runc` CPU container with Torch backend autoload disabled; mount the four assigned chips only for the NPU run.
 
@@ -1078,7 +1093,7 @@ selected = set(yaml.safe_load(Path(locked["filter"]["path"]).read_text())["token
 ids = [row["token"] for row in infos if row["token"] in selected]
 assert len(ids) == len(set(ids)) == len(selected)
 world = 4
-context = dict(source_sha256="cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+context = dict(source_sha256="a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81",
     config_sha256=digest("/config/inference.py"), checkpoint_sha256=digest("/weights/initial.pth"),
     locked_inputs_sha256=digest(locked_path), image_id=os.environ["WORLDENGINE_IMAGE_ID"],
     world_size=world, anchors=len(ids), precision="fp32", backend="cuda-compatible",
@@ -1122,7 +1137,7 @@ export HCCL_CONNECT_TIMEOUT=1800 HCCL_EXEC_TIMEOUT=7200
   --standalone --nproc_per_node=4 ascend/tools/filesystem_journal_inference.py \
   --source-root /workspace/WorldEngine --config /config/inference.py \
   --checkpoint /weights/initial.pth --locked-inputs /proof/locked_inputs.json \
-  --expected-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-source-sha256 a0d8820b69d5bce3d61a8a6cc6b8135c1c3a4ffbd8623e3cd10b14784d989a81 \
   --expected-config-sha256 "$CONFIG_SHA" --expected-checkpoint-sha256 "$CHECKPOINT_SHA" \
   --expected-locked-inputs-sha256 "$LOCKED_INPUTS_SHA" \
   --precision fp32 --msda-backend cuda-compatible --deterministic \

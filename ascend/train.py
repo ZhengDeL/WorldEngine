@@ -109,10 +109,10 @@ def main():
     parser.add_argument('--debug-anomaly', action='store_true', help='Record the forward origin of a failing backward operation')
     parser.add_argument('--msda-backend', choices=('reference', 'cuda-compatible'), default='reference',
                         help='FP32 sampling backend; cuda-compatible matches the measured original CUDA arithmetic')
-    parser.add_argument('--msda-value-grad-layout', choices=('none', 'head-major'), default='none',
+    parser.add_argument('--msda-value-grad-layout', choices=('none', 'head-major', 'point-parallel-head-major'), default='none',
                         help='Explicit FP32 training value-gradient layout; preserve it for exact resume')
     args = parser.parse_args()
-    from ascend.msda_value_gradient import validate_training_option
+    from ascend.msda_training_point_parallel import validate_training_option
     try:
         validate_training_option(args.msda_value_grad_layout, precision=args.precision,
             backend=args.msda_backend, runtime=bool(args.runtime or args.resume or args.stop_after

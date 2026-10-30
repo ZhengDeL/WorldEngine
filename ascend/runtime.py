@@ -217,7 +217,8 @@ def epoch_finalization_only(runner,hook):
             or hook.steps!=0 or runner.iter!=hook.initial_iter or runner.iter!=marker['completed_updates']
             or hook.initial_epoch!=maximum-1 or runner.epoch!=maximum
             or getattr(runner,'_ascend_restoration',{}).get('result')!='pass_exact_saved_state_restore'
-            or runner.resume_contract['precision']['mode']!='fp32' or hook.expected_pg):
+            or runner.resume_contract['precision']['mode']!='fp32'
+            or (hook.expected_pg and runner.resume_contract.get('expected_pg') is not True)):
         raise RuntimeError('Zero-update epoch finalization lacks the exact saved final-batch/epoch/restore contract')
     return True
 
@@ -431,7 +432,7 @@ class AscendRuntimeHook(Hook):
         finalization_only=epoch_finalization_only(runner,self)
         if not changed and not finalization_only:raise RuntimeError('Watched trainable planning parameter did not update')
         if finalization_only and changed:raise RuntimeError('Parameter changed during zero-update epoch finalization')
-        if self.expected_pg and not self.pg_observed_nonzero:
+        if self.expected_pg and not self.pg_observed_nonzero and not finalization_only:
             raise RuntimeError('No nonzero real policy-gradient loss')
         gathered=[torch.empty_like(self.watch) for _ in range(dist.get_world_size())]
         dist.all_gather(gathered,self.watch.detach().contiguous())
@@ -465,6 +466,8 @@ class AscendRuntimeHook(Hook):
                       restoration=getattr(runner,'_ascend_restoration',None),
                       watched_parameter_name=self.watched_parameter_name,raw_loss_count=self.raw_loss_count,
                       expected_pg=self.expected_pg,pg_observed_nonzero=self.pg_observed_nonzero,
+                      pg_executed_this_run=bool(self.expected_pg and self.steps>0),
+                      pg_zero_update_epoch_finalization=bool(self.expected_pg and finalization_only),
                       model_parameters=sum(p.numel() for p in self.model.parameters()),
                       trainable_parameters=sum(p.numel() for p in self.model.parameters() if p.requires_grad))
         if isinstance(runner,EpochBasedRunner):
