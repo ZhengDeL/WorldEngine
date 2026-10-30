@@ -25,13 +25,19 @@
 ## Ascend 910C SimEngine
 
 The optional FP32 planner bridge passed four actual VADv2/HydraMDP × NR/R
-eight-control scored prefixes and the public CPU byte-comparison audit. Its current 213-file source requires a pinned
+eight-control scored prefixes at commit `7e9389e9a4f6206007bb48c6b82a80e3eac42b6a`.
+The terminal-queue repair now stops before an unconsumed prediction. Its VADv2 NR
+NPU regression produced exactly eight necessary plans, retained the complete
+original scored prefix byte for byte, and passed the unchanged public CPU audit.
+The other three paths have not been rerun with this repair. The 213-file source requires a pinned
 249-file external AlgEngine and explicit `point-parallel-last-frame` selection;
 the default retains the original planner. See the [bridge commands and public
 byte-comparison audit](simengine_ascend/README.md#explicit-fp32-planner-optimization).
 The accepted results below belong to immutable SimEngine commit
 `27b13d7a03da257c3d2a66a95b640bd522ab0c61` (runtime 212) and AlgEngine 245;
-their earlier 24-frame scope is separate from the new bridge's eight-control acceptance. Same-pair end-to-end timing is being measured separately.
+their earlier 24-frame scope is separate from the new bridge's eight-control acceptance.
+Four same-pair end-to-end observations completed, but their interruption and
+different generated-plan counts prevent a formal performance ratio.
 
 This branch provides a forward-only NPU renderer, official asset preparation and controlled replay/planner integration. FP32 VADv2/HydraMDP × NR/R passed four complete runs of the same official 24-frame MTGS scene. Each case used two chips on one physical card, applied twenty model controls after four genuine history frames, and independently verified all 192 camera JPEGs. On one fixed capture with 1,550,733 Gaussians and eight 1920×1080 cameras, same-chip sequential ABBA testing reduced median renderer forward time from 38.9381 to 17.7366 seconds; complete uncompressed RGB+ED, alpha and radii were bitwise identical. A separate FP32 eight-control prefix of this same real scene completed original CPU PDM/dense scoring for all four paths: PDM × 100 was 79.057/0 for VADv2 NR/R and 100/27.233 for HydraMDP NR/R. Each scored case decoded 96 JPEGs and checked nine dense positions with 8192 candidates × eight finite metrics. Low R scores are retained as quality observations. This renderer-only optimization comparison and single-scene functional scoring do not establish closed-loop end-to-end speedup, GPU parity, all-scene quality or MTGS backward/reconstruction training.
 

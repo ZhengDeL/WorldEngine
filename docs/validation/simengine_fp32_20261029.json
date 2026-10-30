@@ -924,16 +924,268 @@
       "source_SHA_before_after_and_local_equal": true
     },
     "end_to_end_ABBA": {
-      "state": "running_separate_same_host_same_pair_four_fresh_scored_jobs",
+      "state": "complete_resumed_observations_not_formal_performance",
       "performance_accepted": false,
       "performance_ratio": null,
-      "scope": "A original 212/245 versus B213/CBE249, VADv2 NR only; completed equal-generation four-case artifacts and isolation required before a ratio"
+      "uninterrupted_ABBA": false,
+      "generation_counts_equal": false,
+      "A": {
+        "SimEngine_runtime": "daabd5c34ed290038ad4d0da13c32e81100b9692a0b63ff9b657f72edd9c7d66",
+        "AlgEngine_runtime": "0488bfb748904ab0853f2c86ad868a1bf84c19991ad383ca1a15e346f7e40922"
+      },
+      "B": {
+        "SimEngine_runtime": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+        "AlgEngine_runtime": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610"
+      },
+      "cases": [
+        {
+          "case": "A1",
+          "kind": "A",
+          "NN_exit": 0,
+          "started_utc": "2026-10-30T00:07:38.964895335Z",
+          "finished_utc": "2026-10-30T00:20:06.950749868Z",
+          "wall_seconds": 747.985854533,
+          "generated_predictions": 9,
+          "consumed_controls": 8,
+          "preserved_NumPy_draws": null,
+          "public_audit_sha256": "29e7f83f6a07c94311addf902e1b98f9a5d0d5f58f16086139ecd79f792b55eb",
+          "raw_comparison_sha256": "86d9473101861683138d03fbc7d30766fbff83e59ea29f860519bd49a090b4a3"
+        },
+        {
+          "case": "B1",
+          "kind": "B",
+          "NN_exit": 0,
+          "started_utc": "2026-10-30T00:28:20.912874889Z",
+          "finished_utc": "2026-10-30T00:36:03.81054217Z",
+          "wall_seconds": 462.897667281,
+          "generated_predictions": 8,
+          "consumed_controls": 8,
+          "preserved_NumPy_draws": 48,
+          "public_audit_sha256": "04fe968d3509d287940c687192991631677ef537b7d5e34d0786f7e895f888e3",
+          "raw_comparison_sha256": "64387c8048431e6098b325fabcef427adff6a221bcd2a53ac54c6967cdeb53f9"
+        },
+        {
+          "case": "B2",
+          "kind": "B",
+          "NN_exit": 0,
+          "started_utc": "2026-10-30T00:36:12.524632048Z",
+          "finished_utc": "2026-10-30T00:43:57.450243682Z",
+          "wall_seconds": 464.925611634,
+          "generated_predictions": 9,
+          "consumed_controls": 8,
+          "preserved_NumPy_draws": 54,
+          "public_audit_sha256": "38c9cb715afc9f5706691bb220044ef95cca2e7a9d3f74a1ce0d5b4a530194f5",
+          "raw_comparison_sha256": "153806bd99af642b5fc6d5bcd500147cf555d0b52d3e6c788fa62e72c56e0a0a"
+        },
+        {
+          "case": "A2",
+          "kind": "A",
+          "NN_exit": 0,
+          "started_utc": "2026-10-30T00:44:06.44036435Z",
+          "finished_utc": "2026-10-30T00:56:02.442121547Z",
+          "wall_seconds": 716.001757197,
+          "generated_predictions": 8,
+          "consumed_controls": 8,
+          "preserved_NumPy_draws": null,
+          "public_audit_sha256": "b591def8b1144236eae8b4602d844fa7b3a11cd56ef891638f46034ad832daac",
+          "raw_comparison_sha256": "d8cbd80b43ab54c62dadb8ad40e339c01f5e1505bc37efc1399dc027dbd16762"
+        }
+      ],
+      "collection_receipt": {
+        "kind": "SSH collection tool response JSON file",
+        "file_name": "ABBA_resume_v2_jobprogress253_v7.json",
+        "bytes": 28239,
+        "sha256": "2fb1fb1d8e14712e4121b53194646d9e63f1ee424a384bb52224cd1788b81cae",
+        "hash_basis": "complete collection file bytes, including command, tool exit code and serialized stdout; no JSON canonicalization or reserialization"
+      },
+      "interval_A1_finished_to_B1_started_seconds": 493.962125021,
+      "boundary": "A1 NN and CPU/raw passed before the original host parser rejected nanosecond timestamps. A1 was adopted unchanged; B1/B2/A2 continued under a separately tested controller. Generation counts differ. No formal end-to-end ratio is reported."
     },
     "limits": [
       "One NAVTEST failure scene; not all-scene driving quality or NAVTRAIN synthetic-training acceptance.",
       "Low R scores remain unchanged: VAD NC=0 at step11; Hydra TTC=0 with lower progress. No GPU closed-loop equivalence measured.",
       "Original twenty-control/24-frame results and renderer-only 54.45% reduction retain their original 212/245 source identity.",
       "Current MTGS adapter acceptance covers forward rendering, not reconstruction training/backward."
-    ]
+    ],
+    "simengine_git_commit": "7e9389e9a4f6206007bb48c6b82a80e3eac42b6a"
+  },
+  "planner_terminal_horizon_fix_20261030": {
+    "accepted": true,
+    "scope": "One official VADv2 NR scored twelve-frame/eight-control prefix on NPU; other repaired paths and GPU remain unverified.",
+    "source_base_git_commit": "7e9389e9a4f6206007bb48c6b82a80e3eac42b6a",
+    "source_runtime": {
+      "sha256": "9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541",
+      "files": 213
+    },
+    "planner_entry_outside_runtime_fingerprint": true,
+    "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+    "source_manifest_sha256": "c614d0e9709b821e9239ae912e4d649729859af0663d1356702ed9e5b971fc80",
+    "external_AlgEngine": {
+      "sha256": "cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610",
+      "files": 249,
+      "commit": "a783047c92621ca3d2f658fbe054f200783e8e25"
+    },
+    "fix": "Bind the actual configured rendered window before inference. Preserve the final necessary plan and use the original bounded monitor at the horizon for completion or the next scene. Do not start an unconsumed terminal model call.",
+    "CPU_qualification": {
+      "tests": 43,
+      "skips": 0,
+      "native_runtime_files": 46,
+      "actual_return": 0,
+      "NPU_initialized": false,
+      "CUDA_initialized": false,
+      "original_preflight_report": {
+        "kind": "original CPU43 qualification report",
+        "file_name": "CPU_preflight.json",
+        "producer_relative_path": "CPU_qualification_v1/CPU_preflight.json",
+        "bytes": 1957,
+        "sha256": "dfa26e87518576096a9ccefc072ef54d197661ae59c1dd74143d7b79acd9b8b5",
+        "hash_basis": "complete original file bytes; no JSON canonicalization or reserialization"
+      },
+      "original_container_terminal_report": {
+        "kind": "original CPU-only container terminal report",
+        "file_name": "actual.json",
+        "producer_relative_path": "CPU_qualification_v1/actual.json",
+        "bytes": 510,
+        "sha256": "63a511447efba8ca90a7da0fc94b8073a257cd083f12900115326edca8c30ad7",
+        "hash_basis": "complete original file bytes; no JSON canonicalization or reserialization"
+      },
+      "collection_receipt": {
+        "kind": "SSH collection tool response JSON file",
+        "file_name": "CPU43_actual253.json",
+        "bytes": 12442,
+        "sha256": "2b5cc924edd8c99dcada9c19056480fee9e09a87135efe5da85a896bad913694",
+        "hash_basis": "complete collection file bytes, including command, tool exit code and serialized stdout; no JSON canonicalization or reserialization"
+      }
+    },
+    "actual_NN": {
+      "CID": "8df701e6524d97ea85fa0cb0292924c4c822dc0384c1e7cc5a84cb82fb61f2c4",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-30T00:57:29.784620571Z",
+        "FinishedAt": "2026-10-30T01:05:10.906544689Z"
+      },
+      "actual_attach_return": 0,
+      "watchdog_actual_return": 0,
+      "cleanup_errors": []
+    },
+    "actual_CPU": {
+      "CID": "12d3c8aa1b86a135ace94db61eb7758c8bd15d39a26710a151885df34a883075",
+      "state": {
+        "Status": "exited",
+        "Running": false,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 0,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2026-10-30T01:05:13.157714945Z",
+        "FinishedAt": "2026-10-30T01:05:15.368417228Z"
+      },
+      "actual_attach_return": 0,
+      "devices": []
+    },
+    "actual_parent_return": 0,
+    "comparison": {
+      "actual_return": 0,
+      "result": "pass_actual_terminal_horizon8_and_complete_scored_prefix_raw",
+      "public_audit_sha256": "6d12f49ffbd353895a116ab609808596144163b8a56201dac05c73501f2800e5",
+      "planner_entry_sha256": "f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a",
+      "original_public_auditor_unchanged": true,
+      "generated_predictions": 8,
+      "consumed_controls": 8,
+      "exact_control_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "unused_merged12_absent": true,
+      "unused_plan12_absent": true,
+      "actual_control_horizon": {
+        "num_history": 4,
+        "num_future": 8,
+        "frames": 12,
+        "final_frame": 11,
+        "consumed_control_indices": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "source": "simulation_launch_report.configured_window",
+        "producer_report_snapshot_sha256": "2d3d8f1392f6d302621a6ff952ba10e3cc2008b3f5d111f4555de60a57794757"
+      },
+      "reference_regression": {
+        "result": "pass_complete_original212_prefix_persisted_raw_comparison",
+        "reference_audit_sha256": "ae27679989ed101ea5464c98d6dffdf7bbd304523e9c49a4c15705a2354852d7",
+        "reference_runtime": {
+          "sha256": "daabd5c34ed290038ad4d0da13c32e81100b9692a0b63ff9b657f72edd9c7d66",
+          "files": 212
+        },
+        "decoded_JPEGs": 96,
+        "frame_metadata_files": 12,
+        "consumed_plan_files": 8,
+        "actual_input_files": 8,
+        "dense_positions": 9,
+        "dense_arrays_per_position": 8,
+        "all_full_dense_pickle_bytes_equal": true,
+        "PDM_persisted_CSV_bytes_equal": true,
+        "original_PDM_CSV_precision_decimals": 5,
+        "unrounded_internal_PDM_values_compared": false,
+        "GPU_equivalence": false,
+        "all_scene_quality": false,
+        "formal_end_to_end_performance": false
+      },
+      "performance_accepted": false,
+      "GPU_parity": false
+    },
+    "comparison_sha256": "8986b0e2d1baf125cf19505e5e3a1ae1f4a31f73da9917d9c76143e459be4dc7",
+    "public_auditor_sha256": "289a874477e13c31fc0e5218557122524ad74484dd753dc831fdf1cc0f8b5929",
+    "public_audit_sha256": "6d12f49ffbd353895a116ab609808596144163b8a56201dac05c73501f2800e5",
+    "original_acceptance_report": {
+      "kind": "original NN and independent CPU raw acceptance report",
+      "file_name": "acceptance.json",
+      "producer_relative_path": "NN_VADNR_v1/acceptance.json",
+      "bytes": 4727,
+      "sha256": "060954373640f499e17b3c5ced81716260ad4543b17bbce3f12d00328b79b4af",
+      "hash_basis": "complete original file bytes; no JSON canonicalization or reserialization"
+    },
+    "original_parent_terminal_report": {
+      "kind": "original owned parent terminal return",
+      "file_name": "actual_parent_return.json",
+      "producer_relative_path": "NN_VADNR_v1/actual_parent_return.json",
+      "bytes": 25,
+      "sha256": "6f4ecc92b5cfe9c64cbf74491d55ac91183e12fb6184d14864c800b313a89064",
+      "hash_basis": "complete original file bytes; no JSON canonicalization or reserialization"
+    },
+    "terminal_collection_receipt": {
+      "kind": "SSH collection tool response JSON file",
+      "file_name": "NN_progress_actual253_v3.json",
+      "bytes": 19069,
+      "sha256": "ad9ab2ae821d2a98aed7c32d5892a57d65f349af1c2632c99d9827d6762af4d3",
+      "hash_basis": "complete collection file bytes, including command, tool exit code and serialized stdout; no JSON canonicalization or reserialization"
+    },
+    "performance_accepted": false,
+    "GPU_equivalence": false,
+    "all_scene_quality": false,
+    "renderer_backward_training": false
   }
 }

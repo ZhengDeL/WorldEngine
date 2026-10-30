@@ -26,9 +26,41 @@ the controlled launch plan. Keep the renderer FP32 and its existing validated
 CANN capture proof. No rendering operator or scoring formula is replaced.
 The new SimEngine runtime fingerprint is
 `9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541`
-(213 runtime files). Four actual VADv2/HydraMDP × NR/R NPU jobs and the public CPU auditor passed; the complete persisted scored prefix matches the original 212/245 outputs byte for byte.
+(213 runtime files). At commit `7e9389e9a4f6206007bb48c6b82a80e3eac42b6a`, four actual VADv2/HydraMDP × NR/R NPU jobs and the public CPU auditor passed; the complete persisted scored prefix matches the original 212/245 outputs byte for byte.
 
-PDM × 100 remains 79.057/0 for VADv2 NR/R and 100/27.233 for HydraMDP NR/R, including the original low R scores. Each VAD case generated nine plans and recorded 54 compensated historical GridMask calls; each Hydra case generated eight and recorded 48. All applied eight controls with no optimization fallback. Same-host/same-pair complete scored ABBA is measured separately; the concurrent job wall times are not used for a speed ratio.
+PDM × 100 remains 79.057/0 for VADv2 NR/R and 100/27.233 for HydraMDP NR/R, including the original low R scores. In those four runs, each VAD case generated nine plans and recorded 54 compensated historical GridMask calls; each Hydra case generated eight and recorded 48. All applied eight controls with no optimization fallback. Four later same-host/same-pair observations completed, but the sequence was interrupted and generated 9/8/9/8 plans. Their actual wall times are retained in the validation JSON without a formal speed ratio.
+
+### Terminal planning boundary
+
+Controlled NPU loops bind the history length and frame limit to the simulator's actual
+`simulation_launch_report.json` window. For this scored configuration, twelve
+rendered frames require plans 4 through 11. The original 24-frame source scene
+continues to supply genuine scoring context; it does not authorize plan 12.
+At the boundary, the existing bounded monitor waits for the next scene or the
+completion flag before another model call. No arbitrary delay is added.
+
+The repaired VADv2 NR NPU run generated exactly eight plans and retained all
+96 JPEGs, twelve metadata files, eight consumed plans and inputs, nine complete
+dense positions, and the persisted PDM CSV byte for byte. The other three
+repaired paths, GPU execution, and a new uninterrupted equal-work performance
+comparison remain unverified. The planner entry is outside the 213-file runtime
+fingerprint; its separate integration SHA is
+`f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a`.
+Use the matching complete checkout, not the runtime fingerprint alone.
+
+Keep the launch and public audit commands below. After the audit succeeds,
+check the repaired eight-control boundary explicitly:
+
+```bash
+python - "$NEW_AUDIT_JSON" <<'PY'
+import json, sys
+with open(sys.argv[1]) as stream:
+    report = json.load(stream)
+assert report['result'] == 'pass_optimized_default8_scored_window_and_original_prefix_raw'
+assert report['published_plan_indices'] == list(range(4, 12))
+PY
+python -m unittest simengine_ascend.tools.tests.test_planner_horizon -v
+```
 
 The complete 24-frame/twenty-control results and original eight-control scores
 later in this guide belong to SimEngine commit

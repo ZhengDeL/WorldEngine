@@ -20,9 +20,36 @@
 完整 24 帧真实准备数据及原渲染 CANN 捕获证明保持不变，不裁掉评分所需未来帧。
 渲染仍为 FP32，评分沿用原公式。新 SimEngine 指纹为
 `9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541`
-（213 个运行文件）。VADv2/HydraMDP × NR/R 四组实际 NPU 作业及公开 CPU 审计均通过，完整评分前缀输出与原 212/245 版本逐字节一致。
+（213 个运行文件）。在提交 `7e9389e9a4f6206007bb48c6b82a80e3eac42b6a` 上，VADv2/HydraMDP × NR/R 四组实际 NPU 作业及公开 CPU 审计均通过，完整评分前缀输出与原 212/245 版本逐字节一致。
 
-VADv2 NR/R 的 PDM×100 为 79.057/0，HydraMDP NR/R 为 100/27.233，原低分保持不变。VAD 两组实际各生成 9 份计划并补偿 54 次历史 GridMask 随机调用；Hydra 两组各生成 8 份并补偿 48 次；四组均只消费 8 份控制计划，优化回退数为零。同机同芯片的完整评分 ABBA 另行进行，暂不据此次并发作业耗时计算性能倍率。
+VADv2 NR/R 的 PDM×100 为 79.057/0，HydraMDP NR/R 为 100/27.233，原低分保持不变。上述四组中，VAD 两组实际各生成 9 份计划并补偿 54 次历史 GridMask 随机调用；Hydra 两组各生成 8 份并补偿 48 次；四组均只消费 8 份控制计划，优化回退数为零。随后四次同机同芯片端到端观察均完成，但序列曾中断，生成计划数为 9/8/9/8，故只在验证 JSON 保留实际耗时，不给正式性能倍率。
+
+### 末次规划边界
+
+受控 NPU 闭环将历史长度与帧数绑定到仿真器实际的 `simulation_launch_report.json`
+窗口。本评分配置只渲染 12 帧，需要计划 4 至 11；原始 24 帧仍提供真实评分上下文，
+不能据此生成未消费的计划 12。到达边界后，沿用原有有界监控等待下一场景或完成标志，
+在此之前不再调用模型，没有增加任意等待时间。
+
+修复后的 VADv2 NR 实际 NPU 回归精确生成 8 份计划；96 张 JPEG、12 份元数据、
+8 份实际计划及输入、9 个完整 dense 位置和持久 PDM CSV 均与原结果逐字节一致。
+其余三条修复路径、GPU 执行及新的连续等工作量性能对照尚未验证。
+规划入口不在 213 文件指纹范围内，其独立集成 SHA 为
+`f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a`，
+复现时必须使用匹配的完整源码，不能只核对运行指纹。
+
+下文启动和公开审计命令保持不变。审计成功后，显式核对八次控制边界：
+
+```bash
+python - "$NEW_AUDIT_JSON" <<'PY'
+import json, sys
+with open(sys.argv[1]) as stream:
+    report = json.load(stream)
+assert report['result'] == 'pass_optimized_default8_scored_window_and_original_prefix_raw'
+assert report['published_plan_indices'] == list(range(4, 12))
+PY
+python -m unittest simengine_ascend.tools.tests.test_planner_horizon -v
+```
 
 后文完整 24 帧／二十次控制及原八次控制评分结果，均属于 SimEngine 提交
 `27b13d7a03da257c3d2a66a95b640bd522ab0c61` 的 212 文件版本及外部 AlgEngine 245。

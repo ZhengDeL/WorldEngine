@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 import csv
+import hashlib
 import io
 import json
 import logging
@@ -83,6 +84,52 @@ def model_inference(model,data_loader,torch):
     raise ValueError('Closed-loop dataset produced no inference sample')
 
 
+def planner_window(history,frames,producer_report,required=False):
+    """Bind the control horizon to this run's renderer window, not source-log length."""
+    if type(history) is not int or type(frames) is not int or not 0<history<frames:
+        raise ValueError('Explicit positive history and rendered-frame counts required')
+    expected=dict(num_history=history,num_future=frames-history,frames=frames,
+                  final_frame=frames-1,consumed_control_indices=list(range(history,frames)))
+    value=dict(expected,source='planner_configuration_without_producer_report')
+    path=Path(producer_report)
+    if path.exists():
+        if path.is_symlink() or not path.is_file():raise ValueError('Unsafe simulator launch report')
+        raw=path.read_bytes()
+        if len(raw)>1024*1024:raise ValueError('Unexpected simulator report size')
+        producer=json.loads(raw)
+        window=producer.get('configured_window') if isinstance(producer,dict) else None
+        if (not isinstance(window,dict) or set(window)!=set(expected)
+                or any(type(window.get(key)) is not int for key in ('num_history','num_future','frames','final_frame'))
+                or not isinstance(window.get('consumed_control_indices'),list)
+                or any(type(index) is not int for index in window['consumed_control_indices'])
+                or window!=expected):
+            raise ValueError('Planner history/frame limit differs from the actual configured rendering window')
+        value.update(source='simulation_launch_report.configured_window',
+                     producer_report_snapshot_sha256=hashlib.sha256(raw).hexdigest())
+    elif required:
+        raise ValueError('Controlled NPU loop requires the simulator launch window report')
+    return value
+
+
+def control_queue(monitor,current,scene_step,history,completion):
+    """Keep the last required plan; wait for the next scene before an unused one."""
+    step=scene_step+history
+    if (type(scene_step) is not int or type(history) is not int or scene_step<0
+            or history!=monitor.max_history or step!=monitor.next_idx
+            or len(current)!=history):
+        raise ValueError('Planner queue/control counters differ')
+    if step<monitor.max_frame_per_scene:return current,scene_step,True
+    if step!=monitor.max_frame_per_scene:
+        raise ValueError('Planner control index exceeds the rendered-frame horizon')
+    if monitor._reinitialize_queue():
+        queue=list(monitor.file_history)
+        if len(queue)!=history or monitor.next_idx!=history:
+            raise ValueError('Next scene did not supply its complete initial history')
+        return queue,0,True
+    if Path(completion).exists():return current,scene_step,False
+    raise ValueError('Rendered horizon ended without a next scene or completion')
+
+
 async def run_inference_loop(model,cfg,logger,runtime,args,report):
     import numpy as np
     from mmdet3d.datasets import build_dataset
@@ -104,12 +151,18 @@ async def run_inference_loop(model,cfg,logger,runtime,args,report):
             rows=list(reader)
         if len({(row['prefix'],row['step']) for row in rows})!=len(rows):raise ValueError('Duplicate existing plan index rows')
     current=list(monitor.file_history);scene_step=0
+    controlled=bool(os.environ.get('WORLDENGINE_CLOSED_LOOP_DEADLINE_UTC'))
+    report['control_horizon']=planner_window(cfg.queue_length,monitor.max_frame_per_scene,
+        completion.with_name('simulation_launch_report.json'),
+        required=runtime.backend=='npu' and controlled and args.max_predictions is None)
     maximum=args.max_predictions or int(cfg.sim.maximum_step)
     if maximum<1:raise ValueError('Maximum prediction count must be positive')
     try:
         if len(current)!=cfg.queue_length:raise ValueError('Simulation completed without a full initial frame queue')
         while report['predictions']<maximum:
             check_stop(args.stop_file,args.deadline_utc)
+            current,scene_step,active=control_queue(monitor,current,scene_step,cfg.queue_length,completion)
+            if not active:return
             ann=merge_ann_files(cfg,current,scene_step+cfg.queue_length);owned.add(Path(ann))
             cfg.data.test.ann_file=ann
             cfg.data.test.pipeline[0].img_root=cfg.data_root+'sensor_blobs/'
