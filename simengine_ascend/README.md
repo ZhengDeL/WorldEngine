@@ -47,8 +47,8 @@ or plan 12. The three additional paths ran the published SimEngine commit
 `933f6fb780f644c4bae82abfa93f3f488eaa2596`; the original VADv2 NR evidence retains
 its earlier declaration and the same repaired entry hash. VADv2 R still scores
 0 and HydraMDP R 27.233: functional/raw acceptance does not establish driving
-quality. GPU execution, reconstruction training, and a new uninterrupted
-equal-work end-to-end performance comparison remain unverified. The planner entry is outside the 213-file runtime
+quality. GPU execution and reconstruction training remain unverified. The later
+equal-work end-to-end result is limited to the VADv2 NR window below. The planner entry is outside the 213-file runtime
 fingerprint; its separate integration SHA is
 `f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a`.
 Use the matching complete checkout, not the runtime fingerprint alone.
@@ -66,6 +66,123 @@ assert report['published_plan_indices'] == list(range(4, 12))
 PY
 python -m unittest simengine_ascend.tools.tests.test_planner_horizon -v
 ```
+
+### Same-source eight-control end-to-end comparison
+
+A later uninterrupted, equal-work ABBA sequence used the repaired SimEngine
+commit `933f6fb780f644c4bae82abfa93f3f488eaa2596` and the pinned AlgEngine
+commit `a783047c92621ca3d2f658fbe054f200783e8e25`. A selected the original
+`none` planner with query chunk 2048; B selected `point-parallel-last-frame`
+with query chunk 8192. The renderer, official VADv2 100% checkpoint, prepared
+scene, eight applied controls, and original PDM/dense scoring stayed the same.
+
+| Fresh run | Planner | NN container wall time (s) | Generated / consumed plans |
+| --- | --- | ---: | ---: |
+| A1 | none / 2048 | 709.627329629 | 8 / 8 |
+| B1 | point-parallel-last-frame / 8192 | 456.103736565 | 8 / 8 |
+| B2 | point-parallel-last-frame / 8192 | 464.258374442 | 8 / 8 |
+| A2 | none / 2048 | 699.585236908 | 8 / 8 |
+
+Median A was **704.6063 s**, median B **460.1811 s**: a **34.69% reduction**
+for this one VADv2 NR twelve-frame/eight-control job. Both chips on the same
+physical 910C card were used: planner on host chip 0 and renderer on chip 1.
+The other fourteen chips were reserved idle, with 114 completed monitoring
+snapshots and no observed other-chip workload. All four NN containers and
+independent CPU audits completed successfully. Persisted images, metadata,
+consumed inputs/plans, complete dense arrays and five-decimal PDM CSV remained
+byte-identical to the original prefix; PDM×100 stayed 79.057.
+
+Wall time comes from each actual container's `StartedAt`/`FinishedAt`. It
+includes startup, data I/O, planning, rendering and original CPU PDM/dense
+scoring; the subsequent independent CPU audit is excluded. This measures the
+planner software options on the same NPU host. It is separate from the 54.45%
+renderer-only capture result, and establishes no GPU speedup, all-scene result,
+training acceleration or unrounded internal PDM equality.
+
+An earlier equal-work attempt retained one accepted A1 and a naturally
+completed B1, then stopped because the original inventory gate raced a
+container exit. Its failed `docker ps`/`inspect` CID set was not recorded, so
+that sequence remains an interrupted observation. A separate controller then
+ran the four fresh jobs above. Earlier interrupted 9/8/9/8-plan observations
+also remain unchanged in the versioned record; neither is used in this ratio.
+
+#### Reproduce with public launch and audit tools
+
+Prepare the same current scored launch plan as described above, with twelve
+rendered frames and the full real future context. Use four fresh container
+outputs on the same assigned chip pair and exclusive host resources, in
+**A1, B1, B2, A2** order. Change only the two planner options before
+`--cfg-options`: A uses `--inference-optimization none --msda-query-chunk 2048`;
+B uses `--inference-optimization point-parallel-last-frame --msda-query-chunk 8192`.
+Keep all renderer, model, seed, thread/quota, source and data options identical.
+
+For each fresh NPU container, the public entry is:
+
+```bash
+python -m simengine_ascend.launch_closed_loop \
+  --plan "$CASE_PLAN" --run-root "$RECORDED_RUN_ROOT" \
+  --deadline-utc "$DEADLINE_UTC" --expected-scenarios 1 \
+  --expected-scene-ids "$SCENE_IDS"
+```
+
+`CASE_PLAN` must use the paths mounted into that container. Its recorded run
+root can stay the same, such as `/run/job`, while the host output directory is
+fresh for each case. Save the actual terminal container inspection and device
+observations; require natural exit 0 with no OOM. The public launcher manages
+its two child processes; it does not independently reserve a whole host or
+replace the device isolation/monitoring used for this measurement.
+
+Generate the portable original212 reference with the public
+`prepare-reference` procedure below. For B, use the public
+`audit_optimized_default8 audit` command below. For A, use the byte-identical qualified
+baseline auditor added under `tools/validation` (SHA-256
+`45f7663fc6e8216da263b11512a6b9da47af8e7a9315f9825508aaccb1139054`):
+
+```bash
+python "$SIM_ROOT/tools/validation/audit_baseline_none.py" audit \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --reference-inventory "$REFERENCE_JSON" --expected-reference-sha256 "$REFERENCE_SHA" \
+  --expected-source-sha256 9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541 \
+  --expected-algengine-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-algengine-commit "$ALG_OPT_COMMIT" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$CPU_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+Run each audit in a CPU-only container with read-only inputs. The baseline
+profile supports only `audit`; use the public289a optimized auditor to create
+references. For both A and B, also check the exact repaired work boundary:
+
+```bash
+python - "$CPU_AUDIT_JSON" "$PLANNER_REPORT" "$KIND" <<'PY'
+import json, sys
+from pathlib import Path
+audit = json.load(open(sys.argv[1]))
+planner = json.load(open(sys.argv[2]))
+assert sys.argv[3] in ('A', 'B')
+expected = ('pass_baseline_none_default8_scored_window_and_original_prefix_raw'
+            if sys.argv[3] == 'A' else
+            'pass_optimized_default8_scored_window_and_original_prefix_raw')
+assert audit['result'] == expected
+assert audit['published_plan_indices'] == list(range(4, 12))
+assert planner['predictions'] == 8 and planner['last_prediction']['step'] == 11
+assert planner['runtime']['integration_files']['projects/AlgEngine/closed_loop/sim_test.py'] == \
+    'f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a'
+job = Path(sys.argv[2]).parent.parent
+assert not (job / 'merged_ann_files/merged_12.pkl').exists()
+assert not list((job / 'plan_traj').glob('*_12.npy'))
+PY
+```
+
+Use `KIND=A` or `KIND=B` and the actual planner report path for each case.
+Only compare container wall times after all four complete audits, equal plan
+counts and resource conditions pass. The [versioned record](../docs/validation/simengine_fp32_20261029.json)
+retains the original timestamps, complete acceptance hashes and timing scope.
 
 The complete 24-frame/twenty-control results and original eight-control scores
 later in this guide belong to SimEngine commit

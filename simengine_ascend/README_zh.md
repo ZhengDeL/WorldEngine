@@ -38,7 +38,7 @@ VADv2 NR/R 的 PDM×100 为 79.057/0，HydraMDP NR/R 为 100/27.233，原低分�
 新增三路实际执行公开 SimEngine 提交 `933f6fb780f644c4bae82abfa93f3f488eaa2596`；
 最初 VADv2 NR 的原始源码声明保留，实际使用同一修复入口 SHA。
 VADv2 R 的 0 分和 HydraMDP R 的 27.233 分保持不变，功能和原字节一致性不代表
-驾驶质量通过。GPU 执行、重建训练及新的连续等工作量端到端性能对照仍未验收。
+驾驶质量通过。GPU 执行与重建训练仍未验收；后续等工作量端到端结果仅适用于下节 VADv2 NR 窗口。
 规划入口不在 213 文件指纹范围内，其独立集成 SHA 为
 `f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a`，
 复现时必须使用匹配的完整源码，不能只核对运行指纹。
@@ -55,6 +55,109 @@ assert report['published_plan_indices'] == list(range(4, 12))
 PY
 python -m unittest simengine_ascend.tools.tests.test_planner_horizon -v
 ```
+
+### 同源码、八次控制的端到端对照
+
+后续使用末步修复提交 `933f6fb780f644c4bae82abfa93f3f488eaa2596` 和固定外部
+AlgEngine 提交 `a783047c92621ca3d2f658fbe054f200783e8e25`，完成了一轮连续、等工作量的
+ABBA 对照。A 为原 `none` 规划路径、query chunk 2048；B 为
+`point-parallel-last-frame`、query chunk 8192。渲染器、官方 VADv2 100% 权重、
+准备场景、八次实际控制及原 PDM/dense 评分保持相同。
+
+| 独立新作业 | 规划路径 | NN 容器墙时（秒） | 生成／消费计划 |
+| --- | --- | ---: | ---: |
+| A1 | none / 2048 | 709.627329629 | 8 / 8 |
+| B1 | point-parallel-last-frame / 8192 | 456.103736565 | 8 / 8 |
+| B2 | point-parallel-last-frame / 8192 | 464.258374442 | 8 / 8 |
+| A2 | none / 2048 | 699.585236908 | 8 / 8 |
+
+A 中位 **704.6063 秒**，B 中位 **460.1811 秒**，本次 VADv2 NR 单场景
+12 帧／8 次控制的作业耗时减少 **34.69%**。两组均使用同一张 910C 物理卡的双芯片：
+宿主芯片 0 运行规划器、芯片 1 运行渲染器。其余十四个芯片保留空闲，114 次完整监控
+快照未发现其他芯片负载。四个 NN 容器和独立 CPU 审计均正常完成；落盘图像、元数据、
+实际消费输入／计划、完整 dense 数组及五位小数 PDM CSV 均与原前缀逐字节一致，
+PDM×100 仍为 79.057。
+
+墙时取实际容器 `StartedAt` 至 `FinishedAt`，包含启动、读数、规划、渲染及原 CPU
+PDM/dense 评分，不包含随后独立 CPU 审计。该数据只比较同一 NPU 主机上的规划软件选项，
+与 54.45% 的单渲染捕获优化分开，不代表 GPU 加速比、全场景、训练提速或 PDM 内部
+未舍入值相同。
+
+此前一次等量尝试保留了已接受的 A1 和正常退出的 B1，随后原库存门禁与容器退出发生竞态，
+控制流程中断。失败时的 `docker ps`／`inspect` CID 集合没有保存，故该序列仍按中断观察保留。
+之后使用独立修正控制器重新执行了上表四个新作业。更早 9/8/9/8 份计划的不等量观察也保留原记录，
+这两批均不参与本次倍率计算。
+
+#### 使用公开启动与审计入口复现
+
+按前文准备当前评分计划：渲染 12 帧，并保留完整真实未来上下文。在同一分配芯片对、
+独占资源条件下，按 **A1、B1、B2、A2** 顺序运行四个独立新容器输出。仅更换规划器
+`--cfg-options` 之前的两个选项：A 使用
+`--inference-optimization none --msda-query-chunk 2048`；B 使用
+`--inference-optimization point-parallel-last-frame --msda-query-chunk 8192`。
+渲染、模型、随机种子、线程／配额、源码和数据条件保持相同。
+
+每个新 NPU 容器使用公开入口：
+
+```bash
+python -m simengine_ascend.launch_closed_loop \
+  --plan "$CASE_PLAN" --run-root "$RECORDED_RUN_ROOT" \
+  --deadline-utc "$DEADLINE_UTC" --expected-scenarios 1 \
+  --expected-scene-ids "$SCENE_IDS"
+```
+
+`CASE_PLAN` 使用该容器内的挂载路径；记录的运行根目录可以仍为 `/run/job`，但每个容器的
+宿主输出目录必须独立且为空。保留实际容器终态和设备观察，要求自然退出 0、无 OOM。
+公开启动器管理两个子进程，不会自动预留整机，也不代替本次测量所用的设备隔离和全机监控。
+
+先用下文公开 `prepare-reference` 从完整原 212/245 已评分作业生成便携参照。
+B 使用下文 `audit_optimized_default8 audit`；A 使用新增于 `tools/validation` 的原字节
+基准审计器，其 SHA-256 为
+`45f7663fc6e8216da263b11512a6b9da47af8e7a9315f9825508aaccb1139054`：
+
+```bash
+python "$SIM_ROOT/tools/validation/audit_baseline_none.py" audit \
+  --job "$RUN_ROOT" --recorded-job-root "$RECORDED_RUN_ROOT" \
+  --source-root "$SIM_ROOT" --algengine-root "$ALG_ROOT" \
+  --recorded-algengine-root "$RECORDED_ALGENGINE_ROOT" \
+  --prepared-dir "$PREPARED" \
+  --reference-inventory "$REFERENCE_JSON" --expected-reference-sha256 "$REFERENCE_SHA" \
+  --expected-source-sha256 9d09e7bb239fcb0238255e689423598115c0115841b47912b10ffbef80b1e541 \
+  --expected-algengine-source-sha256 cbe546949820096ae12755c95e24e39b39f4fa6e04ec6264b5afa3e78c053610 \
+  --expected-algengine-commit "$ALG_OPT_COMMIT" \
+  --expected-prepare-receipt-sha256 "$APPROVED_PREPARE_RECEIPT_SHA" \
+  --model vadv2 --precision fp32 --reaction NR \
+  --host-devices "$PLANNER_HOST_CHIP" "$RENDERER_HOST_CHIP" \
+  --output "$CPU_AUDIT_JSON" --deadline-utc "$DEADLINE_UTC"
+```
+
+各次审计均在不挂 GPU/NPU 的 CPU 容器中执行，输入只读。基准工具只支持 `audit`；
+生成参照仍用原公开 289a 优化审计器。A/B 均再核对精确末步边界：
+
+```bash
+python - "$CPU_AUDIT_JSON" "$PLANNER_REPORT" "$KIND" <<'PY'
+import json, sys
+from pathlib import Path
+audit = json.load(open(sys.argv[1]))
+planner = json.load(open(sys.argv[2]))
+assert sys.argv[3] in ('A', 'B')
+expected = ('pass_baseline_none_default8_scored_window_and_original_prefix_raw'
+            if sys.argv[3] == 'A' else
+            'pass_optimized_default8_scored_window_and_original_prefix_raw')
+assert audit['result'] == expected
+assert audit['published_plan_indices'] == list(range(4, 12))
+assert planner['predictions'] == 8 and planner['last_prediction']['step'] == 11
+assert planner['runtime']['integration_files']['projects/AlgEngine/closed_loop/sim_test.py'] == \
+    'f61e5d033887ab6051fabbba4e93defd8081b68af0c0e2fc8193ce3dcb955c5a'
+job = Path(sys.argv[2]).parent.parent
+assert not (job / 'merged_ann_files/merged_12.pkl').exists()
+assert not list((job / 'plan_traj').glob('*_12.npy'))
+PY
+```
+
+每个作业分别设置 `KIND=A` 或 `KIND=B`，并填写实际规划报告路径。四个完整审计、
+等计划计数及资源条件全部通过后，再比较容器墙时。[版本化记录](../docs/validation/simengine_fp32_20261029.json)
+保留实际时间戳、完整接受文件 SHA 和计时边界。
 
 后文完整 24 帧／二十次控制及原八次控制评分结果，均属于 SimEngine 提交
 `27b13d7a03da257c3d2a66a95b640bd522ab0c61` 的 212 文件版本及外部 AlgEngine 245。
